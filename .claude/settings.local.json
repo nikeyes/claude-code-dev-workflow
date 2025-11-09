@@ -2,7 +2,17 @@
   "permissions": {
     "allow": [
       "Bash(chmod +x /Users/jorge.castro/mordor/personal/humanlayer/claude-code-dev-workflow/test/smoke-test.sh /Users/jorge.castro/mordor/personal/humanlayer/claude-code-dev-workflow/test/test-helpers.sh)",
-      "Bash(make check)"
+      "Bash(make check)",
+      "Bash(python -m src.converter --celsius 25)",
+      "Bash(python -m src.converter --celsius 0)",
+      "Bash(python -m src.converter --celsius -40)",
+      "Bash(./test/validation-project/validate-workflow-artifacts.sh temperature-cli)",
+      "Bash(make validate-artifacts)",
+      "Bash(cat -A)",
+      "Bash(make -f /Users/jorge.castro/mordor/personal/humanlayer/claude-code-dev-workflow/Makefile help)",
+      "Bash(make validate-manual)",
+      "Bash(shellcheck test/validation-project/*.sh)",
+      "Bash(shellcheck test/validation-project/run-automated-workflow.sh)"
     ],
     "deny": [],
     "ask": []
