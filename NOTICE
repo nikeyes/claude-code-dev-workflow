@@ -1,0 +1,41 @@
+Claude Code Workflow - Local Setup
+Copyright 2025 Jorge Castro
+
+This product includes software developed from the HumanLayer project
+(https://github.com/humanlayer/humanlayer).
+
+================================================================================
+
+The following components are derived from HumanLayer:
+Copyright (c) 2024, humanlayer Authors
+Licensed under the Apache License, Version 2.0
+
+- Claude Code slash commands in .claude/commands/
+  - create_plan.md (modified)
+  - iterate_plan.md (modified)
+  - implement_plan.md (modified)
+  - validate_plan.md (modified)
+  - research_codebase.md (modified)
+  - commit.md (modified)
+
+- Claude Code agents in .claude/agents/
+  - codebase-locator.md (modified)
+  - codebase-analyzer.md (modified)
+  - codebase-pattern-finder.md (modified)
+  - thoughts-locator.md (modified)
+  - thoughts-analyzer.md (modified)
+
+All modifications include:
+- Adaptation for local-only operation (removed HumanLayer Cloud dependencies)
+- Integration with local thoughts/ directory system
+- Addition of metadata generation scripts
+- Enhanced documentation and examples
+
+The original HumanLayer project can be found at:
+https://github.com/humanlayer/humanlayer
+
+================================================================================
+
+This workflow was inspired by Ashley Ha's article:
+"I mastered the Claude Code workflow"
+https://medium.com/@ashleybcha/i-mastered-the-claude-code-workflow-d7ea726b38fd
