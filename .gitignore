@@ -1,0 +1,28 @@
+# Claude Code local settings
+.claude/settings.local.json
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Linux
+*~
+.directory
+
+# Editor files
+*.swp
+*.swo
+*~
+.vscode/
+.idea/
+
+# Test artifacts
+test/tmp/
+*.test
+*.log
+
+# Backup files
+*.backup
+*.bak
+*~
