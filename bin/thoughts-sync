@@ -49,7 +49,9 @@ skipped=0
 info "Synchronizing thoughts/searchable/ hardlinks..."
 
 # Find all .md files in thoughts/ (excluding searchable/ itself)
-while IFS= read -r -d '' file; do
+while IFS= read -r -d '' file || [[ -n "$file" ]]; do
+  # Break if empty (handles case with no files)
+  [[ -z "$file" ]] && break
   # Get relative path from thoughts/ root
   rel_path="${file#"$THOUGHTS_DIR"/}"
 
@@ -100,12 +102,14 @@ while IFS= read -r -d '' file; do
     ln -sf "$rel_source" "$target"
     ((added++))
   fi
-done < <(find "$THOUGHTS_DIR" -type f -name "*.md" -print0)
+done < <(find "$THOUGHTS_DIR" -type f -name "*.md" -print0 2>/dev/null || true)
 
 # Clean up orphaned links in searchable/
 info "Cleaning up orphaned links..."
 orphaned=0
-while IFS= read -r -d '' link; do
+while IFS= read -r -d '' link || [[ -n "$link" ]]; do
+  # Break if empty (handles case with no files)
+  [[ -z "$link" ]] && break
   # Get relative path from searchable/
   rel_path="${link#"$SEARCHABLE_DIR"/}"
   source_file="$THOUGHTS_DIR/$rel_path"
