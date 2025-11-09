@@ -88,9 +88,15 @@ while IFS= read -r -d '' file; do
     # Fallback to symlink if hardlink fails (e.g., cross-filesystem)
     warn "Could not create hardlink for $rel_path (cross-filesystem?), using symlink"
     # Create relative symlink
-    rel_source=$(realpath --relative-to="$target_dir" "$file" 2>/dev/null || \
-                 python3 -c "import os.path; print(os.path.relpath('$file', '$target_dir'))" 2>/dev/null || \
-                 echo "../../$rel_path")
+    # Try realpath first (GNU coreutils), then python fallback, then simple relative path
+    if rel_source=$(realpath --relative-to="$target_dir" "$file" 2>/dev/null); then
+      :  # Success, use $rel_source
+    elif rel_source=$(python3 -c "import os.path; print(os.path.relpath('$file', '$target_dir'))" 2>/dev/null); then
+      :  # Success, use $rel_source
+    else
+      # Fallback: construct simple relative path
+      rel_source="../../$rel_path"
+    fi
     ln -sf "$rel_source" "$target"
     ((added++))
   fi

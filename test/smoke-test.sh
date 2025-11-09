@@ -34,7 +34,7 @@ cd "$TEST_DIR"
 setup_git_repo "$TEST_DIR"
 
 # Run thoughts-init (always non-interactive)
-thoughts-init > /dev/null 2>&1
+thoughts-init
 
 assert_dir_exists "thoughts/nikey_es/tickets" "thoughts/{user}/tickets/ created"
 assert_dir_exists "thoughts/nikey_es/notes" "thoughts/{user}/notes/ created"
