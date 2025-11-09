@@ -153,7 +153,7 @@ assert_output_contains() {
 setup_git_repo() {
   local dir="$1"
 
-  cd "$dir"
+  cd "$dir" || return
   git init > /dev/null 2>&1
   git config user.name "Test User" > /dev/null 2>&1
   git config user.email "test@example.com" > /dev/null 2>&1

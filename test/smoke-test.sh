@@ -13,7 +13,7 @@ source "$SCRIPT_DIR/test-helpers.sh"
 
 # Create temporary test directory
 TEST_DIR=$(mktemp -d)
-trap "rm -rf $TEST_DIR" EXIT
+trap 'rm -rf "$TEST_DIR"' EXIT
 
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 echo "🧪 Claude Code Dev Workflow - Smoke Tests"
