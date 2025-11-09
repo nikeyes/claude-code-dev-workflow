@@ -13,7 +13,10 @@ This workflow implements the **Research → Plan → Implement → Validate** cy
 
 ### Philosophy
 
-Never exceed 60% context. Split work into phases. Clear context between each. Save everything to a local `thoughts/` directory with hardlinks for efficient searching.
+- Never exceed 60% context.  
+- Split work into phases. 
+- Clear context between each phase. 
+- Save everything to a local `thoughts/` directory with hardlinks for efficient searching.
 
 ## 📦 What's Included
 
