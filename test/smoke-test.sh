@@ -33,8 +33,8 @@ section "Test 1: thoughts-init creates directory structure"
 cd "$TEST_DIR"
 setup_git_repo "$TEST_DIR"
 
-# Run thoughts-init with auto-yes
-echo "y" | thoughts-init > /dev/null 2>&1
+# Run thoughts-init in non-interactive mode
+THOUGHTS_NONINTERACTIVE=1 thoughts-init > /dev/null 2>&1
 
 assert_dir_exists "thoughts/nikey_es/tickets" "thoughts/{user}/tickets/ created"
 assert_dir_exists "thoughts/nikey_es/notes" "thoughts/{user}/notes/ created"

@@ -30,20 +30,8 @@ jobs:
         chmod +x install.sh
         chmod +x test/*.sh
 
-    - name: Debug environment
-      run: |
-        echo "=== Environment Info ==="
-        bash --version
-        git --version
-        which git
-        echo "PATH: $PATH"
-        echo "PWD: $PWD"
-        ls -la bin/
-        echo "=== Git config ==="
-        git config --list --global
-
     - name: Run shellcheck
       run: make check
 
     - name: Run tests
-      run: make test-verbose
+      run: make test

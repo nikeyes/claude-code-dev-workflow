@@ -29,11 +29,17 @@ error() {
 # Check if already initialized
 if [ -d "$THOUGHTS_DIR" ]; then
   warn "thoughts/ directory already exists"
-  read -p "Re-initialize? This will preserve existing files. (y/N) " -n 1 -r
-  echo
-  if [[ ! $REPLY =~ ^[Yy]$ ]]; then
-    info "Aborting initialization"
-    exit 0
+
+  # Non-interactive mode for testing/automation
+  if [ "${THOUGHTS_NONINTERACTIVE:-}" = "1" ]; then
+    info "Running in non-interactive mode, re-initializing..."
+  else
+    read -p "Re-initialize? This will preserve existing files. (y/N) " -n 1 -r
+    echo
+    if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+      info "Aborting initialization"
+      exit 0
+    fi
   fi
 fi
 
