@@ -1,5 +1,6 @@
 ---
 description: Document codebase as-is with thoughts directory for historical context
+argument-hint: [research question or topic]
 model: sonnet
 ---
 
@@ -26,11 +27,15 @@ You are tasked with conducting comprehensive research across the codebase to ans
 
 ## Initial Setup:
 
-When this command is invoked, respond with:
+When this command is invoked:
+
+**Research Query**: $ARGUMENTS
+
+- If $ARGUMENTS is provided, use it as the research query and proceed directly to "Steps to follow after receiving the research query"
+- If $ARGUMENTS is empty, respond with:
 ```
 I'm ready to research the codebase. Please provide your research question or area of interest, and I'll analyze it thoroughly by exploring relevant components and connections.
 ```
-
 Then wait for the user's research query.
 
 ## Steps to follow after receiving the research query:

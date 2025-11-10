@@ -1,5 +1,6 @@
 ---
 description: Iterate on existing implementation plans with thorough research and updates
+argument-hint: [plan-file-path] [changes to make]
 model: sonnet
 ---
 
@@ -19,23 +20,28 @@ You are tasked with updating existing implementation plans based on user feedbac
 
 When this command is invoked:
 
-1. **Parse the input to identify**:
+**Input**: $ARGUMENTS
+
+1. **Parse $ARGUMENTS to identify**:
    - Plan file path (e.g., `thoughts/shared/plans/2025-10-16-feature.md`)
-   - Requested changes/feedback
+   - Requested changes/feedback (remaining text after the file path)
 
 2. **Handle different input scenarios**:
 
-   **If NO plan file provided**:
+   **If $ARGUMENTS is empty (no plan file or feedback)**:
    ```
    I'll help you iterate on an existing implementation plan.
 
-   Which plan would you like to update? Please provide the path to the plan file (e.g., `thoughts/shared/plans/2025-10-16-feature.md`).
+   Which plan would you like to update? Please provide the path to the plan file and changes to make.
+
+   Usage: /iterate_plan [plan-file-path] [changes to make]
+   Example: /iterate_plan thoughts/shared/plans/2025-10-16-feature.md add error handling phase
 
    Tip: You can list recent plans with `ls -lt thoughts/shared/plans/ | head`
    ```
    Wait for user input, then re-check for feedback.
 
-   **If plan file provided but NO feedback**:
+   **If $ARGUMENTS contains only plan file path (no feedback)**:
    ```
    I've found the plan at [path]. What changes would you like to make?
 
@@ -47,7 +53,7 @@ When this command is invoked:
    ```
    Wait for user input.
 
-   **If BOTH plan file AND feedback provided**:
+   **If $ARGUMENTS contains BOTH plan file AND feedback**:
    - Proceed immediately to Step 1
    - No preliminary questions needed
 

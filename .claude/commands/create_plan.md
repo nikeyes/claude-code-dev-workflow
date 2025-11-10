@@ -1,5 +1,6 @@
 ---
 description: Create detailed implementation plans through interactive research and iteration
+argument-hint: [ticket-file-path or task description]
 model: sonnet
 ---
 
@@ -19,12 +20,15 @@ You are tasked with creating detailed implementation plans through an interactiv
 
 When this command is invoked:
 
-1. **Check if parameters were provided**:
-   - If a file path or ticket reference was provided as a parameter, skip the default message
+**Input**: $ARGUMENTS
+
+1. **Check if parameters were provided via $ARGUMENTS**:
+   - If $ARGUMENTS contains a file path (e.g., `thoughts/nikey_es/tickets/eng_1234.md`), skip the default message
    - Immediately read any provided files FULLY
    - Begin the research process
+   - If $ARGUMENTS contains a task description (not a file path), use it as context for planning
 
-2. **If no parameters provided**, respond with:
+2. **If $ARGUMENTS is empty**, respond with:
 ```
 I'll help you create a detailed implementation plan. Let me start by understanding what we're building.
 
