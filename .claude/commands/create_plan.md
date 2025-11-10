@@ -363,12 +363,20 @@ After structure approval:
    - Specific files that should exist
    - Code compilation/type checking
    - Automated test suites
+   - **IMPORTANT**: If a verification can be expressed as a unit test, it MUST be in automated verification (or better yet, part of the test phase)
 
 2. **Manual Verification** (requires human testing):
-   - UI/UX functionality
-   - Performance under real conditions
-   - Edge cases that are hard to automate
-   - User acceptance criteria
+   - UI/UX functionality that requires human judgment
+   - Performance under real-world conditions
+   - Subjective quality assessments (readability, usability)
+   - User acceptance criteria that cannot be automated
+   - **IMPORTANT**: Do NOT include verifications that could be unit tests here
+
+**TDD Compliance:**
+- When creating plans for test-driven development projects, minimize or eliminate manual verification steps for business logic
+- Prefer creating test phases BEFORE implementation phases when following TDD
+- Only include manual verification for things that genuinely cannot be automated (UI appearance, subjective performance, etc.)
+- If you find yourself writing manual verification steps that look like assertions (e.g., "verify X == Y"), those should be automated tests instead
 
 **Format example:**
 ```markdown
@@ -379,12 +387,18 @@ After structure approval:
 - [ ] All unit tests pass: `go test ./...`
 - [ ] No linting errors: `golangci-lint run`
 - [ ] API endpoint returns 200: `curl localhost:8080/api/new-endpoint`
+- [ ] Function returns correct value: Unit tests cover this
 
 #### Manual Verification:
-- [ ] New feature appears correctly in the UI
-- [ ] Performance is acceptable with 1000+ items
-- [ ] Error messages are user-friendly
-- [ ] Feature works correctly on mobile devices
+- [ ] New feature appears correctly in the UI (layout, styling)
+- [ ] Performance feels responsive with 1000+ items (subjective)
+- [ ] Error messages are clear and user-friendly (subjective)
+- [ ] Feature works correctly on mobile devices (visual verification)
+
+#### Anti-pattern Examples (DO NOT DO THIS):
+❌ Manual: "Verify function(5) returns 10" → Should be a unit test
+❌ Manual: "Check that API returns correct JSON structure" → Should be an integration test
+❌ Manual: "Confirm calculation produces expected result" → Should be a unit test
 ```
 
 ## Common Patterns
