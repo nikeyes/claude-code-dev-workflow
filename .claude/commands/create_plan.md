@@ -372,33 +372,81 @@ After structure approval:
    - User acceptance criteria that cannot be automated
    - **IMPORTANT**: Do NOT include verifications that could be unit tests here
 
-**TDD Compliance:**
-- When creating plans for test-driven development projects, minimize or eliminate manual verification steps for business logic
-- Prefer creating test phases BEFORE implementation phases when following TDD
-- Only include manual verification for things that genuinely cannot be automated (UI appearance, subjective performance, etc.)
-- If you find yourself writing manual verification steps that look like assertions (e.g., "verify X == Y"), those should be automated tests instead
+**TDD Compliance (CRITICAL FOR TDD PROJECTS):**
 
-**Format example:**
+For projects following Test-Driven Development:
+
+1. **Manual Verification should be RARE or ABSENT**:
+   - TDD projects test behavior through automated tests, not manual checks
+   - If you're writing "Manual Verification" items that test business logic, STOP - those should be automated tests
+   - Manual verification is ONLY for subjective qualities that cannot be automated
+
+2. **Valid Manual Verification (only these types)**:
+   - Visual appearance/styling that requires human aesthetic judgment
+   - Subjective UX qualities (does it "feel" responsive?)
+   - Cross-browser compatibility visual checks
+   - Accessibility with real assistive technologies
+
+3. **INVALID Manual Verification (write tests instead)**:
+   - ❌ "Verify function returns correct value"
+   - ❌ "Test with input X produces output Y"
+   - ❌ "Confirm calculation is correct"
+   - ❌ "Check API response structure"
+   - ❌ "Verify CLI output format"
+   - ❌ "Review test output to confirm tests pass" (this is redundant!)
+
+4. **When in doubt**: If it can be asserted in code (`assert X == Y`), it must be an automated test, not manual verification
+
+**Format examples:**
+
+Example 1 - TDD Backend Project (NO manual verification):
 ```markdown
 ### Success Criteria:
 
 #### Automated Verification:
-- [ ] Database migration runs successfully: `make migrate`
-- [ ] All unit tests pass: `go test ./...`
-- [ ] No linting errors: `golangci-lint run`
-- [ ] API endpoint returns 200: `curl localhost:8080/api/new-endpoint`
-- [ ] Function returns correct value: Unit tests cover this
+- [ ] All unit tests pass: `pytest tests/test_calculator.py -v`
+- [ ] Integration tests pass: `pytest tests/integration/ -v`
+- [ ] No linting errors: `pylint src/`
+- [ ] Type checking passes: `mypy src/`
+- [ ] Code coverage ≥ 90%: `pytest --cov=src tests/`
+```
 
-#### Manual Verification:
-- [ ] New feature appears correctly in the UI (layout, styling)
-- [ ] Performance feels responsive with 1000+ items (subjective)
-- [ ] Error messages are clear and user-friendly (subjective)
-- [ ] Feature works correctly on mobile devices (visual verification)
+Example 2 - TDD CLI Tool (minimal manual verification):
+```markdown
+### Success Criteria:
+
+#### Automated Verification:
+- [ ] All unit tests pass: `go test ./...`
+- [ ] CLI integration tests pass: `make test-cli`
+- [ ] Help text includes new flag: `./app --help | grep --kelvin`
+- [ ] Output format test passes: Test verifies exact output format
+
+#### Manual Verification (ONLY if truly needed):
+- [ ] Terminal color output looks correct (visual check on different terminals)
+```
+
+Example 3 - Web UI Feature (justified manual verification):
+```markdown
+### Success Criteria:
+
+#### Automated Verification:
+- [ ] Component unit tests pass: `npm test components/Button`
+- [ ] E2E tests pass: `playwright test button.spec.ts`
+- [ ] No linting errors: `eslint src/`
+- [ ] Accessibility tests pass: `axe-core` automated checks
+
+#### Manual Verification (UI-specific):
+- [ ] Button animation feels smooth (subjective timing)
+- [ ] Visual appearance matches design mockup (aesthetic judgment)
+- [ ] Works with screen reader (NVDA/JAWS manual test)
+```
 
 #### Anti-pattern Examples (DO NOT DO THIS):
 ❌ Manual: "Verify function(5) returns 10" → Should be a unit test
-❌ Manual: "Check that API returns correct JSON structure" → Should be an integration test
-❌ Manual: "Confirm calculation produces expected result" → Should be a unit test
+❌ Manual: "Check that API returns correct JSON structure" → Should be integration test
+❌ Manual: "Confirm calculation produces expected result" → Should be unit test
+❌ Manual: "Review test output to confirm all tests pass" → Redundant, covered by automated
+❌ Manual: "Test CLI with input X produces output Y" → Should be CLI integration test
 ```
 
 ## Common Patterns
