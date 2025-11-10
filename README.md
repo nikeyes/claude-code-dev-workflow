@@ -8,7 +8,8 @@ This workflow implements the **Research → Plan → Implement → Validate** cy
 
 - **6 Slash Commands** for structured development
 - **5 Specialized Agents** for parallel research
-- **3 Bash Scripts** for local thoughts/ management
+- **4 Bash Scripts** for local thoughts/ management
+- **Built-in version tracking** for team synchronization
 - **Local-only operation** - no cloud dependencies
 
 ### Philosophy
@@ -48,6 +49,7 @@ This workflow implements the **Research → Plan → Implement → Validate** cy
 | `thoughts-init` | Initialize thoughts/ structure in a project |
 | `thoughts-sync` | Sync hardlinks in searchable/ directory |
 | `thoughts-metadata` | Generate git metadata for documents |
+| `thoughts-version` | Check installed version and detect updates |
 
 ## 🚀 Installation
 
@@ -61,6 +63,7 @@ This will:
 - Install commands to `~/.claude/commands/`
 - Install agents to `~/.claude/agents/`
 - Install scripts to `~/.local/bin/`
+- Create version file at `~/.claude/claude-code-dev-workflow-version`
 - Create backups of any existing files
 - Make all scripts executable
 
@@ -68,12 +71,16 @@ This will:
 
 ```bash
 # Check scripts are in PATH
-which thoughts-init thoughts-sync thoughts-metadata
+which thoughts-init thoughts-sync thoughts-metadata thoughts-version
 
-# Should return paths like:
-# /Users/you/.local/bin/thoughts-init
-# /Users/you/.local/bin/thoughts-sync
-# /Users/you/.local/bin/thoughts-metadata
+# Check installed version
+thoughts-version
+
+# Should show:
+# Installed Version:
+#   Version:   v1.2.0 (or commit hash)
+#   Installed: 2025-11-10 14:30:00 UTC
+#   Commit:    abc123...
 ```
 
 If not found, add to your shell config (`~/.zshrc` or `~/.bashrc`):
@@ -89,10 +96,10 @@ After running `thoughts-init` in a project:
 ```
 <your-project>/
 ├── thoughts/
-│   ├── nikey_es/          # Your personal notes
+│   ├── nikey_es/          # Your personal notes (you write)
 │   │   ├── tickets/       # Ticket documentation
 │   │   └── notes/         # Personal notes
-│   ├── shared/            # Team-shared documents
+│   ├── shared/            # Team-shared documents (Claude writes)
 │   │   ├── research/      # Research documents
 │   │   ├── plans/         # Implementation plans
 │   │   └── prs/           # PR descriptions
@@ -103,12 +110,43 @@ After running `thoughts-init` in a project:
 └── ...
 ```
 
+**Key distinction:**
+- **`nikey_es/`**: Personal tickets/notes you create manually
+- **`shared/`**: Formal docs Claude generates from commands
+- **Example**: `/create_plan thoughts/nikey_es/tickets/eng_1234.md` reads your ticket → writes `shared/plans/2025-11-09-ENG-1234-*.md`
+
 ### Why Hardlinks?
 
 - **Fast searching**: Grep one directory instead of many
 - **No duplication**: Same file, same inode, no extra disk space
 - **Auto-sync**: Changes in source are immediately visible
 - **Efficient**: Better than symlinks for grep operations
+
+## Thoughts Directory
+
+This directory contains research documents, implementation plans, and notes for this project.
+
+### Structure
+
+- `nikey_es/` - Personal notes and tickets
+  - `tickets/` - Ticket documentation and tracking
+  - `notes/` - Personal notes and observations
+- `shared/` - Team-shared documents
+  - `research/` - Research documents from /research_codebase
+  - `plans/` - Implementation plans from /create_plan
+  - `prs/` - PR descriptions and documentation
+- `searchable/` - Hardlinks for efficient grep searching (auto-generated)
+
+### Usage
+
+Use Claude Code slash commands:
+- `/research_codebase [topic]` - Research and document codebase
+- `/create_plan [description]` - Create implementation plan
+- `/implement_plan [plan-file]` - Execute a plan
+- `/validate_plan [plan-file]` - Validate implementation
+
+Run `thoughts-sync` after adding/modifying files to update searchable/ hardlinks.
+
 
 ## 🔄 The Four-Phase Workflow
 
@@ -303,6 +341,90 @@ Git User: nikey_es
 
 Used internally by commands to populate frontmatter.
 
+### thoughts-version
+
+Check for updates:
+
+```bash
+thoughts-version
+```
+
+Returns version comparison and update instructions if outdated:
+
+```
+Installed Version:
+  Version:   v1.0.0
+  Installed: 2025-11-10 12:00:00 UTC
+  Commit:    abc123...
+
+Repository Version:
+  Version:   v1.2.0
+  Commit:    def456...
+
+⚠ Update available!
+
+To update:
+  cd /path/to/claude-code-dev-workflow
+  git pull
+  ./install.sh
+```
+
+**Auto-checking**: Other scripts (`thoughts-init`, `thoughts-sync`, `thoughts-metadata`) automatically warn if an update is available.
+
+## 🏷️ Version Management with Tags
+
+### For Maintainers: Creating Releases
+
+Create semantic version tags to mark stable releases:
+
+```bash
+# Tag the current commit
+git tag v1.0.0
+git push origin v1.0.0
+
+# This creates a GitHub release automatically
+```
+
+**Version format** (via `git describe --tags`):
+- `v1.2.0` - Exact tag
+- `v1.2.0-dirty` - Tag with uncommitted changes
+- `v1.2.0-5-gabc123` - 5 commits after v1.2.0
+- `abc123` - No tags, just commit hash
+
+### For Users: Installing Specific Versions
+
+```bash
+# Clone the repo
+git clone https://github.com/user/claude-code-dev-workflow.git
+cd claude-code-dev-workflow
+
+# List available versions
+git tag
+
+# Install specific version
+git checkout v1.2.0
+./install.sh
+
+# Or install latest from main
+git checkout main
+git pull
+./install.sh
+```
+
+### Keeping Updated
+
+```bash
+# Check if update available
+thoughts-version
+
+# If outdated:
+cd /path/to/claude-code-dev-workflow
+git pull
+./install.sh
+```
+
+The version check runs automatically when you use any thoughts script, providing passive update notifications.
+
 ## 📝 Context Management
 
 **Golden Rule**: Never exceed 60% context capacity.
@@ -358,6 +480,10 @@ Tests validate all bash scripts (thoughts-init, thoughts-sync, thoughts-metadata
 **Hardlinks failing**: Script auto-falls back to symlinks (slower but works)
 
 **No files synced**: Run `THOUGHTS_DEBUG=1 thoughts-sync` to debug
+
+**Version mismatch warnings**: Run `thoughts-version` to see details, then update with `git pull && ./install.sh`
+
+**Can't find repo for version check**: `thoughts-version` searches common locations. If your repo is elsewhere, the script will still show your installed version.
 
 ## 📚 Learn More
 

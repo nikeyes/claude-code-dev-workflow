@@ -26,10 +26,11 @@ The workflow operates entirely locally without cloud dependencies and uses a `th
     ├── thoughts-locator.md
     └── thoughts-analyzer.md
 
-bin/                   # 3 bash scripts for thoughts/ management
+bin/                   # 4 bash scripts for thoughts/ management
 ├── thoughts-init      # Initialize thoughts/ structure
 ├── thoughts-sync      # Sync hardlinks to searchable/
-└── thoughts-metadata  # Generate git metadata
+├── thoughts-metadata  # Generate git metadata
+└── thoughts-version   # Check installed version
 
 install.sh            # Installer script (copies to ~/.claude/)
 ```
@@ -44,7 +45,10 @@ install.sh            # Installer script (copies to ~/.claude/)
 # Verify installation
 ls ~/.claude/commands/
 ls ~/.claude/agents/
-which thoughts-init thoughts-sync thoughts-metadata
+which thoughts-init thoughts-sync thoughts-metadata thoughts-version
+
+# Check version
+thoughts-version
 ```
 
 ### Testing Changes
@@ -70,10 +74,11 @@ make check
 - ✅ `bin/thoughts-init` - Directory creation, gitignore, README generation
 - ✅ `bin/thoughts-sync` - Hardlink creation, orphan cleanup
 - ✅ `bin/thoughts-metadata` - Metadata generation
-- ✅ `install.sh` - File installation, backup creation
+- ✅ `bin/thoughts-version` - Version checking and comparison
+- ✅ `install.sh` - File installation, backup creation, VERSION file generation
 
 **Test files:**
-- `test/smoke-test.sh` - Main integration tests (6 test groups, 44 assertions)
+- `test/smoke-test.sh` - Main integration tests (7 test groups, 51 assertions)
 - `test/test-helpers.sh` - Assertion functions and utilities
 - `Makefile` - Test runner targets
 
@@ -142,6 +147,55 @@ thoughts/
 
 **Username**: Set `export THOUGHTS_USER=your_name` (default: `nikey_es`)
 **PATH**: Add `export PATH="$HOME/.local/bin:$PATH"` to shell config
+
+### Version Tracking
+
+The workflow includes built-in version tracking to help teams stay synchronized:
+
+**How it works:**
+- `install.sh` creates `~/.claude/claude-code-dev-workflow-version` with version info (version tag/commit, install date, commit hash)
+- `thoughts-version` compares your installed version with the repository version
+- Other scripts (`thoughts-init`, `thoughts-sync`, `thoughts-metadata`) automatically check for updates and warn if outdated
+
+**Usage:**
+```bash
+# Check your installed version
+thoughts-version
+
+# Example output (up-to-date):
+# Installed Version:
+#   Version:   v1.2.0
+#   Installed: 2025-11-10 14:30:00 UTC
+#   Commit:    abc123def456
+#
+# Repository Version:
+#   Version:   v1.2.0
+#   Commit:    abc123def456
+# ✓ Up to date!
+
+# Example output (outdated):
+# ⚠ Update available!
+# To update:
+#   cd /path/to/claude-code-dev-workflow
+#   git pull
+#   ./install.sh
+```
+
+**Creating releases with tags:**
+```bash
+# Tag a new release
+git tag v1.2.0
+git push origin v1.2.0
+
+# Install from specific tag
+git checkout v1.2.0
+./install.sh
+```
+
+**Version format:**
+- With tags: `v1.2.0`, `v1.2.0-dirty` (local changes)
+- Between tags: `v1.2.0-5-gabc123` (5 commits after v1.2.0)
+- Without tags: `abc123` (commit hash only)
 
 ## Development Workflow
 

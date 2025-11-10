@@ -149,16 +149,46 @@ assert_file_exists "$FAKE_HOME/.claude/agents/thoughts-analyzer.md" "thoughts-an
 assert_file_exists "$FAKE_HOME/.local/bin/thoughts-init" "thoughts-init installed"
 assert_file_exists "$FAKE_HOME/.local/bin/thoughts-sync" "thoughts-sync installed"
 assert_file_exists "$FAKE_HOME/.local/bin/thoughts-metadata" "thoughts-metadata installed"
+assert_file_exists "$FAKE_HOME/.local/bin/thoughts-version" "thoughts-version installed"
 
 # Check scripts are executable
 assert_executable "$FAKE_HOME/.local/bin/thoughts-init" "thoughts-init is executable"
 assert_executable "$FAKE_HOME/.local/bin/thoughts-sync" "thoughts-sync is executable"
 assert_executable "$FAKE_HOME/.local/bin/thoughts-metadata" "thoughts-metadata is executable"
+assert_executable "$FAKE_HOME/.local/bin/thoughts-version" "thoughts-version is executable"
+
+# Check VERSION file installed
+assert_file_exists "$FAKE_HOME/.claude/claude-code-dev-workflow-version" "VERSION file installed"
 
 # ============================================================================
-# Test 6: install.sh creates backup when files exist
+# Test 6: VERSION file format and thoughts-version script
 # ============================================================================
-section "Test 6: install.sh creates backup of existing files"
+section "Test 6: VERSION file format and thoughts-version"
+
+# Check VERSION file format
+version_content=$(cat "$FAKE_HOME/.claude/claude-code-dev-workflow-version")
+assert_output_contains "$version_content" "version=" "VERSION contains version field"
+assert_output_contains "$version_content" "installed=" "VERSION contains installed field"
+assert_output_contains "$version_content" "commit=" "VERSION contains commit field"
+
+# Test thoughts-version with matching versions (up-to-date scenario)
+cd "$PROJECT_ROOT"
+HOME="$FAKE_HOME" bash -c "PATH=\"$FAKE_HOME/.local/bin:\$PATH\" thoughts-version > /dev/null 2>&1"
+version_exit=$?
+
+if [ $version_exit -eq 0 ] || [ $version_exit -eq 1 ]; then
+  echo -e "${GREEN}✓${NC} thoughts-version executes without errors"
+  TESTS_PASSED=$((TESTS_PASSED + 1))
+else
+  echo -e "${RED}✗${NC} thoughts-version returned unexpected exit code: $version_exit"
+  TESTS_FAILED=$((TESTS_FAILED + 1))
+fi
+TESTS_RUN=$((TESTS_RUN + 1))
+
+# ============================================================================
+# Test 7: install.sh creates backup when files exist
+# ============================================================================
+section "Test 7: install.sh creates backup of existing files"
 
 # Create another fake HOME with pre-existing file
 FAKE_HOME2="$TEST_DIR/fake-home2"

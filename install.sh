@@ -41,6 +41,7 @@ CLAUDE_DIR="$HOME/.claude"
 COMMANDS_DIR="$CLAUDE_DIR/commands"
 AGENTS_DIR="$CLAUDE_DIR/agents"
 BIN_DIR="$HOME/.local/bin"
+VERSION_FILE="$CLAUDE_DIR/claude-code-dev-workflow-version"
 BACKUP_DIR="$HOME/.claude-workflow-backup-$(date +%Y%m%d-%H%M%S)"
 
 # Source directories
@@ -48,8 +49,43 @@ SRC_COMMANDS="$SCRIPT_DIR/.claude/commands"
 SRC_AGENTS="$SCRIPT_DIR/.claude/agents"
 SRC_BIN="$SCRIPT_DIR/bin"
 
+# Generate version info
+CURRENT_VERSION=$(cd "$SCRIPT_DIR" && git describe --tags --always --dirty 2>/dev/null || echo "dev")
+INSTALL_DATE=$(date -u +"%Y-%m-%d %H:%M:%S UTC")
+COMMIT_HASH=$(cd "$SCRIPT_DIR" && git rev-parse HEAD 2>/dev/null || echo "unknown")
+
 # Display banner
 header "Claude Code Workflow Installer"
+echo ""
+
+# Check for existing installation
+if [ -f "$VERSION_FILE" ]; then
+  echo -e "${BOLD}Currently Installed:${NC}"
+
+  # Read installed version
+  INSTALLED_VERSION=""
+  INSTALLED_DATE=""
+  INSTALLED_COMMIT=""
+
+  while IFS='=' read -r key value; do
+    case "$key" in
+      version) INSTALLED_VERSION="$value" ;;
+      installed) INSTALLED_DATE="$value" ;;
+      commit) INSTALLED_COMMIT="$value" ;;
+    esac
+  done < "$VERSION_FILE"
+
+  echo "  Version:   $INSTALLED_VERSION"
+  echo "  Installed: $INSTALLED_DATE"
+  echo "  Commit:    $INSTALLED_COMMIT"
+  echo ""
+fi
+
+echo -e "${BOLD}To Be Installed:${NC}"
+echo "  Version:   $CURRENT_VERSION"
+echo "  Commit:    $COMMIT_HASH"
+echo ""
+
 echo "This will install:"
 echo "  • 6 slash commands to $COMMANDS_DIR"
 echo "  • 5 specialized agents to $AGENTS_DIR"
@@ -66,7 +102,7 @@ fi
 
 # Create backup directory if needed
 create_backup=false
-if [ -d "$COMMANDS_DIR" ] || [ -d "$AGENTS_DIR" ] || \
+if [ -d "$COMMANDS_DIR" ] || [ -d "$AGENTS_DIR" ] || [ -f "$VERSION_FILE" ] || \
    [ -f "$BIN_DIR/thoughts-init" ] || [ -f "$BIN_DIR/thoughts-sync" ] || [ -f "$BIN_DIR/thoughts-metadata" ]; then
   create_backup=true
   info "Existing files detected. Creating backup at: $BACKUP_DIR"
@@ -140,6 +176,24 @@ for script in "$SRC_BIN"/*; do
   success "Installed: $script_name"
 done
 
+# Install VERSION file
+header "Creating Version File"
+mkdir -p "$CLAUDE_DIR"
+
+# Backup existing
+if [ -f "$VERSION_FILE" ] && [ "$create_backup" = true ]; then
+  backup_file "$VERSION_FILE"
+fi
+
+# Write version info
+cat > "$VERSION_FILE" <<EOF
+version=$CURRENT_VERSION
+installed=$INSTALL_DATE
+commit=$COMMIT_HASH
+EOF
+
+success "Version file created: $VERSION_FILE"
+
 # Check if ~/.local/bin is in PATH
 header "Checking PATH"
 if [[ ":$PATH:" != *":$BIN_DIR:"* ]]; then
@@ -180,7 +234,15 @@ echo "Scripts installed:"
 echo "  thoughts-init      - Initialize thoughts/ in a project"
 echo "  thoughts-sync      - Sync hardlinks in searchable/"
 echo "  thoughts-metadata  - Generate git metadata"
+echo "  thoughts-version   - Check installed version"
 echo ""
+
+# Run thoughts-version if available
+if command -v thoughts-version &> /dev/null; then
+  header "Version Check"
+  thoughts-version || true
+  echo ""
+fi
 
 header "Next Steps"
 echo "1. Navigate to your project directory:"
@@ -192,6 +254,8 @@ echo ""
 echo "3. Start using Claude Code commands:"
 echo "   /research_codebase [topic]"
 echo "   /create_plan [description]"
+echo "   /implement_plan thoughts/shared/plans/<plan-file>.md"
+echo "   /validate_plan thoughts/shared/plans/<plan-file>.md"
 echo ""
 echo "4. Read the README for detailed usage:"
 echo "   cat $SCRIPT_DIR/README.md"
