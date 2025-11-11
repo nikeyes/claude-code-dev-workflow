@@ -82,13 +82,13 @@ If the user's feedback requires understanding new code patterns or validating as
    Use the right agent for each type of research:
 
    **For code investigation:**
-   - **codebase-locator** - To find relevant files
-   - **codebase-analyzer** - To understand implementation details
-   - **codebase-pattern-finder** - To find similar patterns
+   - **stepwise-dev:codebase-locator** - To find relevant files
+   - **stepwise-dev:codebase-analyzer** - To understand implementation details
+   - **stepwise-dev:codebase-pattern-finder** - To find similar patterns
 
    **For historical context:**
-   - **thoughts-locator** - To find related research or decisions
-   - **thoughts-analyzer** - To extract insights from documents
+   - **stepwise-dev:thoughts-locator** - To find related research or decisions
+   - **stepwise-dev:thoughts-analyzer** - To extract insights from documents
 
    **Be EXTREMELY specific about directories**:
    - If the change involves "WUI", specify `humanlayer-wui/` directory

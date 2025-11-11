@@ -60,10 +60,9 @@ Then wait for the user's input.
 2. **Spawn initial research tasks to gather context**:
    Before asking the user any questions, use specialized agents to research in parallel:
 
-   - Use the **codebase-locator** agent to find all files related to the ticket/task
-   - Use the **codebase-analyzer** agent to understand how the current implementation works
-   - If relevant, use the **thoughts-locator** agent to find any existing thoughts documents about this feature
-   - If a Linear ticket is mentioned, use the **linear-ticket-reader** agent to get full details
+   - Use the **stepwise-dev:codebase-locator** agent to find all files related to the ticket/task
+   - Use the **stepwise-dev:codebase-analyzer** agent to understand how the current implementation works
+   - If relevant, use the **stepwise-dev:thoughts-locator** agent to find any existing thoughts documents about this feature
 
    These agents will:
    - Find relevant source files, configs, and tests
@@ -116,16 +115,13 @@ After getting initial clarifications:
    - Use the right agent for each type of research:
 
    **For deeper investigation:**
-   - **codebase-locator** - To find more specific files (e.g., "find all files that handle [specific component]")
-   - **codebase-analyzer** - To understand implementation details (e.g., "analyze how [system] works")
-   - **codebase-pattern-finder** - To find similar features we can model after
+   - **stepwise-dev:codebase-locator** - To find more specific files (e.g., "find all files that handle [specific component]")
+   - **stepwise-dev:codebase-analyzer** - To understand implementation details (e.g., "analyze how [system] works")
+   - **stepwise-dev:codebase-pattern-finder** - To find similar features we can model after
 
    **For historical context:**
-   - **thoughts-locator** - To find any research, plans, or decisions about this area
-   - **thoughts-analyzer** - To extract key insights from the most relevant documents
-
-   **For related tickets:**
-   - **linear-searcher** - To find similar issues or past implementations
+   - **stepwise-dev:thoughts-locator** - To find any research, plans, or decisions about this area
+   - **stepwise-dev:thoughts-analyzer** - To extract key insights from the most relevant documents
 
    Each agent knows how to:
    - Find the right files and code patterns

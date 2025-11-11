@@ -57,23 +57,15 @@ Then wait for the user's research query.
    - We now have specialized agents that know how to do specific research tasks:
 
    **For codebase research:**
-   - Use the **codebase-locator** agent to find WHERE files and components live
-   - Use the **codebase-analyzer** agent to understand HOW specific code works (without critiquing it)
-   - Use the **codebase-pattern-finder** agent to find examples of existing patterns (without evaluating them)
+   - Use the **stepwise-dev:codebase-locator** agent to find WHERE files and components live
+   - Use the **stepwise-dev:codebase-analyzer** agent to understand HOW specific code works (without critiquing it)
+   - Use the **stepwise-dev:codebase-pattern-finder** agent to find examples of existing patterns (without evaluating them)
 
    **IMPORTANT**: All agents are documentarians, not critics. They will describe what exists without suggesting improvements or identifying issues.
 
    **For thoughts directory:**
-   - Use the **thoughts-locator** agent to discover what documents exist about the topic
-   - Use the **thoughts-analyzer** agent to extract key insights from specific documents (only the most relevant ones)
-
-   **For web research (only if user explicitly asks):**
-   - Use the **web-search-researcher** agent for external documentation and resources
-   - IF you use web-research agents, instruct them to return LINKS with their findings, and please INCLUDE those links in your final report
-
-   **For Linear tickets (if relevant):**
-   - Use the **linear-ticket-reader** agent to get full details of a specific ticket
-   - Use the **linear-searcher** agent to find related tickets or historical context
+   - Use the **stepwise-dev:thoughts-locator** agent to discover what documents exist about the topic
+   - Use the **stepwise-dev:thoughts-analyzer** agent to extract key insights from specific documents (only the most relevant ones)
 
    The key is to use these agents intelligently:
    - Start with locator agents to find what exists
