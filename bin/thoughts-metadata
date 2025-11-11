@@ -22,16 +22,6 @@ warn() {
   echo -e "${YELLOW}[WARN]${NC} $1" >&2
 }
 
-# Check for version updates (optional, non-blocking)
-check_version() {
-  [ ! -f "$HOME/.claude/claude-code-dev-workflow-version" ] && return
-  thoughts-version >/dev/null 2>&1 && return
-  [ $? -eq 1 ] && warn "Claude Code Workflow update available. Run 'thoughts-version' for details." && echo "" >&2
-}
-
-# Run version check
-check_version
-
 # Collect metadata
 DATETIME_TZ=$(date '+%Y-%m-%d %H:%M:%S %Z')
 FILENAME_TS=$(date '+%Y-%m-%d_%H-%M-%S')

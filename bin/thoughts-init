@@ -26,16 +26,6 @@ error() {
   echo -e "${RED}[ERROR]${NC} $1"
 }
 
-# Check for version updates (optional, non-blocking)
-check_version() {
-  [ ! -f "$HOME/.claude/claude-code-dev-workflow-version" ] && return
-  thoughts-version >/dev/null 2>&1 && return
-  [ $? -eq 1 ] && warn "Claude Code Workflow update available. Run 'thoughts-version' for details." && echo ""
-}
-
-# Run version check
-check_version
-
 # Check if already initialized
 if [ -d "$THOUGHTS_DIR" ]; then
   warn "thoughts/ directory already exists. Re-initializing (existing files preserved)..."

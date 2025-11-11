@@ -33,16 +33,6 @@ debug() {
   fi
 }
 
-# Check for version updates (optional, non-blocking)
-check_version() {
-  [ ! -f "$HOME/.claude/claude-code-dev-workflow-version" ] && return
-  thoughts-version >/dev/null 2>&1 && return
-  [ $? -eq 1 ] && warn "Claude Code Workflow update available. Run 'thoughts-version' for details." && echo ""
-}
-
-# Run version check
-check_version
-
 # Check if thoughts/ exists
 if [ ! -d "$THOUGHTS_DIR" ]; then
   error "thoughts/ directory not found. Run 'thoughts-init' first."

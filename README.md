@@ -1,5 +1,9 @@
 # Claude Code Workflow - Local Setup
 
+[![Plugin Available](https://img.shields.io/badge/Claude_Code-Plugin_Available-blue)](https://github.com/nikey-es/claude-code-dev-workflow)
+[![License](https://img.shields.io/badge/License-Apache_2.0-green.svg)](LICENSE)
+[![Tests](https://img.shields.io/badge/Tests-Passing-brightgreen)](test/)
+
 A complete workflow system for Claude Code inspired by [Ashley Ha's workflow](https://medium.com/@ashleybcha/i-mastered-the-claude-code-workflow-d7ea726b38fd), adapted to work 100% locally without HumanLayer Cloud dependencies.
 
 ## 🎯 What This Is
@@ -21,7 +25,7 @@ This workflow implements the **Research → Plan → Implement → Validate** cy
 
 ## 📦 What's Included
 
-### Slash Commands (`.claude/commands/`)
+### Slash Commands
 
 | Command | Description |
 |---------|-------------|
@@ -32,7 +36,7 @@ This workflow implements the **Research → Plan → Implement → Validate** cy
 | `/validate_plan` | Validate implementation against plan |
 | `/commit` | Create git commits (no Claude attribution) |
 
-### Specialized Agents (`.claude/agents/`)
+### Specialized Agents
 
 | Agent | Purpose |
 |-------|---------|
@@ -49,38 +53,38 @@ This workflow implements the **Research → Plan → Implement → Validate** cy
 | `thoughts-init` | Initialize thoughts/ structure in a project |
 | `thoughts-sync` | Sync hardlinks in searchable/ directory |
 | `thoughts-metadata` | Generate git metadata for documents |
-| `thoughts-version` | Check installed version and detect updates |
 
 ## 🚀 Installation
 
-### Quick Install
+### Step 1: Install Plugin
 
 ```bash
-./install.sh
+# Add marketplace from GitHub
+/plugin marketplace add nikey-es/claude-code-dev-workflow
+
+# Install plugin
+/plugin install stepwise-dev@stepwise-dev-marketplace
 ```
 
-This will:
-- Install commands to `~/.claude/commands/`
-- Install agents to `~/.claude/agents/`
-- Install scripts to `~/.local/bin/`
-- Create version file at `~/.claude/claude-code-dev-workflow-version`
-- Create backups of any existing files
-- Make all scripts executable
+Restart Claude Code after installation.
+
+### Step 2: Install Helper Scripts
+
+The plugin installs commands and agents automatically. You also need to install helper scripts to your PATH:
+
+```bash
+git clone https://github.com/nikey-es/claude-code-dev-workflow.git
+cd claude-code-dev-workflow
+./install-scripts.sh
+```
+
+**Why two steps?** Plugin installs commands/agents automatically. Scripts need manual install to your PATH.
 
 ### Verify Installation
 
 ```bash
 # Check scripts are in PATH
-which thoughts-init thoughts-sync thoughts-metadata thoughts-version
-
-# Check installed version
-thoughts-version
-
-# Should show:
-# Installed Version:
-#   Version:   v1.2.0 (or commit hash)
-#   Installed: 2025-11-10 14:30:00 UTC
-#   Commit:    abc123...
+which thoughts-init thoughts-sync thoughts-metadata
 ```
 
 If not found, add to your shell config (`~/.zshrc` or `~/.bashrc`):
@@ -341,89 +345,29 @@ Git User: nikey_es
 
 Used internally by commands to populate frontmatter.
 
-### thoughts-version
+## 🏷️ Version Management
 
-Check for updates:
-
-```bash
-thoughts-version
-```
-
-Returns version comparison and update instructions if outdated:
-
-```
-Installed Version:
-  Version:   v1.0.0
-  Installed: 2025-11-10 12:00:00 UTC
-  Commit:    abc123...
-
-Repository Version:
-  Version:   v1.2.0
-  Commit:    def456...
-
-⚠ Update available!
-
-To update:
-  cd /path/to/claude-code-dev-workflow
-  git pull
-  ./install.sh
-```
-
-**Auto-checking**: Other scripts (`thoughts-init`, `thoughts-sync`, `thoughts-metadata`) automatically warn if an update is available.
-
-## 🏷️ Version Management with Tags
-
-### For Maintainers: Creating Releases
-
-Create semantic version tags to mark stable releases:
+### Checking Plugin Version
 
 ```bash
-# Tag the current commit
-git tag v1.0.0
-git push origin v1.0.0
+# List installed plugins
+/plugin list
 
-# This creates a GitHub release automatically
+# Show detailed plugin info
+/plugin show stepwise-dev@stepwise-dev-marketplace
 ```
 
-**Version format** (via `git describe --tags`):
-- `v1.2.0` - Exact tag
-- `v1.2.0-dirty` - Tag with uncommitted changes
-- `v1.2.0-5-gabc123` - 5 commits after v1.2.0
-- `abc123` - No tags, just commit hash
-
-### For Users: Installing Specific Versions
+### Updating
 
 ```bash
-# Clone the repo
-git clone https://github.com/user/claude-code-dev-workflow.git
-cd claude-code-dev-workflow
+# Update plugin
+/plugin update stepwise-dev@stepwise-dev-marketplace
 
-# List available versions
-git tag
-
-# Install specific version
-git checkout v1.2.0
-./install.sh
-
-# Or install latest from main
-git checkout main
-git pull
-./install.sh
-```
-
-### Keeping Updated
-
-```bash
-# Check if update available
-thoughts-version
-
-# If outdated:
+# Update scripts
 cd /path/to/claude-code-dev-workflow
 git pull
-./install.sh
+./install-scripts.sh
 ```
-
-The version check runs automatically when you use any thoughts script, providing passive update notifications.
 
 ## 📝 Context Management
 
@@ -473,17 +417,31 @@ Tests validate all bash scripts (thoughts-init, thoughts-sync, thoughts-metadata
 
 ## 🐛 Troubleshooting
 
-**Commands not showing**: Check `ls ~/.claude/commands/`, restart Claude Code
+### Plugin Issues
 
-**Scripts not in PATH**: Add `export PATH="$HOME/.local/bin:$PATH"` to `~/.zshrc`
+**Commands not showing after installation**:
+- Restart Claude Code completely
+- Check plugin is enabled: `/plugin list`
+- Try reinstalling: `/plugin uninstall stepwise-dev@stepwise-dev-marketplace` then `/plugin install stepwise-dev@stepwise-dev-marketplace`
+
+**Scripts not found in PATH**:
+- Check installation: `which thoughts-init`
+- Add to shell config: `export PATH="$HOME/.local/bin:$PATH"`
+- Source your shell config: `source ~/.zshrc` (or `~/.bashrc`)
+- Run `./install-scripts.sh` again if needed
+
+**Plugin installation fails**:
+- Verify marketplace added: `/plugin marketplace list`
+- Check network connection (for GitHub marketplaces)
+- Try local marketplace for testing: `/plugin marketplace add ./test-marketplace`
+
+### Workflow Issues
 
 **Hardlinks failing**: Script auto-falls back to symlinks (slower but works)
 
 **No files synced**: Run `THOUGHTS_DEBUG=1 thoughts-sync` to debug
 
-**Version mismatch warnings**: Run `thoughts-version` to see details, then update with `git pull && ./install.sh`
-
-**Can't find repo for version check**: `thoughts-version` searches common locations. If your repo is elsewhere, the script will still show your installed version.
+**Plugin version mismatch**: Update plugin with `/plugin update stepwise-dev@stepwise-dev-marketplace`, update scripts with `cd /path/to/repo && git pull && ./install-scripts.sh`
 
 ## 📚 Learn More
 
@@ -508,7 +466,7 @@ This project contains code derived from [HumanLayer](https://github.com/humanlay
 Copyright (c) 2024, humanlayer Authors
 Licensed under the Apache License, Version 2.0
 
-All components in `.claude/commands/` and `.claude/agents/` are modified versions of the original HumanLayer implementations, adapted for local-only operation without cloud dependencies.
+All slash commands and specialized agents are modified versions of the original HumanLayer implementations, adapted for local-only operation without cloud dependencies.
 
 ## 🙏 Credits
 

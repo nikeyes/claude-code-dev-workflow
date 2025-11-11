@@ -27,7 +27,7 @@ jobs:
     - name: Make scripts executable
       run: |
         chmod +x bin/*
-        chmod +x install.sh
+        chmod +x install-scripts.sh
         chmod +x test/*.sh
 
     - name: Run shellcheck

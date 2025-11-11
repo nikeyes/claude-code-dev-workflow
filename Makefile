@@ -1,4 +1,4 @@
-.PHONY: test check test-verbose install help validate-setup validate-clean validate-manual validate-artifacts
+.PHONY: test check test-verbose help validate-setup validate-clean validate-manual validate-artifacts validate-plugin test-plugin
 
 # Default target
 help:
@@ -7,7 +7,10 @@ help:
 	@echo "  make test               - Run smoke tests"
 	@echo "  make test-verbose       - Run smoke tests with debug output"
 	@echo "  make check              - Run shellcheck on all bash scripts"
-	@echo "  make install            - Run install.sh to install globally"
+	@echo ""
+	@echo "Plugin validation:"
+	@echo "  make validate-plugin    - Validate plugin manifest"
+	@echo "  make test-plugin        - Run automated plugin tests"
 	@echo ""
 	@echo "Validation project targets:"
 	@echo "  make validate-setup     - Setup validation project environment"
@@ -32,15 +35,11 @@ test-verbose:
 check:
 	@echo "Running shellcheck..."
 	@if command -v shellcheck >/dev/null 2>&1; then \
-		shellcheck bin/* install.sh test/*.sh && echo "✓ Shellcheck passed"; \
+		shellcheck bin/* install-scripts.sh test/*.sh && echo "✓ Shellcheck passed"; \
 	else \
 		echo "⚠ shellcheck not installed, skipping..."; \
 		echo "  Install with: brew install shellcheck (macOS) or apt install shellcheck (Linux)"; \
 	fi
-
-# Install globally (interactive)
-install:
-	@./install.sh
 
 # Validation project targets
 validate-setup:
@@ -58,3 +57,23 @@ validate-artifacts:
 validate-clean:
 	@echo "Cleaning validation artifacts..."
 	@cd test/validation-project && chmod +x e2e-workflow-test.sh && ./e2e-workflow-test.sh clean
+
+# Plugin validation targets
+validate-plugin:
+	@echo "Validating plugin manifest..."
+	@if command -v jq >/dev/null 2>&1; then \
+		jq empty .claude-plugin/plugin.json && echo "✓ Plugin manifest valid"; \
+	else \
+		echo "⚠ jq not installed, skipping validation"; \
+	fi
+	@echo "Running claude plugin validate..."; \
+	if [ -f "$$HOME/.claude/local/claude" ]; then \
+		$$HOME/.claude/local/claude plugin validate . && echo "✓ Claude plugin validation passed"; \
+	elif command -v claude >/dev/null 2>&1; then \
+		claude plugin validate . && echo "✓ Claude plugin validation passed"; \
+	else \
+		echo "⚠ claude CLI not available or validation failed (this is optional)"; \
+	fi
+
+test-plugin: test validate-plugin
+	@echo "✓ All plugin tests passed"

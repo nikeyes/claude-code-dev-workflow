@@ -1,0 +1,19 @@
+{
+  "name": "stepwise-dev",
+  "version": "0.0.1",
+  "description": "Research → Plan → Implement → Validate workflow for Claude Code with local thoughts/ management",
+  "author": {
+    "name": "Jorge Castro",
+    "email": "nikey_es@yahoo.es"
+  },
+  "homepage": "https://github.com/nikey-es/claude-code-dev-workflow",
+  "repository": "https://github.com/nikey-es/claude-code-dev-workflow",
+  "license": "Apache-2.0",
+  "keywords": [
+    "workflow",
+    "development",
+    "planning",
+    "research",
+    "tdd"
+  ]
+}

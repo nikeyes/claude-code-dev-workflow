@@ -8,47 +8,68 @@ This is a **workflow tooling project for Claude Code itself**, not a traditional
 
 The workflow operates entirely locally without cloud dependencies and uses a `thoughts/` directory system with hardlinks for efficient searching.
 
+## Plugin Structure
+
+This project is distributed as a Claude Code plugin:
+
+**Plugin Name**: `stepwise-dev`
+
+**Components**:
+- 6 slash commands in `commands/` (at plugin root)
+- 5 specialized agents in `agents/` (at plugin root)
+- 3 bash scripts in `bin/` (require separate installation)
+
+**Installation**:
+- Plugin: Via `/plugin install stepwise-dev@stepwise-dev-marketplace`
+- Scripts: Via `./install-scripts.sh` (one-time, adds to `~/.local/bin/`)
+
+**Note**: Commands and agents are at the plugin root, NOT in a `.claude/` subdirectory.
+This follows Claude Code plugin conventions and prevents confusion with the actual
+`~/.claude/` installation directory.
+
+See README.md for detailed installation instructions.
+
 ## Project Structure
 
 ```
-.claude/
-├── commands/          # 6 slash commands (markdown files)
-│   ├── research_codebase.md
-│   ├── create_plan.md
-│   ├── iterate_plan.md
-│   ├── implement_plan.md
-│   ├── validate_plan.md
-│   └── commit.md
-└── agents/            # 5 specialized agents (markdown files)
-    ├── codebase-locator.md
-    ├── codebase-analyzer.md
-    ├── codebase-pattern-finder.md
-    ├── thoughts-locator.md
-    └── thoughts-analyzer.md
+commands/              # 6 slash commands (markdown files)
+├── research_codebase.md
+├── create_plan.md
+├── iterate_plan.md
+├── implement_plan.md
+├── validate_plan.md
+└── commit.md
 
-bin/                   # 4 bash scripts for thoughts/ management
+agents/                # 5 specialized agents (markdown files)
+├── codebase-locator.md
+├── codebase-analyzer.md
+├── codebase-pattern-finder.md
+├── thoughts-locator.md
+└── thoughts-analyzer.md
+
+bin/                   # 3 bash scripts for thoughts/ management
 ├── thoughts-init      # Initialize thoughts/ structure
 ├── thoughts-sync      # Sync hardlinks to searchable/
-├── thoughts-metadata  # Generate git metadata
-└── thoughts-version   # Check installed version
+└── thoughts-metadata  # Generate git metadata
 
-install.sh            # Installer script (copies to ~/.claude/)
+install-scripts.sh    # Script installer (copies to ~/.local/bin/)
+test/                 # Automated bash tests
 ```
 
 ## Installation & Testing Workflow
 
 ### Installation
 ```bash
-# Install to global ~/.claude/ directory
-./install.sh
+# Install plugin in Claude Code
+/plugin marketplace add nikey-es/claude-code-dev-workflow
+/plugin install stepwise-dev@stepwise-dev-marketplace
+# Restart Claude Code
+
+# Install scripts to PATH
+./install-scripts.sh
 
 # Verify installation
-ls ~/.claude/commands/
-ls ~/.claude/agents/
-which thoughts-init thoughts-sync thoughts-metadata thoughts-version
-
-# Check version
-thoughts-version
+which thoughts-init thoughts-sync thoughts-metadata
 ```
 
 ### Testing Changes
@@ -74,11 +95,10 @@ make check
 - ✅ `bin/thoughts-init` - Directory creation, gitignore, README generation
 - ✅ `bin/thoughts-sync` - Hardlink creation, orphan cleanup
 - ✅ `bin/thoughts-metadata` - Metadata generation
-- ✅ `bin/thoughts-version` - Version checking and comparison
-- ✅ `install.sh` - File installation, backup creation, VERSION file generation
+- ✅ `install-scripts.sh` - Script installation to ~/.local/bin/
 
 **Test files:**
-- `test/smoke-test.sh` - Main integration tests (7 test groups, 51 assertions)
+- `test/smoke-test.sh` - Main integration tests (7 test groups)
 - `test/test-helpers.sh` - Assertion functions and utilities
 - `Makefile` - Test runner targets
 
@@ -87,8 +107,8 @@ make check
 Commands and agents require manual validation in Claude Code:
 
 1. **Test slash commands in Claude Code:**
-   - Commands are loaded from `~/.claude/commands/`
-   - After modifying a command file, restart Claude Code or start a new conversation
+   - Commands are loaded via the plugin
+   - After modifying a command file, restart Claude Code or use `/plugin reload`
    - Test by invoking: `/research_codebase`, `/create_plan`, etc.
 
 2. **Validate agents:**
@@ -98,11 +118,16 @@ Commands and agents require manual validation in Claude Code:
 
 ### Iterative Development Cycle
 
-When modifying commands/agents/scripts:
+When modifying **commands/agents**:
+1. **Edit** the file in `commands/` or `agents/`
+2. **Test locally** via plugin development mode or by reinstalling the plugin
+3. **Validate** in a sample project
+4. **Iterate** based on results
 
-1. **Edit** the file in this repo
-2. **Re-run** `./install.sh` (or manually copy to `~/.claude/`)
-3. **Test** in a sample project
+When modifying **scripts**:
+1. **Edit** the file in `bin/`
+2. **Re-run** `./install-scripts.sh`
+3. **Test** with the script directly
 4. **Iterate** based on results
 
 ## Architecture
@@ -148,60 +173,29 @@ thoughts/
 **Username**: Set `export THOUGHTS_USER=your_name` (default: `nikey_es`)
 **PATH**: Add `export PATH="$HOME/.local/bin:$PATH"` to shell config
 
-### Version Tracking
+### Version Management
 
-The workflow includes built-in version tracking to help teams stay synchronized:
+**Plugin version:**
+- Managed by Claude Code plugin system
+- Check with `/plugin list` or `/plugin show stepwise-dev@stepwise-dev-marketplace`
+- Update with `/plugin update stepwise-dev@stepwise-dev-marketplace`
 
-**How it works:**
-- `install.sh` creates `~/.claude/claude-code-dev-workflow-version` with version info (version tag/commit, install date, commit hash)
-- `thoughts-version` compares your installed version with the repository version
-- Other scripts (`thoughts-init`, `thoughts-sync`, `thoughts-metadata`) automatically check for updates and warn if outdated
-
-**Usage:**
-```bash
-# Check your installed version
-thoughts-version
-
-# Example output (up-to-date):
-# Installed Version:
-#   Version:   v1.2.0
-#   Installed: 2025-11-10 14:30:00 UTC
-#   Commit:    abc123def456
-#
-# Repository Version:
-#   Version:   v1.2.0
-#   Commit:    abc123def456
-# ✓ Up to date!
-
-# Example output (outdated):
-# ⚠ Update available!
-# To update:
-#   cd /path/to/claude-code-dev-workflow
-#   git pull
-#   ./install.sh
-```
-
-**Creating releases with tags:**
-```bash
-# Tag a new release
-git tag v1.2.0
-git push origin v1.2.0
-
-# Install from specific tag
-git checkout v1.2.0
-./install.sh
-```
-
-**Version format:**
-- With tags: `v1.2.0`, `v1.2.0-dirty` (local changes)
-- Between tags: `v1.2.0-5-gabc123` (5 commits after v1.2.0)
-- Without tags: `abc123` (commit hash only)
+**Scripts:**
+- Updated independently via `./install-scripts.sh`
+- No built-in version checking (scripts are simple utilities)
 
 ## Development Workflow
 
-1. Edit file (command/agent/script)
-2. Run `./install.sh` or `make test`
+For **scripts**:
+1. Edit file in `bin/`
+2. Run `./install-scripts.sh` or `make test`
 3. Test changes
+4. Iterate
+
+For **commands/agents**:
+1. Edit file in `commands/` or `agents/`
+2. Test via plugin reload or development mode
+3. Validate in Claude Code
 4. Iterate
 
 ## Attribution
