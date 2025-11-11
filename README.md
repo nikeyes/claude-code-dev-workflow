@@ -60,7 +60,7 @@ This workflow implements the **Research → Plan → Implement → Validate** cy
 
 ```bash
 # Add marketplace from GitHub
-/plugin marketplace add nikey-es/claude-code-dev-workflow
+/plugin marketplace add nikeyes/claude-code-dev-workflow
 
 # Install plugin
 /plugin install stepwise-dev@stepwise-dev-marketplace

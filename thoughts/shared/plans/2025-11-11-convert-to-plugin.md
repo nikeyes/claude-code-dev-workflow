@@ -322,8 +322,8 @@ Establish the plugin metadata by creating the required manifest file. Commands a
     "name": "Jorge Castro",
     "email": "nikey_es@yahoo.es"
   },
-  "homepage": "https://github.com/nikey-es/claude-code-dev-workflow",
-  "repository": "https://github.com/nikey-es/claude-code-dev-workflow",
+  "homepage": "https://github.com/nikeyes/claude-code-dev-workflow",
+  "repository": "https://github.com/nikeyes/claude-code-dev-workflow",
   "license": "Apache-2.0",
   "keywords": [
     "workflow",
@@ -361,13 +361,13 @@ Add before "Quick Install":
 
 ```bash
 # Add marketplace from GitHub
-/plugin marketplace add nikey-es/claude-code-dev-workflow
+/plugin marketplace add nikeyes/claude-code-dev-workflow
 
 # Install plugin
 /plugin install workflow-dev@workflow-dev-marketplace
 
 # Then install helper scripts (one-time setup)
-git clone https://github.com/nikey-es/claude-code-dev-workflow.git
+git clone https://github.com/nikeyes/claude-code-dev-workflow.git
 cd claude-code-dev-workflow
 ./install-scripts.sh
 ```
@@ -375,7 +375,7 @@ cd claude-code-dev-workflow
 ### Method 2: Manual Installation
 
 ```bash
-git clone https://github.com/nikey-es/claude-code-dev-workflow.git
+git clone https://github.com/nikeyes/claude-code-dev-workflow.git
 cd claude-code-dev-workflow
 ./install.sh
 ```
@@ -786,13 +786,13 @@ Prepare the plugin for distribution via GitHub marketplace for team and communit
 
 ```bash
 # Add marketplace from GitHub
-/plugin marketplace add nikey-es/claude-code-dev-workflow
+/plugin marketplace add nikeyes/claude-code-dev-workflow
 
 # Install plugin
 /plugin install workflow-dev@workflow-dev-marketplace
 
 # Install helper scripts (one-time)
-git clone https://github.com/nikey-es/claude-code-dev-workflow.git
+git clone https://github.com/nikeyes/claude-code-dev-workflow.git
 cd claude-code-dev-workflow
 ./install-scripts.sh
 ```
@@ -814,7 +814,7 @@ This repository hosts the `workflow-dev` plugin for Claude Code.
 Add the marketplace to your Claude Code:
 
 \`\`\`bash
-/plugin marketplace add nikey-es/claude-code-dev-workflow
+/plugin marketplace add nikeyes/claude-code-dev-workflow
 \`\`\`
 
 Then install the plugin:
@@ -828,7 +828,7 @@ Then install the plugin:
 The plugin includes 4 helper scripts for thoughts/ management. Install them separately:
 
 \`\`\`bash
-git clone https://github.com/nikey-es/claude-code-dev-workflow.git
+git clone https://github.com/nikeyes/claude-code-dev-workflow.git
 cd claude-code-dev-workflow
 ./install-scripts.sh
 \`\`\`
@@ -869,8 +869,8 @@ See [test/PLUGIN_TESTING.md](test/PLUGIN_TESTING.md) for manual testing procedur
 
 ## Support
 
-- Issues: https://github.com/nikey-es/claude-code-dev-workflow/issues
-- Documentation: https://github.com/nikey-es/claude-code-dev-workflow/blob/main/README.md
+- Issues: https://github.com/nikeyes/claude-code-dev-workflow/issues
+- Documentation: https://github.com/nikeyes/claude-code-dev-workflow/blob/main/README.md
 \`\`\`
 ```
 
@@ -916,7 +916,7 @@ jobs:
 - [ ] GitHub Actions workflow syntax valid (if created)
 
 #### Manual Verification:
-- [ ] Can add marketplace from GitHub: `/plugin marketplace add nikey-es/claude-code-dev-workflow`
+- [ ] Can add marketplace from GitHub: `/plugin marketplace add nikeyes/claude-code-dev-workflow`
 - [ ] Marketplace appears in listing
 - [ ] Can install plugin from GitHub marketplace
 - [ ] Plugin README displays correctly on GitHub
@@ -946,7 +946,7 @@ Test the complete plugin lifecycle before release.
 - [ ] Git available
 
 ### Installation Steps
-1. [ ] Add marketplace: `/plugin marketplace add nikey-es/claude-code-dev-workflow`
+1. [ ] Add marketplace: `/plugin marketplace add nikeyes/claude-code-dev-workflow`
 2. [ ] Verify marketplace appears: `/plugin marketplace list`
 3. [ ] Install plugin: `/plugin install workflow-dev@workflow-dev-marketplace`
 4. [ ] Restart Claude Code
@@ -1062,7 +1062,7 @@ rm ~/.claude/agents/thoughts-*.md
 
 ### 3. Install Plugin
 ```bash
-/plugin marketplace add nikey-es/claude-code-dev-workflow
+/plugin marketplace add nikeyes/claude-code-dev-workflow
 /plugin install workflow-dev@workflow-dev-marketplace
 ```
 
@@ -1091,7 +1091,7 @@ thoughts-version  # Should show version
 ```markdown
 # Claude Code Workflow - Local Setup
 
-[![Plugin Available](https://img.shields.io/badge/Claude_Code-Plugin_Available-blue)](https://github.com/nikey-es/claude-code-dev-workflow)
+[![Plugin Available](https://img.shields.io/badge/Claude_Code-Plugin_Available-blue)](https://github.com/nikeyes/claude-code-dev-workflow)
 [![License](https://img.shields.io/badge/License-Apache_2.0-green.svg)](LICENSE)
 [![Tests](https://img.shields.io/badge/Tests-Passing-brightgreen)](test/)
 

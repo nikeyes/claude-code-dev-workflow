@@ -61,7 +61,7 @@ test/                 # Automated bash tests
 ### Installation
 ```bash
 # Install plugin in Claude Code
-/plugin marketplace add nikey-es/claude-code-dev-workflow
+/plugin marketplace add nikeyes/claude-code-dev-workflow
 /plugin install stepwise-dev@stepwise-dev-marketplace
 # Restart Claude Code
 
