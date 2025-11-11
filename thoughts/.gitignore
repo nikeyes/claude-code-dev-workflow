@@ -1,0 +1,5 @@
+# Ignore searchable/ directory (it contains hardlinks)
+searchable/
+
+# But track the structure
+!searchable/.gitkeep
