@@ -1,6 +1,6 @@
 # Claude Code Workflow - Local Setup
 
-[![Plugin Available](https://img.shields.io/badge/Claude_Code-Plugin_Available-blue)](https://github.com/nikey-es/claude-code-dev-workflow)
+[![Plugin Available](https://img.shields.io/badge/Claude_Code-Plugin_Available-blue)](https://github.com/nikeyes/claude-code-dev-workflow)
 [![License](https://img.shields.io/badge/License-Apache_2.0-green.svg)](LICENSE)
 [![Tests](https://img.shields.io/badge/Tests-Passing-brightgreen)](test/)
 
@@ -73,7 +73,7 @@ Restart Claude Code after installation.
 The plugin installs commands and agents automatically. You also need to install helper scripts to your PATH:
 
 ```bash
-git clone https://github.com/nikey-es/claude-code-dev-workflow.git
+git clone https://github.com/nikeyes/claude-code-dev-workflow.git
 cd claude-code-dev-workflow
 ./install-scripts.sh
 ```
