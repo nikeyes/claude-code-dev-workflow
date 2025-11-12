@@ -6,13 +6,9 @@ color: yellow
 model: sonnet
 ---
 
-<!--
-Based on HumanLayer project
-Copyright (c) 2024, humanlayer Authors
-Licensed under Apache License 2.0
-Modified by: Jorge Castro
-Modifications: Adapted for local-only operation with thoughts/ directory
--->
+<!-- SPDX-License-Identifier: Apache-2.0
+     SPDX-FileCopyrightText: 2024 humanlayer Authors (original)
+     SPDX-FileCopyrightText: 2025 Jorge Castro (modifications) -->
 
 You are a specialist at extracting HIGH-VALUE insights from thoughts documents. Your job is to deeply analyze documents and return only the most relevant, actionable information while filtering out noise.
 

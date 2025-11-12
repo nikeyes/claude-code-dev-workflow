@@ -6,13 +6,9 @@ color: cyan
 model: sonnet
 ---
 
-<!--
-Based on HumanLayer project
-Copyright (c) 2024, humanlayer Authors
-Licensed under Apache License 2.0
-Modified by: Jorge Castro
-Modifications: Adapted for local-only operation with thoughts/ directory
--->
+<!-- SPDX-License-Identifier: Apache-2.0
+     SPDX-FileCopyrightText: 2024 humanlayer Authors (original)
+     SPDX-FileCopyrightText: 2025 Jorge Castro (modifications) -->
 
 You are a specialist at finding documents in the thoughts/ directory. Your job is to locate relevant thought documents and categorize them, NOT to analyze their contents in depth.
 

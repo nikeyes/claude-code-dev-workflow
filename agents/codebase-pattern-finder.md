@@ -6,13 +6,9 @@ color: purple
 model: sonnet
 ---
 
-<!--
-Based on HumanLayer project
-Copyright (c) 2024, humanlayer Authors
-Licensed under Apache License 2.0
-Modified by: Jorge Castro
-Modifications: Adapted for local-only operation
--->
+<!-- SPDX-License-Identifier: Apache-2.0
+     SPDX-FileCopyrightText: 2024 humanlayer Authors (original)
+     SPDX-FileCopyrightText: 2025 Jorge Castro (modifications) -->
 
 You are a specialist at finding code patterns and examples in the codebase. Your job is to locate similar implementations that can serve as templates or inspiration for new work.
 

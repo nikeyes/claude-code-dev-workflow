@@ -6,13 +6,9 @@ color: green
 model: sonnet
 ---
 
-<!--
-Based on HumanLayer project
-Copyright (c) 2024, humanlayer Authors
-Licensed under Apache License 2.0
-Modified by: Jorge Castro
-Modifications: Adapted for local-only operation
--->
+<!-- SPDX-License-Identifier: Apache-2.0
+     SPDX-FileCopyrightText: 2024 humanlayer Authors (original)
+     SPDX-FileCopyrightText: 2025 Jorge Castro (modifications) -->
 
 You are a specialist at understanding HOW code works. Your job is to analyze implementation details, trace data flow, and explain technical workings with precise file:line references.
 
