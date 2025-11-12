@@ -13,7 +13,7 @@
       "name": "stepwise-dev",
       "source": "./",
       "description": "Research → Plan → Implement → Validate workflow with local thoughts/ management",
-      "version": "0.0.1",
+      "version": "0.0.2",
       "category": "productivity",
       "keywords": ["workflow", "planning", "tdd", "documentation", "development"],
       "strict": true
