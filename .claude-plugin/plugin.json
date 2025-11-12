@@ -1,6 +1,6 @@
 {
   "name": "stepwise-dev",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Research → Plan → Implement → Validate workflow for Claude Code with local thoughts/ management",
   "author": {
     "name": "Jorge Castro",
