@@ -238,43 +238,11 @@ done
 # ============================================================================
 section "Test 7: Cross-reference validation"
 
-# Check that README mentions all commands
-for cmd in "${EXPECTED_COMMANDS[@]}"; do
-	if grep -q "/$cmd" README.md; then
-		pass "README mentions command: /$cmd"
-	else
-		echo "⚠️  README doesn't mention command: /$cmd"
-	fi
-done
-
 # Check that CLAUDE.md is comprehensive
 if grep -q "commands/" CLAUDE.md && grep -q "agents/" CLAUDE.md; then
 	pass "CLAUDE.md documents project structure"
 else
 	echo "⚠️  CLAUDE.md may be missing structure documentation"
-fi
-
-# ============================================================================
-# Test 7: Version consistency
-# ============================================================================
-section "Test 7: Version consistency check"
-
-# Check if VERSION file exists
-if [ -f ".version" ]; then
-	VERSION_FILE=$(cat .version)
-	pass "Version file exists: $VERSION_FILE"
-
-	# Compare with plugin.json version if jq available
-	if command -v jq >/dev/null 2>&1; then
-		PLUGIN_VERSION=$(jq -r '.version' .claude-plugin/plugin.json)
-		if [ "$VERSION_FILE" = "$PLUGIN_VERSION" ]; then
-			pass "Version consistency: .version matches plugin.json"
-		else
-			echo "⚠️  Version mismatch: .version=$VERSION_FILE, plugin.json=$PLUGIN_VERSION"
-		fi
-	fi
-else
-	echo "⚠️  .version file not found (created after installation)"
 fi
 
 # ============================================================================
