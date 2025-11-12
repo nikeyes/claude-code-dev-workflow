@@ -107,10 +107,18 @@ When all phases are complete:
    - Ensure all checkboxes are marked
    - Note any deviations from the original plan
 
-3. **Sync the plan**:
+3. **Ensure thoughts directory is initialized:**
+   - Check if `thoughts/` directory exists
+   - If it doesn't exist, use the thoughts-management Skill to initialize it:
+     ```bash
+     bash ${CLAUDE_PLUGIN_ROOT}/skills/thoughts-management/scripts/thoughts-init
+     ```
+   - This ensures the directory structure is properly set up
+
+4. **Sync the plan**:
    - Use the thoughts-management Skill to sync the updated plan
 
-4. **Inform the user**:
+5. **Inform the user**:
    ```
    ✓ Implementation complete for: [Plan Name]
 

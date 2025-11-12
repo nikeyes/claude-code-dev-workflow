@@ -176,7 +176,15 @@ Once aligned on approach:
 
 After structure approval:
 
-1. **Write the plan** to `thoughts/shared/plans/YYYY-MM-DD-ENG-XXXX-description.md`
+1. **Initialize thoughts directory if needed:**
+   - Check if `thoughts/` directory exists
+   - If it doesn't exist, use the thoughts-management Skill to initialize it:
+     ```bash
+     bash ${CLAUDE_PLUGIN_ROOT}/skills/thoughts-management/scripts/thoughts-init
+     ```
+   - This creates the complete directory structure for organizing plans
+
+2. **Write the plan** to `thoughts/shared/plans/YYYY-MM-DD-ENG-XXXX-description.md`
    - Format: `YYYY-MM-DD-ENG-XXXX-description.md` where:
      - YYYY-MM-DD is today's date
      - ENG-XXXX is the ticket number (omit if no ticket)
@@ -184,7 +192,8 @@ After structure approval:
    - Examples:
      - With ticket: `2025-01-08-ENG-1478-parent-child-tracking.md`
      - Without ticket: `2025-01-08-improve-error-handling.md`
-2. **Use this template structure**:
+
+3. **Use this template structure**:
 
 ````markdown
 # [Feature/Task Name] Implementation Plan

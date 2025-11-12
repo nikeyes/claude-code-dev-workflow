@@ -178,10 +178,18 @@ Remember: Good validation catches issues before they reach production. Be constr
 
 After validation is complete:
 
-1. **Sync validation results** (if documented):
+1. **Ensure thoughts directory is initialized:**
+   - Check if `thoughts/` directory exists
+   - If it doesn't exist, use the thoughts-management Skill to initialize it:
+     ```bash
+     bash ${CLAUDE_PLUGIN_ROOT}/skills/thoughts-management/scripts/thoughts-init
+     ```
+   - This ensures the directory structure is properly set up
+
+2. **Sync validation results** (if documented):
    - Use the thoughts-management Skill to sync the validation results
 
-2. **Inform the user**:
+3. **Inform the user**:
    ```
    ✓ Validation complete for: [Plan Name]
 

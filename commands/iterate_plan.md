@@ -125,19 +125,27 @@ Get user confirmation before proceeding.
 
 ### Step 4: Update the Plan
 
-1. **Make focused, precise edits** to the existing plan:
+1. **Ensure thoughts directory is initialized:**
+   - Check if `thoughts/` directory exists
+   - If it doesn't exist, use the thoughts-management Skill to initialize it:
+     ```bash
+     bash ${CLAUDE_PLUGIN_ROOT}/skills/thoughts-management/scripts/thoughts-init
+     ```
+   - This ensures the directory structure is properly set up
+
+2. **Make focused, precise edits** to the existing plan:
    - Use the Edit tool for surgical changes
    - Maintain the existing structure unless explicitly changing it
    - Keep all file:line references accurate
    - Update success criteria if needed
 
-2. **Ensure consistency**:
+3. **Ensure consistency**:
    - If adding a new phase, ensure it follows the existing pattern
    - If modifying scope, update "What We're NOT Doing" section
    - If changing approach, update "Implementation Approach" section
    - Maintain the distinction between automated vs manual success criteria
 
-3. **Preserve quality standards**:
+4. **Preserve quality standards**:
    - Include specific file paths and line numbers for new content
    - Write measurable success criteria
    - Use `make` commands for automated verification

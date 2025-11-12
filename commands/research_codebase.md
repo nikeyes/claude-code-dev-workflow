@@ -86,7 +86,15 @@ Then wait for the user's research query.
    - Highlight patterns, connections, and architectural decisions
    - Answer the user's specific questions with concrete evidence
 
-5. **Gather metadata for the research document:**
+5. **Initialize thoughts directory if needed:**
+   - Check if `thoughts/` directory exists
+   - If it doesn't exist, use the thoughts-management Skill to initialize it:
+     ```bash
+     bash ${CLAUDE_PLUGIN_ROOT}/skills/thoughts-management/scripts/thoughts-init
+     ```
+   - This creates the complete directory structure for organizing research documents
+
+6. **Gather metadata for the research document:**
    - Use the thoughts-management Skill to generate all relevant metadata
    - Filename: `thoughts/shared/research/YYYY-MM-DD-ENG-XXXX-description.md`
      - Format: `YYYY-MM-DD-ENG-XXXX-description.md` where:
@@ -97,8 +105,8 @@ Then wait for the user's research query.
        - With ticket: `2025-01-08-ENG-1478-parent-child-tracking.md`
        - Without ticket: `2025-01-08-authentication-flow.md`
 
-6. **Generate research document:**
-   - Use the metadata gathered in step 4
+7. **Generate research document:**
+   - Use the metadata gathered in step 6
    - Structure the document with YAML frontmatter followed by content:
      ```markdown
      ---
@@ -116,10 +124,10 @@ Then wait for the user's research query.
 
      # Research: [User's Question/Topic]
 
-     **Date**: [Current date and time with timezone from step 4]
+     **Date**: [Current date and time with timezone from step 6]
      **Researcher**: [Researcher name from thoughts status]
-     **Git Commit**: [Current commit hash from step 4]
-     **Branch**: [Current branch name from step 4]
+     **Git Commit**: [Current commit hash from step 6]
+     **Branch**: [Current branch name from step 6]
      **Repository**: [Repository name]
 
      ## Research Question
@@ -158,14 +166,14 @@ Then wait for the user's research query.
      [Any areas that need further investigation]
      ```
 
-7. **Add GitHub permalinks (if applicable):**
+8. **Add GitHub permalinks (if applicable):**
    - Check if on main branch or if commit is pushed: `git branch --show-current` and `git status`
    - If on main/master or pushed, generate GitHub permalinks:
      - Get repo info: `gh repo view --json owner,name`
      - Create permalinks: `https://github.com/{owner}/{repo}/blob/{commit}/{file}#L{line}`
    - Replace local file references with permalinks in the document
 
-8. **Sync and present findings:**
+9. **Sync and present findings:**
    - Use the thoughts-management Skill to sync the thoughts directory
    - Present a concise summary of findings to the user
    - Include key file references for easy navigation
