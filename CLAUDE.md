@@ -17,11 +17,11 @@ This project is distributed as a Claude Code plugin:
 **Components**:
 - 6 slash commands in `commands/` (at plugin root)
 - 5 specialized agents in `agents/` (at plugin root)
-- 3 bash scripts in `bin/` (require separate installation)
+- 1 Agent Skill in `skills/` (for thoughts/ management)
 
 **Installation**:
 - Plugin: Via `/plugin install stepwise-dev@stepwise-dev-marketplace`
-- Scripts: Via `./install-scripts.sh` (one-time, adds to `~/.local/bin/`)
+- No additional steps required - the Skill is included in the plugin
 
 **Note**: Commands and agents are at the plugin root, NOT in a `.claude/` subdirectory.
 This follows Claude Code plugin conventions and prevents confusion with the actual
@@ -47,13 +47,15 @@ agents/                # 5 specialized agents (markdown files)
 ├── thoughts-locator.md
 └── thoughts-analyzer.md
 
-bin/                   # 3 bash scripts for thoughts/ management
-├── thoughts-init      # Initialize thoughts/ structure
-├── thoughts-sync      # Sync hardlinks to searchable/
-└── thoughts-metadata  # Generate git metadata
+skills/                # 1 Agent Skill
+└── thoughts-management/
+    ├── SKILL.md       # Skill instructions
+    └── scripts/       # Bash scripts for thoughts/ operations
+        ├── thoughts-init
+        ├── thoughts-sync
+        └── thoughts-metadata
 
-install-scripts.sh    # Script installer (copies to ~/.local/bin/)
-test/                 # Automated bash tests
+test/                  # Automated bash tests (for development)
 ```
 
 ## Installation & Testing Workflow
@@ -65,11 +67,8 @@ test/                 # Automated bash tests
 /plugin install stepwise-dev@stepwise-dev-marketplace
 # Restart Claude Code
 
-# Install scripts to PATH
-./install-scripts.sh
-
-# Verify installation
-which thoughts-init thoughts-sync thoughts-metadata
+# That's it! The thoughts-management Skill is included in the plugin
+# No additional installation steps required
 ```
 
 ### Testing Changes
@@ -92,19 +91,18 @@ make check
 ```
 
 **What's covered:**
-- ✅ `bin/thoughts-init` - Directory creation, gitignore, README generation
-- ✅ `bin/thoughts-sync` - Hardlink creation, orphan cleanup
-- ✅ `bin/thoughts-metadata` - Metadata generation
-- ✅ `install-scripts.sh` - Script installation to ~/.local/bin/
+- ✅ `skills/thoughts-management/scripts/thoughts-init` - Directory creation, gitignore, README generation
+- ✅ `skills/thoughts-management/scripts/thoughts-sync` - Hardlink creation, orphan cleanup
+- ✅ `skills/thoughts-management/scripts/thoughts-metadata` - Metadata generation
 
 **Test files:**
 - `test/smoke-test.sh` - Main integration tests (7 test groups)
 - `test/test-helpers.sh` - Assertion functions and utilities
 - `Makefile` - Test runner targets
 
-#### 2. Manual Testing (for commands/agents)
+#### 2. Manual Testing (for commands/agents/skills)
 
-Commands and agents require manual validation in Claude Code:
+Commands, agents, and skills require manual validation in Claude Code:
 
 1. **Test slash commands in Claude Code:**
    - Commands are loaded via the plugin
@@ -116,18 +114,23 @@ Commands and agents require manual validation in Claude Code:
    - Test by running commands that use them (e.g., `/research_codebase` spawns `codebase-locator`)
    - Check agent behavior in Claude Code's task output
 
+3. **Test the thoughts-management Skill:**
+   - The Skill activates automatically when Claude needs to manage thoughts/
+   - Test by creating research documents or plans
+   - Verify Claude calls the Skill to sync and gather metadata
+
 ### Iterative Development Cycle
 
-When modifying **commands/agents**:
-1. **Edit** the file in `commands/` or `agents/`
+When modifying **commands/agents/skills**:
+1. **Edit** the file in `commands/`, `agents/`, or `skills/`
 2. **Test locally** via plugin development mode or by reinstalling the plugin
 3. **Validate** in a sample project
 4. **Iterate** based on results
 
-When modifying **scripts**:
-1. **Edit** the file in `bin/`
-2. **Re-run** `./install-scripts.sh`
-3. **Test** with the script directly
+When modifying **scripts in the Skill**:
+1. **Edit** the file in `skills/thoughts-management/scripts/`
+2. **Reinstall** the plugin or test in development mode
+3. **Test** by triggering the Skill (create research docs, plans, etc.)
 4. **Iterate** based on results
 
 ## Architecture
@@ -144,8 +147,8 @@ Agents are specialized markdown files with:
 - Narrowly-scoped instructions (locate, analyze, or find patterns)
 - Called via `Task` tool by commands
 
-### Thoughts System
-Scripts create a directory structure:
+### Thoughts System & Skill
+The `thoughts-management` Skill provides directory management and automation:
 ```
 thoughts/
 ├── {username}/        # Personal notes (default: nikey_es)
@@ -158,7 +161,7 @@ thoughts/
 └── searchable/        # Hardlinks for fast grep (auto-generated)
 ```
 
-**Key concept:** `thoughts-sync` creates hardlinks from source directories to `searchable/` for efficient grep operations without file duplication.
+**Key concept:** The Skill's `thoughts-sync` script creates hardlinks from source directories to `searchable/` for efficient grep operations without file duplication. Claude automatically invokes the Skill when needed.
 
 ### Workflow Philosophy
 

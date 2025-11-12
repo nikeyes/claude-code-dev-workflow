@@ -179,9 +179,7 @@ Remember: Good validation catches issues before they reach production. Be constr
 After validation is complete:
 
 1. **Sync validation results** (if documented):
-   ```bash
-   thoughts-sync
-   ```
+   - Use the thoughts-management Skill to sync the validation results
 
 2. **Inform the user**:
    ```

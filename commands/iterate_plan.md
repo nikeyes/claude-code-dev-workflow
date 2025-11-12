@@ -146,7 +146,7 @@ Get user confirmation before proceeding.
 ### Step 5: Sync and Review
 
 1. **Sync the updated plan**:
-   - Run `thoughts-sync`
+   - Use the thoughts-management Skill to sync the updated plan
    - This ensures changes are properly indexed
 
 2. **Present the changes made**:

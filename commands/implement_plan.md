@@ -108,9 +108,7 @@ When all phases are complete:
    - Note any deviations from the original plan
 
 3. **Sync the plan**:
-   ```bash
-   thoughts-sync
-   ```
+   - Use the thoughts-management Skill to sync the updated plan
 
 4. **Inform the user**:
    ```

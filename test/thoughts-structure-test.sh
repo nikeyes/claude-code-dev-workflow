@@ -23,8 +23,9 @@ echo "━━━━━━━━━━━━━━━━━━━━━━━━�
 echo "Test directory: $TEST_DIR"
 echo ""
 
-# Ensure scripts are in PATH for testing
-export PATH="$PROJECT_ROOT/bin:$PATH"
+# Use scripts from the Skill directory
+SCRIPTS_DIR="$PROJECT_ROOT/skills/thoughts-management/scripts"
+export PATH="$SCRIPTS_DIR:$PATH"
 
 # ============================================================================
 # Test 1: thoughts-init creates directory structure
@@ -114,77 +115,6 @@ if echo "$output" | grep -qE "[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]
   TESTS_PASSED=$((TESTS_PASSED + 1))
 else
   echo -e "${RED}✗${NC} ISO date format is invalid"
-  TESTS_FAILED=$((TESTS_FAILED + 1))
-fi
-TESTS_RUN=$((TESTS_RUN + 1))
-
-# ============================================================================
-# Test 5: install-scripts.sh installs scripts correctly
-# ============================================================================
-section "Test 5: install-scripts.sh installs scripts correctly"
-
-# Create fake HOME for installation test
-FAKE_HOME="$TEST_DIR/fake-home"
-mkdir -p "$FAKE_HOME"
-
-# Run script installer with auto-yes and fake HOME
-cd "$PROJECT_ROOT"
-HOME="$FAKE_HOME" bash -c "echo 'y' | ./install-scripts.sh > /dev/null 2>&1"
-
-# Check scripts installed
-assert_file_exists "$FAKE_HOME/.local/bin/thoughts-init" "thoughts-init installed"
-assert_file_exists "$FAKE_HOME/.local/bin/thoughts-sync" "thoughts-sync installed"
-assert_file_exists "$FAKE_HOME/.local/bin/thoughts-metadata" "thoughts-metadata installed"
-
-# Check scripts are executable
-assert_executable "$FAKE_HOME/.local/bin/thoughts-init" "thoughts-init is executable"
-assert_executable "$FAKE_HOME/.local/bin/thoughts-sync" "thoughts-sync is executable"
-assert_executable "$FAKE_HOME/.local/bin/thoughts-metadata" "thoughts-metadata is executable"
-
-# ============================================================================
-# Test 6: install-scripts.sh creates backup when scripts exist
-# ============================================================================
-section "Test 6: install-scripts.sh creates backup of existing scripts"
-
-# Create another fake HOME with pre-existing script
-FAKE_HOME2="$TEST_DIR/fake-home2"
-mkdir -p "$FAKE_HOME2/.local/bin"
-echo "OLD SCRIPT" > "$FAKE_HOME2/.local/bin/thoughts-init"
-
-# Run installer again
-cd "$PROJECT_ROOT"
-HOME="$FAKE_HOME2" bash -c "echo 'y' | ./install-scripts.sh > /dev/null 2>&1"
-
-# Check backup directory was created
-backup_dir=$(find "$FAKE_HOME2/.local/bin" -maxdepth 1 -type d -name "backup-*" 2>/dev/null | head -1)
-if [ -n "$backup_dir" ] && [ -d "$backup_dir" ]; then
-  echo -e "${GREEN}✓${NC} backup directory created"
-  TESTS_PASSED=$((TESTS_PASSED + 1))
-else
-  echo -e "${RED}✗${NC} backup directory not created"
-  TESTS_FAILED=$((TESTS_FAILED + 1))
-fi
-TESTS_RUN=$((TESTS_RUN + 1))
-
-# Check old script is in backup
-if [ -n "$backup_dir" ] && [ -f "$backup_dir/thoughts-init" ]; then
-  echo -e "${GREEN}✓${NC} old script backed up"
-  TESTS_PASSED=$((TESTS_PASSED + 1))
-else
-  echo -e "${RED}✗${NC} old script not backed up"
-  TESTS_FAILED=$((TESTS_FAILED + 1))
-fi
-TESTS_RUN=$((TESTS_RUN + 1))
-
-# Check new script is installed
-assert_file_exists "$FAKE_HOME2/.local/bin/thoughts-init" "new script installed"
-
-# Verify new content (should not be "OLD SCRIPT")
-if ! grep -q "OLD SCRIPT" "$FAKE_HOME2/.local/bin/thoughts-init" 2>/dev/null; then
-  echo -e "${GREEN}✓${NC} new script has updated content"
-  TESTS_PASSED=$((TESTS_PASSED + 1))
-else
-  echo -e "${RED}✗${NC} new script still has old content"
   TESTS_FAILED=$((TESTS_FAILED + 1))
 fi
 TESTS_RUN=$((TESTS_RUN + 1))

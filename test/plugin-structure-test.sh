@@ -141,15 +141,14 @@ else
 fi
 
 # ============================================================================
-# Test 4: Bash scripts exist and are executable
+# Test 4: Bash scripts in Skill exist and are executable
 # ============================================================================
-section "Test 4: Bash scripts validation"
+section "Test 4: Skill scripts validation"
 
 EXPECTED_SCRIPTS=(
-	"bin/thoughts-init"
-	"bin/thoughts-sync"
-	"bin/thoughts-metadata"
-	"install-scripts.sh"
+	"skills/thoughts-management/scripts/thoughts-init"
+	"skills/thoughts-management/scripts/thoughts-sync"
+	"skills/thoughts-management/scripts/thoughts-metadata"
 )
 
 # Optional scripts (nice to have but not required)
@@ -190,9 +189,32 @@ if [ ${#OPTIONAL_SCRIPTS[@]} -gt 0 ]; then
 fi
 
 # ============================================================================
-# Test 5: Documentation files exist
+# Test 5: Skill structure validation
 # ============================================================================
-section "Test 5: Documentation validation"
+section "Test 5: Skill validation"
+
+# Check Skill directory exists
+assert_dir_exists "skills/thoughts-management" "Skill directory exists"
+
+# Check SKILL.md exists
+assert_file_exists "skills/thoughts-management/SKILL.md" "SKILL.md exists"
+
+# Check SKILL.md has valid frontmatter
+if grep -q "^---$" "skills/thoughts-management/SKILL.md" && \
+   grep -q "^name: thoughts-management$" "skills/thoughts-management/SKILL.md" && \
+   grep -q "^description:" "skills/thoughts-management/SKILL.md"; then
+	pass "SKILL.md has valid frontmatter"
+else
+	fail "SKILL.md missing valid frontmatter"
+fi
+
+# Check scripts directory exists
+assert_dir_exists "skills/thoughts-management/scripts" "Skill scripts directory exists"
+
+# ============================================================================
+# Test 6: Documentation files exist
+# ============================================================================
+section "Test 6: Documentation validation"
 
 EXPECTED_DOCS=(
 	"README.md"
@@ -212,9 +234,9 @@ for doc in "${EXPECTED_DOCS[@]}"; do
 done
 
 # ============================================================================
-# Test 6: Cross-reference validation
+# Test 7: Cross-reference validation
 # ============================================================================
-section "Test 6: Cross-reference validation"
+section "Test 7: Cross-reference validation"
 
 # Check that README mentions all commands
 for cmd in "${EXPECTED_COMMANDS[@]}"; do
