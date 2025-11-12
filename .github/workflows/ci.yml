@@ -29,8 +29,5 @@ jobs:
         chmod +x skills/thoughts-management/scripts/*
         chmod +x test/*.sh
 
-    - name: Run shellcheck
-      run: make check
-
-    - name: Run tests (verbose mode)
-      run: make test-verbose
+    - name: Run CI validation
+      run: make ci
