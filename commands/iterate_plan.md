@@ -87,8 +87,8 @@ If the user's feedback requires understanding new code patterns or validating as
    - **stepwise-dev:thoughts-analyzer** - To extract insights from documents
 
    **Be EXTREMELY specific about directories**:
-   - If the change involves "WUI", specify `humanlayer-wui/` directory
-   - If it involves "daemon", specify `hld/` directory
+   - If the change involves "frontend" or "web UI", specify `frontend/` or `web/` directory
+   - If it involves "backend" or "API", specify `backend/` or `api/` directory
    - Include full path context in prompts
 
 3. **Read any new files identified by research**:
@@ -225,7 +225,7 @@ When updating success criteria, always maintain the two-category structure:
 
 1. **Automated Verification** (can be run by execution agents):
    - Commands that can be run: `make test`, `npm run lint`, etc.
-   - Prefer `make` commands: `make -C humanlayer-wui check` instead of `cd humanlayer-wui && bun run fmt`
+   - Prefer `make` commands: `make -C frontend check` instead of `cd frontend && npm run fmt`
    - Specific files that should exist
    - Code compilation/type checking
 
