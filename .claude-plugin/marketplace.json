@@ -1,19 +1,19 @@
 {
-  "name": "stepwise-dev-marketplace",
+  "name": "stepwise-dev",
   "owner": {
     "name": "Jorge Castro",
     "email": "nikey_es@yahoo.es"
   },
   "metadata": {
     "description": "Step-by-step development: Research → Plan → Implement → Validate with context control",
-    "version": "0.0.2"
+    "version": "0.0.3"
   },
   "plugins": [
     {
       "name": "stepwise-dev",
       "source": "./",
       "description": "Research → Plan → Implement → Validate workflow with local thoughts/ management",
-      "version": "0.0.2",
+      "version": "0.0.3",
       "category": "productivity",
       "keywords": ["workflow", "planning", "tdd", "documentation", "development"],
       "strict": true

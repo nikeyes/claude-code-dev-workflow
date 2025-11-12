@@ -1,6 +1,6 @@
 # Claude Code Workflow - Local Setup
 
-[![Plugin Available](https://img.shields.io/badge/Claude_Code-Plugin_Available-blue)](https://github.com/nikeyes/claude-code-dev-workflow)
+[![Plugin Available](https://img.shields.io/badge/Claude_Code-Plugin_Available-blue)](https://github.com/nikeyes/stepwise-dev)
 [![License](https://img.shields.io/badge/License-Apache_2.0-green.svg)](LICENSE)
 [![Tests](https://img.shields.io/badge/Tests-Passing-brightgreen)](test/)
 
@@ -60,10 +60,10 @@ This workflow implements the **Research → Plan → Implement → Validate** cy
 
 ```bash
 # Add marketplace from GitHub
-/plugin marketplace add nikeyes/claude-code-dev-workflow
+/plugin marketplace add nikeyes/stepwise-dev
 
 # Install plugin
-/plugin install stepwise-dev@stepwise-dev-marketplace
+/plugin install stepwise-dev@stepwise-dev
 ```
 
 Restart Claude Code after installation.
@@ -73,8 +73,8 @@ Restart Claude Code after installation.
 The plugin installs commands and agents automatically. You also need to install helper scripts to your PATH:
 
 ```bash
-git clone https://github.com/nikeyes/claude-code-dev-workflow.git
-cd claude-code-dev-workflow
+git clone https://github.com/nikeyes/stepwise-dev.git
+cd stepwise-dev
 ./install-scripts.sh
 ```
 
@@ -354,17 +354,17 @@ Used internally by commands to populate frontmatter.
 /plugin list
 
 # Show detailed plugin info
-/plugin show stepwise-dev@stepwise-dev-marketplace
+/plugin show stepwise-dev@stepwise-dev
 ```
 
 ### Updating
 
 ```bash
 # Update plugin
-/plugin update stepwise-dev@stepwise-dev-marketplace
+/plugin update stepwise-dev@stepwise-dev
 
 # Update scripts
-cd /path/to/claude-code-dev-workflow
+cd /path/to/stepwise-dev
 git pull
 ./install-scripts.sh
 ```
@@ -422,7 +422,7 @@ Tests validate all bash scripts (thoughts-init, thoughts-sync, thoughts-metadata
 **Commands not showing after installation**:
 - Restart Claude Code completely
 - Check plugin is enabled: `/plugin list`
-- Try reinstalling: `/plugin uninstall stepwise-dev@stepwise-dev-marketplace` then `/plugin install stepwise-dev@stepwise-dev-marketplace`
+- Try reinstalling: `/plugin uninstall stepwise-dev@stepwise-dev` then `/plugin install stepwise-dev@stepwise-dev`
 
 **Scripts not found in PATH**:
 - Check installation: `which thoughts-init`
@@ -441,7 +441,7 @@ Tests validate all bash scripts (thoughts-init, thoughts-sync, thoughts-metadata
 
 **No files synced**: Run `THOUGHTS_DEBUG=1 thoughts-sync` to debug
 
-**Plugin version mismatch**: Update plugin with `/plugin update stepwise-dev@stepwise-dev-marketplace`, update scripts with `cd /path/to/repo && git pull && ./install-scripts.sh`
+**Plugin version mismatch**: Update plugin with `/plugin update stepwise-dev@stepwise-dev`, update scripts with `cd /path/to/repo && git pull && ./install-scripts.sh`
 
 ## 📚 Learn More
 

@@ -20,7 +20,7 @@ This project is distributed as a Claude Code plugin:
 - 1 Agent Skill in `skills/` (for thoughts/ management)
 
 **Installation**:
-- Plugin: Via `/plugin install stepwise-dev@stepwise-dev-marketplace`
+- Plugin: Via `/plugin install stepwise-dev@stepwise-dev`
 - No additional steps required - the Skill is included in the plugin
 
 **Note**: Commands and agents are at the plugin root, NOT in a `.claude/` subdirectory.
@@ -63,8 +63,8 @@ test/                  # Automated bash tests (for development)
 ### Installation
 ```bash
 # Install plugin in Claude Code
-/plugin marketplace add nikeyes/claude-code-dev-workflow
-/plugin install stepwise-dev@stepwise-dev-marketplace
+/plugin marketplace add nikeyes/stepwise-dev
+/plugin install stepwise-dev@stepwise-dev
 # Restart Claude Code
 
 # That's it! The thoughts-management Skill is included in the plugin
@@ -180,8 +180,8 @@ thoughts/
 
 **Plugin version:**
 - Managed by Claude Code plugin system
-- Check with `/plugin list` or `/plugin show stepwise-dev@stepwise-dev-marketplace`
-- Update with `/plugin update stepwise-dev@stepwise-dev-marketplace`
+- Check with `/plugin list` or `/plugin show stepwise-dev@stepwise-dev`
+- Update with `/plugin update stepwise-dev@stepwise-dev`
 
 **Scripts:**
 - Updated independently via `./install-scripts.sh`
