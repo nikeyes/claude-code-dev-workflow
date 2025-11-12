@@ -4,7 +4,7 @@
 [![License](https://img.shields.io/badge/License-Apache_2.0-green.svg)](LICENSE)
 [![Tests](https://img.shields.io/badge/Tests-Passing-brightgreen)](test/)
 
-A complete workflow system for Claude Code inspired by [Ashley Ha's workflow](https://medium.com/@ashleybcha/i-mastered-the-claude-code-workflow-d7ea726b38fd), adapted to work 100% locally without HumanLayer Cloud dependencies.
+A complete workflow system for Claude Code inspired by [Ashley Ha's workflow](https://medium.com/@ashleyha/i-mastered-the-claude-code-workflow-145d25e502cf), adapted to work 100% locally without HumanLayer Cloud dependencies.
 
 ## 🎯 What This Is
 
