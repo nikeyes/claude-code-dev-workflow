@@ -448,9 +448,9 @@ See [NOTICE](NOTICE) for detailed attribution.
 
 ## 🙏 Credits
 
-- **Ashley Ha** - For documenting and popularizing this workflow
-- **HumanLayer Team** (Dex Horthy et al.) - For creating the original commands and agents
-- **Anthropic** - For Claude Code
+- **[Ashley Ha](https://medium.com/@ashleyha)** - For documenting and popularizing this workflow
+- **HumanLayer Team** ([Dex Horthy](https://x.com/dexhorthy) et al.) - For creating the original commands and agents
+- **Anthropic** - For [Claude Code](https://claude.com/product/claude-code)
 
 ---
 
