@@ -38,8 +38,8 @@ Please provide:
 
 I'll analyze this information and work with you to create a comprehensive plan.
 
-Tip: You can also invoke this command with a ticket file directly: `/create_plan thoughts/nikey_es/tickets/eng_1234.md`
-For deeper analysis, try: `/create_plan think deeply about thoughts/nikey_es/tickets/eng_1234.md`
+Tip: You can also invoke this command with a ticket file directly: `/stepwise-dev:create_plan thoughts/nikey_es/tickets/eng_1234.md`
+For deeper analysis, try: `/stepwise-dev:create_plan think deeply about thoughts/nikey_es/tickets/eng_1234.md`
 ```
 
 Then wait for the user's input.
@@ -308,8 +308,8 @@ After structure approval:
 
    Next steps in the workflow:
    - Review and approve the plan
-   - Use `/implement_plan thoughts/shared/plans/[filename].md` to execute it
-   - Or use `/iterate_plan thoughts/shared/plans/[filename].md [changes]` to refine further
+   - Use `/stepwise-dev:implement_plan thoughts/shared/plans/[filename].md` to execute it
+   - Or use `/stepwise-dev:iterate_plan thoughts/shared/plans/[filename].md [changes]` to refine further
 
    💡 Tip: Use `/clear` to free up context before starting implementation
    ```

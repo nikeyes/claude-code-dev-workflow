@@ -165,9 +165,9 @@ Always verify:
 ## Relationship to Other Commands
 
 Recommended workflow:
-1. `/implement_plan` - Execute the implementation
-2. `/commit` - Create atomic commits for changes
-3. `/validate_plan` - Verify implementation correctness
+1. `/stepwise-dev:implement_plan` - Execute the implementation
+2. `/stepwise-dev:commit` - Create atomic commits for changes
+3. `/stepwise-dev:validate_plan` - Verify implementation correctness
 4. `/describe_pr` - Generate PR description
 
 The validation works best after commits are made, as it can analyze the git history to understand what was implemented.
@@ -191,7 +191,7 @@ After validation is complete:
 
    Next steps in the workflow:
    - Address any identified issues
-   - Use `/commit` to create git commits if changes were made
+   - Use `/stepwise-dev:commit` to create git commits if changes were made
    - Plan is ready for PR or further iteration
 
    💡 Tip: Use `/clear` to free up context before committing

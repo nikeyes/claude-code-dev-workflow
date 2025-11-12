@@ -179,7 +179,7 @@ Then wait for the user's research query.
 
    Next steps in the workflow:
    - Review the research document for details
-   - Use `/create_plan [task description]` to plan implementation based on findings
+   - Use `/stepwise-dev:create_plan [task description]` to plan implementation based on findings
    - Ask follow-up questions if needed
 
    💡 Tip: Use `/clear` to free up context before planning or implementation

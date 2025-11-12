@@ -29,12 +29,12 @@ This workflow implements the **Research → Plan → Implement → Validate** cy
 
 | Command | Description |
 |---------|-------------|
-| `/research_codebase` | Research and document codebase comprehensively |
-| `/create_plan` | Create detailed implementation plans iteratively |
-| `/iterate_plan` | Update existing implementation plans |
-| `/implement_plan` | Execute plans phase by phase with validation |
-| `/validate_plan` | Validate implementation against plan |
-| `/commit` | Create git commits (no Claude attribution) |
+| `/stepwise-dev:research_codebase` | Research and document codebase comprehensively |
+| `/stepwise-dev:create_plan` | Create detailed implementation plans iteratively |
+| `/stepwise-dev:iterate_plan` | Update existing implementation plans |
+| `/stepwise-dev:implement_plan` | Execute plans phase by phase with validation |
+| `/stepwise-dev:validate_plan` | Validate implementation against plan |
+| `/stepwise-dev:commit` | Create git commits (no Claude attribution) |
 
 ### Specialized Agents
 
@@ -136,18 +136,18 @@ This directory contains research documents, implementation plans, and notes for 
   - `tickets/` - Ticket documentation and tracking
   - `notes/` - Personal notes and observations
 - `shared/` - Team-shared documents
-  - `research/` - Research documents from /research_codebase
-  - `plans/` - Implementation plans from /create_plan
+  - `research/` - Research documents from /stepwise-dev:research_codebase
+  - `plans/` - Implementation plans from /stepwise-dev:create_plan
   - `prs/` - PR descriptions and documentation
 - `searchable/` - Hardlinks for efficient grep searching (auto-generated)
 
 ### Usage
 
 Use Claude Code slash commands:
-- `/research_codebase [topic]` - Research and document codebase
-- `/create_plan [description]` - Create implementation plan
-- `/implement_plan [plan-file]` - Execute a plan
-- `/validate_plan [plan-file]` - Validate implementation
+- `/stepwise-dev:research_codebase [topic]` - Research and document codebase
+- `/stepwise-dev:create_plan [description]` - Create implementation plan
+- `/stepwise-dev:implement_plan [plan-file]` - Execute a plan
+- `/stepwise-dev:validate_plan [plan-file]` - Validate implementation
 
 Run `thoughts-sync` after adding/modifying files to update searchable/ hardlinks.
 
@@ -160,7 +160,7 @@ Run `thoughts-sync` after adding/modifying files to update searchable/ hardlinks
 
 ```bash
 # In Claude Code
-/research_codebase How does authentication work in this app?
+/stepwise-dev:research_codebase How does authentication work in this app?
 ```
 
 This will:
@@ -178,9 +178,9 @@ This will:
 
 ```bash
 # In Claude Code
-/create_plan Add rate limiting to the API
+/stepwise-dev:create_plan Add rate limiting to the API
 # Or reference a research doc:
-/create_plan @thoughts/shared/research/2025-11-09-auth-system.md
+/stepwise-dev:create_plan @thoughts/shared/research/2025-11-09-auth-system.md
 ```
 
 This will:
@@ -199,7 +199,7 @@ This will:
 
 ```bash
 # In Claude Code
-/implement_plan @thoughts/shared/plans/2025-11-09-rate-limiting.md
+/stepwise-dev:implement_plan @thoughts/shared/plans/2025-11-09-rate-limiting.md
 ```
 
 This will:
@@ -218,7 +218,7 @@ This will:
 
 ```bash
 # In Claude Code
-/validate_plan @thoughts/shared/plans/2025-11-09-rate-limiting.md
+/stepwise-dev:validate_plan @thoughts/shared/plans/2025-11-09-rate-limiting.md
 ```
 
 This will:
@@ -236,20 +236,20 @@ This will:
 
 ```bash
 # 1. Research
-/research_codebase Where is user registration handled?
+/stepwise-dev:research_codebase Where is user registration handled?
 # → Saves to thoughts/shared/research/2025-11-09-user-registration.md
 # → /context shows 45%
 # → /clear
 
 # 2. Plan
-/create_plan Add OAuth login support
+/stepwise-dev:create_plan Add OAuth login support
 # → Iterates 5 times
 # → Saves to thoughts/shared/plans/2025-11-09-oauth-login.md
 # → /context shows 58%
 # → /clear
 
 # 3. Implement (Phase 1 only)
-/implement_plan @thoughts/shared/plans/2025-11-09-oauth-login.md
+/stepwise-dev:implement_plan @thoughts/shared/plans/2025-11-09-oauth-login.md
 # → Completes Phase 1
 # → Runs tests
 # → Pauses for manual testing
@@ -259,12 +259,12 @@ This will:
 # → /clear
 
 # 4. Validate
-/validate_plan @thoughts/shared/plans/2025-11-09-oauth-login.md
+/stepwise-dev:validate_plan @thoughts/shared/plans/2025-11-09-oauth-login.md
 # → Comprehensive verification
 # → /context shows 41%
 
 # 5. Commit
-/commit
+/stepwise-dev:commit
 # → Creates atomic commits
 ```
 
@@ -272,23 +272,23 @@ This will:
 
 ```bash
 # Research the bug
-/research_codebase Why are webhooks timing out after 30 seconds?
+/stepwise-dev:research_codebase Why are webhooks timing out after 30 seconds?
 
 # Create a fix plan
-/create_plan Fix webhook timeout issue based on @thoughts/shared/research/...md
+/stepwise-dev:create_plan Fix webhook timeout issue based on @thoughts/shared/research/...md
 
 # Implement the fix
-/implement_plan @thoughts/shared/plans/...md
+/stepwise-dev:implement_plan @thoughts/shared/plans/...md
 
 # Commit
-/commit
+/stepwise-dev:commit
 ```
 
 ### Example 3: Iterating on a Plan
 
 ```bash
 # You've created a plan but need to adjust it
-/iterate_plan @thoughts/shared/plans/2025-11-09-feature.md
+/stepwise-dev:iterate_plan @thoughts/shared/plans/2025-11-09-feature.md
 
 # Claude asks: What changes would you like to make?
 # You: "Add error handling phase before deployment"

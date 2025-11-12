@@ -46,9 +46,9 @@ Synchronizes hardlinks in `thoughts/searchable/` for efficient grep operations.
 **When to use:**
 - After creating new markdown files in thoughts/
 - After modifying existing markdown files in thoughts/
-- After completing a /research_codebase command
-- After completing a /create_plan command
-- After completing a /iterate_plan command
+- After completing a /stepwise-dev:research_codebase command
+- After completing a /stepwise-dev:create_plan command
+- After completing a /stepwise-dev:iterate_plan command
 
 **Command:**
 ```bash
@@ -100,7 +100,7 @@ Timestamp For Filename: 2025-01-12_14-30-45
 
 ### Research workflow
 
-1. Run `/research_codebase` command
+1. Run `/stepwise-dev:research_codebase` command
 2. Command generates research document in `thoughts/shared/research/`
 3. **Automatically run sync:**
    ```bash
@@ -109,7 +109,7 @@ Timestamp For Filename: 2025-01-12_14-30-45
 
 ### Planning workflow
 
-1. Run `/create_plan` or `/iterate_plan` command
+1. Run `/stepwise-dev:create_plan` or `/stepwise-dev:iterate_plan` command
 2. Command generates/updates plan in `thoughts/shared/plans/`
 3. **Automatically run sync:**
    ```bash
@@ -214,10 +214,10 @@ All scripts are located in: `${CLAUDE_PLUGIN_ROOT}/skills/thoughts-management/sc
 
 The following slash commands automatically use this Skill:
 
-- `/research_codebase` - Uses thoughts-metadata and thoughts-sync
-- `/create_plan` - Uses thoughts-metadata and thoughts-sync
-- `/iterate_plan` - Uses thoughts-sync
-- `/implement_plan` - Uses thoughts-sync
-- `/validate_plan` - Uses thoughts-sync
+- `/stepwise-dev:research_codebase` - Uses thoughts-metadata and thoughts-sync
+- `/stepwise-dev:create_plan` - Uses thoughts-metadata and thoughts-sync
+- `/stepwise-dev:iterate_plan` - Uses thoughts-sync
+- `/stepwise-dev:implement_plan` - Uses thoughts-sync
+- `/stepwise-dev:validate_plan` - Uses thoughts-sync
 
 These commands will automatically invoke the appropriate scripts when needed.

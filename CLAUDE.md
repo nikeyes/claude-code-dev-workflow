@@ -107,11 +107,11 @@ Commands, agents, and skills require manual validation in Claude Code:
 1. **Test slash commands in Claude Code:**
    - Commands are loaded via the plugin
    - After modifying a command file, restart Claude Code or use `/plugin reload`
-   - Test by invoking: `/research_codebase`, `/create_plan`, etc.
+   - Test by invoking: `/stepwise-dev:research_codebase`, `/stepwise-dev:create_plan`, etc.
 
 2. **Validate agents:**
    - Agents spawn as sub-tasks when commands execute
-   - Test by running commands that use them (e.g., `/research_codebase` spawns `codebase-locator`)
+   - Test by running commands that use them (e.g., `/stepwise-dev:research_codebase` spawns `codebase-locator`)
    - Check agent behavior in Claude Code's task output
 
 3. **Test the thoughts-management Skill:**

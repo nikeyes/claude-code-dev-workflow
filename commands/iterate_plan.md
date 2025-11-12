@@ -33,8 +33,8 @@ When this command is invoked:
 
    Which plan would you like to update? Please provide the path to the plan file and changes to make.
 
-   Usage: /iterate_plan [plan-file-path] [changes to make]
-   Example: /iterate_plan thoughts/shared/plans/2025-10-16-feature.md add error handling phase
+   Usage: /stepwise-dev:iterate_plan [plan-file-path] [changes to make]
+   Example: /stepwise-dev:iterate_plan thoughts/shared/plans/2025-10-16-feature.md add error handling phase
 
    Tip: You can list recent plans with `ls -lt thoughts/shared/plans/ | head`
    ```
@@ -172,8 +172,8 @@ Get user confirmation before proceeding.
 
    Next steps in the workflow:
    - Review the updated plan
-   - Use `/implement_plan thoughts/shared/plans/[filename].md` to execute it
-   - Or use `/iterate_plan thoughts/shared/plans/[filename].md [more changes]` for further refinement
+   - Use `/stepwise-dev:implement_plan thoughts/shared/plans/[filename].md` to execute it
+   - Or use `/stepwise-dev:iterate_plan thoughts/shared/plans/[filename].md [more changes]` for further refinement
 
    💡 Tip: Use `/clear` to free up context before starting implementation
    ```
@@ -251,13 +251,13 @@ When spawning research sub-tasks:
 
 **Scenario 1: User provides everything upfront**
 ```
-User: /iterate_plan thoughts/shared/plans/2025-10-16-feature.md - add phase for error handling
+User: /stepwise-dev:iterate_plan thoughts/shared/plans/2025-10-16-feature.md - add phase for error handling
 Assistant: [Reads plan, researches error handling patterns, updates plan]
 ```
 
 **Scenario 2: User provides just plan file**
 ```
-User: /iterate_plan thoughts/shared/plans/2025-10-16-feature.md
+User: /stepwise-dev:iterate_plan thoughts/shared/plans/2025-10-16-feature.md
 Assistant: I've found the plan. What changes would you like to make?
 User: Split Phase 2 into two phases - one for backend, one for frontend
 Assistant: [Proceeds with update]
@@ -265,7 +265,7 @@ Assistant: [Proceeds with update]
 
 **Scenario 3: User provides no arguments**
 ```
-User: /iterate_plan
+User: /stepwise-dev:iterate_plan
 Assistant: Which plan would you like to update? Please provide the path...
 User: thoughts/shared/plans/2025-10-16-feature.md
 Assistant: I've found the plan. What changes would you like to make?
