@@ -6,7 +6,7 @@
   },
   "metadata": {
     "description": "Step-by-step development: Research → Plan → Implement → Validate with context control",
-    "version": "0.0.1"
+    "version": "0.0.2"
   },
   "plugins": [
     {
