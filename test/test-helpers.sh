@@ -185,44 +185,6 @@ section() {
   echo -e "${YELLOW}▶ $1${NC}"
 }
 
-# Pass a test (non-assert, just for reporting)
-# Usage: pass "description"
-pass() {
-  local desc="$1"
-  TESTS_RUN=$((TESTS_RUN + 1))
-  TESTS_PASSED=$((TESTS_PASSED + 1))
-  echo -e "${GREEN}✓${NC} $desc"
-}
-
-# Fail a test (non-assert, just for reporting)
-# Usage: fail "description"
-fail() {
-  local desc="$1"
-  TESTS_RUN=$((TESTS_RUN + 1))
-  TESTS_FAILED=$((TESTS_FAILED + 1))
-  echo -e "${RED}✗${NC} $desc"
-}
-
-# Assert exit code
-# Usage: assert_exit_code EXPECTED "description"
-assert_exit_code() {
-  local expected="$1"
-  local desc="${2:-exit code is $expected}"
-  local actual=$?
-
-  TESTS_RUN=$((TESTS_RUN + 1))
-
-  if [ "$actual" -eq "$expected" ]; then
-    echo -e "${GREEN}✓${NC} $desc"
-    TESTS_PASSED=$((TESTS_PASSED + 1))
-    return 0
-  else
-    echo -e "${RED}✗${NC} $desc (expected: $expected, got: $actual)"
-    TESTS_FAILED=$((TESTS_FAILED + 1))
-    return 1
-  fi
-}
-
 # Assert that a value is not empty
 # Usage: assert_not_empty VALUE "description"
 assert_not_empty() {
@@ -239,32 +201,5 @@ assert_not_empty() {
     echo -e "${RED}✗${NC} $desc (value is empty)"
     TESTS_FAILED=$((TESTS_FAILED + 1))
     return 1
-  fi
-}
-
-# Global variable for tracking failures (used by scripts for exit code)
-# shellcheck disable=SC2034
-FAILURES=0
-
-# Print test summary with custom name (used by plugin-structure-test.sh)
-# Usage: print_summary_named "My Test Suite"
-print_summary_named() {
-  local summary_name="${1:-Tests}"
-  echo ""
-  echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-  echo "$summary_name Summary:"
-  echo "  Total: $TESTS_RUN"
-  echo -e "  ${GREEN}Passed: $TESTS_PASSED${NC}"
-
-  if [ "$TESTS_FAILED" -gt 0 ]; then
-    echo -e "  ${RED}Failed: $TESTS_FAILED${NC}"
-    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-    FAILURES=$TESTS_FAILED
-    return 1
-  else
-    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-    # shellcheck disable=SC2034
-    FAILURES=0
-    return 0
   fi
 }

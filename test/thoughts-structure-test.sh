@@ -63,16 +63,6 @@ thoughts-sync > /dev/null 2>&1
 assert_file_exists "thoughts/searchable/shared/research/test.md" "hardlink created in searchable/"
 assert_hardlink "thoughts/shared/research/test.md" "thoughts/searchable/shared/research/test.md" "files are hardlinked (same inode)"
 
-# Verify content is identical
-if diff thoughts/shared/research/test.md thoughts/searchable/shared/research/test.md > /dev/null 2>&1; then
-  echo -e "${GREEN}✓${NC} hardlink content is identical"
-  TESTS_PASSED=$((TESTS_PASSED + 1))
-else
-  echo -e "${RED}✗${NC} hardlink content differs"
-  TESTS_FAILED=$((TESTS_FAILED + 1))
-fi
-TESTS_RUN=$((TESTS_RUN + 1))
-
 # ============================================================================
 # Test 3: thoughts-sync cleans orphaned links
 # ============================================================================
