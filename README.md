@@ -8,7 +8,9 @@ A development workflow for Claude Code inspired by [Ashley Ha's workflow](https:
 
 ## 🎯 What This Is
 
-This workflow implements the **Research -> Plan -> Implement -> Validate** cycle with:
+Solves the context management problem: LLMs lose attention after 60% context usage.
+
+Implements **Research -> Plan -> Implement -> Validate** with frequent `/clear` and persistent `thoughts/` storage.
 
 - **6 Slash Commands** for structured development
 - **5 Specialized Agents** for parallel research
@@ -17,10 +19,10 @@ This workflow implements the **Research -> Plan -> Implement -> Validate** cycle
 
 ### Philosophy
 
-- Never exceed 60% context.  
+- Keep context < 60% (attention threshold)
 - Split work into phases. 
-- Clear context between each phase. 
-- Save everything to a local `thoughts/` directory with hardlinks for efficient searching.
+- Clear between phases, save to `thoughts/`
+- Never lose research or decisions
 
 ## 📦 What's Included
 
@@ -362,23 +364,6 @@ Clear between phases:
 /clear
 ```
 
-### The 60% Rule
-
-| Phase | Typical Context | Action |
-|-------|----------------|--------|
-| Research | 50-70% | Clear after |
-| Plan | 50-65% | Clear after |
-| Implement | 60-75% | Clear between phases |
-| Validate | 40-50% | Usually safe to continue |
-
-## 🎓 Best Practices
-
-1. **Always Research First** - Even if you "know" the code, patterns and edge cases emerge
-2. **Iterate Plans 5+ Times** - First draft is never complete
-3. **One Phase at a Time** - Don't skip phases; bugs cascade
-4. **Separate Automated vs Manual** - Split verification criteria clearly
-5. **Sync Regularly** - Run `thoughts-sync` to make docs searchable
-
 ## 🔧 Customization
 
 **Change Username**: Set `export THOUGHTS_USER=your_name` or edit `skills/thoughts-management/scripts/thoughts-init:8`
@@ -388,11 +373,19 @@ Clear between phases:
 ## 🧪 Testing
 
 ```bash
-make test    # Run smoke tests
-make check   # Run shellcheck on all bash scripts
+make test          # Run all automated tests (functional + structure)
+make test-verbose  # Run tests with debug output
+make check         # Run shellcheck on all bash scripts
+make ci            # Run full CI validation (test + check + plugin)
 ```
 
-Tests validate all bash scripts (thoughts-init, thoughts-sync, thoughts-metadata, install.sh). No dependencies needed, runs in isolated temp directories.
+Tests validate bash scripts (thoughts-init, thoughts-sync, thoughts-metadata) and plugin structure. No dependencies needed, runs in isolated temp directories.
+
+**Test structure:**
+- `test/thoughts-structure-test.sh` - Functional tests for thoughts/ operations
+- `test/plugin-structure-test.sh` - Plugin structure validation
+- `test/test-helpers.sh` - Test utilities and assertions
+- `test/commands/` - Test command definitions
 
 ## 🐛 Troubleshooting
 
