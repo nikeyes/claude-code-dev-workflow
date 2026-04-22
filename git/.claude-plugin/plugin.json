@@ -1,6 +1,6 @@
 {
   "name": "stepwise-git",
-  "version": "0.0.7",
+  "version": "1.0.0",
   "description": "Git commit workflow without Claude attribution",
   "author": {
     "name": "Jorge Castro",

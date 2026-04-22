@@ -1,6 +1,6 @@
 {
   "name": "stepwise-research",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "Multi-agent deep research plugin with parallel web searches and synthesis",
   "author": {
     "name": "Jorge Castro",

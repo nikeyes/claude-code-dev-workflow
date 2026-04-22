@@ -1,6 +1,6 @@
 {
   "name": "stepwise-core",
-  "version": "0.0.7",
+  "version": "1.0.0",
   "description": "Core workflow for structured development: Research → Plan → Implement → Validate with thoughts/ management",
   "author": {
     "name": "Jorge Castro",
