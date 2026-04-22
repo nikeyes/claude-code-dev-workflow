@@ -31,7 +31,7 @@ The foundation plugin with the complete Research → Plan → Implement → Vali
 **Includes:**
 - 5 slash commands (`research_codebase`, `create_plan`, `iterate_plan`, `implement_plan`, `validate_plan`)
 - 5 specialized agents (codebase exploration and thoughts management)
-- 1 thoughts-management skill (with 3 bash scripts)
+- 1 thoughts-management skill (with 2 bash scripts)
 
 [→ Read more](./core/README.md)
 
@@ -114,14 +114,10 @@ After running `thoughts-init` (from stepwise-core) in a project:
 │   ├── nikey_es/          # Your personal notes (you write)
 │   │   ├── tickets/       # Ticket documentation
 │   │   └── notes/         # Personal notes
-│   ├── shared/            # Team-shared documents (Claude writes)
-│   │   ├── research/      # Research documents
-│   │   ├── plans/         # Implementation plans
-│   │   └── prs/           # PR descriptions
-│   └── searchable/        # Hardlinks for grep (auto-generated)
-│       ├── nikey_es/      # → hardlinks to nikey_es/
-│       └── shared/        # → hardlinks to shared/
-├── .gitignore            # (add thoughts/searchable/ to this)
+│   └── shared/            # Team-shared documents (Claude writes)
+│       ├── research/      # Research documents
+│       ├── plans/         # Implementation plans
+│       └── prs/           # PR descriptions
 └── ...
 ```
 
@@ -129,12 +125,7 @@ After running `thoughts-init` (from stepwise-core) in a project:
 - **`nikey_es/`**: Personal tickets/notes you create manually
 - **`shared/`**: Formal docs Claude generates from commands
 
-### Why Hardlinks?
-
-- **Fast searching**: Grep one directory instead of many
-- **No duplication**: Same file, same inode, no extra disk space
-- **Auto-sync**: Changes in source are immediately visible
-- **Efficient**: Better than symlinks for grep operations
+Use `grep -r thoughts/` to search across all documents.
 
 ## 🔄 The Four-Phase Workflow
 
@@ -264,10 +255,6 @@ make ci            # Run full CI validation
 - Check network connection
 
 ### Workflow Issues
-
-**Hardlinks failing**: Auto-falls back to symlinks
-
-**No files synced**: Run `THOUGHTS_DEBUG=1 thoughts-sync`
 
 ## 📚 Learn More
 

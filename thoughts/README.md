@@ -11,7 +11,6 @@ This directory contains research documents, implementation plans, and notes for 
   - `research/` - Research documents from /stepwise-dev:research_codebase
   - `plans/` - Implementation plans from /stepwise-dev:create_plan
   - `prs/` - PR descriptions and documentation
-- `searchable/` - Hardlinks for efficient grep searching (auto-generated)
 
 ## Usage
 
@@ -21,4 +20,4 @@ Use Claude Code slash commands:
 - `/stepwise-dev:implement_plan [plan-file]` - Execute a plan
 - `/stepwise-dev:validate_plan [plan-file]` - Validate implementation
 
-Run `thoughts-sync` after adding/modifying files to update searchable/ hardlinks.
+Use `grep -r thoughts/` to search across all documents.

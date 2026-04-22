@@ -265,9 +265,7 @@ Review the citation-analyst's feedback:
 
 1. **Verify report location:** Confirm the report is saved to `thoughts/shared/research/[topic]-[date].md`
 
-2. **Sync with thoughts system:** The `thoughts-management` Skill should automatically create hardlinks when the report is saved. If not, manually trigger it.
-
-3. **Present results to user:**
+2. **Present results to user:**
    ```
    Research complete! Report saved to:
    thoughts/shared/research/[filename].md
@@ -348,7 +346,7 @@ source_count: M
 ---
 ```
 
-After report creation, the `thoughts-management` Skill creates hardlinks in `thoughts/searchable/` for efficient grep-based discovery.
+Reports can be found with `grep -r thoughts/shared/research/`.
 
 ## Success Criteria
 

@@ -19,9 +19,8 @@ Core workflow plugin for structured development following the Research → Plan 
 - `thoughts-analyzer` - Extract insights from thoughts docs
 
 ### Skills (1)
-- `thoughts-management` - Manage thoughts/ directory with 3 bash scripts:
+- `thoughts-management` - Manage thoughts/ directory with 2 bash scripts:
   - `thoughts-init` - Initialize thoughts/ structure
-  - `thoughts-sync` - Sync hardlinks in searchable/
   - `thoughts-metadata` - Generate git metadata
 
 ## Installation

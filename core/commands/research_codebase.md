@@ -158,7 +158,6 @@ Then wait for the user's research query.
      [Relevant insights from thoughts/ directory with references]
      - `thoughts/shared/something.md` - Historical decision about X
      - `thoughts/local/notes.md` - Past exploration of Y
-     Note: Paths exclude "searchable/" even if found there
 
      ## Related Research
      [Links to other research documents in thoughts/shared/research/]
@@ -174,8 +173,7 @@ Then wait for the user's research query.
      - Create permalinks: `https://github.com/{owner}/{repo}/blob/{commit}/{file}#L{line}`
    - Replace local file references with permalinks in the document
 
-9. **Sync and present findings:**
-   - Use the thoughts-management Skill to sync the thoughts directory
+9. **Present findings:**
    - Present a concise summary of findings to the user
    - Include key file references for easy navigation
    - Inform the user of completion:
@@ -194,7 +192,7 @@ Then wait for the user's research query.
    💡 Tip: Use `/clear` to free up context before planning or implementation
    ```
 
-9. **Handle follow-up questions:**
+10. **Handle follow-up questions:**
    - If the user has follow-up questions, append to the same research document
    - Update the frontmatter fields `last_updated` and `last_updated_by` to reflect the update
    - Add `last_updated_note: "Added follow-up research for [brief description]"` to frontmatter
@@ -224,14 +222,6 @@ Then wait for the user's research query.
   - ALWAYS wait for all sub-agents to complete before synthesizing (step 4)
   - ALWAYS gather metadata before writing the document (step 5 before step 6)
   - NEVER write the research document with placeholder values
-- **Path handling**: The thoughts/searchable/ directory contains hard links for searching
-  - Always document paths by removing ONLY "searchable/" - preserve all other subdirectories
-  - Examples of correct transformations:
-    - `thoughts/searchable/nikey_es/old_stuff/notes.md` → `thoughts/nikey_es/old_stuff/notes.md`
-    - `thoughts/searchable/shared/prs/123.md` → `thoughts/shared/prs/123.md`
-    - `thoughts/searchable/global/shared/templates.md` → `thoughts/global/shared/templates.md`
-  - NEVER change nikey_es/ to shared/ or vice versa - preserve the exact directory structure
-  - This ensures paths are correct for editing and navigation
 - **Frontmatter consistency**:
   - Always include frontmatter at the beginning of research documents
   - Keep frontmatter fields consistent across all research documents

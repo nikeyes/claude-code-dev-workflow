@@ -6,34 +6,34 @@
   },
   "metadata": {
     "description": "Structured development workflow plugins for Claude Code",
-    "version": "0.0.8"
+    "version": "1.0.0"
   },
   "plugins": [
     {
       "name": "stepwise-core",
       "source": "./core",
-      "version": "0.0.8",
+      "version": "1.0.0",
       "description": "Core workflow for structured development: Research → Plan → Implement → Validate with thoughts/ management",
       "keywords": ["workflow", "research", "planning", "implementation", "validation", "thoughts"]
     },
     {
       "name": "stepwise-git",
       "source": "./git",
-      "version": "0.0.8",
+      "version": "1.0.0",
       "description": "Git commit workflow without Claude attribution",
       "keywords": ["git", "commit", "version-control"]
     },
     {
       "name": "stepwise-web",
       "source": "./web",
-      "version": "0.0.8",
+      "version": "1.0.0",
       "description": "Web search and research capabilities for external context",
       "keywords": ["web", "search", "research", "external"]
     },
     {
       "name": "stepwise-research",
       "source": "./research",
-      "version": "0.0.1",
+      "version": "1.0.0",
       "description": "Multi-agent deep research plugin with parallel web searches and synthesis",
       "keywords": ["research", "multi-agent", "web", "synthesis", "orchestration", "citations"]
     }

@@ -89,26 +89,6 @@ assert_contains() {
   fi
 }
 
-# Assert that two files are hardlinked (same inode)
-# Usage: assert_hardlink FILE1 FILE2 "description"
-assert_hardlink() {
-  local file1="$1"
-  local file2="$2"
-  local desc="${3:-files are hardlinked}"
-
-  TESTS_RUN=$((TESTS_RUN + 1))
-
-  if [ "$file1" -ef "$file2" ]; then
-    echo -e "${GREEN}✓${NC} $desc"
-    TESTS_PASSED=$((TESTS_PASSED + 1))
-    return 0
-  else
-    echo -e "${RED}✗${NC} $desc (not same inode: $file1 vs $file2)"
-    TESTS_FAILED=$((TESTS_FAILED + 1))
-    return 1
-  fi
-}
-
 # Assert that a file does NOT exist
 # Usage: assert_file_not_exists PATH "description"
 assert_file_not_exists() {
