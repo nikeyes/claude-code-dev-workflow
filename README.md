@@ -69,36 +69,49 @@ Advanced multi-agent research system with parallel web searches and synthesis.
 ### Option 1: Install All Plugins (Recommended for first-time users)
 
 ```bash
-# Add marketplace from GitHub
-/plugin marketplace add nikeyes/stepwise-dev
+claude plugin marketplace add https://github.com/nikeyes/stepwise-dev.git
 
 # Install all plugins
-/plugin install stepwise-core@stepwise-dev
-/plugin install stepwise-git@stepwise-dev
-/plugin install stepwise-web@stepwise-dev
-/plugin install stepwise-research@stepwise-dev
+claude plugin install stepwise-core@stepwise-dev
+claude plugin install stepwise-git@stepwise-dev
+claude plugin install stepwise-web@stepwise-dev
+claude plugin install stepwise-research@stepwise-dev
 ```
 
 ### Option 2: Install Only What You Need
 
 ```bash
-# Add marketplace
-/plugin marketplace add nikeyes/stepwise-dev
+# Add marketplace (SSH or HTTPS)
+claude plugin marketplace add https://github.com/nikeyes/stepwise-dev.git
 
 # Install only the core workflow
-/plugin install stepwise-core@stepwise-dev
+claude plugin install stepwise-core@stepwise-dev
 
 # Optionally add git operations
-/plugin install stepwise-git@stepwise-dev
+claude plugin install stepwise-git@stepwise-dev
 
 # Optionally add web research
-/plugin install stepwise-web@stepwise-dev
+claude plugin install stepwise-web@stepwise-dev
 
 # Optionally add multi-agent deep research
-/plugin install stepwise-research@stepwise-dev
+claude plugin install stepwise-research@stepwise-dev
 ```
 
 **Restart Claude Code after installation.**
+
+### Local Development (Testing Without Installing)
+
+Use `--bare` with `--plugin-dir` to load only your local plugin directories, skipping all installed/marketplace plugins:
+
+```bash
+claude --bare \
+    --plugin-dir /path/to/stepwise-dev/core \
+    --plugin-dir /path/to/stepwise-dev/git \
+    --plugin-dir /path/to/stepwise-dev/web \
+    --plugin-dir /path/to/stepwise-dev/research
+```
+
+`--bare` disables plugin sync (so installed plugins are ignored) but still loads the directories you pass via `--plugin-dir`. This means your local changes are tested in isolation without needing to reinstall anything.
 
 ## 🧪 Try It Out
 
@@ -210,13 +223,15 @@ Creates clean commits without Claude attribution.
 
 ```bash
 # Check versions
-/plugin list
+claude plugin list
 
-# Update all plugins
-/plugin update stepwise-core@stepwise-dev
-/plugin update stepwise-git@stepwise-dev
-/plugin update stepwise-web@stepwise-dev
-/plugin update stepwise-research@stepwise-dev
+# Update marketplace and all plugins
+claude plugin marketplace update stepwise-dev
+
+claude plugin update stepwise-core@stepwise-dev
+claude plugin update stepwise-git@stepwise-dev
+claude plugin update stepwise-web@stepwise-dev
+claude plugin update stepwise-research@stepwise-dev
 ```
 
 ## 📝 Context Management

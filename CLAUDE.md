@@ -32,12 +32,12 @@ This project is distributed as **3 independent Claude Code plugins** in a single
 **Installation**:
 ```bash
 # Add marketplace
-/plugin marketplace add nikeyes/stepwise-dev
+claude plugin marketplace add git@github.com:nikeyes/stepwise-dev.git
 
 # Install all three (or pick individual ones)
-/plugin install stepwise-core@stepwise-dev
-/plugin install stepwise-git@stepwise-dev
-/plugin install stepwise-web@stepwise-dev
+claude plugin install stepwise-core@stepwise-dev
+claude plugin install stepwise-git@stepwise-dev
+claude plugin install stepwise-web@stepwise-dev
 ```
 
 See README.md for detailed installation instructions.
@@ -89,11 +89,11 @@ test/                  # Automated bash tests (for development)
 
 ### Installation
 ```bash
-# Install plugins in Claude Code
-/plugin marketplace add nikeyes/stepwise-dev
-/plugin install stepwise-core@stepwise-dev
-/plugin install stepwise-git@stepwise-dev
-/plugin install stepwise-web@stepwise-dev
+# Add marketplace and install plugins
+claude plugin marketplace add git@github.com:nikeyes/stepwise-dev.git
+claude plugin install stepwise-core@stepwise-dev
+claude plugin install stepwise-git@stepwise-dev
+claude plugin install stepwise-web@stepwise-dev
 # Restart Claude Code
 
 # That's it! All components are included in the respective plugins
@@ -134,7 +134,7 @@ Commands, agents, and skills require manual validation in Claude Code:
 
 1. **Test slash commands in Claude Code:**
    - Commands are loaded via the plugins
-   - After modifying a command file, restart Claude Code or use `/plugin reload`
+   - After modifying a command file, restart Claude Code or use `/reload-plugins`
    - Test by invoking: `/stepwise-core:research_codebase`, `/stepwise-git:commit`, etc.
 
 2. **Validate agents:**
@@ -206,11 +206,12 @@ Use `grep -r thoughts/` to search across all documents.
 
 **Plugin versions:**
 - Managed by Claude Code plugin system
-- Check with `/plugin list`
-- Update individual plugins:
-  - `/plugin update stepwise-core@stepwise-dev`
-  - `/plugin update stepwise-git@stepwise-dev`
-  - `/plugin update stepwise-web@stepwise-dev`
+- Check with `claude plugin list`
+- Update marketplace and individual plugins:
+  - `claude plugin marketplace update stepwise-dev`
+  - `claude plugin update stepwise-core@stepwise-dev`
+  - `claude plugin update stepwise-git@stepwise-dev`
+  - `claude plugin update stepwise-web@stepwise-dev`
 
 **Scripts:**
 - Updated automatically when stepwise-core plugin updates
