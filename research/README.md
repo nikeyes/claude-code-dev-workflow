@@ -183,9 +183,8 @@ Workers prioritize sources in this order:
 Reports integrate with the `stepwise-core` thoughts management system:
 
 1. Reports saved to `thoughts/shared/research/`
-2. `thoughts-management` Skill automatically creates hardlinks in `searchable/`
-3. Reports discoverable via grep across entire thoughts directory
-4. YAML frontmatter enables metadata-based searching
+2. Reports discoverable via `grep -r thoughts/shared/research/`
+3. YAML frontmatter enables metadata-based searching
 
 ## Citation Quality
 

@@ -87,8 +87,6 @@ assert_contains "core/skills/thoughts-management/SKILL.md" "name: thoughts-manag
 # Scripts are executable
 assert_file_exists "core/skills/thoughts-management/scripts/thoughts-init" "thoughts-init exists"
 assert_executable "core/skills/thoughts-management/scripts/thoughts-init" "thoughts-init is executable"
-assert_file_exists "core/skills/thoughts-management/scripts/thoughts-sync" "thoughts-sync exists"
-assert_executable "core/skills/thoughts-management/scripts/thoughts-sync" "thoughts-sync is executable"
 assert_file_exists "core/skills/thoughts-management/scripts/thoughts-metadata" "thoughts-metadata exists"
 assert_executable "core/skills/thoughts-management/scripts/thoughts-metadata" "thoughts-metadata is executable"
 

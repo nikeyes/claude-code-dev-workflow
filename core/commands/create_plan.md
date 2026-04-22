@@ -283,11 +283,7 @@ After structure approval:
 
 ### Step 5: Sync and Review
 
-1. **Sync the thoughts directory**:
-   - Use the thoughts-management Skill to sync the newly created plan
-   - This ensures the plan is properly indexed and available
-
-2. **Present the draft plan location**:
+1. **Present the draft plan location**:
    ```
    I've created the initial implementation plan at:
    `thoughts/shared/plans/YYYY-MM-DD-ENG-XXXX-description.md`
@@ -304,8 +300,6 @@ After structure approval:
    - Adjust technical approach
    - Clarify success criteria (both automated and manual)
    - Add/remove scope items
-   - After making changes, use the thoughts-management Skill to sync again
-
 4. **Continue refining** until the user is satisfied
 
 5. **When plan is finalized**, inform the user:

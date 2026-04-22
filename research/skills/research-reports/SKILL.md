@@ -139,7 +139,7 @@ Example:
 - Query: "What is Kubernetes and how does it work?"
 - Filename: `what-is-kubernetes-and-how-does-it-work-2026-02-19.md`
 
-After report creation, the `thoughts-management` Skill will automatically sync hardlinks to `thoughts/searchable/`.
+Reports can be found with `grep -r thoughts/shared/research/`.
 
 ## Script Implementation Notes
 

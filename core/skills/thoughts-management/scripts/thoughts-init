@@ -2,7 +2,6 @@
 set -euo pipefail
 
 # thoughts-init - Initialize thoughts/ directory structure in current project
-# Creates the directory structure and initial hardlinks for searchable/
 
 # Configuration
 USERNAME="${THOUGHTS_USER:-nikey_es}"
@@ -24,6 +23,7 @@ warn() {
 
 error() {
   echo -e "${RED}[ERROR]${NC} $1"
+  exit 1
 }
 
 # Check if already initialized
@@ -39,33 +39,16 @@ mkdir -p "$THOUGHTS_DIR/$USERNAME/notes"
 mkdir -p "$THOUGHTS_DIR/shared/research"
 mkdir -p "$THOUGHTS_DIR/shared/plans"
 mkdir -p "$THOUGHTS_DIR/shared/prs"
-mkdir -p "$THOUGHTS_DIR/searchable"
 
 info "Directory structure created:"
 echo "  $THOUGHTS_DIR/"
 echo "  ├── $USERNAME/"
 echo "  │   ├── tickets/"
 echo "  │   └── notes/"
-echo "  ├── shared/"
-echo "  │   ├── research/"
-echo "  │   ├── plans/"
-echo "  │   └── prs/"
-echo "  └── searchable/ (will contain hardlinks)"
-
-# Create .gitignore if it doesn't exist
-if [ ! -f "$THOUGHTS_DIR/.gitignore" ]; then
-  info "Creating .gitignore..."
-  cat > "$THOUGHTS_DIR/.gitignore" <<EOF
-# Ignore searchable/ directory (it contains hardlinks)
-searchable/
-
-# But track the structure
-!searchable/.gitkeep
-EOF
-fi
-
-# Create .gitkeep in searchable/ to track the directory
-touch "$THOUGHTS_DIR/searchable/.gitkeep"
+echo "  └── shared/"
+echo "      ├── research/"
+echo "      ├── plans/"
+echo "      └── prs/"
 
 # Create README
 if [ ! -f "$THOUGHTS_DIR/README.md" ]; then
@@ -84,7 +67,6 @@ This directory contains research documents, implementation plans, and notes for 
   - \`research/\` - Research documents from /stepwise-dev:research_codebase
   - \`plans/\` - Implementation plans from /stepwise-dev:create_plan
   - \`prs/\` - PR descriptions and documentation
-- \`searchable/\` - Hardlinks for efficient grep searching (auto-generated)
 
 ## Usage
 
@@ -93,23 +75,11 @@ Use Claude Code slash commands:
 - \`/stepwise-dev:create_plan [description]\` - Create implementation plan
 - \`/stepwise-dev:implement_plan [plan-file]\` - Execute a plan
 - \`/stepwise-dev:validate_plan [plan-file]\` - Validate implementation
-
-Run \`thoughts-sync\` after adding/modifying files to update searchable/ hardlinks.
 EOF
-fi
-
-# Run initial sync
-info "Running initial sync to create hardlinks..."
-if command -v thoughts-sync >/dev/null 2>&1; then
-  thoughts-sync
-else
-  warn "thoughts-sync not found in PATH. Hardlinks not created yet."
-  warn "Run 'thoughts-sync' after installation to create hardlinks."
 fi
 
 info "✓ thoughts/ initialized successfully!"
 echo ""
 info "Next steps:"
-echo "  1. Run 'thoughts-sync' to create/update searchable/ hardlinks"
-echo "  2. Use Claude Code slash commands like /stepwise-dev:research_codebase"
-echo "  3. Commit thoughts/ directory to git (searchable/ is gitignored)"
+echo "  1. Use Claude Code slash commands like /stepwise-dev:research_codebase"
+echo "  2. Commit thoughts/ directory to git"

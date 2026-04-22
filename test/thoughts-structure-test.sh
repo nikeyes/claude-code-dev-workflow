@@ -2,7 +2,7 @@
 set -euo pipefail
 
 # thoughts-functional-test.sh - Functional tests for thoughts/ bash scripts
-# Tests thoughts-init, thoughts-sync, thoughts-metadata, and install-scripts.sh
+# Tests thoughts-init, thoughts-metadata, and install-scripts.sh
 # Creates temporary directory, tests core functionality, auto-cleans
 
 # Get script directory
@@ -43,51 +43,12 @@ assert_dir_exists "thoughts/nikey_es/notes" "thoughts/{user}/notes/ created"
 assert_dir_exists "thoughts/shared/research" "thoughts/shared/research/ created"
 assert_dir_exists "thoughts/shared/plans" "thoughts/shared/plans/ created"
 assert_dir_exists "thoughts/shared/prs" "thoughts/shared/prs/ created"
-assert_dir_exists "thoughts/searchable" "thoughts/searchable/ created"
-assert_file_exists "thoughts/.gitignore" "thoughts/.gitignore created"
 assert_file_exists "thoughts/README.md" "thoughts/README.md created"
-assert_contains "thoughts/.gitignore" "searchable/" ".gitignore contains searchable/"
 
 # ============================================================================
-# Test 2: thoughts-sync creates hardlinks correctly
+# Test 2: thoughts-metadata generates valid metadata
 # ============================================================================
-section "Test 2: thoughts-sync creates hardlinks"
-
-# Create test markdown file
-echo "# Test Research Document" > thoughts/shared/research/test.md
-echo "This is a test." >> thoughts/shared/research/test.md
-
-# Run sync
-thoughts-sync > /dev/null 2>&1
-
-assert_file_exists "thoughts/searchable/shared/research/test.md" "hardlink created in searchable/"
-assert_hardlink "thoughts/shared/research/test.md" "thoughts/searchable/shared/research/test.md" "files are hardlinked (same inode)"
-
-# ============================================================================
-# Test 3: thoughts-sync cleans orphaned links
-# ============================================================================
-section "Test 3: thoughts-sync removes orphaned links"
-
-# Create a file, sync it, then delete source
-echo "# Temporary" > thoughts/shared/plans/temp.md
-thoughts-sync > /dev/null 2>&1
-
-# Verify it was created
-assert_file_exists "thoughts/searchable/shared/plans/temp.md" "temp hardlink created"
-
-# Delete source file
-rm thoughts/shared/plans/temp.md
-
-# Run sync again - should clean up orphaned link
-output=$(thoughts-sync 2>&1)
-
-assert_file_not_exists "thoughts/searchable/shared/plans/temp.md" "orphaned link removed"
-assert_output_contains "$output" "Orphaned links cleaned: 1" "sync reports orphaned link cleaned"
-
-# ============================================================================
-# Test 4: thoughts-metadata generates valid metadata
-# ============================================================================
-section "Test 4: thoughts-metadata generates valid metadata"
+section "Test 2: thoughts-metadata generates valid metadata"
 
 output=$(thoughts-metadata 2>&1)
 
