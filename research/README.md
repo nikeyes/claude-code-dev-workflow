@@ -20,7 +20,7 @@ Based on research showing that **multi-agent systems produce 90.2% better result
 
 ### Components
 
-1. **deep_research command** (`/stepwise-research:deep_research`)
+1. **deep-research skill** (`/stepwise-research:deep-research`)
    - Main entry point
    - Orchestrates high-level workflow
    - Spawns lead agent and citation analyst
@@ -69,24 +69,24 @@ Based on research showing that **multi-agent systems produce 90.2% better result
 ### Basic Usage
 
 ```bash
-/stepwise-research:deep_research <research topic>
+/stepwise-research:deep-research <research topic>
 ```
 
 ### Examples
 
 **Simple query (1 worker, ~15 minutes):**
 ```bash
-/stepwise-research:deep_research What is Docker and how does it work?
+/stepwise-research:deep-research What is Docker and how does it work?
 ```
 
 **Comparison query (2-3 workers, ~20-25 minutes):**
 ```bash
-/stepwise-research:deep_research Compare React vs Vue.js for enterprise applications
+/stepwise-research:deep-research Compare React vs Vue.js for enterprise applications
 ```
 
 **Complex research (4-6+ workers, ~30-40 minutes):**
 ```bash
-/stepwise-research:deep_research Analyze the state of AI code generation tools in 2026
+/stepwise-research:deep-research Analyze the state of AI code generation tools in 2026
 ```
 
 ### What to Expect

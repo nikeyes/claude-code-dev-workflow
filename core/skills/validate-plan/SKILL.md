@@ -1,7 +1,9 @@
 ---
+name: validate-plan
 description: Validate that plan was correctly implemented, verify all success criteria
 argument-hint: [plan-file-path]
 model: sonnet
+disable-model-invocation: true
 ---
 
 <!-- SPDX-License-Identifier: Apache-2.0
@@ -93,14 +95,14 @@ Create comprehensive validation summary:
 ## Validation Report: [Plan Name]
 
 ### Implementation Status
-✓ Phase 1: [Name] - Fully implemented
-✓ Phase 2: [Name] - Fully implemented
-⚠️ Phase 3: [Name] - Partially implemented (see issues)
+Phase 1: [Name] - Fully implemented
+Phase 2: [Name] - Fully implemented
+Phase 3: [Name] - Partially implemented (see issues)
 
 ### Automated Verification Results
-✓ Build passes: `make build`
-✓ Tests pass: `make test`
-✗ Linting issues: `make lint` (3 warnings)
+Build passes: `make build`
+Tests pass: `make test`
+Linting issues: `make lint` (3 warnings)
 
 ### Code Review Findings
 
@@ -159,13 +161,13 @@ Always verify:
 - [ ] Documentation updated if needed
 - [ ] Manual test steps are clear
 
-## Relationship to Other Commands
+## Relationship to Other Skills
 
 Recommended workflow:
-1. `/stepwise-core:implement_plan` - Execute the implementation
+1. `/stepwise-core:implement-plan` - Execute the implementation
 2. `/stepwise-git:commit` - Create atomic commits for changes
-3. `/stepwise-core:validate_plan` - Verify implementation correctness
-4. `/describe_pr` - Generate PR description
+Note: The commit skill must be explicitly invoked by the user.
+3. `/stepwise-core:validate-plan` - Verify implementation correctness
 
 The validation works best after commits are made, as it can analyze the git history to understand what was implemented.
 
@@ -188,16 +190,16 @@ After validation is complete:
 
 3. **Inform the user**:
    ```
-   ✓ Validation complete for: [Plan Name]
+   Validation complete for: [Plan Name]
 
    Status: [Summary of validation results]
-   - ✓ [Items that passed]
-   - ⚠️ [Items needing attention]
+   - [Items that passed]
+   - [Items needing attention]
 
    Next steps in the workflow:
    - Address any identified issues
    - Use `/stepwise-git:commit` to create git commits if changes were made
    - Plan is ready for PR or further iteration
 
-   💡 Tip: Use `/clear` to free up context before committing
+   Tip: Use `/clear` to free up context for your next task
    ```

@@ -29,9 +29,8 @@ This repository contains **4 independent plugins** that can be installed separat
 The foundation plugin with the complete Research → Plan → Implement → Validate cycle.
 
 **Includes:**
-- 5 slash commands (`research_codebase`, `create_plan`, `iterate_plan`, `implement_plan`, `validate_plan`)
+- 11 skills (`research-codebase`, `create-plan`, `iterate-plan`, `implement-plan`, `validate-plan`, `thoughts-management`, `bugmagnet`, `hamburger-method`, `small-safe-steps`, `story-splitting`, `test-desiderata`)
 - 5 specialized agents (codebase exploration and thoughts management)
-- 1 thoughts-management skill (with 2 bash scripts)
 
 [→ Read more](./core/README.md)
 
@@ -39,7 +38,7 @@ The foundation plugin with the complete Research → Plan → Implement → Vali
 Clean git commit workflow without Claude attribution.
 
 **Includes:**
-- 1 slash command (`commit`)
+- 1 skill (`commit`)
 - Smart staging and commit message generation
 
 [→ Read more](./git/README.md)
@@ -57,9 +56,8 @@ Web search and research capabilities for external context.
 Advanced multi-agent research system with parallel web searches and synthesis.
 
 **Includes:**
-- 1 slash command (`deep_research`)
+- 2 skills (`deep-research`, `research-reports`)
 - 3 specialized agents (research-lead, research-worker, citation-analyst)
-- 1 research-reports skill (with report generation script)
 - Comprehensive research reports with citations and metadata
 
 [→ Read more](./research/README.md)
@@ -145,7 +143,7 @@ Use `grep -r thoughts/` to search across all documents.
 ### Phase 1: Research (stepwise-core)
 
 ```bash
-/stepwise-core:research_codebase How does authentication work?
+/stepwise-core:research-codebase How does authentication work?
 ```
 
 Spawns parallel agents, searches codebase and thoughts/, generates comprehensive research document.
@@ -153,7 +151,7 @@ Spawns parallel agents, searches codebase and thoughts/, generates comprehensive
 ### Phase 2: Plan (stepwise-core)
 
 ```bash
-/stepwise-core:create_plan Add rate limiting to the API
+/stepwise-core:create-plan Add rate limiting to the API
 ```
 
 Iterates with you 5+ times, creates detailed phases with verification steps.
@@ -161,7 +159,7 @@ Iterates with you 5+ times, creates detailed phases with verification steps.
 ### Phase 3: Implement (stepwise-core)
 
 ```bash
-/stepwise-core:implement_plan @thoughts/shared/plans/2025-11-09-rate-limiting.md
+/stepwise-core:implement-plan @thoughts/shared/plans/2025-11-09-rate-limiting.md
 ```
 
 Executes one phase at a time, validates before proceeding.
@@ -169,7 +167,7 @@ Executes one phase at a time, validates before proceeding.
 ### Phase 4: Validate (stepwise-core)
 
 ```bash
-/stepwise-core:validate_plan @thoughts/shared/plans/2025-11-09-rate-limiting.md
+/stepwise-core:validate-plan @thoughts/shared/plans/2025-11-09-rate-limiting.md
 ```
 
 Systematically verifies the entire implementation.
@@ -188,19 +186,19 @@ Creates clean commits without Claude attribution.
 
 ```bash
 # Research (core)
-/stepwise-core:research_codebase Where is user registration handled?
+/stepwise-core:research-codebase Where is user registration handled?
 # /clear
 
 # Plan (core)
-/stepwise-core:create_plan Add OAuth login support
+/stepwise-core:create-plan Add OAuth login support
 # /clear
 
 # Implement (core)
-/stepwise-core:implement_plan @thoughts/shared/plans/...md
+/stepwise-core:implement-plan @thoughts/shared/plans/...md
 # /clear
 
 # Validate (core)
-/stepwise-core:validate_plan @thoughts/shared/plans/...md
+/stepwise-core:validate-plan @thoughts/shared/plans/...md
 
 # Commit (git)
 /stepwise-git:commit
@@ -214,7 +212,7 @@ Creates clean commits without Claude attribution.
 # The web-search-researcher agent will be invoked automatically
 
 # Research your codebase (core)
-/stepwise-core:research_codebase Where do we handle API rate limiting?
+/stepwise-core:research-codebase Where do we handle API rate limiting?
 
 # Continue with plan and implementation...
 ```

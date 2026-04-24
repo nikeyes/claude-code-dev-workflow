@@ -1,6 +1,8 @@
 ---
+name: commit
 description: Create git commits with user approval and no Claude attribution
 model: haiku
+disable-model-invocation: true
 ---
 
 <!-- SPDX-License-Identifier: Apache-2.0
@@ -59,7 +61,7 @@ After commits are created:
 
 2. **Inform the user**:
    ```
-   ✓ Commits created successfully
+   Commits created successfully
 
    Created [N] commit(s):
    - [commit hash] [commit message]
@@ -70,5 +72,5 @@ After commits are created:
    - Push to remote when ready
    - Create PR if applicable
 
-   💡 Tip: Use `/clear` to free up context for your next task
+   Tip: Use `/clear` to free up context for your next task
    ```

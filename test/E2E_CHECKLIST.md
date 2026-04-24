@@ -25,8 +25,8 @@ make test-plugin     # Runs all automated tests above (124 total assertions)
 - [ ] `./install-scripts.sh` installs scripts (automated test verifies script works)
 
 ### Workflow Quality (LLM behavior)
-- [ ] `/stepwise-core:research_codebase [real topic]` - Verify research document quality
-- [ ] `/stepwise-core:create_plan [from ticket]` - Verify plan is actionable and thorough
+- [ ] `/stepwise-core:research-codebase [real topic]` - Verify research document quality
+- [ ] `/stepwise-core:create-plan [from ticket]` - Verify plan is actionable and thorough
 - [ ] Agents spawn correctly and run in parallel
 - [ ] Context management warnings appear appropriately
 

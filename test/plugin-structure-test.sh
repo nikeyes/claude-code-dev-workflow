@@ -2,7 +2,7 @@
 set -euo pipefail
 
 # plugin-structure-test.sh - Essential structural validation for multi-plugin marketplace
-# Tests marketplace manifest and all 3 plugins (stepwise-core, stepwise-git, stepwise-web)
+# Tests marketplace manifest and all 4 plugins (stepwise-core, stepwise-git, stepwise-web, stepwise-research)
 
 # Get script directory
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
@@ -64,12 +64,12 @@ section "Test 2: stepwise-core plugin"
 assert_file_exists "core/.claude-plugin/plugin.json" "core/plugin.json exists"
 assert_file_exists "core/README.md" "core/README.md exists"
 
-# Commands
-assert_file_exists "core/commands/research_codebase.md" "research_codebase command"
-assert_file_exists "core/commands/create_plan.md" "create_plan command"
-assert_file_exists "core/commands/iterate_plan.md" "iterate_plan command"
-assert_file_exists "core/commands/implement_plan.md" "implement_plan command"
-assert_file_exists "core/commands/validate_plan.md" "validate_plan command"
+# Skills (workflow)
+assert_file_exists "core/skills/research-codebase/SKILL.md" "research-codebase skill"
+assert_file_exists "core/skills/create-plan/SKILL.md" "create-plan skill"
+assert_file_exists "core/skills/iterate-plan/SKILL.md" "iterate-plan skill"
+assert_file_exists "core/skills/implement-plan/SKILL.md" "implement-plan skill"
+assert_file_exists "core/skills/validate-plan/SKILL.md" "validate-plan skill"
 
 # Agents
 assert_file_exists "core/agents/codebase-locator.md" "codebase-locator agent"
@@ -97,7 +97,7 @@ section "Test 3: stepwise-git plugin"
 
 assert_file_exists "git/.claude-plugin/plugin.json" "git/plugin.json exists"
 assert_file_exists "git/README.md" "git/README.md exists"
-assert_file_exists "git/commands/commit.md" "commit command exists"
+assert_file_exists "git/skills/commit/SKILL.md" "commit skill exists"
 
 # ============================================================================
 # Test 4: Web plugin structure (stepwise-web)

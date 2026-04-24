@@ -1,7 +1,9 @@
 ---
+name: implement-plan
 description: Implement technical plans from thoughts/shared/plans with verification
 argument-hint: [plan-file-path]
 model: sonnet
+disable-model-invocation: true
 ---
 
 <!-- SPDX-License-Identifier: Apache-2.0
@@ -106,14 +108,14 @@ When all phases are complete:
 
 3. **Inform the user**:
    ```
-   ✓ Implementation complete for: [Plan Name]
+   Implementation complete for: [Plan Name]
 
    All phases implemented and verified:
    - [List key accomplishments]
 
    Next steps in the workflow:
-   - Use `/stepwise-core:validate_plan thoughts/shared/plans/[filename].md` to verify completeness
+   - Use `/stepwise-core:validate-plan thoughts/shared/plans/[filename].md` to verify completeness
    - Use `/stepwise-git:commit` to create git commits for the changes
 
-   💡 Tip: Use `/clear` to free up context before validation
+   Tip: Use `/clear` to free up context before validation
    ```

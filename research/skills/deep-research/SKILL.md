@@ -1,7 +1,9 @@
 ---
+name: deep-research
 description: Conduct multi-agent deep research on a topic with parallel web searches and synthesis
 argument-hint: <research topic or question>
 model: opus
+disable-model-invocation: true
 ---
 
 # Deep Research Command
@@ -10,7 +12,7 @@ You are orchestrating a **multi-agent deep research workflow** that produces com
 
 ## Command Workflow
 
-When the user invokes `/stepwise-research:deep_research <topic>`, follow these steps:
+When the user invokes `/stepwise-research:deep-research <topic>`, follow these steps:
 
 ### 1. Clarification Phase (Only if Needed)
 
@@ -310,19 +312,19 @@ If `thoughts/shared/research/` directory doesn't exist:
 
 **Simple query:**
 ```
-/stepwise-research:deep_research What is Kubernetes and how does it work?
+/stepwise-research:deep-research What is Kubernetes and how does it work?
 ```
 Expected: 1 worker, 10-15 sources
 
 **Comparison query:**
 ```
-/stepwise-research:deep_research Compare PostgreSQL vs MySQL for high-traffic applications
+/stepwise-research:deep-research Compare PostgreSQL vs MySQL for high-traffic applications
 ```
 Expected: 2-3 workers, 15-20 sources
 
 **Complex research:**
 ```
-/stepwise-research:deep_research Analyze the current state of WebAssembly adoption in enterprise applications
+/stepwise-research:deep-research Analyze the current state of WebAssembly adoption in enterprise applications
 ```
 Expected: 4-6+ workers, 25+ sources
 
@@ -351,13 +353,13 @@ Reports can be found with `grep -r thoughts/shared/research/`.
 ## Success Criteria
 
 A successful research session produces:
-- ✅ Structured report with YAML frontmatter
-- ✅ 10-15+ citations with accessible URLs
-- ✅ Diverse sources (.gov, .edu, industry, academic)
-- ✅ Cross-references and synthesis (not just concatenation)
-- ✅ Executive summary (3-5 sentences)
-- ✅ Detailed findings organized by theme
-- ✅ Full bibliography with numbered citations
+- Structured report with YAML frontmatter
+- 10-15+ citations with accessible URLs
+- Diverse sources (.gov, .edu, industry, academic)
+- Cross-references and synthesis (not just concatenation)
+- Executive summary (3-5 sentences)
+- Detailed findings organized by theme
+- Full bibliography with numbered citations
 
 ## Notes
 

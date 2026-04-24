@@ -1,7 +1,9 @@
 ---
+name: create-plan
 description: Create detailed implementation plans through interactive research and iteration
 argument-hint: [ticket-file-path or task description]
 model: opus
+disable-model-invocation: true
 ---
 
 <!-- SPDX-License-Identifier: Apache-2.0
@@ -35,8 +37,8 @@ Please provide:
 
 I'll analyze this information and work with you to create a comprehensive plan.
 
-Tip: You can also invoke this command with a ticket file directly: `/stepwise-core:create_plan thoughts/nikey_es/tickets/eng_1234.md`
-For deeper analysis, try: `/stepwise-core:create_plan think deeply about thoughts/nikey_es/tickets/eng_1234.md`
+Tip: You can also invoke this command with a ticket file directly: `/stepwise-core:create-plan thoughts/nikey_es/tickets/eng_1234.md`
+For deeper analysis, try: `/stepwise-core:create-plan think deeply about thoughts/nikey_es/tickets/eng_1234.md`
 ```
 
 Then wait for the user's input.
@@ -304,14 +306,14 @@ After structure approval:
 
 5. **When plan is finalized**, inform the user:
    ```
-   ✓ Implementation plan complete: `thoughts/shared/plans/[filename].md`
+   Implementation plan complete: `thoughts/shared/plans/[filename].md`
 
    Next steps in the workflow:
    - Review and approve the plan
-   - Use `/stepwise-core:implement_plan thoughts/shared/plans/[filename].md` to execute it
-   - Or use `/stepwise-core:iterate_plan thoughts/shared/plans/[filename].md [changes]` to refine further
+   - Use `/stepwise-core:implement-plan thoughts/shared/plans/[filename].md` to execute it
+   - Or use `/stepwise-core:iterate-plan thoughts/shared/plans/[filename].md [changes]` to refine further
 
-   💡 Tip: Use `/clear` to free up context before starting implementation
+   Tip: Use `/clear` to free up context before starting implementation
    ```
 
 ## Important Guidelines
@@ -373,10 +375,10 @@ After structure approval:
    - Cross-browser visual compatibility
 
 **INVALID Manual Verification (write tests instead):**
-- ❌ "Review test output" → Redundant, covered by automated
-- ❌ "Verify function returns correct value" → Should be unit test
-- ❌ "Test with input X produces output Y" → Should be test
-- ❌ "Confirm calculation is correct" → Should be unit test
+- "Review test output" → Redundant, covered by automated
+- "Verify function returns correct value" → Should be unit test
+- "Test with input X produces output Y" → Should be test
+- "Confirm calculation is correct" → Should be unit test
 
 **Format examples:**
 
@@ -460,7 +462,7 @@ tasks = [
 ## Example Interaction Flow
 
 ```
-User: /implementation_plan
+User: /create-plan
 Assistant: I'll help you create a detailed implementation plan...
 
 User: We need to add parent-child tracking for Claude sub-tasks. See thoughts/nikey_es/tickets/eng_1478.md

@@ -4,12 +4,18 @@ Core workflow plugin for structured development following the Research → Plan 
 
 ## What's Included
 
-### Commands (5)
-- `/stepwise-core:research_codebase` - Document codebase as-is with comprehensive research
-- `/stepwise-core:create_plan` - Create detailed implementation plans iteratively
-- `/stepwise-core:iterate_plan` - Update existing implementation plans
-- `/stepwise-core:implement_plan` - Execute plans phase by phase with validation
-- `/stepwise-core:validate_plan` - Validate implementation against plan
+### Skills (11)
+- `/stepwise-core:research-codebase` - Document codebase as-is with comprehensive research
+- `/stepwise-core:create-plan` - Create detailed implementation plans iteratively
+- `/stepwise-core:iterate-plan` - Update existing implementation plans
+- `/stepwise-core:implement-plan` - Execute plans phase by phase with validation
+- `/stepwise-core:validate-plan` - Validate implementation against plan
+- `thoughts-management` - Manage thoughts/ directory (auto-triggered)
+- `bugmagnet` - Comprehensive test coverage and bug discovery
+- `hamburger-method` - Vertical story slicing
+- `small-safe-steps` - Break work into safe deployable increments
+- `story-splitting` - Detect and split oversized stories
+- `test-desiderata` - Analyze test quality using Kent Beck's framework
 
 ### Agents (5)
 - `codebase-locator` - Find WHERE code lives in the codebase
@@ -17,11 +23,6 @@ Core workflow plugin for structured development following the Research → Plan 
 - `codebase-pattern-finder` - Find similar patterns to model after
 - `thoughts-locator` - Discover documents in thoughts/
 - `thoughts-analyzer` - Extract insights from thoughts docs
-
-### Skills (1)
-- `thoughts-management` - Manage thoughts/ directory with 2 bash scripts:
-  - `thoughts-init` - Initialize thoughts/ structure
-  - `thoughts-metadata` - Generate git metadata
 
 ## Installation
 
@@ -37,16 +38,16 @@ Core workflow plugin for structured development following the Research → Plan 
 
 ```bash
 # 1. Research
-/stepwise-core:research_codebase How does authentication work?
+/stepwise-core:research-codebase How does authentication work?
 
 # 2. Plan
-/stepwise-core:create_plan Add OAuth support
+/stepwise-core:create-plan Add OAuth support
 
 # 3. Implement
-/stepwise-core:implement_plan @thoughts/shared/plans/YYYY-MM-DD-oauth.md
+/stepwise-core:implement-plan @thoughts/shared/plans/YYYY-MM-DD-oauth.md
 
 # 4. Validate
-/stepwise-core:validate_plan @thoughts/shared/plans/YYYY-MM-DD-oauth.md
+/stepwise-core:validate-plan @thoughts/shared/plans/YYYY-MM-DD-oauth.md
 ```
 
 ## Philosophy
@@ -60,6 +61,7 @@ Core workflow plugin for structured development following the Research → Plan 
 
 - **stepwise-git**: Git commit workflow without Claude attribution
 - **stepwise-web**: Web search and research capabilities
+- **stepwise-research**: Multi-agent deep research with parallel web searches
 
 ## License
 

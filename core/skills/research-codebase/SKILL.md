@@ -1,7 +1,9 @@
 ---
+name: research-codebase
 description: Document codebase as-is with thoughts directory for historical context
 argument-hint: [research question or topic]
 model: opus
+disable-model-invocation: true
 ---
 
 <!-- SPDX-License-Identifier: Apache-2.0
@@ -178,7 +180,7 @@ Then wait for the user's research query.
    - Include key file references for easy navigation
    - Inform the user of completion:
    ```
-   ✓ Research complete: `thoughts/shared/research/[filename].md`
+   Research complete: `thoughts/shared/research/[filename].md`
 
    Key findings:
    - [Brief summary of main discoveries]
@@ -186,10 +188,10 @@ Then wait for the user's research query.
 
    Next steps in the workflow:
    - Review the research document for details
-   - Use `/stepwise-core:create_plan [task description]` to plan implementation based on findings
+   - Use `/stepwise-core:create-plan [task description]` to plan implementation based on findings
    - Ask follow-up questions if needed
 
-   💡 Tip: Use `/clear` to free up context before planning or implementation
+   Tip: Use `/clear` to free up context before planning or implementation
    ```
 
 10. **Handle follow-up questions:**
