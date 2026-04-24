@@ -254,6 +254,16 @@ make check         # Run shellcheck on bash scripts
 make ci            # Run full CI validation
 ```
 
+### Skill Evaluation
+
+Skills have benchmarks in `<skill-name>-workspace/` directories. Each contains test fixtures, grading results, and timing data for with-skill vs. baseline comparison.
+
+To re-run an evaluation (e.g., against a different model):
+
+```bash
+/skill-creator:skill-creator Re-run evals from <skill-name>-workspace/evals/evals.json
+```
+
 ## 🐛 Troubleshooting
 
 ### Plugin Issues

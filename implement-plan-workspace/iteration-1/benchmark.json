@@ -1,0 +1,180 @@
+{
+  "metadata": {
+    "skill_name": "implement-plan",
+    "skill_path": "/Users/jorge.castro/mordor/personal/stepwise-dev/core/skills/implement-plan",
+    "executor_model": "claude-sonnet-4-6",
+    "analyzer_model": "claude-sonnet-4-6",
+    "timestamp": "2026-04-24T12:00:00Z",
+    "evals_run": [1, 2, 3],
+    "runs_per_configuration": 1
+  },
+  "runs": [
+    {
+      "eval_id": 1,
+      "eval_name": "Simple Two-Phase",
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.83,
+        "passed": 5,
+        "failed": 1,
+        "total": 6,
+        "time_seconds": 63.4,
+        "tokens": 18777,
+        "tool_calls": 15,
+        "errors": 0
+      },
+      "expectations": [
+        {"text": "calculator.py contains a def multiply function", "passed": true, "evidence": "Output calculator.py line 9"},
+        {"text": "calculator.py contains a def divide function", "passed": true, "evidence": "Output calculator.py line 13"},
+        {"text": "divide function raises ValueError when divisor is zero", "passed": true, "evidence": "Output calculator.py lines 14-15"},
+        {"text": "make test exits 0 with all tests passing", "passed": true, "evidence": "Transcript confirms all 5 tests passed"},
+        {"text": "Plan file has all checkboxes marked [x]", "passed": true, "evidence": "All 5 checkboxes marked [x]"},
+        {"text": "Phases implemented sequentially", "passed": false, "evidence": "Shared dir issue: code already present from concurrent baseline"}
+      ]
+    },
+    {
+      "eval_id": 1,
+      "eval_name": "Simple Two-Phase",
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.67,
+        "passed": 4,
+        "failed": 2,
+        "total": 6,
+        "time_seconds": 35.3,
+        "tokens": 15823,
+        "tool_calls": 10,
+        "errors": 0
+      },
+      "expectations": [
+        {"text": "calculator.py contains a def multiply function", "passed": true, "evidence": "Output calculator.py line 9"},
+        {"text": "calculator.py contains a def divide function", "passed": true, "evidence": "Output calculator.py line 13"},
+        {"text": "divide function raises ValueError when divisor is zero", "passed": true, "evidence": "Output calculator.py lines 14-15"},
+        {"text": "make test exits 0 with all tests passing", "passed": true, "evidence": "Transcript confirms all 5 tests passed"},
+        {"text": "Plan file has all checkboxes marked [x]", "passed": false, "evidence": "All checkboxes still [ ] — not updated"},
+        {"text": "Phases implemented sequentially", "passed": false, "evidence": "Both phases implemented in single edit"}
+      ]
+    },
+    {
+      "eval_id": 2,
+      "eval_name": "Plan Mismatch",
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.80,
+        "passed": 4,
+        "failed": 1,
+        "total": 5,
+        "time_seconds": 68.0,
+        "tokens": 19465,
+        "tool_calls": 14,
+        "errors": 0
+      },
+      "expectations": [
+        {"text": "Mismatch detected", "passed": true, "evidence": "Identified authenticate() does not exist"},
+        {"text": "Structured Expected/Found format", "passed": true, "evidence": "Used prescribed Issue/Expected/Found/Why format"},
+        {"text": "Asks user for guidance", "passed": false, "evidence": "Included 'How should I proceed?' but self-resolved without pausing"},
+        {"text": "No authenticate() workaround created", "passed": true, "evidence": "Only verify_credentials() and get_user() in output"},
+        {"text": "Logging correctly added to verify_credentials", "passed": true, "evidence": "All 3 logging calls present, all tests pass"}
+      ]
+    },
+    {
+      "eval_id": 2,
+      "eval_name": "Plan Mismatch",
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.60,
+        "passed": 3,
+        "failed": 2,
+        "total": 5,
+        "time_seconds": 59.4,
+        "tokens": 17456,
+        "tool_calls": 12,
+        "errors": 0
+      },
+      "expectations": [
+        {"text": "Mismatch detected", "passed": true, "evidence": "Identified authenticate() vs verify_credentials() mismatch"},
+        {"text": "Structured Expected/Found format", "passed": false, "evidence": "Narrative prose only, no structured format"},
+        {"text": "Asks user for guidance", "passed": false, "evidence": "Made independent decision without asking"},
+        {"text": "No authenticate() workaround created", "passed": true, "evidence": "Only verify_credentials() and get_user() in output"},
+        {"text": "Logging correctly added to verify_credentials", "passed": true, "evidence": "Logging present but tests not actually run (bash permission issue)"}
+      ]
+    },
+    {
+      "eval_id": 3,
+      "eval_name": "Resume Partial",
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.00,
+        "passed": 6,
+        "failed": 0,
+        "total": 6,
+        "time_seconds": 67.8,
+        "tokens": 21130,
+        "tool_calls": 16,
+        "errors": 0
+      },
+      "expectations": [
+        {"text": "Skips Phase 1 (does not modify validator.js)", "passed": true, "evidence": "Trusted existing checkmarks per Resuming Work instructions"},
+        {"text": "console.error logging for validation failures", "passed": true, "evidence": "app.js lines 7,14"},
+        {"text": "console.info logging for successful registration", "passed": true, "evidence": "app.js line 24"},
+        {"text": "make test exits 0 with all 5 tests passing", "passed": true, "evidence": "5 passed, 0 failed"},
+        {"text": "Phase 2 checkboxes marked [x]", "passed": true, "evidence": "All Phase 2 items checked"},
+        {"text": "Phase 1 checkboxes preserved [x]", "passed": true, "evidence": "Phase 1 items remain checked"}
+      ]
+    },
+    {
+      "eval_id": 3,
+      "eval_name": "Resume Partial",
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.00,
+        "passed": 6,
+        "failed": 0,
+        "total": 6,
+        "time_seconds": 49.9,
+        "tokens": 17795,
+        "tool_calls": 11,
+        "errors": 0
+      },
+      "expectations": [
+        {"text": "Skips Phase 1 (does not modify validator.js)", "passed": true, "evidence": "Phase 1 was skipped based on checkmarks"},
+        {"text": "console.error logging for validation failures", "passed": true, "evidence": "app.js lines 7,14"},
+        {"text": "console.info logging for successful registration", "passed": true, "evidence": "app.js line 24"},
+        {"text": "make test exits 0 with all 5 tests passing", "passed": true, "evidence": "All 5 tests passed"},
+        {"text": "Phase 2 checkboxes marked [x]", "passed": true, "evidence": "All Phase 2 items checked"},
+        {"text": "Phase 1 checkboxes preserved [x]", "passed": true, "evidence": "Phase 1 items remain checked"}
+      ]
+    }
+  ],
+  "run_summary": {
+    "with_skill": {
+      "pass_rate": {"mean": 0.88, "stddev": 0.09, "min": 0.80, "max": 1.00},
+      "time_seconds": {"mean": 66.4, "stddev": 2.0, "min": 63.4, "max": 68.0},
+      "tokens": {"mean": 19791, "stddev": 967, "min": 18777, "max": 21130}
+    },
+    "without_skill": {
+      "pass_rate": {"mean": 0.76, "stddev": 0.17, "min": 0.60, "max": 1.00},
+      "time_seconds": {"mean": 48.2, "stddev": 9.9, "min": 35.3, "max": 59.4},
+      "tokens": {"mean": 17025, "stddev": 838, "min": 15823, "max": 17795}
+    },
+    "delta": {
+      "pass_rate": "+0.12",
+      "time_seconds": "+18.2",
+      "tokens": "+2766"
+    }
+  },
+  "notes": [
+    "Eval 1 was confounded by shared project directory — both agents ran against the same files, so the with-skill agent found code already implemented by the baseline's concurrent run. For clean results, each agent needs its own copy of the project.",
+    "The skill's main value shows in Eval 2 (mismatch handling): structured Expected/Found format vs. narrative prose, and deviation notes in the plan file.",
+    "Eval 3 (resume) shows no skill advantage — both agents correctly identified and skipped Phase 1 based on [x] checkmarks. This behavior is natural for capable models.",
+    "The skill adds ~18s and ~2800 tokens on average, primarily from reading the skill file itself and following its more structured verification process.",
+    "Checkbox management is the most consistent skill-vs-baseline difference: with-skill always marks checkboxes, without-skill sometimes forgets (Eval 1 baseline left all unchecked).",
+    "Neither the skill nor baseline actually paused for user input on the mismatch in Eval 2 — both self-resolved. The skill's STOP instruction needs strengthening."
+  ]
+}

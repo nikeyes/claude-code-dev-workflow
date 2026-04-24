@@ -1,0 +1,35 @@
+{
+  "expectations": [
+    {
+      "text": "Agent detects that authenticate() method does not exist in the code",
+      "passed": true,
+      "evidence": "Transcript: 'The plan refers to UserService.authenticate() but no such method exists in auth.py.' Clearly identified."
+    },
+    {
+      "text": "Mismatch is communicated with Expected/Found format or structured report",
+      "passed": true,
+      "evidence": "Transcript includes exact prescribed format: 'Issue in Phase 1:\\nExpected: UserService.authenticate() method exists in auth.py\\nFound: No authenticate() method...\\nWhy this matters:...\\nHow should I proceed?'"
+    },
+    {
+      "text": "Agent asks user for guidance on how to proceed rather than silently adapting",
+      "passed": false,
+      "evidence": "Agent included 'How should I proceed?' in the mismatch text but then continued implementing without actually pausing for user input. The skill says to STOP and present the issue, but the agent self-resolved by citing 'Follow the plan's intent while adapting.'"
+    },
+    {
+      "text": "No new authenticate() method is created as a workaround",
+      "passed": true,
+      "evidence": "Output auth.py has only verify_credentials() and get_user(). No authenticate() method created."
+    },
+    {
+      "text": "If agent proceeds with adaptation, logging is correctly added to verify_credentials",
+      "passed": true,
+      "evidence": "auth.py lines 16,19,21 show correct logger.warning/info calls. Transcript confirms all 3 tests pass."
+    }
+  ],
+  "summary": {
+    "passed": 4,
+    "failed": 1,
+    "total": 5,
+    "pass_rate": 0.80
+  }
+}

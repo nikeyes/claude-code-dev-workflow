@@ -1,0 +1,13 @@
+{
+  "eval_id": 3,
+  "eval_name": "resume-partial",
+  "prompt": "Implement the plan at thoughts/shared/plans/add-validation-and-logging.md",
+  "assertions": [
+    "Agent does NOT modify validator.js (Phase 1 was already done)",
+    "app.js contains console.error logging for validation failures",
+    "app.js contains console.info logging for successful registration",
+    "make test exits 0 with all 5 tests passing",
+    "Phase 2 checkboxes in plan file are marked [x]",
+    "Phase 1 checkboxes in plan file remain [x] and are not reset"
+  ]
+}

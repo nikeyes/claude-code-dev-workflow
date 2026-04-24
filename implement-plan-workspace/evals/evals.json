@@ -1,0 +1,46 @@
+{
+  "skill_name": "implement-plan",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Implement the plan at thoughts/shared/plans/add-calculator-operations.md",
+      "expected_output": "Both multiply and divide functions added to calculator.py, all tests pass, plan checkboxes marked",
+      "files": [],
+      "expectations": [
+        "calculator.py contains a def multiply function",
+        "calculator.py contains a def divide function",
+        "divide function raises ValueError when divisor is zero",
+        "make test exits 0 with all tests passing",
+        "Plan file has all checkboxes marked [x] with no remaining [ ]",
+        "Transcript shows Phase 1 was completed before Phase 2 started"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Implement the plan at thoughts/shared/plans/improve-auth-logging.md",
+      "expected_output": "Detects that authenticate() method does not exist (it is verify_credentials()), presents mismatch clearly, asks for guidance",
+      "files": [],
+      "expectations": [
+        "Agent detects that authenticate() method does not exist in the code",
+        "Mismatch is communicated with Expected/Found format or structured report",
+        "Agent asks user for guidance on how to proceed rather than silently adapting",
+        "No new authenticate() method is created as a workaround",
+        "If agent proceeds with adaptation, logging is correctly added to verify_credentials"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Implement the plan at thoughts/shared/plans/add-validation-and-logging.md",
+      "expected_output": "Skips Phase 1 (already checked), implements Phase 2 logging only, all tests pass",
+      "files": [],
+      "expectations": [
+        "Agent does NOT modify validator.js (Phase 1 was already done)",
+        "app.js contains console.error logging for validation failures",
+        "app.js contains console.info logging for successful registration",
+        "make test exits 0 with all 5 tests passing",
+        "Phase 2 checkboxes in plan file are marked [x]",
+        "Phase 1 checkboxes in plan file remain [x] and are not reset"
+      ]
+    }
+  ]
+}

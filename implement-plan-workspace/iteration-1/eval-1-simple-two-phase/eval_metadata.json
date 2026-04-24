@@ -1,0 +1,13 @@
+{
+  "eval_id": 1,
+  "eval_name": "simple-two-phase",
+  "prompt": "Implement the plan at thoughts/shared/plans/add-calculator-operations.md",
+  "assertions": [
+    "calculator.py contains a def multiply function",
+    "calculator.py contains a def divide function",
+    "divide function raises ValueError when divisor is zero",
+    "make test exits 0 with all tests passing",
+    "Plan file has all checkboxes marked [x] with no remaining [ ]",
+    "Transcript shows Phase 1 was completed before Phase 2 started"
+  ]
+}
