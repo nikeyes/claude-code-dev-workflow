@@ -42,3 +42,31 @@ https://github.com/humanlayer/humanlayer
 This workflow was inspired by Ashley Ha's article:
 "I mastered the Claude Code workflow"
 https://medium.com/@ashleybcha/i-mastered-the-claude-code-workflow-d7ea726b38fd
+
+================================================================================
+
+The following Agent Skills are derived from the skill-factory project by eferro:
+Copyright (c) eferro
+Licensed under the Apache License, Version 2.0
+https://github.com/eferro/skill-factory
+
+- core/skills/hamburger-method/ (from output_skills/practices/hamburger-method)
+- core/skills/small-safe-steps/ (from output_skills/practices/small-safe-steps)
+- core/skills/story-splitting/ (from output_skills/practices/story-splitting)
+- core/skills/test-desiderata/ (from output_skills/testing/test-desiderata)
+
+Note: the hamburger-method and story-splitting skills ultimately credit
+Gojko Adzic as the author of the underlying techniques; test-desiderata
+credits Kent Beck. The skill-factory repository is the upstream source
+from which these SKILL.md files were adapted.
+
+================================================================================
+
+The following component is derived from the BugMagnet AI Assistant:
+Copyright (c) Gojko Adzic
+Licensed under the MIT License
+https://github.com/gojko/bugmagnet-ai-assistant
+
+- core/skills/bugmagnet/SKILL.md (adapted from commands/bugmagnet.md)
+  - Wrapped as a Claude Code Agent Skill with frontmatter and attribution
+  - Original workflow content preserved
