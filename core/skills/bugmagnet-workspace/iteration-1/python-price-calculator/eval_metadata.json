@@ -1,0 +1,42 @@
+{
+  "eval_id": 1,
+  "eval_name": "python-price-calculator",
+  "prompt": "/bugmagnet evals/files/price_calculator.py",
+  "assertions": [
+    {
+      "id": "zero-division-split",
+      "text": "Tests split_payment with parts=0 (zero division bug)",
+      "type": "content_check"
+    },
+    {
+      "id": "negative-price",
+      "text": "Tests negative price values in calculate_discount or calculate_total",
+      "type": "content_check"
+    },
+    {
+      "id": "empty-items",
+      "text": "Tests calculate_total with empty items list",
+      "type": "content_check"
+    },
+    {
+      "id": "coupon-exceeds-total",
+      "text": "Tests apply_coupon producing negative total (coupon value exceeds total)",
+      "type": "content_check"
+    },
+    {
+      "id": "floating-point-rounding",
+      "text": "Tests floating point rounding edge cases",
+      "type": "content_check"
+    },
+    {
+      "id": "bug-as-skipped-test",
+      "text": "Documents at least one discovered bug as a skipped test with BUG notation",
+      "type": "content_check"
+    },
+    {
+      "id": "structured-summary",
+      "text": "Provides a structured test coverage summary at the end",
+      "type": "content_check"
+    }
+  ]
+}

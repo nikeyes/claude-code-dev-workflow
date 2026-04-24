@@ -1,0 +1,47 @@
+{
+  "eval_id": 1,
+  "run_type": "without_skill",
+  "expectations": [
+    {
+      "text": "Tests split_payment with parts=0 (zero division bug)",
+      "passed": false,
+      "evidence": "No test for split_payment(total, 0). The split_payment tests cover even splits, remainders, single part, and zero total, but never test parts=0."
+    },
+    {
+      "text": "Tests negative price values in calculate_discount or calculate_total",
+      "passed": true,
+      "evidence": "test_negative_discount_increases_price tests discount=-10. test_discount_greater_than_100_returns_negative_price tests discount=110."
+    },
+    {
+      "text": "Tests calculate_total with empty items list",
+      "passed": true,
+      "evidence": "test_empty_items_list verifies subtotal=0.0, tax=0.0, total=0.0, item_count=0"
+    },
+    {
+      "text": "Tests apply_coupon producing negative total (coupon value exceeds total)",
+      "passed": true,
+      "evidence": "test_fixed_coupon_exceeding_total_returns_negative and test_percent_coupon_over_100_returns_negative both test this scenario"
+    },
+    {
+      "text": "Tests floating point rounding edge cases",
+      "passed": true,
+      "evidence": "test_floating_point_precision_rounding tests 0.1*3 accumulation. test_fractional_discount_rounds_to_two_decimals tests rounding."
+    },
+    {
+      "text": "Documents at least one discovered bug as a skipped test with BUG notation",
+      "passed": false,
+      "evidence": "No skipped tests with BUG notation. Bugs are documented in the summary.md as comments but no tests use pytest.skip or BUG suffix. The negative-result tests PASS (they assert the buggy behavior rather than skipping)."
+    },
+    {
+      "text": "Provides a structured test coverage summary at the end",
+      "passed": true,
+      "evidence": "summary.md contains structured summary with breakdown by function, bugs section, and coverage improvement table"
+    }
+  ],
+  "summary": {
+    "passed": 5,
+    "failed": 2,
+    "total": 7,
+    "pass_rate": 0.71
+  }
+}

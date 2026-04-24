@@ -1,0 +1,186 @@
+{
+  "metadata": {
+    "skill_name": "bugmagnet",
+    "skill_path": "/Users/jorge.castro/mordor/personal/stepwise-dev/core/skills/bugmagnet",
+    "executor_model": "claude-sonnet-4-6",
+    "timestamp": "2026-04-25T01:15:00Z",
+    "evals_run": [1, 2, 3],
+    "runs_per_configuration": 1
+  },
+  "runs": [
+    {
+      "eval_id": 1,
+      "eval_name": "Python price_calculator",
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 7,
+        "failed": 0,
+        "total": 7,
+        "time_seconds": 20.2,
+        "tokens": 25805,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {"text": "Tests split_payment with parts=0 (zero division bug)", "passed": true, "evidence": "Skipped test with BUG suffix documents ZeroDivisionError"},
+        {"text": "Tests negative price values in calculate_discount or calculate_total", "passed": true, "evidence": "Tests for negative price and negative discount percent"},
+        {"text": "Tests calculate_total with empty items list", "passed": true, "evidence": "test_returns_zeros_for_empty_items_list"},
+        {"text": "Tests apply_coupon producing negative total (coupon value exceeds total)", "passed": true, "evidence": "Two skipped BUG tests for fixed and percent coupons exceeding total"},
+        {"text": "Tests floating point rounding edge cases", "passed": true, "evidence": "TestFloatingPointEdgeCases class with 4 tests"},
+        {"text": "Documents at least one discovered bug as a skipped test with BUG notation", "passed": true, "evidence": "3 skipped tests with BUG suffix and detailed documentation"},
+        {"text": "Provides a structured test coverage summary at the end", "passed": true, "evidence": "summary.md with structured categories, counts, and bug list"}
+      ]
+    },
+    {
+      "eval_id": 1,
+      "eval_name": "Python price_calculator",
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.71,
+        "passed": 5,
+        "failed": 2,
+        "total": 7,
+        "time_seconds": 116.3,
+        "tokens": 25304,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {"text": "Tests split_payment with parts=0 (zero division bug)", "passed": false, "evidence": "No test for parts=0"},
+        {"text": "Tests negative price values in calculate_discount or calculate_total", "passed": true, "evidence": "Tests for negative discount and discount>100"},
+        {"text": "Tests calculate_total with empty items list", "passed": true, "evidence": "test_empty_items_list present"},
+        {"text": "Tests apply_coupon producing negative total (coupon value exceeds total)", "passed": true, "evidence": "Tests document negative results but don't flag as bugs"},
+        {"text": "Tests floating point rounding edge cases", "passed": true, "evidence": "Floating point accumulation test present"},
+        {"text": "Documents at least one discovered bug as a skipped test with BUG notation", "passed": false, "evidence": "No skipped tests with BUG notation; bugs documented only in summary text"},
+        {"text": "Provides a structured test coverage summary at the end", "passed": true, "evidence": "summary.md present with structured content"}
+      ]
+    },
+    {
+      "eval_id": 2,
+      "eval_name": "TypeScript user_validator",
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 7,
+        "failed": 0,
+        "total": 7,
+        "time_seconds": 489.4,
+        "tokens": 76668,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {"text": "Tests email validation edge cases (missing domain, multiple @, no @ at all)", "passed": true, "evidence": "Three email edge case tests present"},
+        {"text": "Tests age with NaN or Infinity values bypassing the range check", "passed": true, "evidence": "Skipped BUG tests for NaN and Infinity age"},
+        {"text": "Tests normalizeEmail with string that has no @ (destructuring crash)", "passed": true, "evidence": "Skipped BUG test with root cause analysis"},
+        {"text": "Tests whitespace-only name passes trim check", "passed": true, "evidence": "Test for name='   ' present"},
+        {"text": "Tests names with special characters (accents, apostrophes, unicode)", "passed": true, "evidence": "Tests for José García-López, O'Brien, 田中太郎"},
+        {"text": "Tests tags as empty array vs undefined", "passed": true, "evidence": "Both empty array and undefined tests present"},
+        {"text": "Documents at least one discovered bug as a skipped test with BUG notation", "passed": true, "evidence": "3 skipped BUG tests with detailed documentation"}
+      ]
+    },
+    {
+      "eval_id": 2,
+      "eval_name": "TypeScript user_validator",
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 7,
+        "failed": 0,
+        "total": 7,
+        "time_seconds": 171.0,
+        "tokens": 26418,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {"text": "Tests email validation edge cases (missing domain, multiple @, no @ at all)", "passed": true, "evidence": "Email edge cases covered in tests"},
+        {"text": "Tests age with NaN or Infinity values bypassing the range check", "passed": true, "evidence": "Skipped BUG test for NaN age"},
+        {"text": "Tests normalizeEmail with string that has no @ (destructuring crash)", "passed": true, "evidence": "Skipped BUG test for normalizeEmail crash"},
+        {"text": "Tests whitespace-only name passes trim check", "passed": true, "evidence": "Whitespace-only name test in coverage table"},
+        {"text": "Tests names with special characters (accents, apostrophes, unicode)", "passed": true, "evidence": "Unicode/accents name test in coverage table"},
+        {"text": "Tests tags as empty array vs undefined", "passed": true, "evidence": "Both empty array and undefined in coverage table"},
+        {"text": "Documents at least one discovered bug as a skipped test with BUG notation", "passed": true, "evidence": "2 skipped BUG tests plus 2 documented bugs"}
+      ]
+    },
+    {
+      "eval_id": 3,
+      "eval_name": "Go string_utils",
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 6,
+        "failed": 0,
+        "total": 6,
+        "time_seconds": 173.8,
+        "tokens": 37365,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {"text": "Discovers Truncate uses len() instead of rune count (unicode truncation bug)", "passed": true, "evidence": "Bug 1 with 2 skipped BUG tests and []rune fix"},
+        {"text": "Tests ExtractInitials with empty string input (index out of range panic)", "passed": true, "evidence": "Empty string test present, returns ''"},
+        {"text": "Tests WrapText with zero or negative width", "passed": true, "evidence": "Zero width test present, summary documents behavior"},
+        {"text": "Tests SlugifyText with input containing only special characters", "passed": true, "evidence": "Special-chars-only test returns empty string"},
+        {"text": "Tests all functions with empty string input", "passed": true, "evidence": "All 5 functions have empty string tests"},
+        {"text": "Documents at least one discovered bug as a skipped test with BUG notation", "passed": true, "evidence": "4 skipped BUG tests, 3 bugs documented with fixes"}
+      ]
+    },
+    {
+      "eval_id": 3,
+      "eval_name": "Go string_utils",
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.67,
+        "passed": 4,
+        "failed": 2,
+        "total": 6,
+        "time_seconds": 164.7,
+        "tokens": 29545,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {"text": "Discovers Truncate uses len() instead of rune count (unicode truncation bug)", "passed": true, "evidence": "Bug 1 in summary with t.Logf documentation"},
+        {"text": "Tests ExtractInitials with empty string input (index out of range panic)", "passed": true, "evidence": "TestExtractInitials_EmptyString present"},
+        {"text": "Tests WrapText with zero or negative width", "passed": false, "evidence": "No zero or negative width test for WrapText"},
+        {"text": "Tests SlugifyText with input containing only special characters", "passed": true, "evidence": "TestSlugifyText_OnlySpecialCharacters present"},
+        {"text": "Tests all functions with empty string input", "passed": true, "evidence": "All 5 functions have empty string tests"},
+        {"text": "Documents at least one discovered bug as a skipped test with BUG notation", "passed": false, "evidence": "Bugs documented with t.Logf not as skipped/BUG tests"}
+      ]
+    }
+  ],
+  "run_summary": {
+    "with_skill": {
+      "pass_rate": {"mean": 1.0, "stddev": 0.0, "min": 1.0, "max": 1.0},
+      "time_seconds": {"mean": 227.8, "stddev": 192.3, "min": 20.2, "max": 489.4},
+      "tokens": {"mean": 46613, "stddev": 21549, "min": 25805, "max": 76668}
+    },
+    "without_skill": {
+      "pass_rate": {"mean": 0.79, "stddev": 0.15, "min": 0.67, "max": 1.0},
+      "time_seconds": {"mean": 150.7, "stddev": 24.5, "min": 116.3, "max": 171.0},
+      "tokens": {"mean": 27089, "stddev": 1708, "min": 25304, "max": 29545}
+    },
+    "delta": {
+      "pass_rate": "+0.21",
+      "time_seconds": "+77.1",
+      "tokens": "+19524"
+    }
+  },
+  "notes": [
+    "With-skill achieves 100% pass rate across all 3 evals vs 79% baseline average",
+    "The biggest skill advantage is in bug documentation format: with-skill consistently uses skipped tests with BUG suffix per the workflow, while baseline agents use ad-hoc approaches (t.Logf, comments, summary-only)",
+    "TypeScript eval shows no assertion difference (both score 100%) — the baseline was surprisingly strong on this eval, finding all the same bugs. This eval may not discriminate well.",
+    "Python baseline missed the split_payment(0) zero-division test entirely — a key bug the skill's checklist catches",
+    "Go baseline missed WrapText zero-width test — the skill's boundary condition checklist prompted testing this edge case",
+    "With-skill runs used significantly more tokens (mean 46K vs 27K) and time (mean 228s vs 151s), reflecting the phased workflow overhead",
+    "Note: Python with-skill timing (20s) is misleadingly low because the subagent was blocked on permissions and tests were run manually; actual workflow time was longer"
+  ]
+}

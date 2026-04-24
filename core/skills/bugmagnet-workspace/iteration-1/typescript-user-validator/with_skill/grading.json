@@ -1,0 +1,47 @@
+{
+  "eval_id": 2,
+  "run_type": "with_skill",
+  "expectations": [
+    {
+      "text": "Tests email validation edge cases (missing domain, multiple @, no @ at all)",
+      "passed": true,
+      "evidence": "Tests: 'returns error when email has no @ sign', 'returns valid for email with only @ and surrounding text' (user@), 'returns valid for email with multiple @ signs' (a@b@c)"
+    },
+    {
+      "text": "Tests age with NaN or Infinity values bypassing the range check",
+      "passed": true,
+      "evidence": "Skipped test 'returns error when age is NaN - BUG' with detailed root cause explaining NaN < 0 and NaN > 150 are both false. Also 'returns error when age is Infinity - BUG'."
+    },
+    {
+      "text": "Tests normalizeEmail with string that has no @ (destructuring crash)",
+      "passed": true,
+      "evidence": "Skipped test 'throws when email has no @ sign - BUG' with root cause analysis of undefined domain from split destructuring"
+    },
+    {
+      "text": "Tests whitespace-only name passes trim check",
+      "passed": true,
+      "evidence": "test 'returns error when name is whitespace only' validates that '   ' is caught by trim().length check"
+    },
+    {
+      "text": "Tests names with special characters (accents, apostrophes, unicode)",
+      "passed": true,
+      "evidence": "Three tests: 'returns valid for name with accents and special characters' (José García-López), 'returns valid for name with apostrophe' (O'Brien), 'returns valid for name with unicode characters' (田中太郎)"
+    },
+    {
+      "text": "Tests tags as empty array vs undefined",
+      "passed": true,
+      "evidence": "Two tests: 'returns valid when tags is undefined' and 'returns valid for empty tags array'. Also formatUserDisplay test documents the empty-array display bug."
+    },
+    {
+      "text": "Documents at least one discovered bug as a skipped test with BUG notation",
+      "passed": true,
+      "evidence": "3 skipped tests with BUG notation: NaN age, Infinity age, and normalizeEmail crash. Each has ROOT CAUSE, CODE LOCATION, and PROPOSED FIX."
+    }
+  ],
+  "summary": {
+    "passed": 7,
+    "failed": 0,
+    "total": 7,
+    "pass_rate": 1.0
+  }
+}

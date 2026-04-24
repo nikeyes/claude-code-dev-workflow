@@ -1,0 +1,42 @@
+{
+  "eval_id": 2,
+  "eval_name": "typescript-user-validator",
+  "prompt": "/bugmagnet evals/files/user_validator.ts",
+  "assertions": [
+    {
+      "id": "email-edge-cases",
+      "text": "Tests email validation edge cases (missing domain, multiple @, no @ at all)",
+      "type": "content_check"
+    },
+    {
+      "id": "nan-infinity-age",
+      "text": "Tests age with NaN or Infinity values bypassing the range check",
+      "type": "content_check"
+    },
+    {
+      "id": "normalize-email-crash",
+      "text": "Tests normalizeEmail with string that has no @ (destructuring crash)",
+      "type": "content_check"
+    },
+    {
+      "id": "whitespace-name",
+      "text": "Tests whitespace-only name passes trim check",
+      "type": "content_check"
+    },
+    {
+      "id": "special-char-names",
+      "text": "Tests names with special characters (accents, apostrophes, unicode)",
+      "type": "content_check"
+    },
+    {
+      "id": "empty-tags-array",
+      "text": "Tests tags as empty array vs undefined",
+      "type": "content_check"
+    },
+    {
+      "id": "bug-as-skipped-test",
+      "text": "Documents at least one discovered bug as a skipped test with BUG notation",
+      "type": "content_check"
+    }
+  ]
+}

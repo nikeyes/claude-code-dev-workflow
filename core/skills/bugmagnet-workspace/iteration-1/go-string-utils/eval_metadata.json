@@ -1,0 +1,37 @@
+{
+  "eval_id": 3,
+  "eval_name": "go-string-utils",
+  "prompt": "/bugmagnet evals/files/string_utils.go",
+  "assertions": [
+    {
+      "id": "unicode-truncation-bug",
+      "text": "Discovers Truncate uses len() instead of rune count (unicode truncation bug)",
+      "type": "content_check"
+    },
+    {
+      "id": "extract-initials-empty-panic",
+      "text": "Tests ExtractInitials with empty string input (index out of range panic)",
+      "type": "content_check"
+    },
+    {
+      "id": "wrap-text-zero-width",
+      "text": "Tests WrapText with zero or negative width",
+      "type": "content_check"
+    },
+    {
+      "id": "slugify-special-only",
+      "text": "Tests SlugifyText with input containing only special characters",
+      "type": "content_check"
+    },
+    {
+      "id": "empty-string-all-functions",
+      "text": "Tests all functions with empty string input",
+      "type": "content_check"
+    },
+    {
+      "id": "bug-as-skipped-test",
+      "text": "Documents at least one discovered bug as a skipped test with BUG notation",
+      "type": "content_check"
+    }
+  ]
+}

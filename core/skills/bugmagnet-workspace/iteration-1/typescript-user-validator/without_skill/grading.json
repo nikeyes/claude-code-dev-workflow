@@ -1,0 +1,47 @@
+{
+  "eval_id": 2,
+  "run_type": "without_skill",
+  "expectations": [
+    {
+      "text": "Tests email validation edge cases (missing domain, multiple @, no @ at all)",
+      "passed": true,
+      "evidence": "Tests cover email with no @, multiple @@, and no domain after @. Documented as bug #3 (email validator too permissive)."
+    },
+    {
+      "text": "Tests age with NaN or Infinity values bypassing the range check",
+      "passed": true,
+      "evidence": "Skipped test 'BUG: NaN age bypasses range check' documents the NaN < 0 / NaN > 150 issue. Bug #1 in summary."
+    },
+    {
+      "text": "Tests normalizeEmail with string that has no @ (destructuring crash)",
+      "passed": true,
+      "evidence": "Skipped test 'BUG: normalizeEmail crashes when input has no @ symbol' documents the TypeError. Bug #2 in summary."
+    },
+    {
+      "text": "Tests whitespace-only name passes trim check",
+      "passed": true,
+      "evidence": "Summary mentions 'Name: whitespace-only' in coverage table. Tests in name validation group."
+    },
+    {
+      "text": "Tests names with special characters (accents, apostrophes, unicode)",
+      "passed": true,
+      "evidence": "Summary mentions 'Name: unicode / accents' in coverage table."
+    },
+    {
+      "text": "Tests tags as empty array vs undefined",
+      "passed": true,
+      "evidence": "Summary mentions 'Tags: undefined vs empty array' in coverage table. Bug #4 documents the formatUserDisplay empty array issue."
+    },
+    {
+      "text": "Documents at least one discovered bug as a skipped test with BUG notation",
+      "passed": true,
+      "evidence": "2 skipped tests with BUG notation (NaN age, normalizeEmail crash). 4 bugs total documented in summary."
+    }
+  ],
+  "summary": {
+    "passed": 7,
+    "failed": 0,
+    "total": 7,
+    "pass_rate": 1.0
+  }
+}

@@ -1,0 +1,42 @@
+{
+  "eval_id": 3,
+  "run_type": "without_skill",
+  "expectations": [
+    {
+      "text": "Discovers Truncate uses len() instead of rune count (unicode truncation bug)",
+      "passed": true,
+      "evidence": "Bug 1 in summary: 'Truncate — byte-based slicing breaks multibyte UTF-8 characters'. TestTruncate_MultibyteBug documents the bug with t.Logf."
+    },
+    {
+      "text": "Tests ExtractInitials with empty string input (index out of range panic)",
+      "passed": true,
+      "evidence": "TestExtractInitials_EmptyString tests ExtractInitials('') expecting ''. Summary notes ExtractInitials returns '' correctly for empty input."
+    },
+    {
+      "text": "Tests WrapText with zero or negative width",
+      "passed": false,
+      "evidence": "No test for zero or negative width. WrapText tests start at width values that fit words (width=11, width=5, etc.). TestWrapText_SingleLongWordExceedingWidth tests a long word but with positive width."
+    },
+    {
+      "text": "Tests SlugifyText with input containing only special characters",
+      "passed": true,
+      "evidence": "TestSlugifyText_OnlySpecialCharacters tests input containing only special chars, expecting empty string result."
+    },
+    {
+      "text": "Tests all functions with empty string input",
+      "passed": true,
+      "evidence": "Empty string tests for all 5 functions: TestTruncate_EmptyString, TestSlugifyText_EmptyString, TestCountWords_EmptyString, TestExtractInitials_EmptyString, TestWrapText_EmptyString"
+    },
+    {
+      "text": "Documents at least one discovered bug as a skipped test with BUG notation",
+      "passed": false,
+      "evidence": "Bugs are documented with t.Logf (informational logs) not as skipped tests with BUG suffix. No test uses t.Skip or has BUG in its name."
+    }
+  ],
+  "summary": {
+    "passed": 4,
+    "failed": 2,
+    "total": 6,
+    "pass_rate": 0.67
+  }
+}

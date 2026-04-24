@@ -1,0 +1,42 @@
+{
+  "eval_id": 3,
+  "run_type": "with_skill",
+  "expectations": [
+    {
+      "text": "Discovers Truncate uses len() instead of rune count (unicode truncation bug)",
+      "passed": true,
+      "evidence": "Bug 1 in summary: 'Truncate: byte-length indexing instead of rune count'. Two skipped tests: TestTruncate_returnsCorrectResultForMultibyteUnicodeCharacters_BUG and TestTruncate_returnsOriginalForMultibyteStringWithinLimit_BUG. Detailed root cause with fix using []rune(s)."
+    },
+    {
+      "text": "Tests ExtractInitials with empty string input (index out of range panic)",
+      "passed": true,
+      "evidence": "TestExtractInitials_returnsEmptyStringForEmptyInput tests ExtractInitials('') and expects ''. Summary notes: 'Returns an empty string for empty or whitespace-only input (correct: the loop never runs)'"
+    },
+    {
+      "text": "Tests WrapText with zero or negative width",
+      "passed": true,
+      "evidence": "Summary section on WrapText: 'width = 0 causes every word after the first to go on its own line (no panic)'. TestWrapText tests include zero width case."
+    },
+    {
+      "text": "Tests SlugifyText with input containing only special characters",
+      "passed": true,
+      "evidence": "SlugifyText tests include special-characters-only input returning empty string"
+    },
+    {
+      "text": "Tests all functions with empty string input",
+      "passed": true,
+      "evidence": "All 5 functions have empty string tests: Truncate('', N), SlugifyText(''), CountWords(''), ExtractInitials(''), WrapText('', N)"
+    },
+    {
+      "text": "Documents at least one discovered bug as a skipped test with BUG notation",
+      "passed": true,
+      "evidence": "4 skipped tests with BUG suffix. 3 bugs documented: Truncate byte-indexing, ExtractInitials byte access, Truncate negative maxLen panic. Each has severity, file location, and proposed fix."
+    }
+  ],
+  "summary": {
+    "passed": 6,
+    "failed": 0,
+    "total": 6,
+    "pass_rate": 1.0
+  }
+}

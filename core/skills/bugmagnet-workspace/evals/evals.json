@@ -1,0 +1,58 @@
+{
+  "skill_name": "bugmagnet",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "/bugmagnet evals/files/price_calculator.py",
+      "expected_output": "Discovers coverage gaps in the price calculator: negative prices, zero division in split_payment, coupon producing negative totals, floating point rounding issues, empty items list, missing currency symbols. Writes tests following the skill's phased workflow.",
+      "files": [
+        "evals/files/price_calculator.py",
+        "evals/files/test_price_calculator.py"
+      ],
+      "expectations": [
+        "Tests split_payment with parts=0 (zero division bug)",
+        "Tests negative price values in calculate_discount or calculate_total",
+        "Tests calculate_total with empty items list",
+        "Tests apply_coupon producing negative total (coupon value exceeds total)",
+        "Tests floating point rounding edge cases",
+        "Documents at least one discovered bug as a skipped test with BUG notation",
+        "Provides a structured test coverage summary at the end"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "/bugmagnet evals/files/user_validator.ts",
+      "expected_output": "Identifies validation gaps: emails with multiple @, whitespace-only names, age as NaN/Infinity, tags as empty array, normalizeEmail with missing @, formatUserDisplay with undefined tags, names with special characters. Writes tests in vitest format.",
+      "files": [
+        "evals/files/user_validator.ts",
+        "evals/files/user_validator.test.ts"
+      ],
+      "expectations": [
+        "Tests email validation edge cases (missing domain, multiple @, no @ at all)",
+        "Tests age with NaN or Infinity values bypassing the range check",
+        "Tests normalizeEmail with string that has no @ (destructuring crash)",
+        "Tests whitespace-only name passes trim check",
+        "Tests names with special characters (accents, apostrophes, unicode)",
+        "Tests tags as empty array vs undefined",
+        "Documents at least one discovered bug as a skipped test with BUG notation"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "/bugmagnet evals/files/string_utils.go",
+      "expected_output": "Finds edge cases: Truncate with multibyte unicode (len vs rune count), SlugifyText with consecutive special chars, ExtractInitials with empty string (index panic), WrapText with single very long word, zero/negative maxLen. Writes Go table-driven tests.",
+      "files": [
+        "evals/files/string_utils.go",
+        "evals/files/string_utils_test.go"
+      ],
+      "expectations": [
+        "Discovers Truncate uses len() instead of rune count (unicode truncation bug)",
+        "Tests ExtractInitials with empty string input (index out of range panic)",
+        "Tests WrapText with zero or negative width",
+        "Tests SlugifyText with input containing only special characters",
+        "Tests all functions with empty string input",
+        "Documents at least one discovered bug as a skipped test with BUG notation"
+      ]
+    }
+  ]
+}

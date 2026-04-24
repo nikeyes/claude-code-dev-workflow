@@ -1,0 +1,47 @@
+{
+  "eval_id": 1,
+  "run_type": "with_skill",
+  "expectations": [
+    {
+      "text": "Tests split_payment with parts=0 (zero division bug)",
+      "passed": true,
+      "evidence": "test_raises_error_for_zero_parts_BUG is a skipped test that documents the ZeroDivisionError bug with root cause analysis and proposed fix"
+    },
+    {
+      "text": "Tests negative price values in calculate_discount or calculate_total",
+      "passed": true,
+      "evidence": "test_returns_negative_result_for_negative_price tests calculate_discount(-100, 10) and test_returns_increased_price_when_discount_is_negative tests discount_percent=-10"
+    },
+    {
+      "text": "Tests calculate_total with empty items list",
+      "passed": true,
+      "evidence": "test_returns_zeros_for_empty_items_list verifies subtotal=0, tax=0, total=0, item_count=0"
+    },
+    {
+      "text": "Tests apply_coupon producing negative total (coupon value exceeds total)",
+      "passed": true,
+      "evidence": "Two skipped BUG tests: test_returns_negative_total_when_fixed_coupon_exceeds_total_BUG and test_returns_negative_total_when_percent_coupon_exceeds_100_BUG"
+    },
+    {
+      "text": "Tests floating point rounding edge cases",
+      "passed": true,
+      "evidence": "TestFloatingPointEdgeCases class with 4 tests: recurring decimal, accumulation precision, split payment sums, format_price rounding"
+    },
+    {
+      "text": "Documents at least one discovered bug as a skipped test with BUG notation",
+      "passed": true,
+      "evidence": "3 skipped tests with BUG suffix, each with detailed ROOT CAUSE, CODE LOCATION, PROPOSED FIX, and EXPECTED/ACTUAL"
+    },
+    {
+      "text": "Provides a structured test coverage summary at the end",
+      "passed": true,
+      "evidence": "summary.md contains structured summary with tests by category, pass/skip counts, and detailed bug list with locations and fixes"
+    }
+  ],
+  "summary": {
+    "passed": 7,
+    "failed": 0,
+    "total": 7,
+    "pass_rate": 1.0
+  }
+}
