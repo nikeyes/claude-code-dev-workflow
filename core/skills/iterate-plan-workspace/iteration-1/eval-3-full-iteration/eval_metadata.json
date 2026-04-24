@@ -1,0 +1,14 @@
+{
+  "eval_id": 3,
+  "eval_name": "full-iteration-add-error-phase",
+  "prompt": "/iterate-plan thoughts/shared/plans/2026-04-24-bugfix-skill.md Add an error handling phase with rollback procedures between Phase 1 and Phase 2, and update success criteria to include error scenario tests",
+  "assertions": [
+    {"text": "Reads the full existing plan before making changes"},
+    {"text": "Researches error handling patterns in the codebase via sub-agents"},
+    {"text": "Presents understanding of changes and asks for confirmation before editing"},
+    {"text": "Adds a new error handling phase to the plan"},
+    {"text": "Updates success criteria to include error scenario tests"},
+    {"text": "Preserves existing Phase 1 and Phase 2 content without loss"},
+    {"text": "Saves updated plan to thoughts/shared/plans/ directory"}
+  ]
+}

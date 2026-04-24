@@ -1,0 +1,10 @@
+{
+  "eval_id": 1,
+  "eval_name": "no-args-help-message",
+  "configuration": "without_skill",
+  "expectations": [
+    {"text": "Response asks the user to provide a plan file path", "passed": true, "evidence": "Asks 'Which plan file do you want to work with?' and offers to list thoughts/shared/plans/."},
+    {"text": "Response does NOT attempt to read or modify any plan file", "passed": true, "evidence": "No file reads or modifications. Only asks clarifying questions."},
+    {"text": "Response includes usage example showing the expected invocation format", "passed": false, "evidence": "No usage syntax like '/iterate-plan [args]' shown. Lists generic change types but no invocation format."}
+  ]
+}

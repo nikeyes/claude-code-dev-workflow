@@ -1,0 +1,11 @@
+{
+  "eval_id": 2,
+  "eval_name": "plan-path-only-asks-for-feedback",
+  "configuration": "without_skill",
+  "expectations": [
+    {"text": "Reads the existing plan file", "passed": true, "evidence": "Says 'I've read the plan' and summarizes its contents accurately (two phases, bugfix skill)."},
+    {"text": "Summarizes or acknowledges the plan content", "passed": true, "evidence": "Provides a richer summary than with_skill: 'It covers adding a new bugfix skill to stepwise-core in two phases: 1. Create core/skills/bugfix/SKILL.md 2. Update test/smoke-test.sh'"},
+    {"text": "Asks the user what changes they want to make", "passed": true, "evidence": "Says 'What would you like to update?' with 5 categorized example areas."},
+    {"text": "Does NOT start modifying the plan without user feedback", "passed": true, "evidence": "No modifications made. Waits for user direction."}
+  ]
+}

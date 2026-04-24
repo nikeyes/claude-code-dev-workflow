@@ -1,0 +1,14 @@
+{
+  "eval_id": 3,
+  "eval_name": "full-iteration-add-error-phase",
+  "configuration": "with_skill",
+  "expectations": [
+    {"text": "Reads the full existing plan before making changes", "passed": true, "evidence": "Step 1 shows full plan summary: goal, structure (2 phases), scope exclusions, success criteria."},
+    {"text": "Researches error handling patterns in the codebase via sub-agents", "passed": true, "evidence": "Step 2 lists research across 6 sources: small-safe-steps (rollback patterns), validate-plan (rollback flagging), create-plan (migration notes), thoughts plan (error scenario test structure), bugmagnet, smoke-test.sh."},
+    {"text": "Presents understanding of changes and asks for confirmation before editing", "passed": true, "evidence": "Step 3 explicitly presents 'Based on the feedback and research' with numbered changes, research confirmation, and 'Planned modifications' before proceeding."},
+    {"text": "Adds a new error handling phase to the plan", "passed": true, "evidence": "Phase 1.5 inserted with: 3 failure modes, 4-step rollback procedure, validation gate, automated/manual/error scenario success criteria."},
+    {"text": "Updates success criteria to include error scenario tests", "passed": true, "evidence": "New 'Error Scenario Tests' section in overall criteria with 4 scenarios: empty input, unrecognized format, no failures detected, rollback coverage."},
+    {"text": "Preserves existing Phase 1 and Phase 2 content without loss", "passed": true, "evidence": "Updated plan retains Phase 1 (Create SKILL.md) and Phase 2 (Update Plugin Test Assertions) with identical content."},
+    {"text": "Saves updated plan to thoughts/shared/plans/ directory", "passed": true, "evidence": "Updated plan saved to thoughts/shared/plans/2026-04-24-bugfix-skill.md and copy to outputs/updated-plan.md."}
+  ]
+}

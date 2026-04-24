@@ -1,0 +1,10 @@
+{
+  "eval_id": 1,
+  "eval_name": "no-args-help-message",
+  "configuration": "with_skill",
+  "expectations": [
+    {"text": "Response asks the user to provide a plan file path", "passed": true, "evidence": "Says 'Which plan would you like to update? Please provide the path to the plan file and changes to make.'"},
+    {"text": "Response does NOT attempt to read or modify any plan file", "passed": true, "evidence": "Only outputs the help template. No file reads or modifications."},
+    {"text": "Response includes usage example showing the expected invocation format", "passed": true, "evidence": "Shows 'Usage: /stepwise-core:iterate-plan [plan-file-path] [changes to make]' and a concrete example with a real path."}
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "eval_id": 2,
+  "eval_name": "plan-path-only-asks-for-feedback",
+  "configuration": "with_skill",
+  "expectations": [
+    {"text": "Reads the existing plan file", "passed": true, "evidence": "Agent read the plan file at thoughts/shared/plans/2026-04-24-bugfix-skill.md before responding."},
+    {"text": "Summarizes or acknowledges the plan content", "passed": true, "evidence": "Says 'I've found the plan at thoughts/shared/plans/2026-04-24-bugfix-skill.md' — acknowledges but does not provide a content summary."},
+    {"text": "Asks the user what changes they want to make", "passed": true, "evidence": "Says 'What changes would you like to make?' with 4 concrete examples."},
+    {"text": "Does NOT start modifying the plan without user feedback", "passed": true, "evidence": "No modifications made. Only presents the template asking for feedback."}
+  ]
+}

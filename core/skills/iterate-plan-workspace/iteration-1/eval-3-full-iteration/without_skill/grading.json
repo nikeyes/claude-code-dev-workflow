@@ -1,0 +1,14 @@
+{
+  "eval_id": 3,
+  "eval_name": "full-iteration-add-error-phase",
+  "configuration": "without_skill",
+  "expectations": [
+    {"text": "Reads the full existing plan before making changes", "passed": true, "evidence": "Response shows accurate understanding of the full plan structure: overview, 2 phases, scope exclusions."},
+    {"text": "Researches error handling patterns in the codebase via sub-agents", "passed": false, "evidence": "No codebase research conducted. Went directly from reading the plan to editing it based on general knowledge. No references to small-safe-steps, validate-plan, or other codebase patterns."},
+    {"text": "Presents understanding of changes and asks for confirmation before editing", "passed": false, "evidence": "Response presents a post-hoc summary of changes made ('Understanding of Requested Changes' + 'Changes Made'), not a pre-edit confirmation step. Changes were made first, then reported."},
+    {"text": "Adds a new error handling phase to the plan", "passed": true, "evidence": "Phase 1.5 added with failure modes, 4-step rollback procedure, validation gate, success criteria."},
+    {"text": "Updates success criteria to include error scenario tests", "passed": true, "evidence": "New 'Error Scenario Tests' section added with 4 scenarios: empty input, binary path, no failures detected, rollback coverage."},
+    {"text": "Preserves existing Phase 1 and Phase 2 content without loss", "passed": true, "evidence": "Phase 1 and Phase 2 retained with identical content in the updated plan."},
+    {"text": "Saves updated plan to thoughts/shared/plans/ directory", "passed": true, "evidence": "Plan saved to thoughts/shared/plans/2026-04-24-bugfix-skill.md and copy to outputs/updated-plan.md."}
+  ]
+}

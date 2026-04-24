@@ -1,0 +1,11 @@
+{
+  "eval_id": 2,
+  "eval_name": "plan-path-only-asks-for-feedback",
+  "prompt": "/iterate-plan thoughts/shared/plans/2026-04-24-bugfix-skill.md",
+  "assertions": [
+    {"text": "Reads the existing plan file"},
+    {"text": "Summarizes or acknowledges the plan content"},
+    {"text": "Asks the user what changes they want to make"},
+    {"text": "Does NOT start modifying the plan without user feedback"}
+  ]
+}

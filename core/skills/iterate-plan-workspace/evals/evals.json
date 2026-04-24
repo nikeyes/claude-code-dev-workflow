@@ -1,0 +1,32 @@
+{
+  "skill_name": "iterate-plan",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "/iterate-plan",
+      "expected_output": "Should display help message asking for plan file path and changes. Should NOT attempt to read or modify any plan file.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "/iterate-plan thoughts/shared/plans/2026-04-24-bugfix-skill.md",
+      "expected_output": "Should read the plan file, summarize its contents, and ask the user what changes they want to make. Should NOT start modifying the plan.",
+      "files": ["evals/sample-plan.md"]
+    },
+    {
+      "id": 3,
+      "prompt": "/iterate-plan thoughts/shared/plans/2026-04-24-bugfix-skill.md Add an error handling phase with rollback procedures between Phase 1 and Phase 2, and update success criteria to include error scenario tests",
+      "expected_output": "Should read the plan, research error handling patterns in the codebase, present understanding of changes, and update the plan with a new phase and updated success criteria.",
+      "files": ["evals/sample-plan.md"],
+      "assertions": [
+        {"text": "Reads the full existing plan before making changes", "type": "behavior"},
+        {"text": "Researches error handling patterns in the codebase via sub-agents", "type": "behavior"},
+        {"text": "Presents understanding of changes and asks for confirmation before editing", "type": "behavior"},
+        {"text": "Adds a new error handling phase to the plan", "type": "output"},
+        {"text": "Updates success criteria to include error scenario tests", "type": "output"},
+        {"text": "Preserves existing Phase 1 and Phase 2 content without loss", "type": "output"},
+        {"text": "Saves updated plan to thoughts/shared/plans/ directory", "type": "output"}
+      ]
+    }
+  ]
+}
