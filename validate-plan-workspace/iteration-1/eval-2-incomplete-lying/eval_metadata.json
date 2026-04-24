@@ -1,0 +1,13 @@
+{
+  "eval_id": 2,
+  "eval_name": "incomplete-lying",
+  "prompt": "Validate the plan at thoughts/shared/plans/add-rate-limiting-and-audit.md",
+  "assertions": [
+    "Report confirms Phase 1 (rate limiting) is correctly implemented",
+    "Report detects audit_logger.py is missing despite Phase 2 checkboxes being [x]",
+    "Report detects test_audit_logger.py is missing",
+    "Report explicitly flags checkbox/reality mismatch for Phase 2",
+    "Report does NOT claim Phase 2 is complete",
+    "Report recommends unchecking Phase 2 checkboxes or implementing the missing code"
+  ]
+}

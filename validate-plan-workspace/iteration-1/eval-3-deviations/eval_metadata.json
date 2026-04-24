@@ -1,0 +1,13 @@
+{
+  "eval_id": 3,
+  "eval_name": "deviations",
+  "prompt": "Validate the plan at thoughts/shared/plans/add-string-utils.md",
+  "assertions": [
+    "Report identifies truncate was named shorten instead",
+    "Report identifies word_count was named count_words instead",
+    "Report identifies reverse_words as an unplanned addition not in the plan",
+    "Report confirms tests pass despite naming deviations",
+    "Report notes parameter naming differences (max_length→max_len, suffix→ellipsis)",
+    "Report distinguishes between deviations (naming) and completeness (functionality works)"
+  ]
+}

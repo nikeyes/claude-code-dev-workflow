@@ -1,0 +1,183 @@
+{
+  "metadata": {
+    "skill_name": "validate-plan",
+    "skill_path": "/Users/jorge.castro/mordor/personal/stepwise-dev/core/skills/validate-plan",
+    "executor_model": "claude-sonnet-4-6",
+    "analyzer_model": "claude-sonnet-4-6",
+    "timestamp": "2026-04-24T23:30:00Z",
+    "evals_run": [1, 2, 3],
+    "runs_per_configuration": 1
+  },
+  "runs": [
+    {
+      "eval_id": 1,
+      "eval_name": "Fully Correct",
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 6,
+        "failed": 0,
+        "total": 6,
+        "time_seconds": 51.9,
+        "tokens": 19470,
+        "tool_calls": 12,
+        "errors": 0
+      },
+      "expectations": [
+        {"text": "Report confirms Phase 1 (power) is fully implemented", "passed": true, "evidence": "Report states 'Phase 1: Power Operation - Fully implemented'"},
+        {"text": "Report confirms Phase 2 (modulo) is fully implemented", "passed": true, "evidence": "Report states 'Phase 2: Modulo Operation - Fully implemented'"},
+        {"text": "Report shows make test passes with all 8 tests", "passed": true, "evidence": "Full test output: '8/8 tests passed (0 failures)'"},
+        {"text": "Report checks that plan checkboxes match actual code state", "passed": true, "evidence": "'Success Criteria Verification' section with each criterion compared"},
+        {"text": "Report identifies no deviations or missing items", "passed": true, "evidence": "'Deviations from Plan: None identified'"},
+        {"text": "Report includes manual verification checklist items", "passed": true, "evidence": "'Manual Testing Results' section with both items checked"}
+      ]
+    },
+    {
+      "eval_id": 1,
+      "eval_name": "Fully Correct",
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 6,
+        "failed": 0,
+        "total": 6,
+        "time_seconds": 56.0,
+        "tokens": 18178,
+        "tool_calls": 11,
+        "errors": 0
+      },
+      "expectations": [
+        {"text": "Report confirms Phase 1 (power) is fully implemented", "passed": true, "evidence": "Phase 1 table: all 3 items PASS"},
+        {"text": "Report confirms Phase 2 (modulo) is fully implemented", "passed": true, "evidence": "Phase 2 table: all 3 items PASS"},
+        {"text": "Report shows make test passes with all 8 tests", "passed": true, "evidence": "Full pytest output: '8 passed in 0.01s'"},
+        {"text": "Report checks that plan checkboxes match actual code state", "passed": true, "evidence": "'Plan Checkbox Verification' section with detailed table"},
+        {"text": "Report identifies no deviations or missing items", "passed": true, "evidence": "'None. The implementation matches the plan specification exactly.'"},
+        {"text": "Report includes manual verification checklist items", "passed": true, "evidence": "'Manual Verification Items' section lists both as PASS"}
+      ]
+    },
+    {
+      "eval_id": 2,
+      "eval_name": "Incomplete Lying",
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 6,
+        "failed": 0,
+        "total": 6,
+        "time_seconds": 81.5,
+        "tokens": 23847,
+        "tool_calls": 16,
+        "errors": 0
+      },
+      "expectations": [
+        {"text": "Report confirms Phase 1 (rate limiting) is correctly implemented", "passed": true, "evidence": "Detailed Phase 1 review confirms all 6 items"},
+        {"text": "Report detects audit_logger.py is missing despite Phase 2 checkboxes being [x]", "passed": true, "evidence": "'audit_logger.py — does not exist' under Missing files"},
+        {"text": "Report detects test_audit_logger.py is missing", "passed": true, "evidence": "'test_audit_logger.py — does not exist'"},
+        {"text": "Report explicitly flags checkbox/reality mismatch for Phase 2", "passed": true, "evidence": "'Critical Finding: Plan Completion Status Is Dishonest'"},
+        {"text": "Report does NOT claim Phase 2 is complete", "passed": true, "evidence": "'Phase 2: Audit Logging - NOT implemented'"},
+        {"text": "Report recommends unchecking Phase 2 checkboxes or implementing the missing code", "passed": true, "evidence": "Recommendations: 'Correct the plan' and 'Implement Phase 2'"}
+      ]
+    },
+    {
+      "eval_id": 2,
+      "eval_name": "Incomplete Lying",
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 6,
+        "failed": 0,
+        "total": 6,
+        "time_seconds": 89.6,
+        "tokens": 22736,
+        "tool_calls": 17,
+        "errors": 0
+      },
+      "expectations": [
+        {"text": "Report confirms Phase 1 (rate limiting) is correctly implemented", "passed": true, "evidence": "'Phase 1 — Rate Limiting: COMPLETE' with full verification"},
+        {"text": "Report detects audit_logger.py is missing despite Phase 2 checkboxes being [x]", "passed": true, "evidence": "'audit_logger.py: DOES NOT EXIST'"},
+        {"text": "Report detects test_audit_logger.py is missing", "passed": true, "evidence": "'test_audit_logger.py: DOES NOT EXIST'"},
+        {"text": "Report explicitly flags checkbox/reality mismatch for Phase 2", "passed": true, "evidence": "'all Phase 2 checkboxes are falsely marked complete' with deviation table"},
+        {"text": "Report does NOT claim Phase 2 is complete", "passed": true, "evidence": "'Phase 2 — Audit Logging: NOT IMPLEMENTED'"},
+        {"text": "Report recommends unchecking Phase 2 checkboxes or implementing the missing code", "passed": true, "evidence": "'All Phase 2 items must be unchecked' and 'Create audit_logger.py'"}
+      ]
+    },
+    {
+      "eval_id": 3,
+      "eval_name": "Deviations",
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 6,
+        "failed": 0,
+        "total": 6,
+        "time_seconds": 74.0,
+        "tokens": 20872,
+        "tool_calls": 12,
+        "errors": 0
+      },
+      "expectations": [
+        {"text": "Report identifies truncate was named shorten instead", "passed": true, "evidence": "'truncate renamed to shorten (string_utils.py:4)'"},
+        {"text": "Report identifies word_count was named count_words instead", "passed": true, "evidence": "'word_count renamed to count_words (string_utils.py:21)'"},
+        {"text": "Report identifies reverse_words as an unplanned addition not in the plan", "passed": true, "evidence": "'Unplanned function reverse_words added'"},
+        {"text": "Report confirms tests pass despite naming deviations", "passed": true, "evidence": "'7 tests collected, 7 passed in 0.01s'"},
+        {"text": "Report notes parameter naming differences (max_length→max_len, suffix→ellipsis)", "passed": true, "evidence": "'parameter names differ (max_length → max_len, suffix → ellipsis)'"},
+        {"text": "Report distinguishes between deviations (naming) and completeness (functionality works)", "passed": true, "evidence": "Summary table uses DEVIATED vs COMPLETE per item"}
+      ]
+    },
+    {
+      "eval_id": 3,
+      "eval_name": "Deviations",
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 6,
+        "failed": 0,
+        "total": 6,
+        "time_seconds": 58.5,
+        "tokens": 20426,
+        "tool_calls": 11,
+        "errors": 0
+      },
+      "expectations": [
+        {"text": "Report identifies truncate was named shorten instead", "passed": true, "evidence": "'Plan specifies truncate but implementation provides shorten'"},
+        {"text": "Report identifies word_count was named count_words instead", "passed": true, "evidence": "'Plan specifies word_count but implementation provides count_words'"},
+        {"text": "Report identifies reverse_words as an unplanned addition not in the plan", "passed": true, "evidence": "'NOT IN PLAN — added without being specified'"},
+        {"text": "Report confirms tests pass despite naming deviations", "passed": true, "evidence": "'7 passed' and 'Tests pass: PASS' in Overall Assessment"},
+        {"text": "Report notes parameter naming differences (max_length→max_len, suffix→ellipsis)", "passed": true, "evidence": "'Parameter names match plan: FAIL (max_length -> max_len, suffix -> ellipsis)'"},
+        {"text": "Report distinguishes between deviations (naming) and completeness (functionality works)", "passed": true, "evidence": "Table separates 'Function names match plan: FAIL' from 'Tests pass: PASS'"}
+      ]
+    }
+  ],
+  "run_summary": {
+    "with_skill": {
+      "pass_rate": {"mean": 1.0, "stddev": 0.0, "min": 1.0, "max": 1.0},
+      "time_seconds": {"mean": 69.1, "stddev": 12.3, "min": 51.9, "max": 81.5},
+      "tokens": {"mean": 21396, "stddev": 1850, "min": 19470, "max": 23847}
+    },
+    "without_skill": {
+      "pass_rate": {"mean": 1.0, "stddev": 0.0, "min": 1.0, "max": 1.0},
+      "time_seconds": {"mean": 68.0, "stddev": 14.9, "min": 56.0, "max": 89.6},
+      "tokens": {"mean": 20447, "stddev": 1871, "min": 18178, "max": 22736}
+    },
+    "delta": {
+      "pass_rate": "+0.00",
+      "time_seconds": "+1.1",
+      "tokens": "+949"
+    }
+  },
+  "notes": [
+    "Both configurations achieved 100% pass rate across all 3 evals — no discriminating assertions found in this iteration.",
+    "The skill adds ~949 tokens and ~1.1s on average, a negligible overhead from reading the SKILL.md file.",
+    "Eval 2 (Incomplete Lying) was the most discriminating scenario — both caught the lie, but the baseline was equally capable at file-existence checks.",
+    "Eval 3 (Deviations) was equally well-handled by both — the model naturally compares plan names to code names regardless of skill guidance.",
+    "The with_skill report for Eval 2 used stronger language ('Dishonest', 'Critical Finding') and more structured formatting (explicit Missing files section), suggesting the skill encourages more rigorous presentation.",
+    "Current assertions may be too easy — they check for detection of obvious issues (missing files, wrong names) that Claude handles well without guidance. Harder scenarios (subtle logic bugs, partial implementations that look complete, performance issues) might differentiate skill value better.",
+    "Qualitative difference: the with_skill reports follow the SKILL.md template more closely (Implementation Status, Automated Verification, Code Review Findings, Manual Testing, Recommendations), while without_skill reports vary in structure but still contain equivalent information."
+  ]
+}

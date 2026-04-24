@@ -1,0 +1,13 @@
+{
+  "eval_id": 1,
+  "eval_name": "fully-correct",
+  "prompt": "Validate the plan at thoughts/shared/plans/add-power-modulo.md",
+  "assertions": [
+    "Report confirms Phase 1 (power) is fully implemented",
+    "Report confirms Phase 2 (modulo) is fully implemented",
+    "Report shows make test passes with all 8 tests",
+    "Report checks that plan checkboxes match actual code state",
+    "Report identifies no deviations or missing items",
+    "Report includes manual verification checklist items"
+  ]
+}

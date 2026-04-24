@@ -1,0 +1,47 @@
+{
+  "skill_name": "validate-plan",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Validate the plan at thoughts/shared/plans/add-power-modulo.md",
+      "expected_output": "Confirms all phases are correctly implemented, tests pass, no issues found. Report should be positive with no deviations.",
+      "files": [],
+      "assertions": [
+        "Report confirms Phase 1 (power) is fully implemented",
+        "Report confirms Phase 2 (modulo) is fully implemented",
+        "Report shows make test passes with all 8 tests",
+        "Report checks that plan checkboxes match actual code state",
+        "Report identifies no deviations or missing items",
+        "Report includes manual verification checklist items"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Validate the plan at thoughts/shared/plans/add-rate-limiting-and-audit.md",
+      "expected_output": "Detects that Phase 2 (audit logging) is marked [x] but audit_logger.py does not exist. Flags the discrepancy clearly.",
+      "files": [],
+      "assertions": [
+        "Report confirms Phase 1 (rate limiting) is correctly implemented",
+        "Report detects audit_logger.py is missing despite Phase 2 checkboxes being [x]",
+        "Report detects test_audit_logger.py is missing",
+        "Report explicitly flags checkbox/reality mismatch for Phase 2",
+        "Report does NOT claim Phase 2 is complete",
+        "Report recommends unchecking Phase 2 checkboxes or implementing the missing code"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Validate the plan at thoughts/shared/plans/add-string-utils.md",
+      "expected_output": "Detects naming deviations (shorten vs truncate, count_words vs word_count) and the unplanned reverse_words function. Tests pass but plan doesn't match implementation names.",
+      "files": [],
+      "assertions": [
+        "Report identifies truncate was named shorten instead",
+        "Report identifies word_count was named count_words instead",
+        "Report identifies reverse_words as an unplanned addition not in the plan",
+        "Report confirms tests pass despite naming deviations",
+        "Report notes parameter naming differences (max_length→max_len, suffix→ellipsis)",
+        "Report distinguishes between deviations (naming) and completeness (functionality works)"
+      ]
+    }
+  ]
+}

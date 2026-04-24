@@ -1,0 +1,40 @@
+{
+  "expectations": [
+    {
+      "text": "Report identifies truncate was named shorten instead",
+      "passed": true,
+      "evidence": "'Plan specifies truncate but the implementation provides shorten' with full deviation table"
+    },
+    {
+      "text": "Report identifies word_count was named count_words instead",
+      "passed": true,
+      "evidence": "'Plan specifies word_count but the implementation provides count_words'"
+    },
+    {
+      "text": "Report identifies reverse_words as an unplanned addition not in the plan",
+      "passed": true,
+      "evidence": "'reverse_words(text) — NOT IN PLAN — added without being specified'"
+    },
+    {
+      "text": "Report confirms tests pass despite naming deviations",
+      "passed": true,
+      "evidence": "'7 passed in 0.01s' and 'Tests pass: PASS' in Overall Assessment"
+    },
+    {
+      "text": "Report notes parameter naming differences (max_length→max_len, suffix→ellipsis)",
+      "passed": true,
+      "evidence": "Overall Assessment table: 'Parameter names match plan: FAIL (max_length -> max_len, suffix -> ellipsis)'"
+    },
+    {
+      "text": "Report distinguishes between deviations (naming) and completeness (functionality works)",
+      "passed": true,
+      "evidence": "Table distinguishes 'Function names match plan: FAIL' from 'Tests pass: PASS' and 'All files created: PASS'"
+    }
+  ],
+  "summary": {
+    "passed": 6,
+    "failed": 0,
+    "total": 6,
+    "pass_rate": 1.0
+  }
+}

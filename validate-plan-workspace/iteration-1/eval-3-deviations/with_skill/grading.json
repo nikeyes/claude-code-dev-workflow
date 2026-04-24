@@ -1,0 +1,40 @@
+{
+  "expectations": [
+    {
+      "text": "Report identifies truncate was named shorten instead",
+      "passed": true,
+      "evidence": "'truncate renamed to shorten (string_utils.py:4)' with full comparison of plan vs actual"
+    },
+    {
+      "text": "Report identifies word_count was named count_words instead",
+      "passed": true,
+      "evidence": "'word_count renamed to count_words (string_utils.py:21)' with explicit comparison"
+    },
+    {
+      "text": "Report identifies reverse_words as an unplanned addition not in the plan",
+      "passed": true,
+      "evidence": "'Unplanned function reverse_words added (string_utils.py:34-36) — This function was not in the plan'"
+    },
+    {
+      "text": "Report confirms tests pass despite naming deviations",
+      "passed": true,
+      "evidence": "'make test — 7 tests collected, 7 passed in 0.01s'"
+    },
+    {
+      "text": "Report notes parameter naming differences (max_length→max_len, suffix→ellipsis)",
+      "passed": true,
+      "evidence": "'Both the function name and the parameter names differ (max_length → max_len, suffix → ellipsis)'"
+    },
+    {
+      "text": "Report distinguishes between deviations (naming) and completeness (functionality works)",
+      "passed": true,
+      "evidence": "Summary table uses DEVIATED vs COMPLETE status per item, and notes 'All plan-specified outputs are functionally correct'"
+    }
+  ],
+  "summary": {
+    "passed": 6,
+    "failed": 0,
+    "total": 6,
+    "pass_rate": 1.0
+  }
+}
