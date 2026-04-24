@@ -1,0 +1,14 @@
+{
+  "eval_id": 2,
+  "eval_name": "thoughts-management",
+  "prompt": "Investiga cómo funciona el sistema de thoughts-management: qué scripts tiene, cómo se inicializa el directorio thoughts/, y qué metadata genera.",
+  "assertions": [
+    "The document has YAML frontmatter (--- delimited) with date, researcher, and git_commit fields",
+    "The output filename follows the YYYY-MM-DD-description.md convention",
+    "The document contains a 'Historical Context (from thoughts/)' section",
+    "The document contains an 'Open Questions' section",
+    "The document contains an 'Architecture Documentation' section",
+    "The document contains a 'Related Research' section",
+    "The document contains a 'Code References' section with file paths"
+  ]
+}

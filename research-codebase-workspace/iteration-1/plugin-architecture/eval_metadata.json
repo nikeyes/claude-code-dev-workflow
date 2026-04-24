@@ -1,0 +1,14 @@
+{
+  "eval_id": 1,
+  "eval_name": "plugin-architecture",
+  "prompt": "Quiero entender cómo está organizado el sistema de plugins en este repositorio. Cómo se registran, cómo se descubren las skills y agents, y cómo se relacionan entre sí los 4 plugins.",
+  "assertions": [
+    "The document has YAML frontmatter (--- delimited) with date, researcher, and git_commit fields",
+    "The output filename follows the YYYY-MM-DD-description.md convention",
+    "The document contains a 'Historical Context (from thoughts/)' section",
+    "The document contains an 'Open Questions' section",
+    "The document contains an 'Architecture Documentation' section",
+    "The document contains a 'Related Research' section",
+    "The document contains a 'Code References' section with file paths"
+  ]
+}

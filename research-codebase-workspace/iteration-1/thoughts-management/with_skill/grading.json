@@ -1,0 +1,45 @@
+{
+  "expectations": [
+    {
+      "text": "The document has YAML frontmatter (--- delimited) with date, researcher, and git_commit fields",
+      "passed": true,
+      "evidence": "Lines 1-12: full YAML frontmatter with date, researcher, git_commit"
+    },
+    {
+      "text": "The output filename follows the YYYY-MM-DD-description.md convention",
+      "passed": true,
+      "evidence": "Filename is '2026-04-24-thoughts-management-system.md'"
+    },
+    {
+      "text": "The document contains a 'Historical Context (from thoughts/)' section",
+      "passed": true,
+      "evidence": "Section present at line 225"
+    },
+    {
+      "text": "The document contains an 'Open Questions' section",
+      "passed": true,
+      "evidence": "Section present at line 235 with two questions"
+    },
+    {
+      "text": "The document contains an 'Architecture Documentation' section",
+      "passed": true,
+      "evidence": "Section present at line 212 with design patterns"
+    },
+    {
+      "text": "The document contains a 'Related Research' section",
+      "passed": true,
+      "evidence": "Section present at line 230 with 2 related documents"
+    },
+    {
+      "text": "The document contains a 'Code References' section with file paths",
+      "passed": true,
+      "evidence": "Section present at line 196 with 10+ paths including line numbers"
+    }
+  ],
+  "summary": {
+    "passed": 7,
+    "failed": 0,
+    "total": 7,
+    "pass_rate": 1.0
+  }
+}

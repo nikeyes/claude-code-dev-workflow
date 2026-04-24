@@ -1,0 +1,45 @@
+{
+  "expectations": [
+    {
+      "text": "The document has YAML frontmatter (--- delimited) with date, researcher, and git_commit fields",
+      "passed": true,
+      "evidence": "Lines 1-12: full YAML frontmatter with date, researcher, git_commit fields"
+    },
+    {
+      "text": "The output filename follows the YYYY-MM-DD-description.md convention",
+      "passed": false,
+      "evidence": "Filename is 'research-document.md', not YYYY-MM-DD-description.md"
+    },
+    {
+      "text": "The document contains a 'Historical Context (from thoughts/)' section",
+      "passed": true,
+      "evidence": "Section present at line 313 with references to thoughts/ documents"
+    },
+    {
+      "text": "The document contains an 'Open Questions' section",
+      "passed": true,
+      "evidence": "Section present at line 325 with two factual open questions"
+    },
+    {
+      "text": "The document contains an 'Architecture Documentation' section",
+      "passed": true,
+      "evidence": "Section present at line 266 with patterns documented"
+    },
+    {
+      "text": "The document contains a 'Related Research' section",
+      "passed": true,
+      "evidence": "Section present at line 319"
+    },
+    {
+      "text": "The document contains a 'Code References' section with file paths",
+      "passed": true,
+      "evidence": "Section present at line 243 with 20+ file paths"
+    }
+  ],
+  "summary": {
+    "passed": 6,
+    "failed": 1,
+    "total": 7,
+    "pass_rate": 0.86
+  }
+}

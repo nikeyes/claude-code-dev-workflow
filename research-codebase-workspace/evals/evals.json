@@ -1,0 +1,47 @@
+{
+  "skill_name": "research-codebase",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Quiero entender cómo está organizado el sistema de plugins en este repositorio. Cómo se registran, cómo se descubren las skills y agents, y cómo se relacionan entre sí los 4 plugins.",
+      "expected_output": "A structured research document covering plugin architecture, plugin.json files, marketplace.json, skill/agent registration, and inter-plugin relationships.",
+      "files": [],
+      "expectations": [
+        "The document mentions all 4 plugins by name: stepwise-core, stepwise-git, stepwise-web, stepwise-research",
+        "The document references plugin.json and/or marketplace.json files",
+        "The document includes concrete file paths with extensions (e.g., core/skills/..., .claude-plugin/plugin.json)",
+        "The document has YAML frontmatter with date, researcher, and git_commit fields",
+        "The document describes how skills are registered (SKILL.md as entrypoint or plugin.json configuration)",
+        "The document does NOT contain improvement recommendations, suggestions for changes, or critique of the implementation"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Investiga cómo funciona el sistema de thoughts-management: qué scripts tiene, cómo se inicializa el directorio thoughts/, y qué metadata genera.",
+      "expected_output": "A research document detailing thoughts-management scripts (thoughts-init, thoughts-metadata), directory structure, and metadata generation.",
+      "files": [],
+      "expectations": [
+        "The document mentions both scripts: thoughts-init and thoughts-metadata",
+        "The document describes the thoughts/ directory structure (shared/, personal user directories)",
+        "The document includes concrete file paths to the scripts (e.g., core/skills/thoughts-management/scripts/thoughts-init)",
+        "The document has YAML frontmatter with date, researcher, and git_commit fields",
+        "The document describes what metadata the scripts generate (date, branch, commit, repository info, etc.)",
+        "The document does NOT contain improvement recommendations, suggestions for changes, or critique of the implementation"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Necesito entender el flujo completo de la skill create-plan. Lee el archivo core/skills/create-plan/SKILL.md y documenta qué agentes usa, en qué orden, y cómo genera el plan final.",
+      "expected_output": "A research document that first reads the specified file, then documents the full create-plan workflow including agent usage and plan generation.",
+      "files": [],
+      "expectations": [
+        "The document explicitly mentions core/skills/create-plan/SKILL.md as a source",
+        "The document lists the agents used by create-plan (e.g., codebase-locator, codebase-analyzer, codebase-pattern-finder)",
+        "The document describes the order/flow of steps in the create-plan workflow",
+        "The document has YAML frontmatter with date, researcher, and git_commit fields",
+        "The document includes at least 3 concrete file paths with extensions",
+        "The document does NOT contain improvement recommendations, suggestions for changes, or critique of the implementation"
+      ]
+    }
+  ]
+}

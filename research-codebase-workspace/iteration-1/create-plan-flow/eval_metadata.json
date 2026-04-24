@@ -1,0 +1,14 @@
+{
+  "eval_id": 3,
+  "eval_name": "create-plan-flow",
+  "prompt": "Necesito entender el flujo completo de la skill create-plan. Lee el archivo core/skills/create-plan/SKILL.md y documenta qué agentes usa, en qué orden, y cómo genera el plan final.",
+  "assertions": [
+    "The document has YAML frontmatter (--- delimited) with date, researcher, and git_commit fields",
+    "The output filename follows the YYYY-MM-DD-description.md convention",
+    "The document contains a 'Historical Context (from thoughts/)' section",
+    "The document contains an 'Open Questions' section",
+    "The document contains an 'Architecture Documentation' section",
+    "The document contains a 'Related Research' section",
+    "The document contains a 'Code References' section with file paths"
+  ]
+}

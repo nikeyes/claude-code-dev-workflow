@@ -1,0 +1,45 @@
+{
+  "expectations": [
+    {
+      "text": "The document has YAML frontmatter (--- delimited) with date, researcher, and git_commit fields",
+      "passed": true,
+      "evidence": "Lines 1-12: YAML frontmatter with date, researcher, git_commit fields present"
+    },
+    {
+      "text": "The output filename follows the YYYY-MM-DD-description.md convention",
+      "passed": false,
+      "evidence": "Filename is 'research.md', not YYYY-MM-DD-description.md"
+    },
+    {
+      "text": "The document contains a 'Historical Context (from thoughts/)' section",
+      "passed": true,
+      "evidence": "Section present at line 352 referencing thoughts/nikey_es/notes/plugins-claude-code.md"
+    },
+    {
+      "text": "The document contains an 'Open Questions' section",
+      "passed": true,
+      "evidence": "Section present at line 356 with 3 factual open questions"
+    },
+    {
+      "text": "The document contains an 'Architecture Documentation' section",
+      "passed": true,
+      "evidence": "Section present at line 319 with multiple patterns"
+    },
+    {
+      "text": "The document contains a 'Related Research' section",
+      "passed": false,
+      "evidence": "No 'Related Research' section found. Document ends after Open Questions."
+    },
+    {
+      "text": "The document contains a 'Code References' section with file paths",
+      "passed": true,
+      "evidence": "Section present at line 303 with 15+ file paths"
+    }
+  ],
+  "summary": {
+    "passed": 5,
+    "failed": 2,
+    "total": 7,
+    "pass_rate": 0.71
+  }
+}
