@@ -1,0 +1,22 @@
+{
+  "eval_id": 1,
+  "eval_name": "no-args-help-message",
+  "prompt": "/create-plan",
+  "assertions": [
+    {
+      "id": "shows-help-message",
+      "text": "Response includes clear instructions asking the user to provide task description, constraints, or relevant context",
+      "type": "content_check"
+    },
+    {
+      "id": "does-not-start-planning",
+      "text": "Response does NOT begin researching the codebase or generating a plan — it only asks for input",
+      "type": "content_check"
+    },
+    {
+      "id": "mentions-file-path-tip",
+      "text": "Response mentions the ability to pass a ticket file path as an argument (e.g., thoughts/nikey_es/tickets/...)",
+      "type": "content_check"
+    }
+  ]
+}

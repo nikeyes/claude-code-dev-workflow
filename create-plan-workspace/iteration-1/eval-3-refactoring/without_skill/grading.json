@@ -1,0 +1,36 @@
+{
+  "eval_id": 3,
+  "run_type": "without_skill",
+  "expectations": [
+    {
+      "text": "Response shows evidence of reading and analyzing the current thoughts-management scripts (thoughts-init, thoughts-metadata)",
+      "passed": true,
+      "evidence": "Lists all hardcoded paths from thoughts-init with line numbers (lines 7, 8, 37-41). Mentions thoughts-metadata. Also identifies downstream consumers (create-plan, research-codebase, etc.)."
+    },
+    {
+      "text": "Response identifies specific hardcoded paths or directory names in the current implementation",
+      "passed": true,
+      "evidence": "Lists all 5 mkdir calls, THOUGHTS_DIR='thoughts', USERNAME default. Also maps downstream consumers with a table showing which skill uses which hardcoded path."
+    },
+    {
+      "text": "Plan follows the template structure: Overview, Current State Analysis, Desired End State, Implementation Phases, Success Criteria",
+      "passed": false,
+      "evidence": "Has 'Research Findings', 'Six-phase breakdown' table, config format, success criteria. But structure is flat — no formal 'Overview', 'Current State Analysis', 'Desired End State' sections. More of a summary + table layout than the structured plan template."
+    },
+    {
+      "text": "Plan proposes incremental changes across multiple phases rather than a single big-bang rewrite",
+      "passed": true,
+      "evidence": "6 phases: config-lib, thoughts-init, thoughts-metadata, SKILL.md, thoughts-locator, tests. Each independently scoped."
+    },
+    {
+      "text": "Each phase includes verifiable success criteria with automated verification commands",
+      "passed": true,
+      "evidence": "Final success criteria: 'make test' and 'make check' commands. Though per-phase criteria are less detailed than the with-skill version."
+    },
+    {
+      "text": "Plan addresses backward compatibility or includes a migration strategy for existing thoughts/ directories",
+      "passed": true,
+      "evidence": "'No breaking changes — projects without thoughts.config.json behave exactly as today'. 'THOUGHTS_USER env var still works'. Clear backward compatibility commitment."
+    }
+  ]
+}

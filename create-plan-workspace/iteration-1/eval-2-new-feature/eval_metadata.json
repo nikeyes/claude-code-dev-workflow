@@ -1,0 +1,37 @@
+{
+  "eval_id": 2,
+  "eval_name": "new-feature-bugfix-skill",
+  "prompt": "/create-plan Add a new \"bugfix\" skill that helps users debug failing tests by analyzing test output and suggesting fixes",
+  "assertions": [
+    {
+      "id": "researches-existing-skills",
+      "text": "Response shows evidence of inspecting existing skills in core/skills/ to identify patterns to follow",
+      "type": "content_check"
+    },
+    {
+      "id": "follows-plan-template",
+      "text": "Plan includes key template sections: Overview, Current State Analysis, Desired End State, Implementation Phases, and Success Criteria",
+      "type": "structure_check"
+    },
+    {
+      "id": "includes-file-references",
+      "text": "Plan contains specific file path references to real files in the repository (e.g., core/skills/bugmagnet/SKILL.md)",
+      "type": "content_check"
+    },
+    {
+      "id": "defines-phases",
+      "text": "Plan defines at least 2 distinct implementation phases",
+      "type": "structure_check"
+    },
+    {
+      "id": "has-success-criteria",
+      "text": "Each implementation phase includes verifiable success criteria (automated commands or checkable conditions)",
+      "type": "structure_check"
+    },
+    {
+      "id": "saves-to-thoughts",
+      "text": "Plan is saved to (or mentions saving to) thoughts/shared/plans/ with the correct YYYY-MM-DD-description.md naming format",
+      "type": "content_check"
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "eval_id": 1,
+  "run_type": "with_skill",
+  "expectations": [
+    {
+      "text": "Response includes clear instructions asking the user to provide task description, constraints, or relevant context",
+      "passed": true,
+      "evidence": "Response asks for: 1) task/ticket description, 2) relevant context/constraints/requirements, 3) links to related research"
+    },
+    {
+      "text": "Response does NOT begin researching the codebase or generating a plan — it only asks for input",
+      "passed": true,
+      "evidence": "Response only shows the help template and waits. No codebase research or plan generation attempted."
+    },
+    {
+      "text": "Response mentions the ability to pass a ticket file path as an argument",
+      "passed": true,
+      "evidence": "Tip: 'You can also invoke this command with a ticket file directly: /stepwise-core:create-plan thoughts/nikey_es/tickets/eng_1234.md' and also mentions 'think deeply' variant."
+    }
+  ]
+}

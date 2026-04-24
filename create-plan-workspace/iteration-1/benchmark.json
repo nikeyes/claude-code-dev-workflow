@@ -1,0 +1,166 @@
+{
+  "metadata": {
+    "skill_name": "create-plan",
+    "skill_path": "core/skills/create-plan/SKILL.md",
+    "timestamp": "2026-04-24T20:38:32Z",
+    "evals_run": ["no-args-help-message", "new-feature-bugfix-skill", "refactoring-thoughts-management"],
+    "runs_per_configuration": 1
+  },
+  "runs": [
+    {
+      "eval_id": 1,
+      "eval_name": "no-args-help-message",
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 3,
+        "failed": 0,
+        "total": 3,
+        "time_seconds": 25.1,
+        "tokens": 18581,
+        "errors": 0
+      },
+      "expectations": [
+        {"text": "Response includes clear instructions asking the user to provide task description, constraints, or relevant context", "passed": true, "evidence": "Response asks for: task/ticket description, context/constraints, links to related research"},
+        {"text": "Response does NOT begin researching the codebase or generating a plan", "passed": true, "evidence": "Only shows help template. No codebase research attempted."},
+        {"text": "Response mentions the ability to pass a ticket file path as an argument", "passed": true, "evidence": "Tip: 'You can also invoke this command with a ticket file directly: /stepwise-core:create-plan thoughts/nikey_es/tickets/eng_1234.md'"}
+      ]
+    },
+    {
+      "eval_id": 1,
+      "eval_name": "no-args-help-message",
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.67,
+        "passed": 2,
+        "failed": 1,
+        "total": 3,
+        "time_seconds": 23.0,
+        "tokens": 13394,
+        "errors": 0
+      },
+      "expectations": [
+        {"text": "Response includes clear instructions asking the user to provide task description, constraints, or relevant context", "passed": true, "evidence": "Asks: What are you building? Scope? Current state? Success criteria? Constraints?"},
+        {"text": "Response does NOT begin researching the codebase or generating a plan", "passed": true, "evidence": "Shows generic template but does not research. Waits for input."},
+        {"text": "Response mentions the ability to pass a ticket file path as an argument", "passed": false, "evidence": "No mention of ticket file paths, /create-plan syntax, or thoughts/ directory."}
+      ]
+    },
+    {
+      "eval_id": 2,
+      "eval_name": "new-feature-bugfix-skill",
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 6,
+        "failed": 0,
+        "total": 6,
+        "time_seconds": 198.9,
+        "tokens": 59655,
+        "errors": 0
+      },
+      "expectations": [
+        {"text": "Inspects existing skills to identify patterns", "passed": true, "evidence": "Examined bugmagnet, test-desiderata, research-codebase with file:line references"},
+        {"text": "Plan follows template structure (Overview, Current State, Desired End State, Phases, Success Criteria)", "passed": true, "evidence": "All required sections present including What We're NOT Doing"},
+        {"text": "Contains specific file path references to real repo files", "passed": true, "evidence": "References: bugmagnet/SKILL.md (line 158), research-codebase/SKILL.md (lines 1-7), plugin-structure-test.sh (line 73)"},
+        {"text": "Defines at least 2 distinct implementation phases", "passed": true, "evidence": "Phase 1: Create SKILL.md. Phase 2: Update test assertions."},
+        {"text": "Each phase includes verifiable success criteria", "passed": true, "evidence": "Phase 1: file exists + valid frontmatter. Phase 2: make test passes."},
+        {"text": "Saves plan to thoughts/shared/plans/ with YYYY-MM-DD naming", "passed": true, "evidence": "Saved to thoughts/shared/plans/2026-04-24-bugfix-skill.md"}
+      ]
+    },
+    {
+      "eval_id": 2,
+      "eval_name": "new-feature-bugfix-skill",
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.67,
+        "passed": 4,
+        "failed": 2,
+        "total": 6,
+        "time_seconds": 121.7,
+        "tokens": 55239,
+        "errors": 0
+      },
+      "expectations": [
+        {"text": "Inspects existing skills to identify patterns", "passed": true, "evidence": "Explored existing skills, identified bugmagnet and test-desiderata, noted frontmatter patterns."},
+        {"text": "Plan follows template structure (Overview, Current State, Desired End State, Phases, Success Criteria)", "passed": false, "evidence": "Missing formal Current State Analysis and Desired End State sections. Structure is functional but doesn't match template."},
+        {"text": "Contains specific file path references to real repo files", "passed": true, "evidence": "References bugmagnet/SKILL.md, test-desiderata/SKILL.md, plugin.json, smoke-test.sh."},
+        {"text": "Defines at least 2 distinct implementation phases", "passed": true, "evidence": "Phase 1: Create SKILL.md. Phase 2: Add test assertion."},
+        {"text": "Each phase includes verifiable success criteria", "passed": true, "evidence": "Phase 1: file exists + make check. Phase 2: make test passes."},
+        {"text": "Saves plan to thoughts/shared/plans/ with YYYY-MM-DD naming", "passed": false, "evidence": "Saved to create-plan-workspace/.../without_skill/outputs/plan.md — not in thoughts/shared/plans/."}
+      ]
+    },
+    {
+      "eval_id": 3,
+      "eval_name": "refactoring-thoughts-management",
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 6,
+        "failed": 0,
+        "total": 6,
+        "time_seconds": 218.6,
+        "tokens": 55397,
+        "errors": 0
+      },
+      "expectations": [
+        {"text": "Reads and analyzes current thoughts-management scripts", "passed": true, "evidence": "Read thoughts-init (lines 7-8, 37-41), thoughts-metadata, SKILL.md (lines 88-95), test file (lines 41-42), Makefile (line 42)."},
+        {"text": "Identifies specific hardcoded paths", "passed": true, "evidence": "Lists all 5 mkdir calls at lines 37-41, USERNAME at line 7, THOUGHTS_DIR at line 8, plus downstream consumers."},
+        {"text": "Plan follows template structure", "passed": true, "evidence": "Has all sections: Overview, Current State Analysis, Desired End State, Key Discoveries, What We're NOT Doing, 4 Phases with Success Criteria."},
+        {"text": "Proposes incremental phases (not big-bang rewrite)", "passed": true, "evidence": "4 phases: config in thoughts-init, update metadata, update tests, update docs. Each independently testable."},
+        {"text": "Each phase includes automated verification commands", "passed": true, "evidence": "make check + make test per phase. Output field verification for Phase 2."},
+        {"text": "Addresses backward compatibility", "passed": true, "evidence": "Explicit: 'NOT changing default directory layout'. 'NOT migrating existing thoughts/ directories'. Fully backwards-compatible."}
+      ]
+    },
+    {
+      "eval_id": 3,
+      "eval_name": "refactoring-thoughts-management",
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.83,
+        "passed": 5,
+        "failed": 1,
+        "total": 6,
+        "time_seconds": 152.8,
+        "tokens": 47645,
+        "errors": 0
+      },
+      "expectations": [
+        {"text": "Reads and analyzes current thoughts-management scripts", "passed": true, "evidence": "Lists all hardcoded paths from thoughts-init with line numbers. Identifies downstream consumers with table."},
+        {"text": "Identifies specific hardcoded paths", "passed": true, "evidence": "Lists all 5 mkdir calls, THOUGHTS_DIR, USERNAME default. Maps downstream consumers."},
+        {"text": "Plan follows template structure", "passed": false, "evidence": "Has Research Findings, six-phase table, config format. But structure is flat — no formal Overview, Current State Analysis, Desired End State sections."},
+        {"text": "Proposes incremental phases (not big-bang rewrite)", "passed": true, "evidence": "6 phases: config-lib, thoughts-init, thoughts-metadata, SKILL.md, thoughts-locator, tests."},
+        {"text": "Each phase includes automated verification commands", "passed": true, "evidence": "Final success criteria: make test + make check. Per-phase criteria less detailed."},
+        {"text": "Addresses backward compatibility", "passed": true, "evidence": "'No breaking changes — projects without thoughts.config.json behave exactly as today'."}
+      ]
+    }
+  ],
+  "run_summary": {
+    "with_skill": {
+      "pass_rate": {"mean": 1.0, "stddev": 0.0},
+      "time_seconds": {"mean": 147.5, "stddev": 108.8},
+      "tokens": {"mean": 44544, "stddev": 23380}
+    },
+    "without_skill": {
+      "pass_rate": {"mean": 0.72, "stddev": 0.09},
+      "time_seconds": {"mean": 99.2, "stddev": 68.5},
+      "tokens": {"mean": 38759, "stddev": 21799}
+    },
+    "delta": {
+      "pass_rate": "+0.28",
+      "time_seconds": "+48.3",
+      "tokens": "+5785"
+    }
+  },
+  "notes": [
+    "with_skill achieves 100% pass rate across all 15 assertions vs 72% baseline",
+    "Baseline consistently fails on: plan template structure and thoughts/ save location",
+    "Non-discriminating assertions (both pass): researches codebase, identifies hardcoded paths, backward compatibility",
+    "with_skill uses ~15% more tokens and ~49% more time due to structured research process"
+  ]
+}

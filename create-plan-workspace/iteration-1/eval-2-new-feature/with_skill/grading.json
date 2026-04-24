@@ -1,0 +1,36 @@
+{
+  "eval_id": 2,
+  "run_type": "with_skill",
+  "expectations": [
+    {
+      "text": "Response shows evidence of inspecting existing skills in core/skills/ to identify patterns to follow",
+      "passed": true,
+      "evidence": "Examined bugmagnet, test-desiderata, research-codebase, and other skills. Identified frontmatter patterns (model: opus, disable-model-invocation) with specific file:line references."
+    },
+    {
+      "text": "Plan includes key template sections: Overview, Current State Analysis, Desired End State, Implementation Phases, and Success Criteria",
+      "passed": true,
+      "evidence": "Response has: Task Description, Research Findings (serves as Current State), Design Questions, Plan Structure, Detailed Implementation Plan with phases and success criteria, What We're NOT Doing, Testing Strategy."
+    },
+    {
+      "text": "Plan contains specific file path references to real files in the repository",
+      "passed": true,
+      "evidence": "References: core/skills/bugmagnet/SKILL.md (line 158), core/skills/research-codebase/SKILL.md (lines 1-7), test/plugin-structure-test.sh (line 73), core/skills/test-desiderata/SKILL.md."
+    },
+    {
+      "text": "Plan defines at least 2 distinct implementation phases",
+      "passed": true,
+      "evidence": "Phase 1: Create core/skills/bugfix/SKILL.md. Phase 2: Update test/plugin-structure-test.sh with assertion."
+    },
+    {
+      "text": "Each implementation phase includes verifiable success criteria",
+      "passed": true,
+      "evidence": "Phase 1: file exists, valid frontmatter fields, workflow coverage. Phase 2: assertion in test file, make test passes."
+    },
+    {
+      "text": "Plan is saved to thoughts/shared/plans/ with correct YYYY-MM-DD-description.md naming format",
+      "passed": true,
+      "evidence": "Saved to: thoughts/shared/plans/2026-04-24-bugfix-skill.md — correct date format and kebab-case description."
+    }
+  ]
+}

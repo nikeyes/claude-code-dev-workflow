@@ -1,0 +1,36 @@
+{
+  "eval_id": 2,
+  "run_type": "without_skill",
+  "expectations": [
+    {
+      "text": "Response shows evidence of inspecting existing skills in core/skills/ to identify patterns to follow",
+      "passed": true,
+      "evidence": "Explored existing skills, identified bugmagnet and test-desiderata, noted frontmatter patterns and model selection conventions."
+    },
+    {
+      "text": "Plan includes key template sections: Overview, Current State Analysis, Desired End State, Implementation Phases, and Success Criteria",
+      "passed": false,
+      "evidence": "Has 'What We Are Building', 'What We Are NOT Doing', Phases, and success criteria. But missing formal 'Current State Analysis' and 'Desired End State' sections. Structure is functional but doesn't follow the skill's template."
+    },
+    {
+      "text": "Plan contains specific file path references to real files in the repository",
+      "passed": true,
+      "evidence": "References: core/skills/bugmagnet/SKILL.md, core/skills/test-desiderata/SKILL.md, core/.claude-plugin/plugin.json, test/smoke-test.sh."
+    },
+    {
+      "text": "Plan defines at least 2 distinct implementation phases",
+      "passed": true,
+      "evidence": "Phase 1: Create core/skills/bugfix/SKILL.md. Phase 2: Add file-existence assertion to test/smoke-test.sh."
+    },
+    {
+      "text": "Each implementation phase includes verifiable success criteria",
+      "passed": true,
+      "evidence": "Phase 1: file exists, make check passes, skill invocable after reload. Phase 2: make test passes with new assertion."
+    },
+    {
+      "text": "Plan is saved to thoughts/shared/plans/ with correct YYYY-MM-DD-description.md naming format",
+      "passed": false,
+      "evidence": "Plan saved to create-plan-workspace/.../without_skill/outputs/plan.md — NOT to thoughts/shared/plans/. No awareness of the thoughts/ convention."
+    }
+  ]
+}

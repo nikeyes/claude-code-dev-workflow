@@ -1,0 +1,37 @@
+{
+  "eval_id": 3,
+  "eval_name": "refactoring-thoughts-management",
+  "prompt": "/create-plan Refactor the thoughts-management skill to support custom directory structures via a config file instead of hardcoded paths",
+  "assertions": [
+    {
+      "id": "analyzes-current-code",
+      "text": "Response shows evidence of reading and analyzing the current thoughts-management scripts (thoughts-init, thoughts-metadata)",
+      "type": "content_check"
+    },
+    {
+      "id": "identifies-hardcoded-paths",
+      "text": "Response identifies specific hardcoded paths or directory names in the current implementation",
+      "type": "content_check"
+    },
+    {
+      "id": "follows-plan-template",
+      "text": "Plan follows the template structure: Overview, Current State Analysis, Desired End State, Implementation Phases, Success Criteria",
+      "type": "structure_check"
+    },
+    {
+      "id": "incremental-phases",
+      "text": "Plan proposes incremental changes across multiple phases rather than a single big-bang rewrite",
+      "type": "structure_check"
+    },
+    {
+      "id": "has-success-criteria",
+      "text": "Each phase includes verifiable success criteria with automated verification commands",
+      "type": "structure_check"
+    },
+    {
+      "id": "backward-compatible",
+      "text": "Plan addresses backward compatibility or includes a migration strategy for existing thoughts/ directories",
+      "type": "content_check"
+    }
+  ]
+}

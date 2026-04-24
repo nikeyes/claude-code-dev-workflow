@@ -1,0 +1,23 @@
+{
+  "skill_name": "create-plan",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "/create-plan",
+      "expected_output": "Should display help message asking for task description, constraints, and links. Should NOT start researching or planning.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "/create-plan Add a new \"bugfix\" skill that helps users debug failing tests by analyzing test output and suggesting fixes",
+      "expected_output": "Should research existing skills in the codebase, identify patterns, and generate a detailed implementation plan following the template in thoughts/shared/plans/",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "/create-plan Refactor the thoughts-management skill to support custom directory structures via a config file instead of hardcoded paths",
+      "expected_output": "Should analyze current thoughts-management code, identify hardcoded paths, and propose incremental refactoring phases with specific file:line references",
+      "files": []
+    }
+  ]
+}

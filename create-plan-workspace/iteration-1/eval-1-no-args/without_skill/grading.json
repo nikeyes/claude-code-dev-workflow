@@ -1,0 +1,21 @@
+{
+  "eval_id": 1,
+  "run_type": "without_skill",
+  "expectations": [
+    {
+      "text": "Response includes clear instructions asking the user to provide task description, constraints, or relevant context",
+      "passed": true,
+      "evidence": "Asks: What are you building? Scope? Current state? Success criteria? Constraints? Then shows a generic plan template."
+    },
+    {
+      "text": "Response does NOT begin researching the codebase or generating a plan — it only asks for input",
+      "passed": true,
+      "evidence": "Shows a generic template structure but does not research or start planning. Waits for user input."
+    },
+    {
+      "text": "Response mentions the ability to pass a ticket file path as an argument",
+      "passed": false,
+      "evidence": "No mention of ticket file paths, /create-plan command syntax, or thoughts/ directory. Gives a generic response with no project-specific guidance."
+    }
+  ]
+}
