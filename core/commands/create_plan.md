@@ -35,8 +35,8 @@ Please provide:
 
 I'll analyze this information and work with you to create a comprehensive plan.
 
-Tip: You can also invoke this command with a ticket file directly: `/stepwise-dev:create_plan thoughts/nikey_es/tickets/eng_1234.md`
-For deeper analysis, try: `/stepwise-dev:create_plan think deeply about thoughts/nikey_es/tickets/eng_1234.md`
+Tip: You can also invoke this command with a ticket file directly: `/stepwise-core:create_plan thoughts/nikey_es/tickets/eng_1234.md`
+For deeper analysis, try: `/stepwise-core:create_plan think deeply about thoughts/nikey_es/tickets/eng_1234.md`
 ```
 
 Then wait for the user's input.
@@ -57,9 +57,9 @@ Then wait for the user's input.
 2. **Spawn initial research tasks to gather context**:
    Before asking the user any questions, use specialized agents to research in parallel:
 
-   - Use the **stepwise-dev:codebase-locator** agent to find all files related to the ticket/task
-   - Use the **stepwise-dev:codebase-analyzer** agent to understand how the current implementation works
-   - If relevant, use the **stepwise-dev:thoughts-locator** agent to find any existing thoughts documents about this feature
+   - Use the **stepwise-core:codebase-locator** agent to find all files related to the ticket/task
+   - Use the **stepwise-core:codebase-analyzer** agent to understand how the current implementation works
+   - If relevant, use the **stepwise-core:thoughts-locator** agent to find any existing thoughts documents about this feature
 
    These agents will:
    - Find relevant source files, configs, and tests
@@ -112,13 +112,13 @@ After getting initial clarifications:
    - Use the right agent for each type of research:
 
    **For deeper investigation:**
-   - **stepwise-dev:codebase-locator** - To find more specific files (e.g., "find all files that handle [specific component]")
-   - **stepwise-dev:codebase-analyzer** - To understand implementation details (e.g., "analyze how [system] works")
-   - **stepwise-dev:codebase-pattern-finder** - To find similar features we can model after
+   - **stepwise-core:codebase-locator** - To find more specific files (e.g., "find all files that handle [specific component]")
+   - **stepwise-core:codebase-analyzer** - To understand implementation details (e.g., "analyze how [system] works")
+   - **stepwise-core:codebase-pattern-finder** - To find similar features we can model after
 
    **For historical context:**
-   - **stepwise-dev:thoughts-locator** - To find any research, plans, or decisions about this area
-   - **stepwise-dev:thoughts-analyzer** - To extract key insights from the most relevant documents
+   - **stepwise-core:thoughts-locator** - To find any research, plans, or decisions about this area
+   - **stepwise-core:thoughts-analyzer** - To extract key insights from the most relevant documents
 
    Each agent knows how to:
    - Find the right files and code patterns
@@ -308,8 +308,8 @@ After structure approval:
 
    Next steps in the workflow:
    - Review and approve the plan
-   - Use `/stepwise-dev:implement_plan thoughts/shared/plans/[filename].md` to execute it
-   - Or use `/stepwise-dev:iterate_plan thoughts/shared/plans/[filename].md [changes]` to refine further
+   - Use `/stepwise-core:implement_plan thoughts/shared/plans/[filename].md` to execute it
+   - Or use `/stepwise-core:iterate_plan thoughts/shared/plans/[filename].md [changes]` to refine further
 
    💡 Tip: Use `/clear` to free up context before starting implementation
    ```

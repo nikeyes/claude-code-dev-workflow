@@ -136,6 +136,6 @@ All scripts are located in: `${CLAUDE_PLUGIN_ROOT}/skills/thoughts-management/sc
 
 The following slash commands use this Skill:
 
-- `/stepwise-dev:research_codebase` - Uses thoughts-init and thoughts-metadata
-- `/stepwise-dev:create_plan` - Uses thoughts-init and thoughts-metadata
-- `/stepwise-dev:implement_plan` - Uses thoughts-init
+- `/stepwise-core:research_codebase` - Uses thoughts-init and thoughts-metadata
+- `/stepwise-core:create_plan` - Uses thoughts-init and thoughts-metadata
+- `/stepwise-core:implement_plan` - Uses thoughts-init

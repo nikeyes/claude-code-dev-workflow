@@ -30,8 +30,8 @@ When this command is invoked:
 
    Which plan would you like to update? Please provide the path to the plan file and changes to make.
 
-   Usage: /stepwise-dev:iterate_plan [plan-file-path] [changes to make]
-   Example: /stepwise-dev:iterate_plan thoughts/shared/plans/2025-10-16-feature.md add error handling phase
+   Usage: /stepwise-core:iterate_plan [plan-file-path] [changes to make]
+   Example: /stepwise-core:iterate_plan thoughts/shared/plans/2025-10-16-feature.md add error handling phase
 
    Tip: You can list recent plans with `ls -lt thoughts/shared/plans/ | head`
    ```
@@ -79,13 +79,13 @@ If the user's feedback requires understanding new code patterns or validating as
    Use the right agent for each type of research:
 
    **For code investigation:**
-   - **stepwise-dev:codebase-locator** - To find relevant files
-   - **stepwise-dev:codebase-analyzer** - To understand implementation details
-   - **stepwise-dev:codebase-pattern-finder** - To find similar patterns
+   - **stepwise-core:codebase-locator** - To find relevant files
+   - **stepwise-core:codebase-analyzer** - To understand implementation details
+   - **stepwise-core:codebase-pattern-finder** - To find similar patterns
 
    **For historical context:**
-   - **stepwise-dev:thoughts-locator** - To find related research or decisions
-   - **stepwise-dev:thoughts-analyzer** - To extract insights from documents
+   - **stepwise-core:thoughts-locator** - To find related research or decisions
+   - **stepwise-core:thoughts-analyzer** - To extract insights from documents
 
    **Be EXTREMELY specific about directories**:
    - If the change involves "frontend" or "web UI", specify `frontend/` or `web/` directory
@@ -177,8 +177,8 @@ Get user confirmation before proceeding.
 
    Next steps in the workflow:
    - Review the updated plan
-   - Use `/stepwise-dev:implement_plan thoughts/shared/plans/[filename].md` to execute it
-   - Or use `/stepwise-dev:iterate_plan thoughts/shared/plans/[filename].md [more changes]` for further refinement
+   - Use `/stepwise-core:implement_plan thoughts/shared/plans/[filename].md` to execute it
+   - Or use `/stepwise-core:iterate_plan thoughts/shared/plans/[filename].md [more changes]` for further refinement
 
    💡 Tip: Use `/clear` to free up context before starting implementation
    ```
@@ -256,13 +256,13 @@ When spawning research sub-tasks:
 
 **Scenario 1: User provides everything upfront**
 ```
-User: /stepwise-dev:iterate_plan thoughts/shared/plans/2025-10-16-feature.md - add phase for error handling
+User: /stepwise-core:iterate_plan thoughts/shared/plans/2025-10-16-feature.md - add phase for error handling
 Assistant: [Reads plan, researches error handling patterns, updates plan]
 ```
 
 **Scenario 2: User provides just plan file**
 ```
-User: /stepwise-dev:iterate_plan thoughts/shared/plans/2025-10-16-feature.md
+User: /stepwise-core:iterate_plan thoughts/shared/plans/2025-10-16-feature.md
 Assistant: I've found the plan. What changes would you like to make?
 User: Split Phase 2 into two phases - one for backend, one for frontend
 Assistant: [Proceeds with update]
@@ -270,7 +270,7 @@ Assistant: [Proceeds with update]
 
 **Scenario 3: User provides no arguments**
 ```
-User: /stepwise-dev:iterate_plan
+User: /stepwise-core:iterate_plan
 Assistant: Which plan would you like to update? Please provide the path...
 User: thoughts/shared/plans/2025-10-16-feature.md
 Assistant: I've found the plan. What changes would you like to make?

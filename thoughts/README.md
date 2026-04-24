@@ -8,16 +8,16 @@ This directory contains research documents, implementation plans, and notes for 
   - `tickets/` - Ticket documentation and tracking
   - `notes/` - Personal notes and observations
 - `shared/` - Team-shared documents
-  - `research/` - Research documents from /stepwise-dev:research_codebase
-  - `plans/` - Implementation plans from /stepwise-dev:create_plan
+  - `research/` - Research documents from /stepwise-core:research_codebase
+  - `plans/` - Implementation plans from /stepwise-core:create_plan
   - `prs/` - PR descriptions and documentation
 
 ## Usage
 
 Use Claude Code slash commands:
-- `/stepwise-dev:research_codebase [topic]` - Research and document codebase
-- `/stepwise-dev:create_plan [description]` - Create implementation plan
-- `/stepwise-dev:implement_plan [plan-file]` - Execute a plan
-- `/stepwise-dev:validate_plan [plan-file]` - Validate implementation
+- `/stepwise-core:research_codebase [topic]` - Research and document codebase
+- `/stepwise-core:create_plan [description]` - Create implementation plan
+- `/stepwise-core:implement_plan [plan-file]` - Execute a plan
+- `/stepwise-core:validate_plan [plan-file]` - Validate implementation
 
 Use `grep -r thoughts/` to search across all documents.

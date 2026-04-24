@@ -112,8 +112,8 @@ When all phases are complete:
    - [List key accomplishments]
 
    Next steps in the workflow:
-   - Use `/stepwise-dev:validate_plan thoughts/shared/plans/[filename].md` to verify completeness
-   - Use `/stepwise-dev:commit` to create git commits for the changes
+   - Use `/stepwise-core:validate_plan thoughts/shared/plans/[filename].md` to verify completeness
+   - Use `/stepwise-git:commit` to create git commits for the changes
 
    💡 Tip: Use `/clear` to free up context before validation
    ```

@@ -54,18 +54,18 @@ Then wait for the user's research query.
    - We now have specialized agents that know how to do specific research tasks:
 
    **For codebase research:**
-   - Use the **stepwise-dev:codebase-locator** agent to find WHERE files and components live
-   - Use the **stepwise-dev:codebase-analyzer** agent to understand HOW specific code works (without critiquing it)
-   - Use the **stepwise-dev:codebase-pattern-finder** agent to find examples of existing patterns (without evaluating them)
+   - Use the **stepwise-core:codebase-locator** agent to find WHERE files and components live
+   - Use the **stepwise-core:codebase-analyzer** agent to understand HOW specific code works (without critiquing it)
+   - Use the **stepwise-core:codebase-pattern-finder** agent to find examples of existing patterns (without evaluating them)
 
    **IMPORTANT**: All agents are documentarians, not critics. They will describe what exists without suggesting improvements or identifying issues.
 
    **For thoughts directory:**
-   - Use the **stepwise-dev:thoughts-locator** agent to discover what documents exist about the topic
-   - Use the **stepwise-dev:thoughts-analyzer** agent to extract key insights from specific documents (only the most relevant ones)
+   - Use the **stepwise-core:thoughts-locator** agent to discover what documents exist about the topic
+   - Use the **stepwise-core:thoughts-analyzer** agent to extract key insights from specific documents (only the most relevant ones)
 
    **For web research (only if user explicitly asks):**
-   - Use the **web-search-researcher** agent for external documentation and resources
+   - Use the **stepwise-web:web-search-researcher** agent for external documentation and resources
    - IF you use web-research agents, instruct them to return LINKS with their findings, and please INCLUDE those links in your final report
 
    The key is to use these agents intelligently:
@@ -186,7 +186,7 @@ Then wait for the user's research query.
 
    Next steps in the workflow:
    - Review the research document for details
-   - Use `/stepwise-dev:create_plan [task description]` to plan implementation based on findings
+   - Use `/stepwise-core:create_plan [task description]` to plan implementation based on findings
    - Ask follow-up questions if needed
 
    💡 Tip: Use `/clear` to free up context before planning or implementation
