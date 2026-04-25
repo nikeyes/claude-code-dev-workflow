@@ -1,0 +1,102 @@
+{
+  "expectations": [
+    {
+      "text": "Report identifies that the plan specifies rate limiting by IP address but the code uses session IDs",
+      "passed": true,
+      "evidence": "Report section 'Critical Semantic Mismatch: IP Address vs Session ID' states: 'The plan specifies IP-based rate limiting throughout. The implementation uses session IDs as the tracking key.' The plan's stated purpose is quoted directly: 'Each unique IP should be tracked independently.'"
+    },
+    {
+      "text": "Report notes that method signatures use session_id parameter where the plan specifies ip_address",
+      "passed": true,
+      "evidence": "Report includes a table showing all method signature mismatches: 'check_rate_limit(ip_address)' vs 'check_rate_limit(session_id)', 'record_request(ip_address)' vs 'record_request(session_id)', etc. Also Phase 1 checklist explicitly marks these as PARTIAL with note 'parameter is session_id not ip_address'."
+    },
+    {
+      "text": "Report flags that check_rate_limit, record_request, and get_remaining all accept session_id instead of ip_address",
+      "passed": true,
+      "evidence": "All three are listed in the comparison table with plan vs implementation columns. Phase 1 checklist also notes each as PARTIAL with the comment 'parameter is session_id not ip_address'."
+    },
+    {
+      "text": "Report flags that allowlist operations use session_id instead of ip_address",
+      "passed": true,
+      "evidence": "The comparison table includes is_allowlisted, add_to_allowlist, and remove_from_allowlist, all showing ip_address in the plan vs session_id in implementation. Phase 2 checklist marks is_allowlisted and the add/remove methods as PARTIAL with note 'operates on session IDs'."
+    },
+    {
+      "text": "Report confirms all tests pass despite the semantic mismatch",
+      "passed": true,
+      "evidence": "Report states in both the summary and Test Results section: '8 passed in 0.01s' and 'All tests pass. However, passing tests do not guarantee the implementation matches the plan's intent.' Success Criteria table shows 'All tests pass: PASS — 8/8 pass'."
+    },
+    {
+      "text": "Report does NOT simply claim the plan is fully implemented just because tests pass",
+      "passed": true,
+      "evidence": "The overall verdict is 'FAIL — Critical semantic mismatch between plan and implementation'. The report explicitly notes: 'All tests pass because the tests were written to match the (incorrect) implementation rather than the plan's specification.' It does not claim full implementation."
+    },
+    {
+      "text": "Report identifies that get_top_offenders returns session IDs not IP addresses as the plan requires",
+      "passed": true,
+      "evidence": "The comparison table row states plan requires 'get_top_offenders(n) returns IP addresses' while implementation has 'get_top_offenders(n) returns session IDs'. Phase 2 checklist marks it PARTIAL: 'Logic is correct (sorted by count, descending), but returns session IDs'. Success Criteria also flags it as PARTIAL."
+    },
+    {
+      "text": "Report classifies this as a semantic deviation, not just a naming difference — the tracking dimension (IP vs session) changes the security behavior",
+      "passed": true,
+      "evidence": "Report explicitly states under 'Why this matters': 'IP-based and session-based rate limiting have different security properties. A single IP can generate many sessions (bypassing session-based limits), while NAT/proxies can cause multiple legitimate users to share one IP (causing false positives with IP-based limits). The choice between them is a security architecture decision, not an implementation detail.' Issue 1 is classified as Critical."
+    }
+  ],
+  "summary": {
+    "passed": 8,
+    "failed": 0,
+    "total": 8,
+    "pass_rate": 1.0
+  },
+  "execution_metrics": {
+    "output_chars": 5167,
+    "transcript_chars": null
+  },
+  "timing": {
+    "executor_duration_seconds": 65.5,
+    "grader_duration_seconds": null,
+    "total_duration_seconds": 65.5
+  },
+  "claims": [
+    {
+      "claim": "8/8 tests pass",
+      "type": "factual",
+      "verified": true,
+      "evidence": "Stated in summary, Test Results section, and Success Criteria table. Consistent across the report."
+    },
+    {
+      "claim": "The implementation is algorithmically correct",
+      "type": "quality",
+      "verified": true,
+      "evidence": "The report notes sliding window logic, allowlist bypass, isolation between keys, and get_top_offenders sorting all work as intended. The issue is semantic (wrong key type), not algorithmic."
+    },
+    {
+      "claim": "_get_session_id is dead code never called",
+      "type": "factual",
+      "verified": false,
+      "evidence": "The report asserts the method is 'never called anywhere in api_gateway.py or test_api_gateway.py', but the source files are not available for independent verification in this grading context."
+    },
+    {
+      "claim": "Tests were written to match the (incorrect) implementation rather than the plan's specification",
+      "type": "quality",
+      "verified": true,
+      "evidence": "The report notes tests use 'sess-001', 'sess-002' identifiers rather than IP addresses, which is consistent with the described implementation mismatch."
+    }
+  ],
+  "user_notes_summary": {
+    "uncertainties": [],
+    "needs_review": [],
+    "workarounds": []
+  },
+  "eval_feedback": {
+    "suggestions": [
+      {
+        "reason": "No assertion checks that the report explicitly quotes or references the plan document to show the mismatch was found by comparing plan text against code, rather than just reasoning about naming. The report does this well, but an assertion would confirm it's grounded in the plan artifact."
+      },
+      {
+        "assertion": "Report classifies this as a semantic deviation, not just a naming difference — the tracking dimension (IP vs session) changes the security behavior",
+        "reason": "This assertion is strong and discriminating. The report does satisfy it with the explicit 'security architecture decision, not an implementation detail' language. However, a weaker report could pass by vaguely mentioning 'security' without explaining the specific bypass vectors — consider tightening to require the bypass vector (one IP generating many sessions) to be named."
+      }
+    ],
+    "overall": "Evals are well-targeted and discriminating. All 8 assertions test substance that a superficial report would miss. The set correctly avoids assertions that pass just because tests pass. No critical gaps observed."
+  }
+}

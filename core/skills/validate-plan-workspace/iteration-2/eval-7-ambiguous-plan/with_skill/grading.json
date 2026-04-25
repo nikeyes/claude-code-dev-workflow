@@ -1,0 +1,86 @@
+{
+  "expectations": [
+    {
+      "text": "Report flags sanitize_string clean string input appropriately as vague",
+      "passed": true,
+      "evidence": "Report states in Ambiguous Plan Language table: 'sanitize_string — \"clean string input appropriately\" | No specification of what \"clean\" means (strip? lowercase? truncate? remove special chars?) | Only strips whitespace'."
+    },
+    {
+      "text": "Report flags Handle edge cases well as unmeasurable",
+      "passed": true,
+      "evidence": "Report states: 'Phase 2 — \"Handle edge cases well\" | No specific edge cases defined | Not all edge cases handled' and 'Handle edge cases well | INCOMPLETE' in the Summary Assessment."
+    },
+    {
+      "text": "Report flags Ensure good performance for large inputs as unmeasurable",
+      "passed": true,
+      "evidence": "Report states: 'Phase 2 — \"Ensure good performance for large inputs\" | No threshold defined (1 MB? 100 MB? latency target?) | No size limits or performance guards implemented' and 'Performance guarantee | NOT VERIFIED'."
+    },
+    {
+      "text": "Report flags Performance is acceptable in success criteria as unmeasurable",
+      "passed": true,
+      "evidence": "Report's Summary Assessment table shows: 'Performance guarantee | NOT VERIFIED' and the ambiguity section notes 'No threshold defined (1 MB? 100 MB? latency target?)' making it unmeasurable."
+    },
+    {
+      "text": "Report flags sanitize_html handle HTML content safely as ambiguous",
+      "passed": true,
+      "evidence": "Report states: 'sanitize_html — \"handle HTML content safely\" | Escaping vs stripping vs sanitizing with allowlist are all valid approaches | Escapes all HTML (destructive for rich-text use cases)' and 'The most significant ambiguity in the plan.'"
+    },
+    {
+      "text": "Report does NOT invent specific interpretations for vague criteria and then claim they are met",
+      "passed": true,
+      "evidence": "Report explicitly states: 'The plan uses vague directives throughout. The following items in the plan are too imprecise to verify objectively' and 'those choices may or may not match the actual requirements' rather than claiming they are met. Overall verdict is 'Conditionally acceptable' not 'PASS'."
+    },
+    {
+      "text": "Report recommends clarifying the vague criteria with specific measurable acceptance conditions",
+      "passed": true,
+      "evidence": "Recommendations include: '1. Clarify sanitize_html intent — document whether output should preserve any markup', '5. Define and test a performance budget — if the plan promises \"good performance for large inputs\", add a benchmark test with a concrete threshold (e.g., 1 MB in under 100 ms).'"
+    },
+    {
+      "text": "Report confirms all 7 tests pass for the concrete functionality that IS testable",
+      "passed": true,
+      "evidence": "Report states: 'make test: PASSED — 7/7 tests pass' and lists all 7 tests as PASSED."
+    }
+  ],
+  "summary": {
+    "passed": 8,
+    "failed": 0,
+    "total": 8,
+    "pass_rate": 1.0
+  },
+  "execution_metrics": {
+    "output_chars": 10427
+  },
+  "timing": {
+    "total_duration_seconds": 99.8,
+    "total_tokens": 22217
+  },
+  "claims": [
+    {
+      "claim": "sanitize_html escaping is destructive for rich-text use cases",
+      "type": "quality",
+      "verified": true,
+      "evidence": "Report states: 'html.escape converts <, >, &, \", \\' to HTML entities. This is safe against XSS but destroys intended HTML markup. If the use case allows a subset of HTML tags (e.g., <b>, <i>), the current implementation is incorrect.'"
+    },
+    {
+      "claim": "sanitize_email does not guard against None input",
+      "type": "factual",
+      "verified": true,
+      "evidence": "Report states: 'Calling sanitize_email(None) raises AttributeError: \"NoneType\" object has no attribute \"strip\"' and notes the inconsistency with sanitize_string which handles non-strings."
+    },
+    {
+      "claim": "sanitize_record uses fragile key-name heuristics",
+      "type": "quality",
+      "verified": true,
+      "evidence": "Report states: 'The routing logic uses \"email\" in key.lower() and \"html\" in key.lower() or \"body\" in key.lower(). A field named \"email_verified\" (a boolean flag) would be passed to sanitize_email if its value is a string, which is unintended.'"
+    }
+  ],
+  "eval_feedback": {
+    "suggestions": [
+      {
+        "assertion": "Report flags Performance is acceptable in success criteria as unmeasurable",
+        "reason": "This assertion and 'Report flags Ensure good performance for large inputs as unmeasurable' overlap substantially — they test essentially the same thing (performance is not quantified). Both pass here, but one could be replaced with a more discriminating check like 'Report does not retroactively declare the performance criterion satisfied just because no performance test failed.'"
+      }
+    ],
+    "overall": "Assertions are generally solid. Minor overlap between the two performance-related assertions reduces discriminating power slightly."
+  }
+}

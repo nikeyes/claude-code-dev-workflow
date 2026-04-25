@@ -1,0 +1,65 @@
+{
+  "expectations": [
+    {
+      "text": "Report identifies truncate was named shorten instead",
+      "passed": true,
+      "evidence": "Report states under Deviations: '1. truncate was renamed to shorten (DEVIATION) — Plan required: truncate(text, max_length, suffix=\"...\") — Implemented as: shorten(text, max_len, ellipsis=\"...\")'"
+    },
+    {
+      "text": "Report identifies word_count was named count_words instead",
+      "passed": true,
+      "evidence": "Report states: '2. word_count was renamed to count_words (DEVIATION) — Plan required: word_count(text) — Implemented as: count_words(text)'"
+    },
+    {
+      "text": "Report identifies reverse_words as an unplanned addition not in the plan",
+      "passed": true,
+      "evidence": "Report states: '3. reverse_words function added (DEVIATION — unplanned addition) — Plan required: No such function — Implemented: reverse_words(text) — reverses word order in a string — Impact: Scope creep.'"
+    },
+    {
+      "text": "Report confirms tests pass despite naming deviations",
+      "passed": true,
+      "evidence": "Report shows 'Outcome: 7/7 tests PASSED — All tests pass. No test failures.' with all 7 tests listed."
+    },
+    {
+      "text": "Report notes parameter naming differences (max_length→max_len, suffix→ellipsis)",
+      "passed": true,
+      "evidence": "Report explicitly documents: 'Parameter names also differ (max_length → max_len, suffix → ellipsis)' under Deviation #1."
+    },
+    {
+      "text": "Report distinguishes between deviations (naming) and completeness (functionality works)",
+      "passed": true,
+      "evidence": "Report summary states: 'The implementation is functionally correct — all business logic works and tests pass. However, there are two naming deviations that break the public API contract.' And the 'What Was Correctly Implemented' table shows truncate logic as 'DONE (under wrong name)' and word_count as 'DONE (under wrong name)'."
+    }
+  ],
+  "summary": {
+    "passed": 6,
+    "failed": 0,
+    "total": 6,
+    "pass_rate": 1.0
+  },
+  "execution_metrics": {
+    "output_chars": 3725
+  },
+  "timing": {
+    "total_duration_seconds": 39.5,
+    "total_tokens": 17036
+  },
+  "claims": [
+    {
+      "claim": "Code importing truncate or word_count from this module would break",
+      "type": "quality",
+      "verified": true,
+      "evidence": "Report states for both deviations: 'Code importing truncate from this module would break' and 'Code importing word_count from this module would break.'"
+    },
+    {
+      "claim": "Success criteria truncate(\"Hello World\", 8) returns \"Hello...\" fails because function is named shorten",
+      "type": "factual",
+      "verified": true,
+      "evidence": "Success Criteria Verification table explicitly shows: 'truncate(\"Hello World\", 8) returns \"Hello...\" | FAIL — function is named shorten, not truncate'."
+    }
+  ],
+  "eval_feedback": {
+    "suggestions": [],
+    "overall": "No suggestions, evals look solid."
+  }
+}

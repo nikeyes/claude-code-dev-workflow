@@ -1,0 +1,98 @@
+{
+  "expectations": [
+    {
+      "text": "Report identifies truncate was named shorten instead",
+      "passed": true,
+      "evidence": "Under 'truncate — NOT implemented as specified': 'Actual implementation: shorten(text, max_len, ellipsis=\"...\")' and 'Function renamed from truncate to shorten'"
+    },
+    {
+      "text": "Report identifies word_count was named count_words instead",
+      "passed": true,
+      "evidence": "Under 'word_count — NOT implemented as specified': 'Plan specifies: word_count(text)' and 'Actual implementation: count_words(text)' with 'Function is renamed.'"
+    },
+    {
+      "text": "Report identifies reverse_words as an unplanned addition not in the plan",
+      "passed": true,
+      "evidence": "Dedicated 'Unplanned Code' section states: 'reverse_words(text) — Extra function not in the plan. A reverse_words function was added that has no corresponding plan item.'"
+    },
+    {
+      "text": "Report confirms tests pass despite naming deviations",
+      "passed": true,
+      "evidence": "Report includes full pytest output showing '7 passed in 0.01s' and states 'All 7 tests pass. However, the tests test the implemented (deviated) API, not the API specified in the plan.'"
+    },
+    {
+      "text": "Report notes parameter naming differences (max_length→max_len, suffix→ellipsis)",
+      "passed": true,
+      "evidence": "Under truncate deviations: 'Parameter max_length renamed to max_len' and 'Parameter suffix renamed to ellipsis' are listed explicitly as separate deviation bullet points."
+    },
+    {
+      "text": "Report distinguishes between deviations (naming) and completeness (functionality works)",
+      "passed": true,
+      "evidence": "Report separates naming deviations from functional assessment: 'The equivalent behavior exists under shorten(\"Hello World\", 8)' and for reverse_words: 'This is not a regression (it does not break existing methods)'. The 'Automated Verification' section notes tests pass while 'Findings' documents the naming non-compliance."
+    }
+  ],
+  "summary": {
+    "passed": 6,
+    "failed": 0,
+    "total": 6,
+    "pass_rate": 1.0
+  },
+  "execution_metrics": {
+    "output_chars": 3748,
+    "transcript_chars": null
+  },
+  "timing": {
+    "executor_duration_seconds": 54.0,
+    "grader_duration_seconds": null,
+    "total_duration_seconds": 54.0
+  },
+  "claims": [
+    {
+      "claim": "All 7 tests pass",
+      "type": "factual",
+      "verified": true,
+      "evidence": "Pytest output in the report shows '7 passed in 0.01s' with each test listed as PASSED"
+    },
+    {
+      "claim": "Tests test the deviated API, not the plan-specified API",
+      "type": "quality",
+      "verified": true,
+      "evidence": "The report explains: 'Tests do not test the functions named in the plan (truncate, word_count) — they test the deviated names (shorten, count_words)'"
+    },
+    {
+      "claim": "No external dependencies were added",
+      "type": "factual",
+      "verified": true,
+      "evidence": "Report states 'Only re (stdlib) is imported' under Manual Verification Items"
+    },
+    {
+      "claim": "slugify, extract_emails, and mask_sensitive are fully implemented as specified",
+      "type": "factual",
+      "verified": true,
+      "evidence": "Each has a dedicated subsection confirming 'Fully implemented as specified' with signature and behavior matches confirmed"
+    },
+    {
+      "claim": "The plan's success criteria are currently not satisfiable",
+      "type": "quality",
+      "verified": true,
+      "evidence": "Report states: 'truncate(\"Hello World\", 8) and word_count(\"one two three\") as written in the plan will raise NameError in the current codebase'"
+    }
+  ],
+  "user_notes_summary": {
+    "uncertainties": [],
+    "needs_review": [],
+    "workarounds": []
+  },
+  "eval_feedback": {
+    "suggestions": [
+      {
+        "reason": "No assertion checks whether the report correctly identifies that slugify, extract_emails, and mask_sensitive are correctly implemented — a report that flagged everything as a deviation would still pass all 6 assertions. Adding a positive-compliance assertion would make the eval more discriminating."
+      },
+      {
+        "assertion": "Report distinguishes between deviations (naming) and completeness (functionality works)",
+        "reason": "This assertion is somewhat soft — a report that merely notes 'tests pass' alongside naming issues technically satisfies it. Consider tightening it to require the report to explicitly state that the core functionality (truncation logic, word counting logic) is correct despite the naming deviations."
+      }
+    ],
+    "overall": "All 6 assertions pass and the report is genuinely thorough. The main gap is that no assertion validates the positive side — that the report correctly identifies the 3 fully-compliant functions. This means a report that wildly over-flags could still pass."
+  }
+}

@@ -1,0 +1,114 @@
+{
+  "expectations": [
+    {
+      "text": "Report identifies that the plan specifies rate limiting by IP address but the code uses session IDs",
+      "passed": true,
+      "evidence": "The main finding is titled 'Critical Semantic Mismatch: IP address replaced by session ID throughout' and states 'The plan explicitly and repeatedly specifies IP address as the rate limiting key. The implementation instead uses session_id everywhere.'"
+    },
+    {
+      "text": "Report notes that method signatures use session_id parameter where the plan specifies ip_address",
+      "passed": true,
+      "evidence": "A table in the Findings section contrasts plan vs implementation for every method: e.g. 'check_rate_limit(ip_address)' vs 'check_rate_limit(session_id)', 'record_request(ip_address)' vs 'record_request(session_id)', etc."
+    },
+    {
+      "text": "Report flags that check_rate_limit, record_request, and get_remaining all accept session_id instead of ip_address",
+      "passed": true,
+      "evidence": "All three methods appear in the comparison table: check_rate_limit, record_request, and get_remaining are each listed with the plan's ip_address parameter vs the implementation's session_id parameter."
+    },
+    {
+      "text": "Report flags that allowlist operations use session_id instead of ip_address",
+      "passed": true,
+      "evidence": "The table explicitly lists is_allowlisted, add_to_allowlist, and remove_from_allowlist as using session_id where the plan specifies ip_address."
+    },
+    {
+      "text": "Report confirms all tests pass despite the semantic mismatch",
+      "passed": true,
+      "evidence": "The Automated Verification section shows '8 passed in 0.01s' and the Findings section states 'All 8 tests pass, but they test session-based rate limiting rather than IP-based rate limiting.'"
+    },
+    {
+      "text": "Report does NOT simply claim the plan is fully implemented just because tests pass",
+      "passed": true,
+      "evidence": "The report explicitly states 'The tests confirm the implementation works as built, but they do not verify the plan's actual requirement.' It identifies deviations found in both phases and does not conclude the plan is satisfied."
+    },
+    {
+      "text": "Report identifies that get_top_offenders returns session IDs not IP addresses as the plan requires",
+      "passed": true,
+      "evidence": "The table row reads: 'get_top_offenders(n) returns IPs | get_top_offenders(n) returns session IDs'. The Tests section also notes: 'get_top_offenders returns IPs sorted by request count — returns session IDs, not IPs.'"
+    },
+    {
+      "text": "Report classifies this as a semantic deviation, not just a naming difference — the tracking dimension (IP vs session) changes the security behavior",
+      "passed": true,
+      "evidence": "The report explicitly states 'This is not a renaming detail — it is a fundamental change in what the system does.' and explains the security implications: 'A single client with multiple sessions would bypass limits; a NAT gateway with many clients sharing one IP would not be rate-limited at all.'"
+    }
+  ],
+  "summary": {
+    "passed": 8,
+    "failed": 0,
+    "total": 8,
+    "pass_rate": 1.0
+  },
+  "execution_metrics": {
+    "tool_calls": {},
+    "total_tool_calls": null,
+    "total_steps": null,
+    "errors_encountered": 0,
+    "output_chars": 3847,
+    "transcript_chars": null
+  },
+  "timing": {
+    "executor_duration_seconds": 62.5,
+    "grader_duration_seconds": null,
+    "total_duration_seconds": 62.5
+  },
+  "claims": [
+    {
+      "claim": "The mismatch is a semantic deviation that changes security behavior, not just a naming issue",
+      "type": "quality",
+      "verified": true,
+      "evidence": "The report explains concrete security consequences: multiple-session clients could bypass per-IP limits; NAT clients sharing an IP would be unaffected. This is substantive analysis, not surface-level renaming observation."
+    },
+    {
+      "claim": "All 8 tests pass",
+      "type": "factual",
+      "verified": true,
+      "evidence": "pytest output in the report shows '8 passed in 0.01s' with each test listed as PASSED."
+    },
+    {
+      "claim": "Tests use session ID strings (sess-001, etc.) not IP address strings",
+      "type": "factual",
+      "verified": true,
+      "evidence": "Report states: 'Test identifiers use strings like \"sess-001\", \"sess-002\", \"sess-heavy\", \"sess-vip\" — none use IP address strings.'"
+    },
+    {
+      "claim": "There is dead code (_get_session_id) not mentioned in the plan",
+      "type": "factual",
+      "verified": true,
+      "evidence": "Report identifies an unused _get_session_id helper method at lines 12-13 of api_gateway.py that is never called. This is an additional finding beyond the scope of the eval assertions."
+    },
+    {
+      "claim": "The algorithmic logic (sliding window, allowlist, sorting) is correct relative to plan intent",
+      "type": "quality",
+      "verified": true,
+      "evidence": "The 'What does match the plan' section lists sliding window of 60 seconds, correct get_remaining for allowlisted identifiers, correct sorting in get_top_offenders, and correct allowlist bypass behavior."
+    }
+  ],
+  "user_notes_summary": {
+    "uncertainties": [],
+    "needs_review": [],
+    "workarounds": []
+  },
+  "eval_feedback": {
+    "suggestions": [
+      {
+        "reason": "No assertion checks the quality of the security reasoning — the report could mention 'not a naming difference' without explaining why it matters securely. Assertion 8 passes because the report goes beyond what's required, but a weaker report might still pass. Consider requiring the report to cite a specific security failure mode (e.g., NAT bypass or multi-session bypass)."
+      },
+      {
+        "reason": "No assertion covers the report's finding of dead code (_get_session_id) that is present in the implementation but absent from the plan. This is a meaningful observation that goes beyond the semantic mismatch and could indicate a half-completed refactor or an abandoned approach."
+      },
+      {
+        "reason": "No assertion checks that the report distinguishes between tests that pass and tests that verify the plan's actual success criteria. The report makes this distinction explicitly and well, but it is only covered obliquely by assertion 6."
+      }
+    ],
+    "overall": "All 8 assertions pass with strong evidence. The report is high quality — it goes beyond surface identification to explain security implications, flag dead code, and distinguish test correctness from plan correctness. The evals are well-targeted but could be strengthened by requiring specific security failure mode reasoning and checking for the dead code observation."
+  }
+}

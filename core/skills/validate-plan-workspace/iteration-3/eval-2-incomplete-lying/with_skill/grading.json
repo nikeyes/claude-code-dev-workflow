@@ -1,0 +1,98 @@
+{
+  "expectations": [
+    {
+      "text": "Report confirms Phase 1 (rate limiting) is correctly implemented",
+      "passed": true,
+      "evidence": "Report states 'Phase 1: Rate Limiting — Fully implemented' and details: rate_limiter.py exists with RateLimiter class, correct __init__ params, record_attempt and is_blocked methods, 4 passing tests. Section heading reads 'Phase 1: Rate Limiting — Matches plan'."
+    },
+    {
+      "text": "Report detects audit_logger.py is missing despite Phase 2 checkboxes being [x]",
+      "passed": true,
+      "evidence": "Report table explicitly states 'audit_logger.py | File does not exist' and notes 'The plan marks every Phase 2 item with [x] (complete), but none of the following exist'. Phase 2 section heading reads 'Phase 2: Audit Logging — Entirely absent'."
+    },
+    {
+      "text": "Report detects test_audit_logger.py is missing",
+      "passed": true,
+      "evidence": "Report table row: 'Tests in test_audit_logger.py | test_audit_logger.py | File does not exist'. Also noted in automated verification section: 'There is no test_audit_logger.py file to run'."
+    },
+    {
+      "text": "Report explicitly flags checkbox/reality mismatch for Phase 2",
+      "passed": true,
+      "evidence": "Report states: 'The checked checkboxes in Phase 2 of the plan are false. This is a case of a lying plan — all items appear marked done but the implementation is completely missing.'"
+    },
+    {
+      "text": "Report does NOT claim Phase 2 is complete",
+      "passed": true,
+      "evidence": "Report summary header reads 'Phase 2: Audit Logging — NOT implemented (all checkboxes marked complete in plan, but no code exists)'. No section of the report claims Phase 2 is complete."
+    },
+    {
+      "text": "Report recommends unchecking Phase 2 checkboxes or implementing the missing code",
+      "passed": true,
+      "evidence": "Recommendations section item 1: 'Implement Phase 2 in full. Create audit_logger.py...'. Item 5: 'Do not mark Phase 2 items as complete in the plan until the code and tests are written and passing.' The report recommends both implementing the code and not marking items complete prematurely."
+    }
+  ],
+  "summary": {
+    "passed": 6,
+    "failed": 0,
+    "total": 6,
+    "pass_rate": 1.0
+  },
+  "execution_metrics": {
+    "output_chars": 3452,
+    "transcript_chars": null
+  },
+  "timing": {
+    "executor_duration_seconds": 55.6,
+    "grader_duration_seconds": null,
+    "total_duration_seconds": 55.6
+  },
+  "claims": [
+    {
+      "claim": "All 4 rate limiter tests pass",
+      "type": "factual",
+      "verified": true,
+      "evidence": "Pytest output in the report shows '4 passed in 0.01s' with each test explicitly listed as PASSED."
+    },
+    {
+      "claim": "audit_logger.py does not exist at all",
+      "type": "factual",
+      "verified": true,
+      "evidence": "Report confirms this via file listing and table. No pytest output or import error references audit_logger, consistent with total absence."
+    },
+    {
+      "claim": "Phase 2 plan items are marked [x] (complete) in the plan",
+      "type": "factual",
+      "verified": true,
+      "evidence": "Report states 'The plan marks every Phase 2 item with [x] (complete)' and later 'The checked checkboxes in Phase 2 of the plan are false.' This is consistent with the eval scenario name 'incomplete-lying'."
+    },
+    {
+      "claim": "There is a gap: no test verifies time-window expiry behavior",
+      "type": "quality",
+      "verified": true,
+      "evidence": "Report explicitly identifies this gap: 'One gap: no test verifies the time-window expiry behavior (i.e., that attempts older than window_seconds are not counted).' This is a legitimate gap given the plan's stated requirement."
+    },
+    {
+      "claim": "Manual verification items remain unchecked in the plan",
+      "type": "factual",
+      "verified": true,
+      "evidence": "Report states 'All three manual verification items in the plan remain unchecked ([ ])'."
+    }
+  ],
+  "user_notes_summary": {
+    "uncertainties": [],
+    "needs_review": [],
+    "workarounds": []
+  },
+  "eval_feedback": {
+    "suggestions": [
+      {
+        "reason": "No assertion checks that the report correctly identifies the specific missing symbols (AuditLogger class, log_event method, get_events method). A report that simply said 'audit_logger.py is missing' without itemizing what it should contain would pass all current assertions but miss the depth of analysis the skill is supposed to provide."
+      },
+      {
+        "assertion": "Report recommends unchecking Phase 2 checkboxes or implementing the missing code",
+        "reason": "The assertion is phrased as an 'or' — recommending either unchecking boxes OR implementing the code both satisfy it. The ideal outcome is the report recommends implementing the code (not just unchecking boxes). The current wording could pass for a weaker report that only says 'uncheck the boxes'. Worth splitting into two assertions or tightening to require implementation guidance."
+      }
+    ],
+    "overall": "Assertions are well-targeted for this lying-plan scenario and all pass with genuine evidence. The set correctly discriminates: a report that accepted the plan's checkboxes at face value would fail assertions 2, 3, 4, and 5. Minor improvement possible on specificity of the recommendation assertion."
+  }
+}

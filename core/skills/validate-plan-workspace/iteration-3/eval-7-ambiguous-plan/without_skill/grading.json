@@ -1,0 +1,112 @@
+{
+  "expectations": [
+    {
+      "text": "Report flags 'sanitize_string — clean string input appropriately' as vague — what counts as 'appropriate' is undefined (XSS? SQL injection? Unicode normalization? Just trimming?)",
+      "passed": true,
+      "evidence": "Checklist row: 'sanitize_string(value) — clean string input appropriately | DONE (partial) | Only strips whitespace. \"Appropriately\" is ambiguous — no null-byte removal, no length truncation, no control-char stripping'. Also in Code Review section: 'Resolved as: strip leading/trailing whitespace only. This is a narrow interpretation. The plan could reasonably have required removing control characters, null bytes, or enforcing length limits.'"
+    },
+    {
+      "text": "Report flags 'Handle edge cases well' as unmeasurable — no specific edge cases are listed",
+      "passed": true,
+      "evidence": "Checklist row: 'Handle edge cases well | PARTIAL | Non-string values pass through unchanged (correct); empty dict handled; no test for None values or missing keys'. Code Review section lists specific untested edge cases (None values, Unicode, very long strings) and explicitly states '\"Handle edge cases well\" — Partially addressed.' The word 'unmeasurable' is not used verbatim, but the report demonstrates the criterion is not concretely defined by calling it PARTIAL and enumerating gaps the plan left unspecified."
+    },
+    {
+      "text": "Report flags 'Ensure good performance for large inputs' as unmeasurable — no target metrics, input sizes, or benchmarks defined",
+      "passed": true,
+      "evidence": "Checklist row: 'Ensure good performance for large inputs | UNVERIFIABLE | No benchmark or performance test; html.escape and strip are O(n) — acceptable in principle, but \"good performance\" was never defined or measured'. Code Review section reiterates: 'Not verified. No performance test exists.'"
+    },
+    {
+      "text": "Report flags 'Performance is acceptable' in success criteria as unmeasurable — no threshold specified",
+      "passed": false,
+      "evidence": "The report does not reference a 'success criteria' section or the exact phrase 'Performance is acceptable'. The plan checklist item is labeled 'Ensure good performance for large inputs' and is marked UNVERIFIABLE. No separate success criteria block with the phrase 'Performance is acceptable' is examined or quoted."
+    },
+    {
+      "text": "Report flags 'sanitize_html — handle HTML content safely' as ambiguous — could mean escape, strip, allowlist, or sanitize-and-preserve",
+      "passed": true,
+      "evidence": "Code Review section: 'Resolved as: escape HTML entities with html.escape(). This is correct for rendering user content in HTML, but it is not the same as stripping HTML (which is an alternative safe approach). The plan does not specify which strategy was intended.' The checklist also notes the implementation 'Uses html.escape() to escape tags; XSS-safe for output escaping' while acknowledging the plan ambiguity."
+    },
+    {
+      "text": "Report does NOT invent specific interpretations for vague criteria and then claim they are met",
+      "passed": true,
+      "evidence": "For each vague criterion the report describes what the implementer chose, then explicitly notes the ambiguity and marks the item as DONE (partial) or UNVERIFIABLE rather than claiming full compliance. For example, sanitize_string is 'DONE (partial)', performance is 'UNVERIFIABLE', and edge cases are 'PARTIAL'. The overall verdict is 'PASS with caveats' with explicit enumeration of what remains undefined."
+    },
+    {
+      "text": "Report recommends clarifying the vague criteria with specific, measurable acceptance conditions before validation can be completed",
+      "passed": false,
+      "evidence": "The report concludes with 'PASS with caveats' and states 'If stricter sanitization behavior... is required, the plan should be revised to specify it explicitly and tests should be added.' This is a mild, conditional recommendation framed as future improvement, not a requirement to clarify criteria before validation can be completed. The report treats validation as complete despite the vagueness."
+    },
+    {
+      "text": "Report confirms all 7 tests pass for the concrete functionality that IS testable",
+      "passed": true,
+      "evidence": "Automated Verification section: 'Result: PASS — 7/7 tests passed in 0.01s' with all seven test names listed: test_sanitize_string_strips_whitespace, test_sanitize_string_non_string, test_sanitize_email_normalizes, test_sanitize_email_rejects_invalid, test_sanitize_html_escapes_tags, test_sanitize_record_mixed_fields, test_sanitize_record_empty."
+    }
+  ],
+  "summary": {
+    "passed": 6,
+    "failed": 2,
+    "total": 8,
+    "pass_rate": 0.75
+  },
+  "execution_metrics": {
+    "output_chars": 3950,
+    "transcript_chars": null
+  },
+  "timing": {
+    "executor_duration_seconds": 57.2,
+    "grader_duration_seconds": null,
+    "total_duration_seconds": 57.2
+  },
+  "claims": [
+    {
+      "claim": "The implementation is complete and passes all automated tests",
+      "type": "quality",
+      "verified": true,
+      "evidence": "All 7 pytest tests listed as PASSED in 0.01s; all plan checklist items marked as DONE or PARTIAL/UNVERIFIABLE with explanation"
+    },
+    {
+      "claim": "All plan checklist items are marked done",
+      "type": "factual",
+      "verified": false,
+      "evidence": "The summary says 'all plan checklist items are marked done' but the checklist itself shows 'PARTIAL' for Handle edge cases well and 'UNVERIFIABLE' for performance — not all items are unconditionally DONE"
+    },
+    {
+      "claim": "sanitize_string only strips whitespace (narrow interpretation)",
+      "type": "factual",
+      "verified": true,
+      "evidence": "Test name test_sanitize_string_strips_whitespace confirms this, and the report explicitly notes no null-byte removal, no length truncation, no control-char stripping"
+    },
+    {
+      "claim": "sanitize_html uses html.escape() which is correct for output escaping",
+      "type": "factual",
+      "verified": true,
+      "evidence": "Test test_sanitize_html_escapes_tags confirms escaping behavior; report cites Python standard library html.escape()"
+    },
+    {
+      "claim": "No performance test exists and 'good performance' was never defined",
+      "type": "quality",
+      "verified": true,
+      "evidence": "Report marks the performance item UNVERIFIABLE and states 'No benchmark or performance test' exists"
+    }
+  ],
+  "user_notes_summary": {
+    "uncertainties": [],
+    "needs_review": [],
+    "workarounds": []
+  },
+  "eval_feedback": {
+    "suggestions": [
+      {
+        "assertion": "Report flags 'Performance is acceptable' in success criteria as unmeasurable — no threshold specified",
+        "reason": "The plan under test may not actually contain a 'success criteria' section with the exact phrase 'Performance is acceptable'. The assertion references language that does not appear in the validation report, making it impossible to verify from available outputs. Consider aligning the assertion text with the actual plan language or checking the plan source."
+      },
+      {
+        "assertion": "Report recommends clarifying the vague criteria with specific, measurable acceptance conditions before validation can be completed",
+        "reason": "This assertion sets a high bar (blocking validation) that a well-written report might reasonably not meet — a report can correctly surface ambiguity while still providing a qualified pass. Consider softening to 'Report recommends clarifying vague criteria before treating implementation as fully validated' to match what a high-quality report would realistically say."
+      },
+      {
+        "reason": "No assertion checks whether the report's 'PASS with caveats' verdict is appropriate or whether the vagueness is severe enough that a 'CANNOT VALIDATE' verdict would be more correct. The distinction between 'pass with caveats' and 'blocked pending clarification' is the crux of the eval scenario, but no assertion directly targets the verdict quality."
+      }
+    ],
+    "overall": "Most assertions are well-targeted and discriminating. The two failures point to genuine gaps: one assertion references plan language not visible in the report, and one sets a blocking-validation bar that the report does not reach. The eval would benefit from aligning assertion text with actual plan content and from adding an assertion on the appropriateness of the final verdict."
+  }
+}

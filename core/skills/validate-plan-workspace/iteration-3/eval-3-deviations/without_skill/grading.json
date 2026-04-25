@@ -1,0 +1,96 @@
+{
+  "expectations": [
+    {
+      "text": "Report identifies truncate was named shorten instead",
+      "passed": true,
+      "evidence": "Deviation 1 explicitly states: 'Plan: truncate(text, max_length, suffix=\"...\") / Actual: shorten(text, max_len, ellipsis=\"...\") — function name and parameter names differ'. Also appears in the comparison table row: '| truncate(text, max_length, suffix=\"...\") | DEVIATED | Implemented as shorten(text, max_len, ellipsis=\"...\")'"
+    },
+    {
+      "text": "Report identifies word_count was named count_words instead",
+      "passed": true,
+      "evidence": "Deviation 2 states: 'Plan: word_count(text) / Actual: count_words(text) — function name is reversed'. Also in comparison table: '| word_count(text) | DEVIATED | Implemented as count_words(text) — function name is reversed'"
+    },
+    {
+      "text": "Report identifies reverse_words as an unplanned addition not in the plan",
+      "passed": true,
+      "evidence": "Deviation 3 states: 'Unplanned function added: reverse_words — Plan: No mention of this function. Actual: reverse_words(text) added to string_utils.py with a corresponding test.'"
+    },
+    {
+      "text": "Report confirms tests pass despite naming deviations",
+      "passed": true,
+      "evidence": "The Test Results section shows 'Result: ALL 7 TESTS PASS' with all 7 tests listed as PASSED. The summary table confirms 'Tests pass: YES (7/7)'. The summary paragraph also notes: 'The implementation passes all tests, but the tests themselves are written against the deviated implementation rather than the plan's specified API.'"
+    },
+    {
+      "text": "Report notes parameter naming differences (max_length→max_len, suffix→ellipsis)",
+      "passed": true,
+      "evidence": "Deviation 1 explicitly lists both parameter renames: 'The parameter names also differ (max_length vs max_len, suffix vs ellipsis), breaking keyword-argument calls.' The comparison table also shows 'shorten(text, max_len, ellipsis=\"...\")' vs plan's 'truncate(text, max_length, suffix=\"...\")'"
+    },
+    {
+      "text": "Report distinguishes between deviations (naming) and completeness (functionality works)",
+      "passed": true,
+      "evidence": "The report explicitly separates the two concerns throughout. Each deviation entry notes that 'behavior is correct under that name' (e.g., 'Function is named shorten, not truncate; behavior is correct under that name'). The summary concludes: 'The implementation passes all tests, but... The two core functions were renamed, meaning any external code relying on the planned public API would break.' The summary table shows 'Tests pass: YES' alongside 'Plan fully implemented: NO', directly distinguishing functional correctness from naming compliance."
+    }
+  ],
+  "summary": {
+    "passed": 6,
+    "failed": 0,
+    "total": 6,
+    "pass_rate": 1.0
+  },
+  "execution_metrics": {
+    "total_tool_calls": null,
+    "output_chars": 3700,
+    "transcript_chars": null
+  },
+  "timing": {
+    "executor_duration_seconds": 45.7,
+    "grader_duration_seconds": null,
+    "total_duration_seconds": 45.7
+  },
+  "claims": [
+    {
+      "claim": "ALL 7 TESTS PASS",
+      "type": "factual",
+      "verified": false,
+      "evidence": "The report quotes test output showing 7 passed, but we cannot independently verify this from the grader's available files — no source code or test runner output was provided as a separate artifact. The claim is plausible and internally consistent, but unverifiable from available outputs alone."
+    },
+    {
+      "claim": "Calling truncate(...) or word_count(...) will produce a NameError",
+      "type": "factual",
+      "verified": false,
+      "evidence": "Logical consequence of the naming deviations identified, but no source code file was provided to confirm the actual function names defined in string_utils.py."
+    },
+    {
+      "claim": "reverse_words was not in the plan",
+      "type": "factual",
+      "verified": false,
+      "evidence": "The report states 'Plan: No mention of this function', but the plan file was not included in the outputs directory, so the claim cannot be independently verified."
+    },
+    {
+      "claim": "No external dependencies were added",
+      "type": "factual",
+      "verified": false,
+      "evidence": "Report states 'Only re from the standard library is used', but no requirements file or source code was included in outputs to confirm."
+    }
+  ],
+  "user_notes_summary": {
+    "uncertainties": [],
+    "needs_review": [],
+    "workarounds": []
+  },
+  "eval_feedback": {
+    "suggestions": [
+      {
+        "reason": "No assertion checks whether the report correctly assesses severity or impact of the deviations. A superficial report listing the names without explaining the API-breakage impact would still pass all 6 assertions. Adding an assertion like 'Report assesses the impact of naming deviations on external API consumers' would raise the bar."
+      },
+      {
+        "assertion": "Report confirms tests pass despite naming deviations",
+        "reason": "This assertion passes even if the report only mentions that tests pass without explaining *why* tests pass despite the deviations (i.e., that the tests were written against the deviated implementation, not the planned API). The report does address this subtlety, but the assertion wouldn't catch a shallower report that just says 'tests pass'."
+      },
+      {
+        "reason": "No assertion checks that the report provides a clear recommendation or verdict (e.g., 'plan not complete, corrections needed'). The report does provide this, but it's not evaluated."
+      }
+    ],
+    "overall": "The assertions are well-targeted and discriminating — a report that missed any one deviation would fail. The main gap is that assertions verify presence of facts but not quality of analysis (severity, impact, or actionable conclusion)."
+  }
+}

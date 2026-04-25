@@ -1,0 +1,267 @@
+{
+  "metadata": {
+    "skill_name": "validate-plan",
+    "skill_path": "/Users/jorge.castro/mordor/personal/stepwise-dev/core/skills/validate-plan",
+    "executor_model": "claude-sonnet-4-6",
+    "analyzer_model": "claude-sonnet-4-6",
+    "timestamp": "2026-04-25T20:42:00Z",
+    "evals_run": [1, 2, 3, 4, 5, 6, 7],
+    "runs_per_configuration": 1
+  },
+  "runs": [
+    {
+      "eval_id": 1,
+      "eval_name": "Fully Correct",
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 6,
+        "failed": 0,
+        "total": 6,
+        "time_seconds": 38.2,
+        "tokens": 18086,
+        "tool_calls": 9,
+        "errors": 0
+      }
+    },
+    {
+      "eval_id": 1,
+      "eval_name": "Fully Correct",
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 6,
+        "failed": 0,
+        "total": 6,
+        "time_seconds": 34.0,
+        "tokens": 16325,
+        "tool_calls": 8,
+        "errors": 0
+      }
+    },
+    {
+      "eval_id": 2,
+      "eval_name": "Incomplete Lying",
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 6,
+        "failed": 0,
+        "total": 6,
+        "time_seconds": 62.6,
+        "tokens": 19577,
+        "tool_calls": 10,
+        "errors": 0
+      }
+    },
+    {
+      "eval_id": 2,
+      "eval_name": "Incomplete Lying",
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 6,
+        "failed": 0,
+        "total": 6,
+        "time_seconds": 43.3,
+        "tokens": 16951,
+        "tool_calls": 9,
+        "errors": 0
+      }
+    },
+    {
+      "eval_id": 3,
+      "eval_name": "Deviations",
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 6,
+        "failed": 0,
+        "total": 6,
+        "time_seconds": 55.6,
+        "tokens": 19767,
+        "tool_calls": 10,
+        "errors": 0
+      }
+    },
+    {
+      "eval_id": 3,
+      "eval_name": "Deviations",
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 6,
+        "failed": 0,
+        "total": 6,
+        "time_seconds": 39.5,
+        "tokens": 17036,
+        "tool_calls": 8,
+        "errors": 0
+      }
+    },
+    {
+      "eval_id": 4,
+      "eval_name": "Semantic Mismatch",
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 8,
+        "failed": 0,
+        "total": 8,
+        "time_seconds": 63.7,
+        "tokens": 20770,
+        "tool_calls": 9,
+        "errors": 0
+      }
+    },
+    {
+      "eval_id": 4,
+      "eval_name": "Semantic Mismatch",
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 8,
+        "failed": 0,
+        "total": 8,
+        "time_seconds": 58.0,
+        "tokens": 18583,
+        "tool_calls": 8,
+        "errors": 0
+      }
+    },
+    {
+      "eval_id": 5,
+      "eval_name": "Lying Tests",
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 8,
+        "failed": 0,
+        "total": 8,
+        "time_seconds": 71.5,
+        "tokens": 21696,
+        "tool_calls": 10,
+        "errors": 0
+      }
+    },
+    {
+      "eval_id": 5,
+      "eval_name": "Lying Tests",
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.875,
+        "passed": 7,
+        "failed": 1,
+        "total": 8,
+        "time_seconds": 65.1,
+        "tokens": 19651,
+        "tool_calls": 10,
+        "errors": 0
+      }
+    },
+    {
+      "eval_id": 6,
+      "eval_name": "Hidden Regression",
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 7,
+        "failed": 0,
+        "total": 7,
+        "time_seconds": 108.1,
+        "tokens": 24355,
+        "tool_calls": 15,
+        "errors": 0
+      }
+    },
+    {
+      "eval_id": 6,
+      "eval_name": "Hidden Regression",
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 7,
+        "failed": 0,
+        "total": 7,
+        "time_seconds": 62.2,
+        "tokens": 20375,
+        "tool_calls": 12,
+        "errors": 0
+      }
+    },
+    {
+      "eval_id": 7,
+      "eval_name": "Ambiguous Plan",
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 8,
+        "failed": 0,
+        "total": 8,
+        "time_seconds": 99.8,
+        "tokens": 22217,
+        "tool_calls": 11,
+        "errors": 0
+      }
+    },
+    {
+      "eval_id": 7,
+      "eval_name": "Ambiguous Plan",
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 8,
+        "failed": 0,
+        "total": 8,
+        "time_seconds": 71.2,
+        "tokens": 19026,
+        "tool_calls": 10,
+        "errors": 0
+      }
+    }
+  ],
+  "run_summary": {
+    "with_skill": {
+      "pass_rate": {"mean": 1.0, "stddev": 0.0, "min": 1.0, "max": 1.0},
+      "time_seconds": {"mean": 71.4, "stddev": 23.4, "min": 38.2, "max": 108.1},
+      "tokens": {"mean": 20924, "stddev": 1900, "min": 18086, "max": 24355}
+    },
+    "without_skill": {
+      "pass_rate": {"mean": 0.982, "stddev": 0.047, "min": 0.875, "max": 1.0},
+      "time_seconds": {"mean": 53.3, "stddev": 14.0, "min": 34.0, "max": 71.2},
+      "tokens": {"mean": 18278, "stddev": 1461, "min": 16325, "max": 20375}
+    },
+    "delta": {
+      "pass_rate": "+0.018",
+      "time_seconds": "+18.1",
+      "tokens": "+2646"
+    }
+  },
+  "notes": [
+    "ITERATION 2: Re-evaluation with 4 new capability-class evals (semantic mismatch, lying tests, hidden regression, ambiguous plan) added to the original 3 content-check evals.",
+    "With-skill achieves 100% across all 7 evals vs 98.2% baseline. The only baseline failure is in Eval 5 (Lying Tests) where without_skill failed to specifically enumerate that test_successful_payment mocks all three internal methods.",
+    "NEW EVALS ANALYSIS — The 4 new capability-class evals were designed to be harder and test deeper analysis skills. Results:",
+    "Eval 4 (Semantic Mismatch): BOTH passed 8/8. Both correctly identified the IP vs session_id mismatch. The baseline was surprisingly strong — it produced equally detailed comparison tables and caught dead code. NO SKILL ADVANTAGE.",
+    "Eval 5 (Lying Tests): with_skill 8/8, without_skill 7/8 (+12.5% delta). The skill advantage is marginal — the baseline caught most lying-test patterns but lacked specificity on the mock-wiring assertion. SMALL SKILL ADVANTAGE.",
+    "Eval 6 (Hidden Regression): BOTH passed 7/7. Both correctly identified get_user_count() regression, explained the failure scenarios, and noted the missing test coverage. NO SKILL ADVANTAGE.",
+    "Eval 7 (Ambiguous Plan): BOTH passed 8/8. Both correctly flagged vague criteria, refused to rubber-stamp, and recommended clarification. NO SKILL ADVANTAGE.",
+    "ORIGINAL EVALS (1-3): Both configurations passed 100% across all 3, same as iteration 1. These evals are non-discriminating.",
+    "TOKEN/TIME OVERHEAD: The skill adds ~2,646 tokens (+14.5%) and ~18.1 seconds (+34%) per eval on average, primarily from reading SKILL.md. The skill's heaviest overhead was on Eval 6 (108s vs 62s) and Eval 7 (100s vs 71s).",
+    "OVERALL CONCLUSION: The new capability-class evals confirm the iteration 1 finding — validate-plan provides negligible value over the baseline model. The baseline (Claude Sonnet without the skill) independently catches semantic mismatches, lying tests, hidden regressions, and ambiguous criteria with the same quality. The skill's primary effect is adding a consistent report template structure, not improving detection capability. The +1.8% delta on 7 evals (vs +0% on 3 evals in iteration 1) is not statistically significant with N=1 runs.",
+    "RECOMMENDATION: Consider removing validate-plan or significantly rewriting it to add capabilities the baseline model doesn't already have (e.g., automated test mutation, formal specification checking, code path analysis). The current skill is a formatting wrapper with no measurable capability improvement."
+  ]
+}

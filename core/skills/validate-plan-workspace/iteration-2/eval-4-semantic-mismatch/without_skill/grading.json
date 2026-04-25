@@ -1,0 +1,75 @@
+{
+  "expectations": [
+    {
+      "text": "Report identifies that the plan specifies rate limiting by IP address but the code uses session IDs",
+      "passed": true,
+      "evidence": "Report states: 'Critical Semantic Mismatch: IP addresses vs. Session IDs — The plan is unambiguous: every feature is defined in terms of IP addresses' and 'The plan specifies IP-based rate limiting; the implementation uses session IDs throughout.'"
+    },
+    {
+      "text": "Report notes that method signatures use session_id parameter where the plan specifies ip_address",
+      "passed": true,
+      "evidence": "Report provides a table with all mismatches: 'check_rate_limit(ip_address) | check_rate_limit(session_id)', 'record_request(ip_address) | record_request(session_id)', etc."
+    },
+    {
+      "text": "Report flags that check_rate_limit, record_request, and get_remaining all accept session_id instead of ip_address",
+      "passed": true,
+      "evidence": "Report table explicitly lists check_rate_limit, record_request, and get_remaining as using session_id instead of ip_address with FAIL status for each."
+    },
+    {
+      "text": "Report flags that allowlist operations use session_id instead of ip_address",
+      "passed": true,
+      "evidence": "Report table shows is_allowlisted, add_to_allowlist, remove_from_allowlist all as FAIL with 'Signature uses session_id, not ip_address'."
+    },
+    {
+      "text": "Report confirms all tests pass despite the semantic mismatch",
+      "passed": true,
+      "evidence": "Report states: '8 passed in 0.01s — All 8 tests pass. No failures, no errors.' and 'The implementation is functionally coherent and all tests pass.'"
+    },
+    {
+      "text": "Report does NOT simply claim the plan is fully implemented just because tests pass",
+      "passed": true,
+      "evidence": "Report states: 'Overall verdict: FAIL — Tests pass but the implementation does not match the plan. The plan specifies IP-based rate limiting; the implementation uses session IDs throughout.'"
+    },
+    {
+      "text": "Report identifies that get_top_offenders returns session IDs not IP addresses as the plan requires",
+      "passed": true,
+      "evidence": "Report states: 'get_top_offenders(n) returns IPs sorted by request count | FAIL | Returns session IDs; no IP-address semantics' and 'get_top_offenders(n) returns session IDs sorted by count'."
+    },
+    {
+      "text": "Report classifies this as a semantic deviation, not just a naming difference — the tracking dimension (IP vs session) changes the security behavior",
+      "passed": true,
+      "evidence": "Report states: 'Session IDs are typically application-layer tokens, while IP addresses are network-layer identifiers. A session ID rate limiter does not protect against abuse from a single IP that spawns multiple sessions, which is the core threat model the plan is designed to address.'"
+    }
+  ],
+  "summary": {
+    "passed": 8,
+    "failed": 0,
+    "total": 8,
+    "pass_rate": 1.0
+  },
+  "execution_metrics": {
+    "output_chars": 6890
+  },
+  "timing": {
+    "total_duration_seconds": 58.0,
+    "total_tokens": 18583
+  },
+  "claims": [
+    {
+      "claim": "Tests were written to match the incorrect implementation rather than to validate plan requirements",
+      "type": "quality",
+      "verified": true,
+      "evidence": "Report states: 'The tests were written to match the (incorrect) implementation rather than to validate the plan's requirements, which is why they all pass despite the implementation being wrong.'"
+    },
+    {
+      "claim": "_get_session_id is dead code",
+      "type": "factual",
+      "verified": true,
+      "evidence": "Report states: '_get_session_id(self, request_context) (line 12–13) is defined but never called anywhere in the class or tests. It appears to be dead code left over from a different design.'"
+    }
+  ],
+  "eval_feedback": {
+    "suggestions": [],
+    "overall": "No suggestions, evals look solid. Both reports correctly identified all key aspects of this scenario."
+  }
+}

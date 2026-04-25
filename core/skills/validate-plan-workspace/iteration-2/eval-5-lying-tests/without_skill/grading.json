@@ -1,0 +1,75 @@
+{
+  "expectations": [
+    {
+      "text": "Report identifies that test_valid_card_number and test_invalid_card_number have no assert statements",
+      "passed": true,
+      "evidence": "Report shows code for test_valid_card_number with comment '# result ignored — no assertion' and states 'calls validate_card but discards the result. A bug that always returns None or False would not be caught.' Same documented for test_invalid_card_number."
+    },
+    {
+      "text": "Report identifies that test_future_date_is_valid and test_past_date_is_invalid mock the very method being tested, making them tautological",
+      "passed": true,
+      "evidence": "Report shows test_future_date_is_valid code with @patch.object(PaymentProcessor, 'validate_expiry', return_value=True) and states: 'This test would pass even if validate_expiry was completely deleted.' Same for test_past_date_is_invalid under Pattern 2."
+    },
+    {
+      "text": "Report identifies that test_credit_fee and test_debit_fee only assert fee > 0, not the actual expected values",
+      "passed": true,
+      "evidence": "Report shows test_credit_fee code with 'assert fee > 0' and states: 'passes for any positive number including wildly incorrect values' and 'The plan requires specific fee rates (2.9%/0.5% + $0.30) but these tests would pass for any positive number.'"
+    },
+    {
+      "text": "Report identifies that test_successful_payment mocks all three internal methods, testing the mock wiring rather than actual payment processing logic",
+      "passed": false,
+      "evidence": "Report describes test_successful_payment only indirectly as 'Tests for transaction processing | PARTIAL | Tests exist but are heavily mocked and miss key assertions' — it does not specifically enumerate that validate_card, validate_expiry, and calculate_fee are all mocked in test_successful_payment, nor explain that this tests mock wiring only."
+    },
+    {
+      "text": "Report confirms all 13 tests pass despite the quality issues",
+      "passed": true,
+      "evidence": "Report states: 'Outcome: 13 passed in 0.01s — All 13 tests pass. However, the tests are systematically deceptive.'"
+    },
+    {
+      "text": "Report does NOT claim the plan success criteria are met just because make test exits 0",
+      "passed": true,
+      "evidence": "Report states: 'Verdict: FAIL — The plan's automated verification criterion (\"all tests pass AND [specific behaviors verified]\") is not met. Tests pass without verifying behavior.'"
+    },
+    {
+      "text": "Report flags that the plan requires Luhn validation correctly identifies invalid card numbers but no test actually asserts on valid vs invalid card results",
+      "passed": true,
+      "evidence": "Report Success Criteria table shows: 'Luhn validation correctly identifies invalid card numbers | NO — test_invalid_card_number discards the result'."
+    },
+    {
+      "text": "Report flags that the plan requires fees calculated correctly but tests do not verify the specific fee percentages",
+      "passed": true,
+      "evidence": "Report Success Criteria table shows: 'Fees calculated correctly for credit (2.9% + $0.30) | NO — only checks fee > 0' and 'Fees calculated correctly for debit (0.5% + $0.30) | NO — only checks fee > 0'."
+    }
+  ],
+  "summary": {
+    "passed": 7,
+    "failed": 1,
+    "total": 8,
+    "pass_rate": 0.875
+  },
+  "execution_metrics": {
+    "output_chars": 6570
+  },
+  "timing": {
+    "total_duration_seconds": 65.1,
+    "total_tokens": 19651
+  },
+  "claims": [
+    {
+      "claim": "The implementation is correct — validate_card(\"4532015112830366\") returns True",
+      "type": "factual",
+      "verified": true,
+      "evidence": "Report states: 'validate_card(\"4532015112830366\") returns True (valid Luhn)' and verifies calculate_fee(100, \"credit\") = 3.20."
+    },
+    {
+      "claim": "test_short_card_number asserts result is not None which is trivially always true",
+      "type": "factual",
+      "verified": true,
+      "evidence": "Report shows test code with 'assert result is not None' and states: 'Because False is not None, this assertion passes even for an invalid card returning False. The assertion provides zero signal.'"
+    }
+  ],
+  "eval_feedback": {
+    "suggestions": [],
+    "overall": "No suggestions. The without_skill report is nearly as thorough as the with_skill report, missing only the specific enumeration that test_successful_payment mocks all three internal methods by name."
+  }
+}

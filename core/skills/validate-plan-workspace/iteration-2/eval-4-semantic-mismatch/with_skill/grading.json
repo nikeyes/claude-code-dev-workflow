@@ -1,0 +1,75 @@
+{
+  "expectations": [
+    {
+      "text": "Report identifies that the plan specifies rate limiting by IP address but the code uses session IDs",
+      "passed": true,
+      "evidence": "Report states under 'Deviations from Plan (Critical Semantic Mismatch)': 'The implementation tracks session_id instead of ip_address throughout. The plan specifies IP-based rate limiting — every method signature in the plan uses ip_address as the parameter name and as the conceptual key.'"
+    },
+    {
+      "text": "Report notes that method signatures use session_id parameter where the plan specifies ip_address",
+      "passed": true,
+      "evidence": "Report lists all mismatches: 'Plan: check_rate_limit(ip_address) → Implementation: check_rate_limit(session_id)', 'Plan: record_request(ip_address) → Implementation: record_request(session_id)', etc."
+    },
+    {
+      "text": "Report flags that check_rate_limit, record_request, and get_remaining all accept session_id instead of ip_address",
+      "passed": true,
+      "evidence": "Report explicitly lists: 'Plan: check_rate_limit(ip_address) → Implementation: check_rate_limit(session_id)', 'Plan: record_request(ip_address) → Implementation: record_request(session_id)', 'Plan: get_remaining(ip_address) → Implementation: get_remaining(session_id)'."
+    },
+    {
+      "text": "Report flags that allowlist operations use session_id instead of ip_address",
+      "passed": true,
+      "evidence": "Report lists: 'Plan: is_allowlisted(ip_address) → Implementation: is_allowlisted(session_id)', 'Plan: add_to_allowlist(ip_address) → Implementation: add_to_allowlist(session_id)', 'Plan: remove_from_allowlist(ip_address) → Implementation: remove_from_allowlist(session_id)'."
+    },
+    {
+      "text": "Report confirms all tests pass despite the semantic mismatch",
+      "passed": true,
+      "evidence": "Report shows 'All 8 tests pass' with all listed as PASSED, and states: 'The implementation is functionally correct for a generic identifier-based rate limiter and all 8 automated tests pass.'"
+    },
+    {
+      "text": "Report does NOT simply claim the plan is fully implemented just because tests pass",
+      "passed": true,
+      "evidence": "Report explicitly states: 'there is a critical semantic mismatch: the plan specifies IP-based rate limiting but the code uses session IDs as the limiting key. The security goal of the plan (blocking abusive IPs) is not realized.'"
+    },
+    {
+      "text": "Report identifies that get_top_offenders returns session IDs not IP addresses as the plan requires",
+      "passed": true,
+      "evidence": "Report states: 'Plan: get_top_offenders(n) returns \"IP addresses\" → Implementation returns session_id values'."
+    },
+    {
+      "text": "Report classifies this as a semantic deviation, not just a naming difference — the tracking dimension (IP vs session) changes the security behavior",
+      "passed": true,
+      "evidence": "Report states: 'Wrong abstraction level: Session IDs and IP addresses are fundamentally different concepts. An IP may have multiple sessions; rate limiting by session is a weaker protection against abuse from a single IP. The original security goal (protecting against IP-based abuse) is not achieved.'"
+    }
+  ],
+  "summary": {
+    "passed": 8,
+    "failed": 0,
+    "total": 8,
+    "pass_rate": 1.0
+  },
+  "execution_metrics": {
+    "output_chars": 6906
+  },
+  "timing": {
+    "total_duration_seconds": 63.7,
+    "total_tokens": 20770
+  },
+  "claims": [
+    {
+      "claim": "Dead method _get_session_id(request_context) is never called",
+      "type": "factual",
+      "verified": true,
+      "evidence": "Report states: 'api_gateway.py contains a dead method _get_session_id(request_context) (line 13–14) that is never called by any other method.'"
+    },
+    {
+      "claim": "Tests use sess-XXX style identifiers rather than IP addresses",
+      "type": "factual",
+      "verified": true,
+      "evidence": "Report states: 'The tests also use sess-XXX style identifiers (e.g., \"sess-001\", \"sess-heavy\") rather than IP addresses (e.g., \"192.168.1.1\"), so the test suite validates the wrong semantic domain.'"
+    }
+  ],
+  "eval_feedback": {
+    "suggestions": [],
+    "overall": "No suggestions, evals look solid. The assertions correctly test whether the report identifies the IP vs session-ID distinction as a semantic issue with security implications, not merely a naming preference."
+  }
+}
