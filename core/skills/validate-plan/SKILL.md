@@ -6,200 +6,59 @@ model: sonnet
 disable-model-invocation: true
 ---
 
-<!-- SPDX-License-Identifier: Apache-2.0
-     SPDX-FileCopyrightText: 2024 humanlayer Authors (original)
-     SPDX-FileCopyrightText: 2025 Jorge Castro (modifications) -->
-
 # Validate Plan
 
-You are tasked with validating that an implementation plan was correctly executed, verifying all success criteria and identifying any deviations or issues.
+Validate that an implementation plan was correctly executed by comparing the plan's claims against the actual codebase state.
 
-## Initial Setup
+## Input
 
-When invoked:
-1. **Determine context** - Are you in an existing conversation or starting fresh?
-   - If existing: Review what was implemented in this session
-   - If fresh: Need to discover what was done through git and codebase analysis
+- If a plan path is provided, use it
+- Otherwise, search `thoughts/shared/plans/` or ask the user
 
-2. **Locate the plan**:
-   - If plan path provided, use it
-   - Otherwise, search recent commits for plan references or ask user
+## Validation Steps
 
-3. **Gather implementation evidence**:
-   ```bash
-   # Check recent commits
-   git log --oneline -n 20
-   git diff HEAD~N..HEAD  # Where N covers implementation commits
+1. **Read the plan completely** — identify every phase, checkbox, success criterion, and manual verification item.
 
-   # Run comprehensive checks
-   cd $(git rev-parse --show-toplevel) && make check test
-   ```
+2. **Read every file the plan references** — source code, test files, config files. Compare what the plan says should exist against what actually exists.
 
-## Validation Process
+3. **Run automated verification** — execute `make test` (or whatever the plan specifies). Capture full output.
 
-### Step 1: Context Discovery
+4. **Compare plan claims to reality for each phase**:
+   - Do checked items (`[x]`) match what's actually in the code?
+   - Do function names, signatures, and behavior match what the plan specifies?
+   - Are there deviations (renamed functions, changed parameters, extra code not in plan)?
+   - Are there items marked complete that are missing or incomplete?
 
-If starting fresh or need more context:
+5. **Assess test quality** — don't just check that tests pass. Read the test code:
+   - Do tests actually assert the expected behavior, or are assertions missing/trivial?
+   - Do tests mock the method they're supposed to test (tautological tests)?
+   - Do the plan's success criteria have corresponding test assertions?
 
-1. **Read the implementation plan** completely
-2. **Identify what should have changed**:
-   - List all files that should be modified
-   - Note all success criteria (automated and manual)
-   - Identify key functionality to verify
+6. **Look for regressions** — did the implementation break pre-existing methods or behavior? Check methods that aren't part of the plan but exist in modified files.
 
-3. **Spawn parallel research tasks** to discover implementation:
-   ```
-   Task 1 - Verify database changes:
-   Research if migration [N] was added and schema changes match plan.
-   Check: migration files, schema version, table structure
-   Return: What was implemented vs what plan specified
+7. **Evaluate plan quality** — if the plan has vague or unmeasurable criteria ("handle edge cases well", "good performance"), flag them as unverifiable rather than inventing interpretations.
 
-   Task 2 - Verify code changes:
-   Find all modified files related to [feature].
-   Compare actual changes to plan specifications.
-   Return: File-by-file comparison of planned vs actual
-
-   Task 3 - Verify test coverage:
-   Check if tests were added/modified as specified.
-   Run test commands and capture results.
-   Return: Test status and any missing coverage
-   ```
-
-### Step 2: Systematic Validation
-
-For each phase in the plan:
-
-1. **Check completion status**:
-   - Look for checkmarks in the plan (- [x])
-   - Verify the actual code matches claimed completion
-
-2. **Run automated verification**:
-   - Execute each command from "Automated Verification"
-   - Document pass/fail status
-   - If failures, investigate root cause
-
-3. **Assess manual criteria**:
-   - List what needs manual testing
-   - Provide clear steps for user verification
-
-4. **Think deeply about edge cases**:
-   - Were error conditions handled?
-   - Are there missing validations?
-   - Could the implementation break existing functionality?
-
-### Step 3: Generate Validation Report
-
-Create comprehensive validation summary:
+## Report Format
 
 ```markdown
 ## Validation Report: [Plan Name]
 
 ### Implementation Status
-Phase 1: [Name] - Fully implemented
-Phase 2: [Name] - Fully implemented
-Phase 3: [Name] - Partially implemented (see issues)
+Phase N: [Name] — [Fully implemented | Deviations found | NOT implemented]
 
-### Automated Verification Results
-Build passes: `make build`
-Tests pass: `make test`
-Linting issues: `make lint` (3 warnings)
+### Automated Verification
+[Full test output, pass/fail count]
 
-### Code Review Findings
+### Findings
+[What matches the plan, what deviates, what's missing, what's broken]
 
-#### Matches Plan:
-- Database migration correctly adds [table]
-- API endpoints implement specified methods
-- Error handling follows plan
-
-#### Deviations from Plan:
-- Used different variable names in [file:line]
-- Added extra validation in [file:line] (improvement)
-
-#### Potential Issues:
-- Missing index on foreign key could impact performance
-- No rollback handling in migration
-
-### Manual Testing Required:
-1. UI functionality:
-   - [ ] Verify [feature] appears correctly
-   - [ ] Test error states with invalid input
-
-2. Integration:
-   - [ ] Confirm works with existing [component]
-   - [ ] Check performance with large datasets
-
-### Recommendations:
-- Address linting warnings before merge
-- Consider adding integration test for [scenario]
-- Document new API endpoints
+### Recommendations
+[What needs fixing before this can be considered complete]
 ```
 
-## Working with Existing Context
+## Key Principles
 
-If you were part of the implementation:
-- Review the conversation history
-- Check your todo list for what was completed
-- Focus validation on work done in this session
-- Be honest about any shortcuts or incomplete items
-
-## Important Guidelines
-
-1. **Be thorough but practical** - Focus on what matters
-2. **Run all automated checks** - Don't skip verification commands
-3. **Document everything** - Both successes and issues
-4. **Think critically** - Question if the implementation truly solves the problem
-5. **Consider maintenance** - Will this be maintainable long-term?
-
-## Validation Checklist
-
-Always verify:
-- [ ] All phases marked complete are actually done
-- [ ] Automated tests pass
-- [ ] Code follows existing patterns
-- [ ] No regressions introduced
-- [ ] Error handling is robust
-- [ ] Documentation updated if needed
-- [ ] Manual test steps are clear
-
-## Relationship to Other Skills
-
-Recommended workflow:
-1. `/stepwise-core:implement-plan` - Execute the implementation
-2. `/stepwise-git:commit` - Create atomic commits for changes
-Note: The commit skill must be explicitly invoked by the user.
-3. `/stepwise-core:validate-plan` - Verify implementation correctness
-
-The validation works best after commits are made, as it can analyze the git history to understand what was implemented.
-
-Remember: Good validation catches issues before they reach production. Be constructive but thorough in identifying gaps or improvements.
-
-## Completion
-
-After validation is complete:
-
-1. **Ensure thoughts directory is initialized:**
-   - Check if `thoughts/` directory exists
-   - If it doesn't exist, use the thoughts-management Skill to initialize it:
-     ```bash
-     bash ${CLAUDE_PLUGIN_ROOT}/skills/thoughts-management/scripts/thoughts-init
-     ```
-   - This ensures the directory structure is properly set up
-
-2. **Sync validation results** (if documented):
-   - Use the thoughts-management Skill to sync the validation results
-
-3. **Inform the user**:
-   ```
-   Validation complete for: [Plan Name]
-
-   Status: [Summary of validation results]
-   - [Items that passed]
-   - [Items needing attention]
-
-   Next steps in the workflow:
-   - Address any identified issues
-   - Use `/stepwise-git:commit` to create git commits if changes were made
-   - Plan is ready for PR or further iteration
-
-   Tip: Use `/clear` to free up context for your next task
-   ```
+- A passing test suite does not mean the plan is satisfied — tests can lie.
+- Checked checkboxes do not mean work is done — verify against actual code.
+- "It works" is not the same as "it matches the plan" — semantic mismatches matter.
+- Vague criteria cannot be validated — flag them, don't rubber-stamp them.

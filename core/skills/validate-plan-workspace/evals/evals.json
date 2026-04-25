@@ -7,12 +7,12 @@
       "expected_output": "Confirms all phases are correctly implemented, tests pass, no issues found. Report should be positive with no deviations.",
       "files": [],
       "assertions": [
-        "Report confirms Phase 1 (power) is fully implemented",
-        "Report confirms Phase 2 (modulo) is fully implemented",
-        "Report shows make test passes with all 8 tests",
-        "Report checks that plan checkboxes match actual code state",
-        "Report identifies no deviations or missing items",
-        "Report includes manual verification checklist items"
+        {"text": "Report confirms Phase 1 (power) is fully implemented", "type": "content_check"},
+        {"text": "Report confirms Phase 2 (modulo) is fully implemented", "type": "content_check"},
+        {"text": "Report shows make test passes with all 8 tests", "type": "content_check"},
+        {"text": "Report checks that plan checkboxes match actual code state", "type": "content_check"},
+        {"text": "Report identifies no deviations or missing items", "type": "content_check"},
+        {"text": "Report includes manual verification checklist items", "type": "content_check"}
       ]
     },
     {
@@ -21,12 +21,12 @@
       "expected_output": "Detects that Phase 2 (audit logging) is marked [x] but audit_logger.py does not exist. Flags the discrepancy clearly.",
       "files": [],
       "assertions": [
-        "Report confirms Phase 1 (rate limiting) is correctly implemented",
-        "Report detects audit_logger.py is missing despite Phase 2 checkboxes being [x]",
-        "Report detects test_audit_logger.py is missing",
-        "Report explicitly flags checkbox/reality mismatch for Phase 2",
-        "Report does NOT claim Phase 2 is complete",
-        "Report recommends unchecking Phase 2 checkboxes or implementing the missing code"
+        {"text": "Report confirms Phase 1 (rate limiting) is correctly implemented", "type": "content_check"},
+        {"text": "Report detects audit_logger.py is missing despite Phase 2 checkboxes being [x]", "type": "content_check"},
+        {"text": "Report detects test_audit_logger.py is missing", "type": "content_check"},
+        {"text": "Report explicitly flags checkbox/reality mismatch for Phase 2", "type": "content_check"},
+        {"text": "Report does NOT claim Phase 2 is complete", "type": "content_check"},
+        {"text": "Report recommends unchecking Phase 2 checkboxes or implementing the missing code", "type": "content_check"}
       ]
     },
     {
@@ -35,12 +35,79 @@
       "expected_output": "Detects naming deviations (shorten vs truncate, count_words vs word_count) and the unplanned reverse_words function. Tests pass but plan doesn't match implementation names.",
       "files": [],
       "assertions": [
-        "Report identifies truncate was named shorten instead",
-        "Report identifies word_count was named count_words instead",
-        "Report identifies reverse_words as an unplanned addition not in the plan",
-        "Report confirms tests pass despite naming deviations",
-        "Report notes parameter naming differences (max_length→max_len, suffix→ellipsis)",
-        "Report distinguishes between deviations (naming) and completeness (functionality works)"
+        {"text": "Report identifies truncate was named shorten instead", "type": "content_check"},
+        {"text": "Report identifies word_count was named count_words instead", "type": "content_check"},
+        {"text": "Report identifies reverse_words as an unplanned addition not in the plan", "type": "content_check"},
+        {"text": "Report confirms tests pass despite naming deviations", "type": "content_check"},
+        {"text": "Report notes parameter naming differences (max_length→max_len, suffix→ellipsis)", "type": "content_check"},
+        {"text": "Report distinguishes between deviations (naming) and completeness (functionality works)", "type": "content_check"}
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "Validate the plan at thoughts/shared/plans/add-ip-rate-limiting.md",
+      "expected_output": "Detects that the plan specifies IP-based rate limiting but the implementation uses session IDs instead. All tests pass and code works, but the semantic intent of the plan is not met. The code tracks session_id everywhere the plan says ip_address.",
+      "project_dir": "evals/projects/eval-4-semantic-mismatch",
+      "files": [],
+      "assertions": [
+        {"text": "Report identifies that the plan specifies rate limiting by IP address but the code uses session IDs", "type": "capability"},
+        {"text": "Report notes that method signatures use session_id parameter where the plan specifies ip_address", "type": "capability"},
+        {"text": "Report flags that check_rate_limit, record_request, and get_remaining all accept session_id instead of ip_address", "type": "capability"},
+        {"text": "Report flags that allowlist operations use session_id instead of ip_address", "type": "capability"},
+        {"text": "Report confirms all tests pass despite the semantic mismatch", "type": "content_check"},
+        {"text": "Report does NOT simply claim the plan is fully implemented just because tests pass", "type": "capability"},
+        {"text": "Report identifies that get_top_offenders returns session IDs not IP addresses as the plan requires", "type": "capability"},
+        {"text": "Report classifies this as a semantic deviation, not just a naming difference — the tracking dimension (IP vs session) changes the security behavior", "type": "capability"}
+      ]
+    },
+    {
+      "id": 5,
+      "prompt": "Validate the plan at thoughts/shared/plans/add-payment-processor.md",
+      "expected_output": "Detects that tests pass (13/13) but many tests are deceptive: card validation tests have no assertions, expiry tests mock the method being tested (so they test the mock, not the code), fee tests only check fee > 0 instead of exact values, and process_payment tests mock all dependencies. The test suite creates a false sense of coverage.",
+      "project_dir": "evals/projects/eval-5-lying-tests",
+      "files": [],
+      "assertions": [
+        {"text": "Report identifies that test_valid_card_number and test_invalid_card_number have no assert statements — they call the method but never verify the result", "type": "capability"},
+        {"text": "Report identifies that test_future_date_is_valid and test_past_date_is_invalid mock the very method being tested, making them tautological", "type": "capability"},
+        {"text": "Report identifies that test_credit_fee and test_debit_fee only assert fee > 0, not the actual expected values (3.20 for credit, 0.80 for debit on $100)", "type": "capability"},
+        {"text": "Report identifies that test_successful_payment mocks all three internal methods, testing the mock wiring rather than actual payment processing logic", "type": "capability"},
+        {"text": "Report confirms all 13 tests pass despite the quality issues", "type": "content_check"},
+        {"text": "Report does NOT claim the plan's success criteria are met just because make test exits 0", "type": "capability"},
+        {"text": "Report flags that the plan requires 'Luhn validation correctly identifies invalid card numbers' but no test actually asserts on valid vs invalid card results", "type": "capability"},
+        {"text": "Report flags that the plan requires 'Fees calculated correctly for both credit and debit' but tests don't verify the specific fee percentages (2.9% credit, 0.5% debit, +$0.30)", "type": "capability"}
+      ]
+    },
+    {
+      "id": 6,
+      "prompt": "Validate the plan at thoughts/shared/plans/add-caching-to-user-service.md",
+      "expected_output": "Detects that the caching integration introduced a regression in get_user_count: it now returns the cache size instead of the actual user count from the store. After update_user (which invalidates cache) or for users never fetched via get_user (not cached), the count will be wrong. All 16 tests pass because no test exercises get_user_count after cache invalidation.",
+      "project_dir": "evals/projects/eval-6-hidden-regression",
+      "files": [],
+      "assertions": [
+        {"text": "Report confirms Phase 1 (LRU cache) is correctly implemented", "type": "content_check"},
+        {"text": "Report confirms Phase 2 cache integration works for get_user, update_user, and delete_user", "type": "content_check"},
+        {"text": "Report confirms all 16 tests pass", "type": "content_check"},
+        {"text": "Report identifies that get_user_count reads from cache (len(self._cache)) instead of the store", "type": "capability"},
+        {"text": "Report explains that get_user_count will return wrong results after cache invalidation (update/delete) or for users not yet cached", "type": "capability"},
+        {"text": "Report identifies this as a regression introduced by the caching integration — get_user_count previously used the store but was changed to use cache", "type": "capability"},
+        {"text": "Report notes the test suite does not cover the get_user_count regression scenario", "type": "capability"}
+      ]
+    },
+    {
+      "id": 7,
+      "prompt": "Validate the plan at thoughts/shared/plans/add-data-sanitizer.md",
+      "expected_output": "Identifies that the plan contains multiple vague and unmeasurable criteria: 'clean string input appropriately', 'handle edge cases well', 'ensure good performance', 'performance is acceptable', 'input/output looks right'. A proper validation cannot confirm or deny these criteria without clarification. The report should flag the ambiguity rather than rubber-stamping or inventing specific interpretations.",
+      "project_dir": "evals/projects/eval-7-ambiguous-plan",
+      "files": [],
+      "assertions": [
+        {"text": "Report flags 'sanitize_string — clean string input appropriately' as vague — what counts as 'appropriate' is undefined (XSS? SQL injection? Unicode normalization? Just trimming?)", "type": "capability"},
+        {"text": "Report flags 'Handle edge cases well' as unmeasurable — no specific edge cases are listed", "type": "capability"},
+        {"text": "Report flags 'Ensure good performance for large inputs' as unmeasurable — no target metrics, input sizes, or benchmarks defined", "type": "capability"},
+        {"text": "Report flags 'Performance is acceptable' in success criteria as unmeasurable — no threshold specified", "type": "capability"},
+        {"text": "Report flags 'sanitize_html — handle HTML content safely' as ambiguous — could mean escape, strip, allowlist, or sanitize-and-preserve", "type": "capability"},
+        {"text": "Report does NOT invent specific interpretations for vague criteria and then claim they are met", "type": "capability"},
+        {"text": "Report recommends clarifying the vague criteria with specific, measurable acceptance conditions before validation can be completed", "type": "capability"},
+        {"text": "Report confirms all 7 tests pass for the concrete functionality that IS testable", "type": "content_check"}
       ]
     }
   ]
