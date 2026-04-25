@@ -1,0 +1,15 @@
+{
+  "eval_id": 2,
+  "eval_name": "ambiguous-mismatch",
+  "configuration": "with_skill",
+  "overall": {"pass_rate": 1.00, "passed": 7, "failed": 0, "total": 7},
+  "expectations": [
+    {"text": "Detects that the plan references 'Order' class but the actual class is 'PurchaseOrder'", "passed": true, "evidence": "DEVIATION comment: Plan refers to Order class, but actual class is PurchaseOrder"},
+    {"text": "Detects that the plan references 'compute_total(tax_percent)' but the actual method is 'calculate_total(tax_rate, discount_code)'", "passed": true, "evidence": "DEVIATION comment: Plan refers to Order.compute_total(tax_percent), but actual method is calculate_total(tax_rate, discount_code)"},
+    {"text": "Detects that the plan uses 'cancel(note)' / 'self.cancel_note' but the tests expect 'cancel(reason)' / 'self.cancellation_reason'", "passed": true, "evidence": "DEVIATION comment: Plan says cancel(note) storing in self.cancel_note, but tests use cancel(reason=...) and order.cancellation_reason"},
+    {"text": "Adapts to actual codebase names rather than creating new classes or renaming existing ones", "passed": true, "evidence": "Used PurchaseOrder, cancel(reason), cancellation_reason — tests as source of truth"},
+    {"text": "Documents naming deviations as inline notes in the plan file", "passed": true, "evidence": "Three DEVIATION comments in plan: Phase 1 (Order→PurchaseOrder, compute_total→calculate_total), Phase 2 (cancel(note)→cancel(reason))"},
+    {"text": "Does NOT rename PurchaseOrder to Order or create a new Order class", "passed": true, "evidence": "Class remains PurchaseOrder in output order.py"},
+    {"text": "cancel and status_history are correctly added and all tests pass", "passed": true, "evidence": "10 passed, 0 failed"}
+  ]
+}

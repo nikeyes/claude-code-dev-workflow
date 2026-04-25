@@ -3,3 +3,5 @@ __pycache__/
 .pytest_cache/
 *.pyc
 package-lock.json
+iteration-*/eval-*/with_skill/project/
+iteration-*/eval-*/without_skill/project/

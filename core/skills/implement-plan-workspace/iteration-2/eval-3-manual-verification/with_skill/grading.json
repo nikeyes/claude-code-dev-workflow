@@ -1,0 +1,14 @@
+{
+  "eval_id": 3,
+  "eval_name": "manual-verification",
+  "configuration": "with_skill",
+  "expectations": [
+    {"text": "Phase 1 (center_text) is completed and agent proceeds to Phase 2 without pausing for user input", "passed": true, "evidence": "Agent implemented both phases without pausing between them; only paused after Phase 2 as required"},
+    {"text": "After Phase 2 (format_table), agent pauses and presents the Manual Verification items to the user", "passed": true, "evidence": "Agent output explicitly says 'Phase 2 Complete - Ready for Manual Verification' and lists the items"},
+    {"text": "Pause message lists the specific manual verification items from the plan (visual alignment, dash separators, column widths)", "passed": true, "evidence": "Message includes all three items: 'Table output is visually aligned', 'Separator line uses dashes', 'Column widths accommodate the longest value'"},
+    {"text": "Manual Verification checkboxes are NOT marked [x] by the agent — they remain [ ] for user confirmation", "passed": true, "evidence": "Verified in outputs/add-formatting-features.md: manual verification items remain [ ]"},
+    {"text": "formatter.py contains both center_text and format_table functions", "passed": true, "evidence": "Verified in outputs/formatter.py: center_text line 21, format_table line 30"},
+    {"text": "make test exits 0 with all tests passing", "passed": false, "evidence": "Independently verified: test_format_table_alignment FAILED (1 failed, 8 passed). The format_table implementation produces lines of unequal length because separator is based on sum of col_widths + len(headers)-1 but data rows use ljust with spaces between columns"},
+    {"text": "Phase 1 and Phase 2 code checkboxes are marked [x]", "passed": true, "evidence": "Verified: all Phase 1 and Phase 2 implementation checkboxes are [x]"}
+  ]
+}

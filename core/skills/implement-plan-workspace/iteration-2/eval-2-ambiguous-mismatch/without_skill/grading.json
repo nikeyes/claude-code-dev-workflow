@@ -1,0 +1,14 @@
+{
+  "eval_id": 2,
+  "eval_name": "ambiguous-mismatch",
+  "configuration": "without_skill",
+  "expectations": [
+    {"text": "Detects that the plan references 'Order' class but the actual class is 'PurchaseOrder'", "passed": true, "evidence": "Agent summary states 'plan called for extending an Order class, but the actual codebase uses PurchaseOrder'"},
+    {"text": "Detects that the plan references 'compute_total(tax_percent)' but the actual method is 'calculate_total(tax_rate, discount_code)'", "passed": false, "evidence": "Agent summary does not mention the compute_total vs calculate_total mismatch at all"},
+    {"text": "Detects that the plan uses 'cancel(note)' / 'self.cancel_note' but the tests expect 'cancel(reason)' / 'self.cancellation_reason'", "passed": true, "evidence": "Agent summary: 'plan says cancel(note)/cancel_note, but tests use cancel(reason)/cancellation_reason'"},
+    {"text": "Presents mismatches using structured Issue/Expected/Found format", "passed": false, "evidence": "Used narrative prose in summary, no structured format"},
+    {"text": "Asks user for guidance on how to proceed rather than silently auto-resolving all mismatches", "passed": false, "evidence": "Auto-resolved all mismatches by following test signatures without asking"},
+    {"text": "Does NOT rename PurchaseOrder to Order or create a new Order class", "passed": true, "evidence": "Verified in outputs/order.py: class is PurchaseOrder"},
+    {"text": "If agent proceeds with adaptation, cancel and status_history are correctly added to PurchaseOrder and all tests pass", "passed": true, "evidence": "Independently verified: 10 passed in 0.01s"}
+  ]
+}

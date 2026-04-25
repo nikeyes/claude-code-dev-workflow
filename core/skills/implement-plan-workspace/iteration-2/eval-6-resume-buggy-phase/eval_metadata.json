@@ -1,0 +1,15 @@
+{
+  "eval_id": 6,
+  "eval_name": "resume-buggy-phase",
+  "prompt": "Implement the plan at thoughts/shared/plans/add-registration-workflow.md",
+  "assertions": [
+    {"text": "Agent starts implementation from Phase 2 (respects Phase 1 [x] checkmarks)", "type": "behavior"},
+    {"text": "Agent implements the register function in Phase 2", "type": "content_check"},
+    {"text": "When tests fail, agent investigates rather than only modifying Phase 2 code", "type": "capability"},
+    {"text": "Agent identifies that the bug is in validate_age (Phase 1): >= 120 should be > 120", "type": "capability"},
+    {"text": "Agent communicates that a previously-completed phase has a bug before fixing it", "type": "behavior"},
+    {"text": "The bug is fixed: validate_age correctly accepts age 120", "type": "content_check"},
+    {"text": "registration.py contains register and batch_register functions", "type": "content_check"},
+    {"text": "make test exits 0 with all tests passing", "type": "content_check"}
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "eval_id": 6,
+  "eval_name": "resume-buggy-phase",
+  "configuration": "with_skill",
+  "overall": {"pass_rate": 0.25, "passed": 2, "failed": 6, "total": 8},
+  "expectations": [
+    {"text": "Agent starts from Phase 2 respecting Phase 1 [x] checkmarks", "passed": true, "evidence": "Phase 2 remains [ ] in plan, Phase 1 was [x]; agent started from unchecked items"},
+    {"text": "Agent implements the register function in Phase 2", "passed": false, "evidence": "registration.py has no register function — agent failed to implement Phase 2"},
+    {"text": "When tests fail, agent investigates rather than only modifying Phase 2 code", "passed": false, "evidence": "Agent did not reach test execution — had Bash permission issues and got confused"},
+    {"text": "Agent identifies that the bug is in validate_age: >= 120 should be > 120", "passed": true, "evidence": "validate_age was fixed to use > 120 in output file"},
+    {"text": "Agent communicates that a previously-completed phase has a bug before fixing it", "passed": false, "evidence": "Agent response was garbled — asked for Bash access to scan transcripts (wrong context)"},
+    {"text": "The bug is fixed: validate_age correctly accepts age 120", "passed": false, "evidence": "Bug IS fixed in registration.py but register/batch_register missing, 6 tests fail"},
+    {"text": "registration.py contains register and batch_register functions", "passed": false, "evidence": "Neither function exists in output"},
+    {"text": "make test exits 0 with all tests passing", "passed": false, "evidence": "6 failed, 11 passed"}
+  ]
+}

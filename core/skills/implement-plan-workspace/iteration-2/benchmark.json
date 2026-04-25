@@ -1,0 +1,399 @@
+{
+  "metadata": {
+    "skill_name": "implement-plan",
+    "skill_path": "/Users/jorge.castro/mordor/personal/stepwise-dev/core/skills/implement-plan",
+    "executor_model": "claude-sonnet-4-6",
+    "analyzer_model": "claude-sonnet-4-6",
+    "timestamp": "2026-04-25T22:00:00Z",
+    "evals_run": [1, 2, 3, 4, 5, 6, 7],
+    "runs_per_configuration": 1
+  },
+  "runs": [
+    {
+      "eval_id": 1,
+      "eval_name": "phase-discipline",
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.00,
+        "passed": 7,
+        "failed": 0,
+        "total": 7,
+        "time_seconds": 62.3,
+        "tokens": 23540,
+        "tool_calls": 17,
+        "errors": 0
+      },
+      "expectations": [
+        {"text": "make test is executed at least 3 times across the transcript", "passed": true, "evidence": "Agent summary confirms phase-by-phase test runs; 17 tool calls consistent with multiple test executions"},
+        {"text": "Phase 1 (remove_item) is implemented and verified before Phase 2 (total_value) begins", "passed": true, "evidence": "Agent confirms sequential phase implementation"},
+        {"text": "Phase 2 (total_value) is implemented and verified before Phase 3 (apply_discount) begins", "passed": true, "evidence": "Agent confirms sequential phase implementation"},
+        {"text": "Checkboxes in the plan file are marked progressively as phases complete", "passed": true, "evidence": "Output plan has all checkboxes [x]; agent confirmed progressive marking"},
+        {"text": "inventory.py contains remove_item, total_value, and apply_discount methods", "passed": true, "evidence": "Verified in outputs/inventory.py"},
+        {"text": "make test exits 0 with all tests passing", "passed": true, "evidence": "Independently verified: 16 passed"},
+        {"text": "Plan file has all checkboxes marked [x]", "passed": true, "evidence": "Verified: all 14 checkboxes [x]"}
+      ]
+    },
+    {
+      "eval_id": 1,
+      "eval_name": "phase-discipline",
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.29,
+        "passed": 2,
+        "failed": 5,
+        "total": 7,
+        "time_seconds": 33.6,
+        "tokens": 17102,
+        "tool_calls": 9,
+        "errors": 0
+      },
+      "expectations": [
+        {"text": "make test is executed at least 3 times across the transcript", "passed": false, "evidence": "Only 9 tool calls — single make test run"},
+        {"text": "Phase 1 (remove_item) is implemented and verified before Phase 2 (total_value) begins", "passed": false, "evidence": "All methods implemented in one edit"},
+        {"text": "Phase 2 (total_value) is implemented and verified before Phase 3 (apply_discount) begins", "passed": false, "evidence": "All methods implemented in one edit"},
+        {"text": "Checkboxes in the plan file are marked progressively as phases complete", "passed": false, "evidence": "All checkboxes remain [ ]"},
+        {"text": "inventory.py contains remove_item, total_value, and apply_discount methods", "passed": true, "evidence": "All three methods present"},
+        {"text": "make test exits 0 with all tests passing", "passed": true, "evidence": "16 passed"},
+        {"text": "Plan file has all checkboxes marked [x]", "passed": false, "evidence": "All checkboxes remain [ ]"}
+      ]
+    },
+    {
+      "eval_id": 2,
+      "eval_name": "ambiguous-mismatch",
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.71,
+        "passed": 5,
+        "failed": 2,
+        "total": 7,
+        "time_seconds": 67.2,
+        "tokens": 20619,
+        "tool_calls": 13,
+        "errors": 0
+      },
+      "expectations": [
+        {"text": "Detects 'Order' vs 'PurchaseOrder' mismatch", "passed": true, "evidence": "Explicitly noted in summary and plan annotations"},
+        {"text": "Detects 'compute_total' vs 'calculate_total' mismatch", "passed": true, "evidence": "Noted in summary"},
+        {"text": "Detects 'cancel(note)/cancel_note' vs 'cancel(reason)/cancellation_reason' mismatch", "passed": true, "evidence": "Plan annotated with correct signatures"},
+        {"text": "Uses structured Issue/Expected/Found format", "passed": false, "evidence": "Used inline plan annotations, not prescribed format"},
+        {"text": "Asks user for guidance before auto-resolving", "passed": false, "evidence": "Auto-resolved by following test signatures"},
+        {"text": "Does NOT rename PurchaseOrder to Order", "passed": true, "evidence": "Verified: class remains PurchaseOrder"},
+        {"text": "Tests pass with correct adaptation", "passed": true, "evidence": "10 passed"}
+      ]
+    },
+    {
+      "eval_id": 2,
+      "eval_name": "ambiguous-mismatch",
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.43,
+        "passed": 3,
+        "failed": 4,
+        "total": 7,
+        "time_seconds": 40.5,
+        "tokens": 17263,
+        "tool_calls": 10,
+        "errors": 0
+      },
+      "expectations": [
+        {"text": "Detects 'Order' vs 'PurchaseOrder' mismatch", "passed": true, "evidence": "Noted in summary"},
+        {"text": "Detects 'compute_total' vs 'calculate_total' mismatch", "passed": false, "evidence": "Not mentioned"},
+        {"text": "Detects 'cancel(note)/cancel_note' vs 'cancel(reason)/cancellation_reason' mismatch", "passed": true, "evidence": "Noted in summary"},
+        {"text": "Uses structured Issue/Expected/Found format", "passed": false, "evidence": "Narrative prose only"},
+        {"text": "Asks user for guidance before auto-resolving", "passed": false, "evidence": "Auto-resolved without asking"},
+        {"text": "Does NOT rename PurchaseOrder to Order", "passed": true, "evidence": "Class remains PurchaseOrder"},
+        {"text": "Tests pass with correct adaptation", "passed": true, "evidence": "10 passed"}
+      ]
+    },
+    {
+      "eval_id": 3,
+      "eval_name": "manual-verification",
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.86,
+        "passed": 6,
+        "failed": 1,
+        "total": 7,
+        "time_seconds": 73.0,
+        "tokens": 20435,
+        "tool_calls": 14,
+        "errors": 0
+      },
+      "expectations": [
+        {"text": "Phase 1 completed without pausing", "passed": true, "evidence": "Proceeded directly to Phase 2"},
+        {"text": "Pauses after Phase 2 for Manual Verification", "passed": true, "evidence": "Output shows 'Phase 2 Complete - Ready for Manual Verification'"},
+        {"text": "Pause message lists specific manual verification items", "passed": true, "evidence": "All three items listed"},
+        {"text": "Manual Verification checkboxes remain [ ]", "passed": true, "evidence": "Verified in output plan file"},
+        {"text": "formatter.py contains center_text and format_table", "passed": true, "evidence": "Both functions present"},
+        {"text": "make test exits 0 with all tests passing", "passed": false, "evidence": "test_format_table_alignment FAILED (1 failed, 8 passed)"},
+        {"text": "Phase 1 and Phase 2 code checkboxes marked [x]", "passed": true, "evidence": "Verified: implementation checkboxes are [x]"}
+      ]
+    },
+    {
+      "eval_id": 3,
+      "eval_name": "manual-verification",
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.43,
+        "passed": 3,
+        "failed": 4,
+        "total": 7,
+        "time_seconds": 126.2,
+        "tokens": 24542,
+        "tool_calls": 22,
+        "errors": 0
+      },
+      "expectations": [
+        {"text": "Phase 1 completed without pausing", "passed": true, "evidence": "No pauses at all"},
+        {"text": "Pauses after Phase 2 for Manual Verification", "passed": false, "evidence": "Completed without pausing"},
+        {"text": "Pause message lists specific manual verification items", "passed": false, "evidence": "No pause message produced"},
+        {"text": "Manual Verification checkboxes remain [ ]", "passed": true, "evidence": "All checkboxes remain [ ] (baseline didn't touch any)"},
+        {"text": "formatter.py contains center_text and format_table", "passed": true, "evidence": "Both functions present"},
+        {"text": "make test exits 0 with all tests passing", "passed": true, "evidence": "9 passed (used pipe-delimited format)"},
+        {"text": "Phase 1 and Phase 2 code checkboxes marked [x]", "passed": false, "evidence": "All checkboxes remain [ ]"}
+      ]
+    },
+    {
+      "eval_id": 4,
+      "eval_name": "cascade-dependencies",
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.00,
+        "passed": 9,
+        "failed": 0,
+        "total": 9,
+        "time_seconds": 80.1,
+        "tokens": 26751,
+        "tool_calls": 18,
+        "errors": 0
+      },
+      "expectations": [
+        {"text": "Phase 1 before Phase 2", "passed": true, "evidence": "Sequential implementation confirmed"},
+        {"text": "Phase 2 before Phase 3", "passed": true, "evidence": "Sequential implementation confirmed"},
+        {"text": "make test at least 4 times", "passed": true, "evidence": "18 tool calls for 5 phases consistent with per-phase testing"},
+        {"text": "Progressive checkboxes", "passed": true, "evidence": "All [x] in output plan"},
+        {"text": "tracker.py has all components", "passed": true, "evidence": "16/16 tests pass"},
+        {"text": "get_summary accounts for deletions", "passed": true, "evidence": "test_full_workflow passes"},
+        {"text": "make test exits 0", "passed": true, "evidence": "16 passed"},
+        {"text": "Plan all [x]", "passed": true, "evidence": "Verified"},
+        {"text": "Deviations noted", "passed": true, "evidence": "Agent noted adding get_task/delete_task beyond plan spec"}
+      ]
+    },
+    {
+      "eval_id": 4,
+      "eval_name": "cascade-dependencies",
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.33,
+        "passed": 3,
+        "failed": 6,
+        "total": 9,
+        "time_seconds": 36.5,
+        "tokens": 17990,
+        "tool_calls": 10,
+        "errors": 0
+      },
+      "expectations": [
+        {"text": "Phase 1 before Phase 2", "passed": false, "evidence": "All classes in one edit"},
+        {"text": "Phase 2 before Phase 3", "passed": false, "evidence": "All classes in one edit"},
+        {"text": "make test at least 4 times", "passed": false, "evidence": "Once at end"},
+        {"text": "Progressive checkboxes", "passed": false, "evidence": "All remain [ ]"},
+        {"text": "tracker.py has all components", "passed": true, "evidence": "16/16 pass"},
+        {"text": "get_summary accounts for deletions", "passed": true, "evidence": "test_full_workflow passes"},
+        {"text": "make test exits 0", "passed": true, "evidence": "16 passed"},
+        {"text": "Plan all [x]", "passed": false, "evidence": "All remain [ ]"},
+        {"text": "Deviations noted", "passed": false, "evidence": "No notes about extra methods"}
+      ]
+    },
+    {
+      "eval_id": 5,
+      "eval_name": "evolved-codebase",
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.00,
+        "passed": 8,
+        "failed": 0,
+        "total": 8,
+        "time_seconds": 64.8,
+        "tokens": 19926,
+        "tool_calls": 14,
+        "errors": 0
+      },
+      "expectations": [
+        {"text": "Detects string_helpers.py doesn't exist", "passed": true, "evidence": "Explicit mismatch report"},
+        {"text": "Identifies text_utils.py and text_transforms.py", "passed": true, "evidence": "Both named in report"},
+        {"text": "Detects function split across files", "passed": true, "evidence": "Enumerates which functions in which file"},
+        {"text": "Presents mismatch before implementation", "passed": true, "evidence": "Issue/Expected/Found format before code changes"},
+        {"text": "Uses structured Issue/Expected/Found format", "passed": true, "evidence": "Exact format used"},
+        {"text": "Functions added to correct files", "passed": true, "evidence": "Verified file contents"},
+        {"text": "No string_helpers.py created", "passed": true, "evidence": "File does not exist"},
+        {"text": "make test exits 0", "passed": true, "evidence": "9 passed"}
+      ]
+    },
+    {
+      "eval_id": 5,
+      "eval_name": "evolved-codebase",
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.50,
+        "passed": 4,
+        "failed": 4,
+        "total": 8,
+        "time_seconds": 41.6,
+        "tokens": 17233,
+        "tool_calls": 12,
+        "errors": 0
+      },
+      "expectations": [
+        {"text": "Detects string_helpers.py doesn't exist", "passed": true, "evidence": "Mentioned in summary"},
+        {"text": "Identifies text_utils.py and text_transforms.py", "passed": true, "evidence": "Both named"},
+        {"text": "Detects function split across files", "passed": false, "evidence": "Didn't enumerate existing functions per file"},
+        {"text": "Presents mismatch before implementation", "passed": false, "evidence": "Noted in summary only, not presented to user"},
+        {"text": "Uses structured Issue/Expected/Found format", "passed": false, "evidence": "Narrative prose"},
+        {"text": "Functions added to correct files", "passed": true, "evidence": "Verified"},
+        {"text": "No string_helpers.py created", "passed": true, "evidence": "File does not exist"},
+        {"text": "make test exits 0", "passed": true, "evidence": "9 passed"}
+      ]
+    },
+    {
+      "eval_id": 6,
+      "eval_name": "resume-buggy-phase",
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.00,
+        "passed": 8,
+        "failed": 0,
+        "total": 8,
+        "time_seconds": 57.2,
+        "tokens": 21745,
+        "tool_calls": 14,
+        "errors": 0
+      },
+      "expectations": [
+        {"text": "Starts from Phase 2 respecting [x] marks", "passed": true, "evidence": "Bug caught via test failure, not re-implementation"},
+        {"text": "Implements register function", "passed": true, "evidence": "Verified in output"},
+        {"text": "Investigates when tests fail", "passed": true, "evidence": "Traced failure to Phase 1 validate_age"},
+        {"text": "Identifies >= 120 should be > 120", "passed": true, "evidence": "Explicitly stated in summary"},
+        {"text": "Communicates previously-completed phase has a bug", "passed": true, "evidence": "Labeled as 'Bug detected in Phase 1 (despite being marked [x])'"},
+        {"text": "Bug is fixed", "passed": true, "evidence": "Verified: age > 120 in output"},
+        {"text": "register and batch_register present", "passed": true, "evidence": "Verified in output"},
+        {"text": "make test exits 0", "passed": true, "evidence": "17 passed"}
+      ]
+    },
+    {
+      "eval_id": 6,
+      "eval_name": "resume-buggy-phase",
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.75,
+        "passed": 6,
+        "failed": 2,
+        "total": 8,
+        "time_seconds": 44.1,
+        "tokens": 18346,
+        "tool_calls": 11,
+        "errors": 0
+      },
+      "expectations": [
+        {"text": "Starts from Phase 2 respecting [x] marks", "passed": false, "evidence": "Fixed Phase 1 bug proactively — didn't trust [x] marks"},
+        {"text": "Implements register function", "passed": true, "evidence": "Present in output"},
+        {"text": "Investigates when tests fail", "passed": true, "evidence": "Found validate_age bug"},
+        {"text": "Identifies >= 120 should be > 120", "passed": true, "evidence": "Stated in summary"},
+        {"text": "Communicates previously-completed phase has a bug", "passed": false, "evidence": "Just described it as 'Bug fixed' without flagging Phase 1 issue"},
+        {"text": "Bug is fixed", "passed": true, "evidence": "17 tests pass"},
+        {"text": "register and batch_register present", "passed": true, "evidence": "All tests pass"},
+        {"text": "make test exits 0", "passed": true, "evidence": "17 passed"}
+      ]
+    },
+    {
+      "eval_id": 7,
+      "eval_name": "completion-messaging",
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.00,
+        "passed": 7,
+        "failed": 0,
+        "total": 7,
+        "time_seconds": 40.2,
+        "tokens": 17802,
+        "tool_calls": 11,
+        "errors": 0
+      },
+      "expectations": [
+        {"text": "converter.py has all 4 functions", "passed": true, "evidence": "8/8 tests pass"},
+        {"text": "make test exits 0", "passed": true, "evidence": "8 passed"},
+        {"text": "Plan all [x]", "passed": true, "evidence": "Verified"},
+        {"text": "References validate-plan", "passed": true, "evidence": "Present in completion message"},
+        {"text": "References stepwise-git:commit", "passed": true, "evidence": "Present in completion message"},
+        {"text": "Suggests /clear", "passed": true, "evidence": "Present in completion message"},
+        {"text": "Summary of accomplishments", "passed": true, "evidence": "Phase-by-phase summary included"}
+      ]
+    },
+    {
+      "eval_id": 7,
+      "eval_name": "completion-messaging",
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.43,
+        "passed": 3,
+        "failed": 4,
+        "total": 7,
+        "time_seconds": 30.9,
+        "tokens": 15853,
+        "tool_calls": 10,
+        "errors": 0
+      },
+      "expectations": [
+        {"text": "converter.py has all 4 functions", "passed": true, "evidence": "8/8 tests pass"},
+        {"text": "make test exits 0", "passed": true, "evidence": "8 passed"},
+        {"text": "Plan all [x]", "passed": false, "evidence": "All remain [ ]"},
+        {"text": "References validate-plan", "passed": false, "evidence": "Not mentioned"},
+        {"text": "References stepwise-git:commit", "passed": false, "evidence": "Not mentioned"},
+        {"text": "Suggests /clear", "passed": false, "evidence": "Not mentioned"},
+        {"text": "Summary of accomplishments", "passed": true, "evidence": "Basic summary included"}
+      ]
+    }
+  ],
+  "run_summary": {
+    "with_skill": {
+      "pass_rate": {"mean": 0.94, "stddev": 0.10, "min": 0.71, "max": 1.00},
+      "time_seconds": {"mean": 63.5, "stddev": 13.0, "min": 40.2, "max": 80.1},
+      "tokens": {"mean": 21545, "stddev": 2843, "min": 17802, "max": 26751}
+    },
+    "without_skill": {
+      "pass_rate": {"mean": 0.45, "stddev": 0.14, "min": 0.29, "max": 0.75},
+      "time_seconds": {"mean": 50.5, "stddev": 33.0, "min": 30.9, "max": 126.2},
+      "tokens": {"mean": 18333, "stddev": 2688, "min": 15853, "max": 24542}
+    },
+    "delta": {
+      "pass_rate": "+0.49",
+      "time_seconds": "+13.0",
+      "tokens": "+3212"
+    }
+  },
+  "notes": [
+    "The skill provides a massive +49pp pass rate improvement (0.94 vs 0.45) across 7 diverse eval cases.",
+    "The baseline consistently fails on process discipline: checkbox management (0/7 baselines updated checkboxes), phase-by-phase execution, and structured mismatch communication.",
+    "Both skill and baseline produce functionally correct code — 13/14 runs have all tests passing. The one failure (eval 3 with_skill) is a format_table alignment edge case caused by Bash permission denial preventing the agent from running tests to catch it.",
+    "The skill's strongest differentiation is in structured communication: eval 5 (evolved-codebase) with_skill used exact Issue/Expected/Found format and scored 8/8; baseline scored 4/8.",
+    "Eval 2 (ambiguous-mismatch) reveals the skill's main weakness: despite the STOP instruction, the agent still auto-resolved mismatches (5/7) instead of asking for guidance (same as iteration-1). The baseline also auto-resolves (3/7).",
+    "Eval 6 (resume-buggy-phase) shows interesting divergence: with_skill trusted [x] marks and found the bug via test failure (correct per skill instructions); baseline spotted the bug proactively but didn't follow the resume protocol.",
+    "The skill adds ~13s and ~3200 tokens per run — primarily from reading the skill file and following its structured verification process. This cost is justified by the +49pp pass rate gain.",
+    "Eval 3 (manual-verification) is the only eval where baseline outperforms skill on code correctness (9/9 vs 8/9 tests), but skill wins on protocol (paused for manual verification, marked checkboxes correctly).",
+    "Completion messaging (eval 7) is a complete skill win: 7/7 vs 3/7, with baseline missing all workflow-specific references (validate-plan, stepwise-git:commit, /clear)."
+  ]
+}

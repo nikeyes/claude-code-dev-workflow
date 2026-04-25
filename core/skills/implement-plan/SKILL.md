@@ -36,9 +36,15 @@ Plans are carefully designed, but reality can be messy. Your job is to:
 
 When things don't match the plan exactly, think about why and communicate clearly. The plan is your guide, but your judgment matters too.
 
-If you encounter a mismatch:
-- STOP and think deeply about why the plan can't be followed
-- Present the issue clearly:
+There are two kinds of mismatches — handle them differently:
+
+**Naming mismatches** (class/method/parameter named differently, but the intent is clear from context or tests):
+- Adapt to the actual codebase names — tests are the source of truth
+- Document what you adapted in the plan file as inline notes
+- Continue without pausing
+
+**Structural mismatches** (file doesn't exist, architecture changed, module split/merged, missing dependencies):
+- STOP and present the issue clearly:
   ```
   Issue in Phase [N]:
   Expected: [what the plan says]

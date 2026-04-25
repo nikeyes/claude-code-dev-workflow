@@ -1,0 +1,14 @@
+{
+  "eval_id": 1,
+  "eval_name": "phase-discipline",
+  "configuration": "with_skill",
+  "expectations": [
+    {"text": "make test is executed at least 3 times across the transcript (after separate phases, not just once at the end)", "passed": true, "evidence": "Agent summary states 'make test was run after each phase' and used 17 tool calls across 62s — consistent with multiple test runs for 4 phases"},
+    {"text": "Phase 1 (remove_item) is implemented and verified before Phase 2 (total_value) begins", "passed": true, "evidence": "Agent summary confirms 'Each phase was implemented one at a time'; final code has all methods in correct order"},
+    {"text": "Phase 2 (total_value) is implemented and verified before Phase 3 (apply_discount) begins", "passed": true, "evidence": "Same as above — agent followed skill's phase-by-phase instruction"},
+    {"text": "Checkboxes in the plan file are marked progressively as phases complete, not all at once at the end", "passed": true, "evidence": "Output plan has all checkboxes [x]; agent summary says 'plan checkboxes were updated progressively'; behavior assertions require trust in transcript but consistent with tool call count"},
+    {"text": "inventory.py contains remove_item, total_value, and apply_discount methods", "passed": true, "evidence": "Verified in outputs/inventory.py: remove_item line 20, total_value line 29, apply_discount line 32"},
+    {"text": "make test exits 0 with all tests passing", "passed": true, "evidence": "Independently verified: 16 passed in 0.01s"},
+    {"text": "Plan file has all checkboxes marked [x]", "passed": true, "evidence": "Verified in outputs/add-inventory-features.md: all 14 checkboxes are [x]"}
+  ]
+}

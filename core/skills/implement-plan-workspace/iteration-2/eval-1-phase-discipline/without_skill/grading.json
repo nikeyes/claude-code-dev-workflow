@@ -1,0 +1,14 @@
+{
+  "eval_id": 1,
+  "eval_name": "phase-discipline",
+  "configuration": "without_skill",
+  "expectations": [
+    {"text": "make test is executed at least 3 times across the transcript (after separate phases, not just once at the end)", "passed": false, "evidence": "Agent used only 9 tool calls in 34s — implemented all methods in one pass and ran make test once"},
+    {"text": "Phase 1 (remove_item) is implemented and verified before Phase 2 (total_value) begins", "passed": false, "evidence": "All three methods implemented in a single edit, no intermediate verification"},
+    {"text": "Phase 2 (total_value) is implemented and verified before Phase 3 (apply_discount) begins", "passed": false, "evidence": "All three methods implemented in a single edit"},
+    {"text": "Checkboxes in the plan file are marked progressively as phases complete, not all at once at the end", "passed": false, "evidence": "Plan file has ALL checkboxes still [ ] — none were updated"},
+    {"text": "inventory.py contains remove_item, total_value, and apply_discount methods", "passed": true, "evidence": "Verified in outputs/inventory.py: all three methods present"},
+    {"text": "make test exits 0 with all tests passing", "passed": true, "evidence": "Independently verified: 16 passed in 0.01s"},
+    {"text": "Plan file has all checkboxes marked [x]", "passed": false, "evidence": "All checkboxes remain [ ] in outputs/add-inventory-features.md"}
+  ]
+}

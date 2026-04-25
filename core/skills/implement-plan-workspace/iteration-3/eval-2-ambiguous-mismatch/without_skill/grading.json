@@ -1,0 +1,15 @@
+{
+  "eval_id": 2,
+  "eval_name": "ambiguous-mismatch",
+  "configuration": "without_skill",
+  "overall": {"pass_rate": 0.43, "passed": 3, "failed": 4, "total": 7},
+  "expectations": [
+    {"text": "Detects that the plan references 'Order' class but the actual class is 'PurchaseOrder'", "passed": true, "evidence": "Noted in agent summary that plan says Order but actual is PurchaseOrder"},
+    {"text": "Detects that the plan references 'compute_total(tax_percent)' but the actual method is 'calculate_total(tax_rate, discount_code)'", "passed": false, "evidence": "Not mentioned in summary or plan"},
+    {"text": "Detects that the plan uses 'cancel(note)' / 'self.cancel_note' but the tests expect 'cancel(reason)' / 'self.cancellation_reason'", "passed": true, "evidence": "Noted in summary: cancel(reason=...) with cancellation_reason"},
+    {"text": "Adapts to actual codebase names rather than creating new classes or renaming existing ones", "passed": true, "evidence": "Used PurchaseOrder, cancel(reason), cancellation_reason"},
+    {"text": "Documents naming deviations as inline notes in the plan file", "passed": false, "evidence": "Plan file has no inline deviation notes — all checkboxes still [ ]"},
+    {"text": "Does NOT rename PurchaseOrder to Order or create a new Order class", "passed": true, "evidence": "Class remains PurchaseOrder"},
+    {"text": "cancel and status_history are correctly added and all tests pass", "passed": false, "evidence": "Tests pass (10 passed) but plan not updated"}
+  ]
+}

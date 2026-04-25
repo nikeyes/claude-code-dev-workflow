@@ -1,0 +1,16 @@
+{
+  "eval_id": 4,
+  "eval_name": "cascade-dependencies",
+  "configuration": "without_skill",
+  "expectations": [
+    {"text": "Phase 1 (Task model) is implemented before Phase 2 (TaskRepository)", "passed": false, "evidence": "Agent used 10 tool calls in 36s — implemented entire tracker.py in one pass"},
+    {"text": "Phase 2 (TaskRepository) is implemented before Phase 3 (TaskService)", "passed": false, "evidence": "All classes implemented in a single edit"},
+    {"text": "make test is executed after each phase (at least 4 times across transcript)", "passed": false, "evidence": "Only 10 tool calls total — ran make test once at the end"},
+    {"text": "Checkboxes are marked progressively as each phase completes", "passed": false, "evidence": "All checkboxes remain [ ] in output plan file"},
+    {"text": "tracker.py contains Task, TaskRepository, TaskService classes and format_task_list function", "passed": true, "evidence": "16/16 tests pass, importing all components"},
+    {"text": "TaskService.get_summary correctly returns total reflecting current repo count (accounts for deletions)", "passed": true, "evidence": "test_full_workflow passes with deletion + summary assertion"},
+    {"text": "make test exits 0 with all tests passing", "passed": true, "evidence": "Independently verified: 16 passed in 0.01s"},
+    {"text": "Plan file has all checkboxes marked [x]", "passed": false, "evidence": "All checkboxes remain [ ] in outputs/build-task-tracker.md"},
+    {"text": "Any deviations from the plan are noted in the plan file or communicated to the user", "passed": false, "evidence": "No deviation notes in plan or summary about adding get_task/delete_task beyond plan spec"}
+  ]
+}

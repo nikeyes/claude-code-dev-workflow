@@ -1,0 +1,16 @@
+{
+  "eval_id": 4,
+  "eval_name": "cascade-dependencies",
+  "prompt": "Implement the plan at thoughts/shared/plans/build-task-tracker.md",
+  "assertions": [
+    {"text": "Phase 1 (Task model) is implemented before Phase 2 (TaskRepository)", "type": "behavior"},
+    {"text": "Phase 2 (TaskRepository) is implemented before Phase 3 (TaskService)", "type": "behavior"},
+    {"text": "make test is executed after each phase (at least 4 times across transcript)", "type": "behavior"},
+    {"text": "Checkboxes are marked progressively as each phase completes", "type": "behavior"},
+    {"text": "tracker.py contains Task, TaskRepository, TaskService classes and format_task_list function", "type": "content_check"},
+    {"text": "TaskService.get_summary correctly returns total reflecting current repo count (accounts for deletions)", "type": "capability"},
+    {"text": "make test exits 0 with all tests passing", "type": "content_check"},
+    {"text": "Plan file has all checkboxes marked [x]", "type": "content_check"},
+    {"text": "Any deviations from the plan are noted in the plan file or communicated to the user", "type": "behavior"}
+  ]
+}

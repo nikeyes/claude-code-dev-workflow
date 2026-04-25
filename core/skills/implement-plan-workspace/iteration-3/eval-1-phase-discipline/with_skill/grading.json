@@ -1,0 +1,15 @@
+{
+  "eval_id": 1,
+  "eval_name": "phase-discipline",
+  "configuration": "with_skill",
+  "overall": {"pass_rate": 1.00, "passed": 7, "failed": 0, "total": 7},
+  "expectations": [
+    {"text": "make test is executed at least 3 times across the transcript", "passed": true, "evidence": "Agent summary confirms phase-by-phase test runs; 18 tool calls consistent with multiple make test executions"},
+    {"text": "Phase 1 (remove_item) is implemented and verified before Phase 2 (total_value) begins", "passed": true, "evidence": "Agent confirms sequential: Phase 1 → Phase 2 → Phase 3 → Phase 4 verification"},
+    {"text": "Phase 2 (total_value) is implemented and verified before Phase 3 (apply_discount) begins", "passed": true, "evidence": "Agent confirms sequential implementation"},
+    {"text": "Checkboxes in the plan file are marked progressively as phases complete", "passed": true, "evidence": "Output plan has all 13 checkboxes [x]; agent confirmed progressive marking after each phase"},
+    {"text": "inventory.py contains remove_item, total_value, and apply_discount methods", "passed": true, "evidence": "All 16 tests pass, confirming all methods present"},
+    {"text": "make test exits 0 with all tests passing", "passed": true, "evidence": "Verified independently: 16 passed"},
+    {"text": "Plan file has all checkboxes marked [x]", "passed": true, "evidence": "Verified: 13 [x] checkboxes"}
+  ]
+}

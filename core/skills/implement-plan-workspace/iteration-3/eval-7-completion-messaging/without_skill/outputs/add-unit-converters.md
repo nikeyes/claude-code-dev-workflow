@@ -1,0 +1,15 @@
+# Add Unit Converters
+
+Extend converter.py with weight and distance conversion functions.
+
+## Phase 1: Weight conversions
+
+- [ ] `kg_to_lb(kg)` converts kilograms to pounds (1 kg = 2.20462 lb)
+- [ ] `lb_to_kg(lb)` converts pounds to kilograms
+- [ ] Tests pass for weight conversions
+
+## Phase 2: Distance conversions
+
+- [ ] `km_to_miles(km)` converts kilometers to miles (1 km = 0.621371 miles)
+- [ ] `miles_to_km(miles)` converts miles to kilometers
+- [ ] All tests pass with `make test`

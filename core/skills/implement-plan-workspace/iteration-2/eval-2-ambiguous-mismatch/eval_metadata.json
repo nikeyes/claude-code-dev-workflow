@@ -1,0 +1,14 @@
+{
+  "eval_id": 2,
+  "eval_name": "ambiguous-mismatch",
+  "prompt": "Implement the plan at thoughts/shared/plans/add-order-lifecycle.md",
+  "assertions": [
+    {"text": "Detects that the plan references 'Order' class but the actual class is 'PurchaseOrder'", "type": "capability"},
+    {"text": "Detects that the plan references 'compute_total(tax_percent)' but the actual method is 'calculate_total(tax_rate, discount_code)'", "type": "capability"},
+    {"text": "Detects that the plan uses 'cancel(note)' / 'self.cancel_note' but the tests expect 'cancel(reason)' / 'self.cancellation_reason'", "type": "capability"},
+    {"text": "Presents mismatches using structured Issue/Expected/Found format", "type": "behavior"},
+    {"text": "Asks user for guidance on how to proceed rather than silently auto-resolving all mismatches", "type": "behavior"},
+    {"text": "Does NOT rename PurchaseOrder to Order or create a new Order class", "type": "capability"},
+    {"text": "If agent proceeds with adaptation, cancel and status_history are correctly added to PurchaseOrder and all tests pass", "type": "content_check"}
+  ]
+}

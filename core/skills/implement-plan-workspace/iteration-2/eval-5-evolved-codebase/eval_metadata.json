@@ -1,0 +1,15 @@
+{
+  "eval_id": 5,
+  "eval_name": "evolved-codebase",
+  "prompt": "Implement the plan at thoughts/shared/plans/extend-string-helpers.md",
+  "assertions": [
+    {"text": "Detects that string_helpers.py does not exist", "type": "capability"},
+    {"text": "Identifies that the codebase has text_utils.py and text_transforms.py instead", "type": "capability"},
+    {"text": "Detects that functions are split across two files (slugify/word_count in text_utils, truncate/title_case in text_transforms)", "type": "capability"},
+    {"text": "Presents the file structure mismatch before starting implementation", "type": "behavior"},
+    {"text": "Uses structured Issue/Expected/Found format to communicate the mismatch", "type": "behavior"},
+    {"text": "If agent adapts, new functions are added to the correct existing files (contains_any/extract_emails to text_utils.py, pad_right/pad_center/repeat_text to text_transforms.py)", "type": "capability"},
+    {"text": "Does NOT create a new string_helpers.py file", "type": "capability"},
+    {"text": "If agent proceeds, make test exits 0 with all tests passing", "type": "content_check"}
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "eval_id": 7,
+  "eval_name": "completion-messaging",
+  "configuration": "with_skill",
+  "overall": {"pass_rate": 1.00, "passed": 7, "failed": 0, "total": 7},
+  "expectations": [
+    {"text": "converter.py contains kg_to_lb, lb_to_kg, km_to_miles, and miles_to_km functions", "passed": true, "evidence": "All 8 tests pass"},
+    {"text": "make test exits 0 with all tests passing", "passed": true, "evidence": "8 passed"},
+    {"text": "Plan file has all checkboxes marked [x]", "passed": true, "evidence": "6 [x] checkboxes verified"},
+    {"text": "Completion message references validate-plan as a next step", "passed": true, "evidence": "Present in completion-message.txt: /stepwise-core:validate-plan"},
+    {"text": "Completion message references stepwise-git:commit as a next step", "passed": true, "evidence": "Present: /stepwise-git:commit"},
+    {"text": "Completion message suggests using /clear to free context", "passed": true, "evidence": "Present: /clear to free up context before validation"},
+    {"text": "Completion message includes a summary of what was accomplished", "passed": true, "evidence": "Phase-by-phase summary included"}
+  ]
+}

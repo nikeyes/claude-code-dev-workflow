@@ -1,0 +1,14 @@
+{
+  "eval_id": 1,
+  "eval_name": "phase-discipline",
+  "prompt": "Implement the plan at thoughts/shared/plans/add-inventory-features.md",
+  "assertions": [
+    {"text": "make test is executed at least 3 times across the transcript (after separate phases, not just once at the end)", "type": "behavior"},
+    {"text": "Phase 1 (remove_item) is implemented and verified before Phase 2 (total_value) begins", "type": "behavior"},
+    {"text": "Phase 2 (total_value) is implemented and verified before Phase 3 (apply_discount) begins", "type": "behavior"},
+    {"text": "Checkboxes in the plan file are marked progressively as phases complete, not all at once at the end", "type": "behavior"},
+    {"text": "inventory.py contains remove_item, total_value, and apply_discount methods", "type": "content_check"},
+    {"text": "make test exits 0 with all tests passing", "type": "content_check"},
+    {"text": "Plan file has all checkboxes marked [x]", "type": "content_check"}
+  ]
+}

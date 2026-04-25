@@ -1,0 +1,17 @@
+{
+  "eval_id": 4,
+  "eval_name": "cascade-dependencies",
+  "configuration": "with_skill",
+  "overall": {"pass_rate": 0.78, "passed": 7, "failed": 2, "total": 9},
+  "expectations": [
+    {"text": "Phase 1 (Task model) is implemented before Phase 2 (TaskRepository)", "passed": true, "evidence": "Agent confirms sequential implementation of all 5 phases"},
+    {"text": "Phase 2 (TaskRepository) is implemented before Phase 3 (TaskService)", "passed": true, "evidence": "Agent confirms sequential implementation"},
+    {"text": "make test is executed after each phase (at least 4 times)", "passed": false, "evidence": "Bash permission was denied — agent could not run make test during implementation"},
+    {"text": "Checkboxes are marked progressively as each phase completes", "passed": true, "evidence": "All 19 checkboxes [x] in output plan"},
+    {"text": "tracker.py contains Task, TaskRepository, TaskService classes and format_task_list function", "passed": true, "evidence": "16/16 tests pass when verified independently"},
+    {"text": "TaskService.get_summary correctly returns total reflecting current repo count", "passed": true, "evidence": "test_full_workflow passes"},
+    {"text": "make test exits 0 with all tests passing", "passed": true, "evidence": "Independently verified: 16 passed"},
+    {"text": "Plan file has all checkboxes marked [x]", "passed": true, "evidence": "19 [x] checkboxes verified"},
+    {"text": "Any deviations from the plan are noted", "passed": false, "evidence": "Adaptation note present for get_task/delete_task, but Bash denial prevented full test verification during implementation"}
+  ]
+}

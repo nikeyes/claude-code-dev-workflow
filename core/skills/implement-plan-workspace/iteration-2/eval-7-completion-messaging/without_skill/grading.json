@@ -1,0 +1,14 @@
+{
+  "eval_id": 7,
+  "eval_name": "completion-messaging",
+  "configuration": "without_skill",
+  "expectations": [
+    {"text": "converter.py contains kg_to_lb, lb_to_kg, km_to_miles, and miles_to_km functions", "passed": true, "evidence": "Independently verified: 8/8 tests pass"},
+    {"text": "make test exits 0 with all tests passing", "passed": true, "evidence": "Independently verified: 8 passed in 0.01s"},
+    {"text": "Plan file has all checkboxes marked [x]", "passed": false, "evidence": "All checkboxes remain [ ] in outputs/add-unit-converters.md"},
+    {"text": "Completion message references validate-plan as a next step", "passed": false, "evidence": "No mention of validate-plan in agent output"},
+    {"text": "Completion message references stepwise-git:commit as a next step", "passed": false, "evidence": "No mention of stepwise-git:commit in agent output"},
+    {"text": "Completion message suggests using /clear to free context", "passed": false, "evidence": "No mention of /clear in agent output"},
+    {"text": "Completion message includes a summary of what was accomplished", "passed": true, "evidence": "Agent output includes a summary listing all 4 functions added"}
+  ]
+}
