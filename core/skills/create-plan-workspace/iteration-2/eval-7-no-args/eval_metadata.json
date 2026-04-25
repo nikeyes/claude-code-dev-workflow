@@ -1,0 +1,8 @@
+{
+  "eval_id": 7,
+  "eval_name": "no-args-help",
+  "prompt": "/create-plan",
+  "assertions": [
+    {"id": "shows-help-waits", "text": "Shows a help message asking for input and does NOT start researching or planning", "type": "behavior"}
+  ]
+}

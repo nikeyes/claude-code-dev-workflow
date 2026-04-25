@@ -1,0 +1,11 @@
+{
+  "eval_id": 4,
+  "eval_name": "contradictory-requirements",
+  "configuration": "with_skill",
+  "expectations": [
+    {"text": "Identifies the tension or contradiction between 'stateless' and 'WebSocket state persistence'", "passed": true, "evidence": "Explicit contradiction table: 'Stateless — no server-side session storage' vs 'WebSocket connections must persist user state'. States: 'These two constraints are mutually exclusive as written.'"},
+    {"text": "Does NOT silently pick one interpretation and plan around it without flagging the conflict", "passed": true, "evidence": "Explicitly stops: 'I cannot write a sound implementation plan until the contradiction is resolved.' No plan file generated."},
+    {"text": "Presents design options for resolving the conflict (e.g., external state store, token-based state, etc.)", "passed": true, "evidence": "Three interpretations: (a) Stateless REST only, WS allowed state, (b) No external session store but in-memory OK, (c) Stateless auth per message (JWT). Plus 5 clarifying questions."},
+    {"text": "Asks for user input on how to resolve the conflict BEFORE writing a full plan", "passed": true, "evidence": "Ends with: 'Please clarify which definition of stateless applies and what user state means in this context, and I will proceed immediately to a full plan.'"}
+  ]
+}

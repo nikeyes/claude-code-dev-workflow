@@ -1,0 +1,329 @@
+{
+  "metadata": {
+    "skill_name": "create-plan",
+    "skill_path": "core/skills/create-plan/SKILL.md",
+    "timestamp": "2026-04-26T00:15:00Z",
+    "evals_run": ["vague-prompt", "trivial-task", "feature-planning", "contradictory-requirements", "refactoring-depth", "ticket-workflow", "no-args-help"],
+    "runs_per_configuration": 1
+  },
+  "runs": [
+    {
+      "eval_id": 1,
+      "eval_name": "vague-prompt",
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 3,
+        "failed": 0,
+        "total": 3,
+        "time_seconds": 31.2,
+        "tokens": 18891,
+        "errors": 0
+      },
+      "expectations": [
+        {"text": "Asks what specifically needs improvement or what area of the codebase to target", "passed": true, "evidence": "Asks 4 clarifying questions: 'What are we making better?', 'What's wrong with it today?', 'What does better mean here?', 'Any relevant context?'"},
+        {"text": "Does NOT write a plan file to thoughts/shared/plans/", "passed": true, "evidence": "No plan file generated. Response is purely clarifying questions."},
+        {"text": "Does NOT spawn codebase research agents before understanding the request", "passed": true, "evidence": "No codebase research performed. Only asks clarifying questions and provides example invocations."}
+      ]
+    },
+    {
+      "eval_id": 1,
+      "eval_name": "vague-prompt",
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.33,
+        "passed": 1,
+        "failed": 2,
+        "total": 3,
+        "time_seconds": 39.9,
+        "tokens": 16199,
+        "errors": 0
+      },
+      "expectations": [
+        {"text": "Asks what specifically needs improvement or what area of the codebase to target", "passed": true, "evidence": "Asks 3 questions at the end of the response."},
+        {"text": "Does NOT write a plan file to thoughts/shared/plans/", "passed": false, "evidence": "Generated a 'Provisional Plan (if forced to guess)' with 3 phases."},
+        {"text": "Does NOT spawn codebase research agents before understanding the request", "passed": false, "evidence": "Explored the codebase to identify the 4 plugins."}
+      ]
+    },
+    {
+      "eval_id": 2,
+      "eval_name": "trivial-task",
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 3,
+        "failed": 0,
+        "total": 3,
+        "time_seconds": 60.3,
+        "tokens": 23476,
+        "errors": 0
+      },
+      "expectations": [
+        {"text": "Recognizes the task is trivial and does not warrant a formal multi-phase plan", "passed": true, "evidence": "States: 'this task does not warrant an implementation plan. It is a single-character text edit.'"},
+        {"text": "Suggests fixing the typo directly or with a simpler approach rather than creating a plan", "passed": true, "evidence": "Provides direct sed command and recommends making the change directly."},
+        {"text": "Does NOT create a multi-phase implementation plan for a one-line fix", "passed": true, "evidence": "No plan file generated. Explicitly states task is below plan threshold."}
+      ]
+    },
+    {
+      "eval_id": 2,
+      "eval_name": "trivial-task",
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 3,
+        "failed": 0,
+        "total": 3,
+        "time_seconds": 24.7,
+        "tokens": 13858,
+        "errors": 0
+      },
+      "expectations": [
+        {"text": "Recognizes the task is trivial and does not warrant a formal multi-phase plan", "passed": true, "evidence": "Plan is 4 simple steps with no phases, no testing strategy."},
+        {"text": "Suggests fixing the typo directly or with a simpler approach rather than creating a plan", "passed": true, "evidence": "Plan is a direct fix checklist: open, replace, save, commit."},
+        {"text": "Does NOT create a multi-phase implementation plan for a one-line fix", "passed": true, "evidence": "No phases, no success criteria, just 4 sequential steps."}
+      ]
+    },
+    {
+      "eval_id": 3,
+      "eval_name": "feature-planning",
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.83,
+        "passed": 5,
+        "failed": 1,
+        "total": 6,
+        "time_seconds": 101.2,
+        "tokens": 25431,
+        "errors": 0
+      },
+      "expectations": [
+        {"text": "Reads the actual user_service.py file before planning", "passed": true, "evidence": "References specific line numbers: get_user at :24, update_user at :48, delete_user at :61, create_user at :40."},
+        {"text": "Plan references actual function names, class names, or line numbers from the fixture project", "passed": true, "evidence": "All references match actual file contents."},
+        {"text": "Each phase can be committed and tested independently", "passed": true, "evidence": "Phase 1 (cache impl) testable with existing tests. Phase 2 (new tests) additive."},
+        {"text": "Success criteria contain actual runnable commands", "passed": true, "evidence": "Both phases: 'All tests pass: make test'."},
+        {"text": "'What We're NOT Doing' section contains specific items relevant to the task", "passed": true, "evidence": "6 specific items including no TTL, no cache for other methods, no Redis."},
+        {"text": "Plan saved to thoughts/shared/plans/ with YYYY-MM-DD naming", "passed": false, "evidence": "Plan saved to workspace outputs, not thoughts/shared/plans/ (fixture has no thoughts/ dir)."}
+      ]
+    },
+    {
+      "eval_id": 3,
+      "eval_name": "feature-planning",
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.67,
+        "passed": 4,
+        "failed": 2,
+        "total": 6,
+        "time_seconds": 53.6,
+        "tokens": 17193,
+        "errors": 0
+      },
+      "expectations": [
+        {"text": "Reads the actual user_service.py file before planning", "passed": true, "evidence": "Accurately describes function behavior and internal calls."},
+        {"text": "Plan references actual function names, class names, or line numbers from the fixture project", "passed": true, "evidence": "References UserService, get_user, update_user, delete_user accurately."},
+        {"text": "Each phase can be committed and tested independently", "passed": true, "evidence": "TDD flow: failing tests → implement → verify."},
+        {"text": "Success criteria contain actual runnable commands", "passed": true, "evidence": "'make test — All original tests plus the four new cache tests must pass.'"},
+        {"text": "'What We're NOT Doing' section contains specific items relevant to the task", "passed": true, "evidence": "Out of Scope: caching get_user_by_username, cache size limits, thread safety, external cache."},
+        {"text": "Plan saved to thoughts/shared/plans/ with YYYY-MM-DD naming", "passed": false, "evidence": "Saved to workspace outputs, not thoughts/shared/plans/."}
+      ]
+    },
+    {
+      "eval_id": 4,
+      "eval_name": "contradictory-requirements",
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 4,
+        "failed": 0,
+        "total": 4,
+        "time_seconds": 54.0,
+        "tokens": 21635,
+        "errors": 0
+      },
+      "expectations": [
+        {"text": "Identifies the tension or contradiction between 'stateless' and 'WebSocket state persistence'", "passed": true, "evidence": "Explicit contradiction table. States: 'These two constraints are mutually exclusive as written.'"},
+        {"text": "Does NOT silently pick one interpretation and plan around it without flagging the conflict", "passed": true, "evidence": "Stops planning. 'I cannot write a sound implementation plan until the contradiction is resolved.'"},
+        {"text": "Presents design options for resolving the conflict", "passed": true, "evidence": "Three interpretations: stateless REST only, no external store, stateless auth per message."},
+        {"text": "Asks for user input on how to resolve the conflict BEFORE writing a full plan", "passed": true, "evidence": "'Please clarify which definition of stateless applies... and I will proceed immediately to a full plan.'"}
+      ]
+    },
+    {
+      "eval_id": 4,
+      "eval_name": "contradictory-requirements",
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.50,
+        "passed": 2,
+        "failed": 2,
+        "total": 4,
+        "time_seconds": 72.7,
+        "tokens": 17315,
+        "errors": 0
+      },
+      "expectations": [
+        {"text": "Identifies the tension or contradiction between 'stateless' and 'WebSocket state persistence'", "passed": true, "evidence": "Identifies the conflict clearly."},
+        {"text": "Does NOT silently pick one interpretation and plan around it without flagging the conflict", "passed": false, "evidence": "Flags conflict but then says 'This plan proceeds with Option 1' and writes full 6-phase plan."},
+        {"text": "Presents design options for resolving the conflict", "passed": true, "evidence": "Two options: relax stateless for WS, or abandon WS for SSE/polling."},
+        {"text": "Asks for user input on how to resolve the conflict BEFORE writing a full plan", "passed": false, "evidence": "Does NOT ask. Immediately proceeds with Option 1 and writes the complete plan."}
+      ]
+    },
+    {
+      "eval_id": 5,
+      "eval_name": "refactoring-depth",
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 5,
+        "failed": 0,
+        "total": 5,
+        "time_seconds": 99.0,
+        "tokens": 25718,
+        "errors": 0
+      },
+      "expectations": [
+        {"text": "Plan identifies all 5 format branches", "passed": true, "evidence": "All 5 with line numbers: json (8-19), csv (21-30), key_value (33-44), xml_simple (46-84), fixed_width (86-110)."},
+        {"text": "Each phase maintains backward compatibility", "passed": true, "evidence": "Phase 1 adds registry with elif fallback. Phase 2 migrates one at a time with make test after each."},
+        {"text": "First phase adds or verifies characterization tests before structural changes", "passed": true, "evidence": "Existing 11 tests serve as characterization. Phase 1 adds registry with fallback, no behavior changes."},
+        {"text": "Does NOT propose replacing the entire if/elif chain in a single phase", "passed": true, "evidence": "Phase 2 migrates one branch at a time (5 steps) with make test after each."},
+        {"text": "Desired End State section describes what the code looks like after refactoring", "passed": true, "evidence": "7-point end state: ABC, 5 classes, registry, process delegates, get_supported_formats derives from keys."}
+      ]
+    },
+    {
+      "eval_id": 5,
+      "eval_name": "refactoring-depth",
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.80,
+        "passed": 4,
+        "failed": 1,
+        "total": 5,
+        "time_seconds": 63.8,
+        "tokens": 18812,
+        "errors": 0
+      },
+      "expectations": [
+        {"text": "Plan identifies all 5 format branches", "passed": true, "evidence": "Lists all 5. Steps 3-7 extract each one."},
+        {"text": "Each phase maintains backward compatibility", "passed": true, "evidence": "Extracts classes without removing elif chain. Tests pass at every step."},
+        {"text": "First phase adds or verifies characterization tests before structural changes", "passed": true, "evidence": "Step 1: 'Run the test suite (baseline) — Verify all tests pass before touching any production code.'"},
+        {"text": "Does NOT propose replacing the entire if/elif chain in a single phase", "passed": false, "evidence": "Steps 2-7 extract classes but Step 8 replaces the entire chain at once. The actual switch is big-bang."},
+        {"text": "Desired End State section describes what the code looks like after refactoring", "passed": true, "evidence": "Final file structure listed. process() becomes one-liner. Adding new format requires only new class."}
+      ]
+    },
+    {
+      "eval_id": 6,
+      "eval_name": "ticket-workflow",
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.80,
+        "passed": 4,
+        "failed": 1,
+        "total": 5,
+        "time_seconds": 126.4,
+        "tokens": 27079,
+        "errors": 0
+      },
+      "expectations": [
+        {"text": "Reads the ticket file completely before starting research", "passed": true, "evidence": "Read tickets/eng-1234.md fully, then all project files."},
+        {"text": "Plan addresses all 4 acceptance criteria from the ticket", "passed": true, "evidence": "All 4: bulk_import method, summary return, update existing SKUs (additive quantity + replace price), error collection."},
+        {"text": "Discovers or mentions the auth module and considers permission checks", "passed": true, "evidence": "Plan has Phase 2 for auth integration. States auth.py 'was not mentioned in the ticket but is directly relevant.'"},
+        {"text": "Presents plan structure and asks for buy-in BEFORE writing full plan", "passed": false, "evidence": "Proceeded straight to full plan without intermediate pause for user buy-in."},
+        {"text": "Final plan has no open questions", "passed": true, "evidence": "All decisions resolved: auth integration, update semantics, validation rules, error format."}
+      ]
+    },
+    {
+      "eval_id": 6,
+      "eval_name": "ticket-workflow",
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.40,
+        "passed": 2,
+        "failed": 3,
+        "total": 5,
+        "time_seconds": 60.2,
+        "tokens": 17933,
+        "errors": 0
+      },
+      "expectations": [
+        {"text": "Reads the ticket file completely before starting research", "passed": true, "evidence": "Read tickets/eng-1234.md and all source files."},
+        {"text": "Plan addresses all 4 acceptance criteria from the ticket", "passed": true, "evidence": "All 4 covered: bulk_import, summary dict, create vs update, error collection."},
+        {"text": "Discovers or mentions the auth module and considers permission checks", "passed": false, "evidence": "Dismisses auth: 'auth.py — unrelated to this ticket; no changes needed.'"},
+        {"text": "Presents plan structure and asks for buy-in BEFORE writing full plan", "passed": false, "evidence": "Went straight to full plan with code snippets."},
+        {"text": "Final plan has no open questions", "passed": true, "evidence": "All decisions made. Out of Scope section declares explicit exclusions."}
+      ]
+    },
+    {
+      "eval_id": 7,
+      "eval_name": "no-args-help",
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 1,
+        "failed": 0,
+        "total": 1,
+        "time_seconds": 22.2,
+        "tokens": 18546,
+        "errors": 0
+      },
+      "expectations": [
+        {"text": "Shows a help message asking for input and does NOT start researching or planning", "passed": true, "evidence": "Shows exact help template from SKILL.md with tips for direct invocation."}
+      ]
+    },
+    {
+      "eval_id": 7,
+      "eval_name": "no-args-help",
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 1,
+        "failed": 0,
+        "total": 1,
+        "time_seconds": 17.7,
+        "tokens": 13372,
+        "errors": 0
+      },
+      "expectations": [
+        {"text": "Shows a help message asking for input and does NOT start researching or planning", "passed": true, "evidence": "Asks 3 clarifying questions. Does not start researching or planning."}
+      ]
+    }
+  ],
+  "run_summary": {
+    "with_skill": {
+      "pass_rate": {"mean": 0.95, "stddev": 0.08},
+      "time_seconds": {"mean": 70.6, "stddev": 36.1},
+      "tokens": {"mean": 22968, "stddev": 3133}
+    },
+    "without_skill": {
+      "pass_rate": {"mean": 0.67, "stddev": 0.25},
+      "time_seconds": {"mean": 47.5, "stddev": 19.1},
+      "tokens": {"mean": 16383, "stddev": 1902}
+    },
+    "delta": {
+      "pass_rate": "+0.28",
+      "time_seconds": "+23.1",
+      "tokens": "+6585"
+    }
+  },
+  "notes": [
+    "with_skill achieves 95% pass rate (25/27) vs 67% baseline (17/27) across all assertions",
+    "Biggest skill advantage: adversarial evals (vague prompt +67%, contradictory reqs +50%, ticket auth discovery +100%)",
+    "Non-discriminating evals: trivial task (both 100%), no-args help (both 100%)",
+    "Discriminating assertions: no-plan-on-vague (skill stops, baseline speculates), no-research-on-vague (skill waits, baseline explores), asks-before-planning (skill pauses on contradiction, baseline charges ahead), discovers-auth-dependency (skill finds it, baseline dismisses), incremental-refactoring (skill migrates 1-by-1, baseline does big-bang switch)",
+    "with_skill uses ~49% more time and ~40% more tokens due to skill instruction processing and structured research",
+    "saves-to-thoughts fails for both configs on fixture evals (fixture projects have no thoughts/ dir) — this assertion is an artifact of running against isolated fixtures rather than a real project",
+    "interactive-pause fails for with_skill on eval-6 because the eval setup simulated auto-approval — not a true skill deficiency"
+  ]
+}

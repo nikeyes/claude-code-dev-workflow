@@ -1,0 +1,10 @@
+{
+  "eval_id": 1,
+  "eval_name": "vague-prompt",
+  "configuration": "with_skill",
+  "expectations": [
+    {"text": "Asks what specifically needs improvement or what area of the codebase to target", "passed": true, "evidence": "Asks 4 clarifying questions: 'What are we making better?', 'What's wrong with it today?', 'What does better mean here?', 'Any relevant context?'"},
+    {"text": "Does NOT write a plan file to thoughts/shared/plans/", "passed": true, "evidence": "No plan file generated. Response is purely clarifying questions."},
+    {"text": "Does NOT spawn codebase research agents before understanding the request", "passed": true, "evidence": "No codebase research performed. Only asks clarifying questions and provides example invocations."}
+  ]
+}

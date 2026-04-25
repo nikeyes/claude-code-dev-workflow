@@ -1,0 +1,11 @@
+{
+  "eval_id": 4,
+  "eval_name": "contradictory-requirements",
+  "configuration": "without_skill",
+  "expectations": [
+    {"text": "Identifies the tension or contradiction between 'stateless' and 'WebSocket state persistence'", "passed": true, "evidence": "States: 'WebSocket connections are inherently stateful. The TCP connection itself is a persistent, server-side resource. Maintaining a WebSocket connection is server-side state.'"},
+    {"text": "Does NOT silently pick one interpretation and plan around it without flagging the conflict", "passed": false, "evidence": "Flags the conflict but then says 'This plan proceeds with Option 1' and writes a full 6-phase plan without waiting for user input on which interpretation to use."},
+    {"text": "Presents design options for resolving the conflict (e.g., external state store, token-based state, etc.)", "passed": true, "evidence": "Two options: (1) Relax stateless for WS only, (2) Abandon WS in favour of SSE/polling. Picks option 1 and continues."},
+    {"text": "Asks for user input on how to resolve the conflict BEFORE writing a full plan", "passed": false, "evidence": "Does NOT ask. Instead states 'Decision required (pick one):' but then immediately says 'This plan proceeds with Option 1' and writes the complete 6-phase plan."}
+  ]
+}

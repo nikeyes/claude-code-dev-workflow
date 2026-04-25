@@ -1,0 +1,13 @@
+{
+  "eval_id": 3,
+  "eval_name": "feature-planning",
+  "configuration": "with_skill",
+  "expectations": [
+    {"text": "Reads the actual user_service.py file before planning (not just assumes its contents)", "passed": true, "evidence": "References specific line numbers: get_user at user_service.py:24, update_user at :48, delete_user at :61, create_user at :40."},
+    {"text": "Plan references actual function names, class names, or line numbers from the fixture project — not hallucinated ones", "passed": true, "evidence": "References UserService, get_user, create_user, update_user, delete_user, get_user_by_username, list_users with accurate descriptions. Line numbers match actual file."},
+    {"text": "Each phase can be committed and tested independently — no phase depends on completing a later phase", "passed": true, "evidence": "Phase 1 (add cache to UserService) can be committed and tested with existing tests. Phase 2 (add cache-behaviour tests) is additive."},
+    {"text": "Success criteria contain actual runnable commands (e.g., 'make test', 'pytest tests/') not vague descriptions like 'verify it works'", "passed": true, "evidence": "Both phases: 'All tests pass: make test'. Phase 2: 'All tests (existing and new) pass: make test'."},
+    {"text": "'What We're NOT Doing' section contains specific items relevant to the task (not generic boilerplate)", "passed": true, "evidence": "6 specific items: No TTL/time-based expiry, No cache for get_user_by_username/list_users/get_user_count, No external cache (Redis, Memcached), No thread-safety primitives, No cache-size limit/eviction policy, No persistence between instances."},
+    {"text": "Plan saved to thoughts/shared/plans/ with YYYY-MM-DD naming", "passed": false, "evidence": "Plan saved to iteration-2/eval-3-feature-planning/with_skill/outputs/plan.md. Fixture project has no thoughts/ directory; eval setup directed output to workspace."}
+  ]
+}

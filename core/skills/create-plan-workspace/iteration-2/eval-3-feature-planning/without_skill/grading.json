@@ -1,0 +1,13 @@
+{
+  "eval_id": 3,
+  "eval_name": "feature-planning",
+  "configuration": "without_skill",
+  "expectations": [
+    {"text": "Reads the actual user_service.py file before planning (not just assumes its contents)", "passed": true, "evidence": "Accurately describes get_user, create_user, update_user, delete_user and their internal behavior (e.g., create_user calls get_user internally)."},
+    {"text": "Plan references actual function names, class names, or line numbers from the fixture project — not hallucinated ones", "passed": true, "evidence": "References UserService, get_user, update_user, delete_user, _conn.execute, setup_method. Function behavior described accurately."},
+    {"text": "Each phase can be committed and tested independently — no phase depends on completing a later phase", "passed": true, "evidence": "TDD flow: Step 1 (failing tests) → Step 2 (implement) → Step 3 (run tests). Steps are sequential but each is a committable increment."},
+    {"text": "Success criteria contain actual runnable commands (e.g., 'make test', 'pytest tests/') not vague descriptions like 'verify it works'", "passed": true, "evidence": "Step 3: 'make test — All original tests plus the four new cache tests must pass.'"},
+    {"text": "'What We're NOT Doing' section contains specific items relevant to the task (not generic boilerplate)", "passed": true, "evidence": "'Out of Scope' section: Caching get_user_by_username, Cache size limits or TTL, Thread safety, External cache backends (Redis, Memcached)."},
+    {"text": "Plan saved to thoughts/shared/plans/ with YYYY-MM-DD naming", "passed": false, "evidence": "Plan saved to iteration-2/eval-3-feature-planning/without_skill/outputs/plan.md. No thoughts/shared/plans/ path used."}
+  ]
+}

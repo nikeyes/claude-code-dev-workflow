@@ -1,0 +1,12 @@
+{
+  "eval_id": 6,
+  "eval_name": "ticket-workflow",
+  "configuration": "without_skill",
+  "expectations": [
+    {"text": "Reads the ticket file completely (not partially) before starting research", "passed": true, "evidence": "Read tickets/eng-1234.md and all source files (inventory.py, test_inventory.py, auth.py, Makefile)."},
+    {"text": "Plan addresses all 4 acceptance criteria from the ticket (bulk_import method, summary return, update existing SKUs, error collection)", "passed": true, "evidence": "All 4 covered: bulk_import method with csv.DictReader, returns {created, updated, errors}, get_product check for create vs update, _validate_row collects errors per row."},
+    {"text": "Discovers or mentions the auth module (auth.py) and considers whether bulk import needs permission checks", "passed": false, "evidence": "Explicitly dismisses auth: 'auth.py — unrelated to this ticket; no changes needed.' Out of Scope section: 'Authentication / permission checks — auth.py is not touched.'"},
+    {"text": "Presents plan structure or findings and asks for buy-in BEFORE writing the full detailed plan", "passed": false, "evidence": "Went straight to full plan with code snippets. No intermediate pause or structure proposal."},
+    {"text": "Final plan has no open questions — all decisions are made (or flagged for user input before writing)", "passed": true, "evidence": "Decisions made: TDD flow, csv.DictReader parsing, _validate_row helper, 8 test cases specified. Out of Scope section declares explicit exclusions."}
+  ]
+}

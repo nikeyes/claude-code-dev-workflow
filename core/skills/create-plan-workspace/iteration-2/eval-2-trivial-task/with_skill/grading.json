@@ -1,0 +1,10 @@
+{
+  "eval_id": 2,
+  "eval_name": "trivial-task",
+  "configuration": "with_skill",
+  "expectations": [
+    {"text": "Recognizes the task is trivial and does not warrant a formal multi-phase plan", "passed": true, "evidence": "States: 'Even if the typo existed, this task does not warrant an implementation plan. It is a single-character text edit... Can be completed in under 5 seconds.'"},
+    {"text": "Suggests fixing the typo directly or with a simpler approach rather than creating a plan", "passed": true, "evidence": "Provides direct fix: 'sed -i s/componets/components/ CLAUDE.md' and says 'the correct action is to make the change directly rather than create a plan.'"},
+    {"text": "Does NOT create a multi-phase implementation plan for a one-line fix", "passed": true, "evidence": "States: 'No plan file was generated because: 1. The stated typo does not exist 2. Even if it did, the task is below the threshold where a plan adds value.'"}
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "eval_id": 1,
+  "eval_name": "vague-prompt",
+  "prompt": "/create-plan Make it better",
+  "assertions": [
+    {"id": "asks-what", "text": "Asks what specifically needs improvement or what area of the codebase to target", "type": "behavior"},
+    {"id": "no-plan-generated", "text": "Does NOT write a plan file to thoughts/shared/plans/", "type": "behavior"},
+    {"id": "no-research-spawned", "text": "Does NOT spawn codebase research agents before understanding the request", "type": "behavior"}
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "eval_id": 2,
+  "eval_name": "trivial-task",
+  "configuration": "without_skill",
+  "expectations": [
+    {"text": "Recognizes the task is trivial and does not warrant a formal multi-phase plan", "passed": true, "evidence": "Plan is 4 simple steps: Open, Replace, Save, Commit. Notes: 'No tests required — documentation-only change.' Agent summary says 'a typo fix in a documentation file needs no research phase, no architecture analysis.'"},
+    {"text": "Suggests fixing the typo directly or with a simpler approach rather than creating a plan", "passed": true, "evidence": "Plan is essentially a direct fix checklist: 'Open CLAUDE.md, replace componets with components, save, commit.'"},
+    {"text": "Does NOT create a multi-phase implementation plan for a one-line fix", "passed": true, "evidence": "No phases, no success criteria, no testing strategy. Just 4 sequential steps."}
+  ]
+}

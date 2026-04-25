@@ -1,0 +1,12 @@
+{
+  "eval_id": 4,
+  "eval_name": "contradictory-requirements",
+  "prompt": "/create-plan Add real-time WebSocket notifications to the REST API. The system must remain stateless with no server-side session storage, but WebSocket connections need to persist user state between messages.",
+  "project_dir": "evals/projects/eval-4-contradictory",
+  "assertions": [
+    {"id": "detects-contradiction", "text": "Identifies the tension or contradiction between 'stateless' and 'WebSocket state persistence'", "type": "capability"},
+    {"id": "does-not-ignore", "text": "Does NOT silently pick one interpretation and plan around it without flagging the conflict", "type": "behavior"},
+    {"id": "proposes-options", "text": "Presents design options for resolving the conflict (e.g., external state store, token-based state, etc.)", "type": "capability"},
+    {"id": "asks-before-planning", "text": "Asks for user input on how to resolve the conflict BEFORE writing a full plan", "type": "behavior"}
+  ]
+}

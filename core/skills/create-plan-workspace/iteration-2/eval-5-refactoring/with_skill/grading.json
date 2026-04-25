@@ -1,0 +1,12 @@
+{
+  "eval_id": 5,
+  "eval_name": "refactoring-depth",
+  "configuration": "with_skill",
+  "expectations": [
+    {"text": "Plan identifies all 5 format branches in the current if/elif chain (json, csv, key_value, xml_simple, fixed_width)", "passed": true, "evidence": "Lists all 5 with line numbers: json (lines 8-19), csv (lines 21-30), key_value (lines 33-44), xml_simple (lines 46-84), fixed_width (lines 86-110)."},
+    {"text": "Each phase maintains backward compatibility — existing callers and tests work throughout the refactoring", "passed": true, "evidence": "Phase 1 adds registry with elif fallback. Phase 2 migrates one at a time, running 'make test' after each removal. Phase 3 cleanup only after all migrated."},
+    {"text": "First phase adds or verifies characterization tests before making structural changes", "passed": true, "evidence": "Phase 1 success criteria: 'All tests pass: make test'. Existing 11 tests serve as characterization tests. Registry is added with fallback so no behavior changes."},
+    {"text": "Does NOT propose replacing the entire if/elif chain in a single phase", "passed": true, "evidence": "Phase 2 migrates one branch at a time: Step 2a JsonStrategy → 2b CsvStrategy → 2c KeyValueStrategy → 2d XmlSimpleStrategy → 2e FixedWidthStrategy. Each step removes one elif branch and runs make test."},
+    {"text": "Desired End State section describes what the code looks like after refactoring, not just 'it uses strategy pattern'", "passed": true, "evidence": "7-point end state: FormatStrategy ABC, 5 concrete classes, registry dict, process delegates to registry, get_supported_formats derives from keys, all tests pass unchanged, adding new format requires only new class + register."}
+  ]
+}

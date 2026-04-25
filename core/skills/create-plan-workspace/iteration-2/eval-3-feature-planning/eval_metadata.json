@@ -1,0 +1,14 @@
+{
+  "eval_id": 3,
+  "eval_name": "feature-planning",
+  "prompt": "/create-plan Add a caching layer to the user service so that repeated lookups by ID don't hit the database",
+  "project_dir": "evals/projects/eval-3-feature-planning",
+  "assertions": [
+    {"id": "reads-implementation", "text": "Reads the actual user_service.py file before planning (not just assumes its contents)", "type": "behavior"},
+    {"id": "references-real-code", "text": "Plan references actual function names, class names, or line numbers from the fixture project — not hallucinated ones", "type": "capability"},
+    {"id": "phases-independent", "text": "Each phase can be committed and tested independently — no phase depends on completing a later phase", "type": "capability"},
+    {"id": "criteria-executable", "text": "Success criteria contain actual runnable commands (e.g., 'make test', 'pytest tests/') not vague descriptions like 'verify it works'", "type": "structure_check"},
+    {"id": "not-doing-useful", "text": "'What We're NOT Doing' section contains specific items relevant to the task (not generic boilerplate)", "type": "capability"},
+    {"id": "saves-correctly", "text": "Plan saved to thoughts/shared/plans/ with YYYY-MM-DD naming", "type": "content_check"}
+  ]
+}

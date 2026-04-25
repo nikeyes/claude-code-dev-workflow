@@ -3,21 +3,90 @@
   "evals": [
     {
       "id": 1,
-      "prompt": "/create-plan",
-      "expected_output": "Should display help message asking for task description, constraints, and links. Should NOT start researching or planning.",
-      "files": []
+      "prompt": "/create-plan Make it better",
+      "expected_output": "Should ask clarifying questions about scope. Should NOT generate a full plan or start researching from a vague prompt.",
+      "files": [],
+      "assertions": [
+        {"id": "asks-what", "text": "Asks what specifically needs improvement or what area of the codebase to target", "type": "behavior"},
+        {"id": "no-plan-generated", "text": "Does NOT write a plan file to thoughts/shared/plans/", "type": "behavior"},
+        {"id": "no-research-spawned", "text": "Does NOT spawn codebase research agents before understanding the request", "type": "behavior"}
+      ]
     },
     {
       "id": 2,
-      "prompt": "/create-plan Add a new \"bugfix\" skill that helps users debug failing tests by analyzing test output and suggesting fixes",
-      "expected_output": "Should research existing skills in the codebase, identify patterns, and generate a detailed implementation plan following the template in thoughts/shared/plans/",
-      "files": []
+      "prompt": "/create-plan Fix the typo in CLAUDE.md line 15 where 'componets' should be 'components'",
+      "expected_output": "Should recognize this task is too small for a formal plan and suggest doing it directly instead of creating a multi-phase plan.",
+      "files": [],
+      "assertions": [
+        {"id": "recognizes-trivial", "text": "Recognizes the task is trivial and does not warrant a formal multi-phase plan", "type": "capability"},
+        {"id": "suggests-direct-fix", "text": "Suggests fixing the typo directly or with a simpler approach rather than creating a plan", "type": "behavior"},
+        {"id": "no-multi-phase", "text": "Does NOT create a multi-phase implementation plan for a one-line fix", "type": "behavior"}
+      ]
     },
     {
       "id": 3,
-      "prompt": "/create-plan Refactor the thoughts-management skill to support custom directory structures via a config file instead of hardcoded paths",
-      "expected_output": "Should analyze current thoughts-management code, identify hardcoded paths, and propose incremental refactoring phases with specific file:line references",
-      "files": []
+      "prompt": "/create-plan Add a caching layer to the user service so that repeated lookups by ID don't hit the database",
+      "expected_output": "Should research the fixture project, produce a plan with phases that are independently committable, with verifiable success criteria referencing real code.",
+      "project_dir": "evals/projects/eval-3-feature-planning",
+      "files": [],
+      "assertions": [
+        {"id": "reads-implementation", "text": "Reads the actual user_service.py file before planning (not just assumes its contents)", "type": "behavior"},
+        {"id": "references-real-code", "text": "Plan references actual function names, class names, or line numbers from the fixture project — not hallucinated ones", "type": "capability"},
+        {"id": "phases-independent", "text": "Each phase can be committed and tested independently — no phase depends on completing a later phase", "type": "capability"},
+        {"id": "criteria-executable", "text": "Success criteria contain actual runnable commands (e.g., 'make test', 'pytest tests/') not vague descriptions like 'verify it works'", "type": "structure_check"},
+        {"id": "not-doing-useful", "text": "'What We're NOT Doing' section contains specific items relevant to the task (not generic boilerplate)", "type": "capability"},
+        {"id": "saves-correctly", "text": "Plan saved to thoughts/shared/plans/ with YYYY-MM-DD naming", "type": "content_check"}
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "/create-plan Add real-time WebSocket notifications to the REST API. The system must remain stateless with no server-side session storage, but WebSocket connections need to persist user state between messages.",
+      "expected_output": "Should identify the contradiction between stateless requirement and WebSocket state persistence, and ask for clarification before planning.",
+      "project_dir": "evals/projects/eval-4-contradictory",
+      "files": [],
+      "assertions": [
+        {"id": "detects-contradiction", "text": "Identifies the tension or contradiction between 'stateless' and 'WebSocket state persistence'", "type": "capability"},
+        {"id": "does-not-ignore", "text": "Does NOT silently pick one interpretation and plan around it without flagging the conflict", "type": "behavior"},
+        {"id": "proposes-options", "text": "Presents design options for resolving the conflict (e.g., external state store, token-based state, etc.)", "type": "capability"},
+        {"id": "asks-before-planning", "text": "Asks for user input on how to resolve the conflict BEFORE writing a full plan", "type": "behavior"}
+      ]
+    },
+    {
+      "id": 5,
+      "prompt": "/create-plan Refactor the data_processor module to use the strategy pattern instead of the current if/elif chain",
+      "expected_output": "Should analyze the actual if/elif chain, identify all 5 branches, and propose incremental refactoring that maintains backward compatibility at each step.",
+      "project_dir": "evals/projects/eval-5-refactoring",
+      "files": [],
+      "assertions": [
+        {"id": "identifies-all-branches", "text": "Plan identifies all 5 format branches in the current if/elif chain (json, csv, key_value, xml_simple, fixed_width)", "type": "capability"},
+        {"id": "backward-compat-per-phase", "text": "Each phase maintains backward compatibility — existing callers and tests work throughout the refactoring", "type": "capability"},
+        {"id": "tests-before-refactor", "text": "First phase adds or verifies characterization tests before making structural changes", "type": "capability"},
+        {"id": "no-big-bang", "text": "Does NOT propose replacing the entire if/elif chain in a single phase", "type": "behavior"},
+        {"id": "end-state-clear", "text": "Desired End State section describes what the code looks like after refactoring, not just 'it uses strategy pattern'", "type": "capability"}
+      ]
+    },
+    {
+      "id": 6,
+      "prompt": "/create-plan tickets/eng-1234.md",
+      "expected_output": "Should read the ticket file fully, research the codebase, discover the auth dependency, and produce a plan addressing all 4 acceptance criteria from the ticket.",
+      "project_dir": "evals/projects/eval-6-ticket",
+      "files": [],
+      "assertions": [
+        {"id": "reads-ticket-fully", "text": "Reads the ticket file completely (not partially) before starting research", "type": "behavior"},
+        {"id": "addresses-all-ac", "text": "Plan addresses all 4 acceptance criteria from the ticket (bulk_import method, summary return, update existing SKUs, error collection)", "type": "capability"},
+        {"id": "discovers-dependency", "text": "Discovers or mentions the auth module (auth.py) and considers whether bulk import needs permission checks", "type": "capability"},
+        {"id": "interactive-pause", "text": "Presents plan structure or findings and asks for buy-in BEFORE writing the full detailed plan", "type": "behavior"},
+        {"id": "no-unresolved-questions", "text": "Final plan has no open questions — all decisions are made (or flagged for user input before writing)", "type": "content_check"}
+      ]
+    },
+    {
+      "id": 7,
+      "prompt": "/create-plan",
+      "expected_output": "Shows help message asking for input and does NOT start researching or planning.",
+      "files": [],
+      "assertions": [
+        {"id": "shows-help-waits", "text": "Shows a help message asking for input and does NOT start researching or planning", "type": "behavior"}
+      ]
     }
   ]
 }

@@ -1,0 +1,12 @@
+{
+  "eval_id": 5,
+  "eval_name": "refactoring-depth",
+  "configuration": "without_skill",
+  "expectations": [
+    {"text": "Plan identifies all 5 format branches in the current if/elif chain (json, csv, key_value, xml_simple, fixed_width)", "passed": true, "evidence": "Context section lists all 5: json, csv, key_value, xml_simple, fixed_width. Steps 3-7 extract each one individually."},
+    {"text": "Each phase maintains backward compatibility — existing callers and tests work throughout the refactoring", "passed": true, "evidence": "Steps 2-7 extract classes without removing the elif chain — 'the if/elif chain is still in place at this point'. Tests pass at every step."},
+    {"text": "First phase adds or verifies characterization tests before making structural changes", "passed": true, "evidence": "Step 1: 'Run the test suite (baseline) — Verify all tests pass before touching any production code. Expected: all 11 tests green.'"},
+    {"text": "Does NOT propose replacing the entire if/elif chain in a single phase", "passed": false, "evidence": "Steps 2-7 extract classes but do NOT wire them up or remove elif branches. Step 8 replaces the entire if/elif chain at once with the registry. The actual switch is big-bang."},
+    {"text": "Desired End State section describes what the code looks like after refactoring, not just 'it uses strategy pattern'", "passed": true, "evidence": "'Final file structure' section lists exact order of classes and functions. 'process() becomes a one-liner lookup + dispatch.' 'Adding a new format only requires: writing a new strategy class and adding it to _STRATEGIES.'"}
+  ]
+}

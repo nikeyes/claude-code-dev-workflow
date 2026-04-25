@@ -1,0 +1,10 @@
+{
+  "eval_id": 2,
+  "eval_name": "trivial-task",
+  "prompt": "/create-plan Fix the typo in CLAUDE.md line 15 where 'componets' should be 'components'",
+  "assertions": [
+    {"id": "recognizes-trivial", "text": "Recognizes the task is trivial and does not warrant a formal multi-phase plan", "type": "capability"},
+    {"id": "suggests-direct-fix", "text": "Suggests fixing the typo directly or with a simpler approach rather than creating a plan", "type": "behavior"},
+    {"id": "no-multi-phase", "text": "Does NOT create a multi-phase implementation plan for a one-line fix", "type": "behavior"}
+  ]
+}

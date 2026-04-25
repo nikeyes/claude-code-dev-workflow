@@ -1,0 +1,13 @@
+{
+  "eval_id": 6,
+  "eval_name": "ticket-workflow",
+  "prompt": "/create-plan tickets/eng-1234.md",
+  "project_dir": "evals/projects/eval-6-ticket",
+  "assertions": [
+    {"id": "reads-ticket-fully", "text": "Reads the ticket file completely (not partially) before starting research", "type": "behavior"},
+    {"id": "addresses-all-ac", "text": "Plan addresses all 4 acceptance criteria from the ticket (bulk_import method, summary return, update existing SKUs, error collection)", "type": "capability"},
+    {"id": "discovers-dependency", "text": "Discovers or mentions the auth module (auth.py) and considers whether bulk import needs permission checks", "type": "capability"},
+    {"id": "interactive-pause", "text": "Presents plan structure or findings and asks for buy-in BEFORE writing the full detailed plan", "type": "behavior"},
+    {"id": "no-unresolved-questions", "text": "Final plan has no open questions — all decisions are made (or flagged for user input before writing)", "type": "content_check"}
+  ]
+}

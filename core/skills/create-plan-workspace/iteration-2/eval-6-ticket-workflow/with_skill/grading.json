@@ -1,0 +1,12 @@
+{
+  "eval_id": 6,
+  "eval_name": "ticket-workflow",
+  "configuration": "with_skill",
+  "expectations": [
+    {"text": "Reads the ticket file completely (not partially) before starting research", "passed": true, "evidence": "Agent read tickets/eng-1234.md fully, then read all project files (inventory.py, test_inventory.py, auth.py, Makefile)."},
+    {"text": "Plan addresses all 4 acceptance criteria from the ticket (bulk_import method, summary return, update existing SKUs, error collection)", "passed": true, "evidence": "All 4 addressed: (1) bulk_import(csv_data: str) -> dict method, (2) returns {created: N, updated: M, errors: [...]}, (3) existing SKUs get quantity incremented and price replaced, (4) invalid rows appended to errors list without aborting."},
+    {"text": "Discovers or mentions the auth module (auth.py) and considers whether bulk import needs permission checks", "passed": true, "evidence": "Plan states: 'auth.py was not mentioned in the ticket but is directly relevant: bulk import is a multi-write operation and must be gated.' Phase 2 adds permission gate with has_permission(username, 'import')."},
+    {"text": "Presents plan structure or findings and asks for buy-in BEFORE writing the full detailed plan", "passed": false, "evidence": "Agent proceeded straight to full plan. Response contains analysis and full detailed plan with code snippets. No intermediate pause point for user buy-in (eval setup simulated automatic approval)."},
+    {"text": "Final plan has no open questions — all decisions are made (or flagged for user input before writing)", "passed": true, "evidence": "All decisions resolved: auth integration (optional parameters for backward compat), update semantics (additive quantity, replaced price), validation rules (negative quantity, non-numeric price, missing fields), error format (row-level strings)."}
+  ]
+}

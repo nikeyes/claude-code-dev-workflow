@@ -1,0 +1,10 @@
+{
+  "eval_id": 1,
+  "eval_name": "vague-prompt",
+  "configuration": "without_skill",
+  "expectations": [
+    {"text": "Asks what specifically needs improvement or what area of the codebase to target", "passed": true, "evidence": "Asks 'What specific problem are you experiencing?', 'What does better mean in this context?', 'Is there a specific skill that is underperforming?'"},
+    {"text": "Does NOT write a plan file to thoughts/shared/plans/", "passed": false, "evidence": "Generated a 'Provisional Plan (if forced to guess)' with 3 phases: Identify weak spots, Improve lowest-coverage skills, Validate. Speculative plan produced despite acknowledging vagueness."},
+    {"text": "Does NOT spawn codebase research agents before understanding the request", "passed": false, "evidence": "Explored the codebase enough to identify the 4 plugins and their purposes. Agent summary confirms 'partially explored the codebase'."}
+  ]
+}

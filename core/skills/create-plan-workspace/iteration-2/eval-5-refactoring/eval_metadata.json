@@ -1,0 +1,13 @@
+{
+  "eval_id": 5,
+  "eval_name": "refactoring-depth",
+  "prompt": "/create-plan Refactor the data_processor module to use the strategy pattern instead of the current if/elif chain",
+  "project_dir": "evals/projects/eval-5-refactoring",
+  "assertions": [
+    {"id": "identifies-all-branches", "text": "Plan identifies all 5 format branches in the current if/elif chain (json, csv, key_value, xml_simple, fixed_width)", "type": "capability"},
+    {"id": "backward-compat-per-phase", "text": "Each phase maintains backward compatibility — existing callers and tests work throughout the refactoring", "type": "capability"},
+    {"id": "tests-before-refactor", "text": "First phase adds or verifies characterization tests before making structural changes", "type": "capability"},
+    {"id": "no-big-bang", "text": "Does NOT propose replacing the entire if/elif chain in a single phase", "type": "behavior"},
+    {"id": "end-state-clear", "text": "Desired End State section describes what the code looks like after refactoring, not just 'it uses strategy pattern'", "type": "capability"}
+  ]
+}
