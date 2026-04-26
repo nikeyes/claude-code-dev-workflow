@@ -315,12 +315,6 @@ Several skills are derived from [eferro's skill-factory](https://github.com/efer
 - Automated testing infrastructure
 - Enhanced TDD-focused success criteria
 
-## 🙏 Credits
-
-- **[Ashley Ha](https://medium.com/@ashleyha)** - Workflow documentation
-- **HumanLayer Team** ([Dex Horthy](https://x.com/dexhorthy) et al.) - Original commands and agents
-- **Anthropic** - [Claude Code](https://claude.com/product/claude-code)
-
 ---
 
 **Happy Coding! 🚀**
