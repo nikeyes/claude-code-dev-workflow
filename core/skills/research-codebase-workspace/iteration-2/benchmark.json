@@ -1,0 +1,112 @@
+{
+  "metadata": {
+    "skill_name": "research-codebase",
+    "skill_path": "/Users/jorge.castro/mordor/personal/stepwise-dev/core/skills/research-codebase/SKILL.md",
+    "executor_model": "claude-sonnet-4-6",
+    "timestamp": "2026-04-26T02:30:00Z",
+    "evals_run": [1, 2, 3, 4, 5, 6, 7],
+    "runs_per_configuration": 1
+  },
+  "runs": [
+    {
+      "eval_id": 1, "eval_name": "create-plan-agents", "configuration": "with_skill", "run_number": 1,
+      "result": {"pass_rate": 1.0, "passed": 5, "failed": 0, "total": 5, "time_seconds": 117.4, "tokens": 56887, "tool_calls": 22, "errors": 0}
+    },
+    {
+      "eval_id": 1, "eval_name": "create-plan-agents", "configuration": "without_skill", "run_number": 1,
+      "result": {"pass_rate": 1.0, "passed": 5, "failed": 0, "total": 5, "time_seconds": 50.1, "tokens": 28906, "tool_calls": 9, "errors": 0}
+    },
+    {
+      "eval_id": 2, "eval_name": "data-flow", "configuration": "with_skill", "run_number": 1,
+      "result": {"pass_rate": 1.0, "passed": 5, "failed": 0, "total": 5, "time_seconds": 175.2, "tokens": 62282, "tool_calls": 24, "errors": 0}
+    },
+    {
+      "eval_id": 2, "eval_name": "data-flow", "configuration": "without_skill", "run_number": 1,
+      "result": {"pass_rate": 0.8, "passed": 4, "failed": 1, "total": 5, "time_seconds": 137.8, "tokens": 39102, "tool_calls": 21, "errors": 0}
+    },
+    {
+      "eval_id": 3, "eval_name": "ambiguous-prompt", "configuration": "with_skill", "run_number": 1,
+      "result": {"pass_rate": 0.0, "passed": 0, "failed": 2, "total": 2, "time_seconds": 165.9, "tokens": 74789, "tool_calls": 37, "errors": 0}
+    },
+    {
+      "eval_id": 3, "eval_name": "ambiguous-prompt", "configuration": "without_skill", "run_number": 1,
+      "result": {"pass_rate": 0.0, "passed": 0, "failed": 2, "total": 2, "time_seconds": 151.3, "tokens": 56894, "tool_calls": 37, "errors": 0}
+    },
+    {
+      "eval_id": 4, "eval_name": "nonexistent-topic", "configuration": "with_skill", "run_number": 1,
+      "result": {"pass_rate": 1.0, "passed": 3, "failed": 0, "total": 3, "time_seconds": 179.8, "tokens": 52761, "tool_calls": 42, "errors": 0}
+    },
+    {
+      "eval_id": 4, "eval_name": "nonexistent-topic", "configuration": "without_skill", "run_number": 1,
+      "result": {"pass_rate": 1.0, "passed": 3, "failed": 0, "total": 3, "time_seconds": 81.1, "tokens": 30061, "tool_calls": 17, "errors": 0}
+    },
+    {
+      "eval_id": 5, "eval_name": "thoughts-init-file", "configuration": "with_skill", "run_number": 1,
+      "result": {"pass_rate": 1.0, "passed": 4, "failed": 0, "total": 4, "time_seconds": 59.7, "tokens": 22445, "tool_calls": 10, "errors": 0}
+    },
+    {
+      "eval_id": 5, "eval_name": "thoughts-init-file", "configuration": "without_skill", "run_number": 1,
+      "result": {"pass_rate": 1.0, "passed": 4, "failed": 0, "total": 4, "time_seconds": 41.8, "tokens": 15146, "tool_calls": 4, "errors": 0}
+    },
+    {
+      "eval_id": 6, "eval_name": "plugin-architecture", "configuration": "with_skill", "run_number": 1,
+      "result": {"pass_rate": 1.0, "passed": 5, "failed": 0, "total": 5, "time_seconds": 194.5, "tokens": 90842, "tool_calls": 55, "errors": 0}
+    },
+    {
+      "eval_id": 6, "eval_name": "plugin-architecture", "configuration": "without_skill", "run_number": 1,
+      "result": {"pass_rate": 0.8, "passed": 4, "failed": 1, "total": 5, "time_seconds": 185.7, "tokens": 88041, "tool_calls": 53, "errors": 0}
+    },
+    {
+      "eval_id": 7, "eval_name": "agent-architecture", "configuration": "with_skill", "run_number": 1,
+      "result": {"pass_rate": 1.0, "passed": 4, "failed": 0, "total": 4, "time_seconds": 136.2, "tokens": 66145, "tool_calls": 26, "errors": 0}
+    },
+    {
+      "eval_id": 7, "eval_name": "agent-architecture", "configuration": "without_skill", "run_number": 1,
+      "result": {"pass_rate": 0.75, "passed": 3, "failed": 1, "total": 4, "time_seconds": 118.1, "tokens": 47707, "tool_calls": 18, "errors": 0}
+    }
+  ],
+  "run_summary": {
+    "with_skill": {
+      "pass_rate": {"mean": 0.86, "stddev": 0.37, "min": 0.0, "max": 1.0},
+      "time_seconds": {"mean": 147.0, "stddev": 46.7, "min": 59.7, "max": 194.5},
+      "tokens": {"mean": 60879, "stddev": 22587, "min": 22445, "max": 90842}
+    },
+    "without_skill": {
+      "pass_rate": {"mean": 0.76, "stddev": 0.39, "min": 0.0, "max": 1.0},
+      "time_seconds": {"mean": 109.4, "stddev": 54.0, "min": 41.8, "max": 185.7},
+      "tokens": {"mean": 43694, "stddev": 23805, "min": 15146, "max": 88041}
+    },
+    "delta": {
+      "pass_rate": "+0.10",
+      "time_seconds": "+37.6",
+      "tokens": "+17185"
+    }
+  },
+  "per_eval_comparison": [
+    {"eval": "1-create-plan-agents", "with_skill": 1.0, "without_skill": 1.0, "delta": 0.0, "note": "Both perfect. Baseline equally capable on factual questions."},
+    {"eval": "2-data-flow", "with_skill": 1.0, "without_skill": 0.8, "delta": 0.2, "note": "Skill found cross-plugin connection (web-search-researcher); baseline missed it."},
+    {"eval": "3-ambiguous-prompt", "with_skill": 0.0, "without_skill": 0.0, "delta": 0.0, "note": "Both failed. SKILL.md treats any non-empty $ARGUMENTS as valid query and proceeds."},
+    {"eval": "4-nonexistent-topic", "with_skill": 1.0, "without_skill": 1.0, "delta": 0.0, "note": "Both correctly reported absence without hallucination."},
+    {"eval": "5-thoughts-init-file", "with_skill": 1.0, "without_skill": 1.0, "delta": 0.0, "note": "Both perfect. Baseline faster (42s vs 60s) and cheaper (15k vs 22k tokens)."},
+    {"eval": "6-plugin-architecture", "with_skill": 1.0, "without_skill": 0.8, "delta": 0.2, "note": "Skill saves to thoughts/ convention; baseline doesn't. structure_check assertion."},
+    {"eval": "7-agent-architecture", "with_skill": 1.0, "without_skill": 0.75, "delta": 0.25, "note": "Skill spawns parallel sub-agents; baseline sequential. behavior assertion."}
+  ],
+  "analysis": {
+    "skill_value": "Skill adds +10% pass rate over baseline, at +34% cost in time and +39% cost in tokens.",
+    "where_skill_wins": [
+      "Eval 2: Cross-plugin discovery (web-search-researcher). Skill's broader agent coverage surfaced this.",
+      "Eval 6: saves-to-thoughts convention. Trivially passes because skill defines this.",
+      "Eval 7: Parallel sub-agent spawning. Behavioral, not content quality."
+    ],
+    "where_baseline_matches": [
+      "Eval 1: Factual accuracy on verifiable questions — baseline equally capable.",
+      "Eval 4: Anti-hallucination — baseline correctly reports absence.",
+      "Eval 5: File-specific documentation — baseline faster and cheaper."
+    ],
+    "non_discriminating": [
+      "Eval 3: Both fail. SKILL.md treats non-empty $ARGUMENTS as valid query."
+    ],
+    "key_insight": "On capability assertions only (factual accuracy, anti-hallucination), baseline scores 88% vs skill 93% — a +5% delta. The remaining +5% comes from structure/behavior assertions testing skill conventions. The skill is a workflow enforcer (parallel agents, thoughts/ persistence, document structure) not a capability amplifier.",
+    "recommendation": "For teams needing consistent research docs → keep. For ad-hoc investigations → baseline is sufficient and 40% cheaper. The ambiguous-prompt eval reveals a design gap in the SKILL.md."
+  }
+}

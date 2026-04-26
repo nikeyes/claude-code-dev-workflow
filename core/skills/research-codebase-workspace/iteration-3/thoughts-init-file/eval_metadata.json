@@ -1,0 +1,11 @@
+{
+  "eval_id": 5,
+  "eval_name": "thoughts-init-file",
+  "prompt": "Lee el archivo core/skills/thoughts-management/scripts/thoughts-init y documenta exactamente qué directorios crea y qué README genera",
+  "assertions": [
+    {"id": "reads-file-first", "text": "Reads core/skills/thoughts-management/scripts/thoughts-init BEFORE spawning any sub-agents for additional research", "type": "behavior"},
+    {"id": "lists-directories", "text": "Lists the 5 directories created: $USERNAME/tickets, $USERNAME/notes, shared/research, shared/plans, shared/prs", "type": "capability"},
+    {"id": "describes-readme", "text": "Describes the README.md content including the directory structure documentation and the slash commands listed in it", "type": "capability"},
+    {"id": "mentions-env-var", "text": "Identifies THOUGHTS_USER as the environment variable for configuring the username (with default nikey_es)", "type": "capability"}
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "eval_id": 6,
+  "eval_name": "plugin-architecture",
+  "configuration": "with_skill",
+  "pass_rate": 1.0,
+  "passed": 5,
+  "failed": 0,
+  "total": 5,
+  "expectations": [
+    {"text": "all-4-plugins", "passed": true, "evidence": "All 4 plugins named: stepwise-core, stepwise-git, stepwise-web, stepwise-research with separate sections for each"},
+    {"text": "inter-plugin-deps", "passed": true, "evidence": "Section 2 identifies core→web dependency (research-codebase references stepwise-web:web-search-researcher at SKILL.md line 35)"},
+    {"text": "marketplace-json", "passed": true, "evidence": "Section 1: 'El fichero marketplace.json en .claude-plugin/ los lista como plugins autónomos'"},
+    {"text": "frontmatter-present", "passed": true, "evidence": "YAML frontmatter present with date: 2026-04-26T01:05:10+0000 and git_commit: a1cdcbb9417f75144272adc1ba45ff14376102d1"},
+    {"text": "saves-to-thoughts", "passed": true, "evidence": "Document follows thoughts/shared/research/ format with full frontmatter as instructed by the skill"}
+  ]
+}

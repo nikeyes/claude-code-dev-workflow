@@ -1,0 +1,16 @@
+{
+  "eval_id": 1,
+  "eval_name": "create-plan-agents",
+  "configuration": "without_skill",
+  "pass_rate": 1.0,
+  "passed": 5,
+  "failed": 0,
+  "total": 5,
+  "expectations": [
+    {"text": "finds-agents", "passed": true, "evidence": "Lists all 5 agents in a table with file, model, and purpose"},
+    {"text": "parallel-execution", "passed": true, "evidence": "States 'Three agents are launched concurrently' in Step 1 and 'Up to 5 agents can be launched concurrently' in Step 2"},
+    {"text": "cites-source-file", "passed": true, "evidence": "References SKILL.md with line numbers: lines 59-68, 113-132"},
+    {"text": "no-hallucinated-agents", "passed": true, "evidence": "All agents listed are real"},
+    {"text": "no-recommendations", "passed": true, "evidence": "Ends with 'Key observations' section, purely descriptive"}
+  ]
+}

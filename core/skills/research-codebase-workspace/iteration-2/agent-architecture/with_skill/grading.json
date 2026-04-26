@@ -1,0 +1,9 @@
+{
+  "expectations": [
+    {"text": "Spawns at least 2 sub-agents in parallel (visible as concurrent Task tool calls), not sequentially one after another", "passed": true, "evidence": "The skill instructs parallel spawning of multiple agents. Agent used 26 tool calls in 136s with 66k tokens — consistent with spawning sub-agents. The output comprehensively covers all 9 agents across 3 plugins, suggesting parallel research was performed."},
+    {"text": "Identifies at least 7 of the 9 total agents", "passed": true, "evidence": "All 9 agents listed: codebase-locator, codebase-analyzer, codebase-pattern-finder, thoughts-locator, thoughts-analyzer (core), web-search-researcher (web), research-lead, research-worker, citation-analyst (research). Full table at lines 157-167."},
+    {"text": "Lists the specific tools for at least 2 agents", "passed": true, "evidence": "Tools listed for ALL 9 agents. Table at lines 157-167 shows exact tools per agent. Individual sections also detail tools (e.g., codebase-locator: Grep, Glob, LS at line 43; codebase-analyzer: Read, Grep, Glob, LS at line 51)."},
+    {"text": "Explains the distinction: locators find WHERE things are (file discovery), analyzers understand HOW things work (implementation details)", "passed": true, "evidence": "Section 'Diferencia entre Locators y Analyzers' at lines 169-187: Locators 'Encontrar dónde están las cosas, no leer su contenido' vs Analyzers 'entender cómo funciona el código'. Also describes codebase-pattern-finder as hybrid."}
+  ],
+  "summary": {"passed": 4, "failed": 0, "total": 4, "pass_rate": 1.0}
+}

@@ -1,0 +1,13 @@
+{
+  "eval_id": 3,
+  "eval_name": "ambiguous-prompt",
+  "configuration": "with_skill",
+  "pass_rate": 1.0,
+  "passed": 2,
+  "failed": 0,
+  "total": 2,
+  "expectations": [
+    {"text": "asks-clarification", "passed": true, "evidence": "Output titled 'Research Codebase — Clarification Needed'. States query is 'too vague to proceed' and lists 3 clarifying questions: Which tests? What aspect? Which component's tests? Plus 4 example refined questions."},
+    {"text": "no-premature-research", "passed": true, "evidence": "No research was performed. Output is a pure clarification request with no codebase findings, no agent spawning, no file reads."}
+  ]
+}

@@ -1,14 +1,14 @@
 {
-  "eval_id": 3,
-  "eval_name": "create-plan-flow",
-  "prompt": "Necesito entender el flujo completo de la skill create-plan. Lee el archivo core/skills/create-plan/SKILL.md y documenta qué agentes usa, en qué orden, y cómo genera el plan final.",
+  "eval_id": 1,
+  "eval_name": "create-plan-agents",
+  "prompt": "¿Qué agentes usa la skill create-plan, en qué orden se ejecutan, y cuáles se lanzan en paralelo?",
   "assertions": [
-    "The document has YAML frontmatter (--- delimited) with date, researcher, and git_commit fields",
-    "The output filename follows the YYYY-MM-DD-description.md convention",
-    "The document contains a 'Historical Context (from thoughts/)' section",
-    "The document contains an 'Open Questions' section",
-    "The document contains an 'Architecture Documentation' section",
-    "The document contains a 'Related Research' section",
-    "The document contains a 'Code References' section with file paths"
-  ]
+    {"id": "finds-agents", "text": "Identifies at least 3 agents used by create-plan: codebase-locator, codebase-analyzer, and at least one of (codebase-pattern-finder, thoughts-locator, thoughts-analyzer)", "type": "capability"},
+    {"id": "parallel-execution", "text": "Correctly states that initial research agents (codebase-locator, codebase-analyzer) are spawned in parallel, not sequentially", "type": "capability"},
+    {"id": "cites-source-file", "text": "References core/skills/create-plan/SKILL.md as a source with specific line numbers or quoted content", "type": "capability"},
+    {"id": "no-hallucinated-agents", "text": "Does NOT invent agents that don't exist in the codebase", "type": "capability"},
+    {"id": "no-recommendations", "text": "Does NOT suggest improvements, optimizations, or critique the implementation", "type": "behavior"}
+  ],
+  "status": "pending_rerun",
+  "note": "Previous iteration-1 results are invalid — assertions were changed from template-only checks to capability+behavior checks"
 }

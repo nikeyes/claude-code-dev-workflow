@@ -1,0 +1,12 @@
+{
+  "eval_id": 1,
+  "eval_name": "create-plan-agents",
+  "prompt": "¿Qué agentes usa la skill create-plan, en qué orden se ejecutan, y cuáles se lanzan en paralelo?",
+  "assertions": [
+    {"id": "finds-agents", "text": "Identifies at least 3 agents used by create-plan: codebase-locator, codebase-analyzer, and at least one of (codebase-pattern-finder, thoughts-locator, thoughts-analyzer)", "type": "capability"},
+    {"id": "parallel-execution", "text": "Correctly states that initial research agents (codebase-locator, codebase-analyzer) are spawned in parallel, not sequentially", "type": "capability"},
+    {"id": "cites-source-file", "text": "References core/skills/create-plan/SKILL.md as a source with specific line numbers or quoted content", "type": "capability"},
+    {"id": "no-hallucinated-agents", "text": "Does NOT invent agents that don't exist in the codebase", "type": "capability"},
+    {"id": "no-recommendations", "text": "Does NOT suggest improvements, optimizations, or critique the implementation", "type": "behavior"}
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "eval_id": 5,
+  "eval_name": "thoughts-init-file",
+  "configuration": "with_skill",
+  "pass_rate": 1.0,
+  "passed": 4,
+  "failed": 0,
+  "total": 4,
+  "expectations": [
+    {"text": "reads-file-first", "passed": true, "evidence": "Output shows direct file analysis with exact line references (lines 37-41, 54-79, line 7). No sub-agent spawning evident before reading the file."},
+    {"text": "lists-directories", "passed": true, "evidence": "Lists all 5 directories with exact mkdir -p calls: $USERNAME/tickets, $USERNAME/notes, shared/research, shared/plans, shared/prs"},
+    {"text": "describes-readme", "passed": true, "evidence": "Shows full README content including Structure section with directory descriptions and Usage section with 4 slash commands"},
+    {"text": "mentions-env-var", "passed": true, "evidence": "States 'Lee THOUGHTS_USER del entorno; si no está definida, usa nikey_es' and references line 7: USERNAME=\"${THOUGHTS_USER:-nikey_es}\""}
+  ]
+}

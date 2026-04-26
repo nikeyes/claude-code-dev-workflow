@@ -1,0 +1,9 @@
+{
+  "expectations": [
+    {"text": "Spawns at least 2 sub-agents in parallel (visible as concurrent Task tool calls), not sequentially one after another", "passed": false, "evidence": "Baseline agent performed direct research without spawning sub-agents. Used 18 tool calls in 118s — consistent with sequential file reads, not parallel agent spawning. No Task tool calls visible in output."},
+    {"text": "Identifies at least 7 of the 9 total agents", "passed": true, "evidence": "All 9 agents listed with full details. Table shows all agents across 3 plugins with model, tools, and role."},
+    {"text": "Lists the specific tools for at least 2 agents", "passed": true, "evidence": "Tools listed for ALL 9 agents in the summary table. Individual sections detail tools per agent (e.g., codebase-locator: Grep, Glob, LS; codebase-analyzer: Read, Grep, Glob, LS)."},
+    {"text": "Explains the distinction: locators find WHERE things are (file discovery), analyzers understand HOW things work (implementation details)", "passed": true, "evidence": "'Locators vs Analyzers — the fundamental distinction' section: 'Locators: Grep + Glob + LS only. They map WHERE things are without reading file contents. Analyzers: add Read. They dive into content to extract meaning.'"}
+  ],
+  "summary": {"passed": 3, "failed": 1, "total": 4, "pass_rate": 0.75}
+}

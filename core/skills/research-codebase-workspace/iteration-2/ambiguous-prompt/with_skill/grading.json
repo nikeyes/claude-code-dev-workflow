@@ -1,0 +1,7 @@
+{
+  "expectations": [
+    {"text": "Asks the user to clarify what aspect of tests to investigate rather than picking one interpretation", "passed": false, "evidence": "Produced a full 260-line research document covering all test types. Did not ask for clarification. Even noted 'This prompt is itself eval_id 3 — an ambiguous prompt test case designed to check whether the skill asks for clarification' but still proceeded with full research."},
+    {"text": "Does NOT spawn sub-agent research tasks before understanding the scope of the request", "passed": false, "evidence": "Spawned sub-agents and executed full research (37 tool calls, 75k tokens). The skill treats 'Investiga los tests' as $ARGUMENTS and proceeds directly to research per SKILL.md:34."}
+  ],
+  "summary": {"passed": 0, "failed": 2, "total": 2, "pass_rate": 0.0}
+}

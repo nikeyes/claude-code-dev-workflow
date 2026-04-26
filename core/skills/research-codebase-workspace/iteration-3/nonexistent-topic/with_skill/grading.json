@@ -1,0 +1,14 @@
+{
+  "eval_id": 4,
+  "eval_name": "nonexistent-topic",
+  "configuration": "with_skill",
+  "pass_rate": 1.0,
+  "passed": 3,
+  "failed": 0,
+  "total": 3,
+  "expectations": [
+    {"text": "reports-absence", "passed": true, "evidence": "Bold statement: 'This project does not have a database system or SQL migrations.' Clear and unambiguous."},
+    {"text": "no-hallucination", "passed": true, "evidence": "Correctly identifies that the only DB-related code is in eval fixtures (user_service.py) and empty test fixture directories — not the project itself."},
+    {"text": "describes-actual-persistence", "passed": true, "evidence": "Section 'Architecture Documentation' describes thoughts/ directory with markdown files as the project's persistence mechanism."}
+  ]
+}

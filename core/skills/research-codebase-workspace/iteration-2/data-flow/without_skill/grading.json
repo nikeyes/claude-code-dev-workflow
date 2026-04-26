@@ -1,0 +1,10 @@
+{
+  "expectations": [
+    {"text": "Describes the flow including at least: invocation with arguments, decomposition of the research question, spawning sub-agents, waiting for results, synthesis, and writing to thoughts/shared/research/", "passed": true, "evidence": "Full flow traced: entry point with SKILL.md loading, parallel agent layer, thoughts-init, thoughts-metadata, document generation to thoughts/shared/research/YYYY-MM-DD. Includes diagram at lines 265-315."},
+    {"text": "Identifies that research-codebase depends on thoughts-management for directory initialization (thoughts-init script) and/or metadata generation (thoughts-metadata script)", "passed": true, "evidence": "Section 3: 'thoughts-init: creates the directory tree'. Section 3.2: 'thoughts-metadata: collects git metadata'. Both scripts documented with invocation paths."},
+    {"text": "Mentions the correct output path: thoughts/shared/research/ with YYYY-MM-DD naming convention", "passed": true, "evidence": "Lines 217-224: 'thoughts/shared/research/YYYY-MM-DD-ENG-XXXX-descripcion.md' with both naming examples (with and without ticket)"},
+    {"text": "Mentions at least one of the scripts: thoughts-init or thoughts-metadata, located in core/skills/thoughts-management/scripts/", "passed": true, "evidence": "Both scripts with paths: 'core/skills/thoughts-management/scripts/thoughts-init' (line 163) and 'core/skills/thoughts-management/scripts/thoughts-metadata' (line 186)"},
+    {"text": "Identifies at least one cross-plugin connection: research-codebase (core) can optionally use web-search-researcher (web plugin) for external research", "passed": false, "evidence": "Document describes only the 5 core agents. No mention of web-search-researcher or any cross-plugin connection."}
+  ],
+  "summary": {"passed": 4, "failed": 1, "total": 5, "pass_rate": 0.8}
+}

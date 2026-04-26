@@ -1,0 +1,8 @@
+{
+  "expectations": [
+    {"text": "Clearly states that there is no database system or SQL migrations in this project", "passed": true, "evidence": "Line 5: 'No contiene ningún sistema de base de datos propio, ni migraciones SQL reales'. Line 6: 'No existe ninguna base de datos operativa, ORM, driver de BD'"},
+    {"text": "Does NOT describe or invent a database system, ORM, migration framework, or SQL files that don't exist", "passed": true, "evidence": "Correctly classifies all SQL findings as: empty fixtures, pedagogical examples. Line 96: 'El tema sistema de base de datos y migraciones SQL no existe como funcionalidad implementada en este proyecto.'"},
+    {"text": "Mentions that the project uses file-based persistence (thoughts/ directory with markdown files) as the actual storage mechanism", "passed": true, "evidence": "Line 5: 'persiste su estado en el sistema de ficheros (directorio thoughts/)'. Not elaborated as much as with_skill but clearly stated."}
+  ],
+  "summary": {"passed": 3, "failed": 0, "total": 3, "pass_rate": 1.0}
+}

@@ -1,0 +1,11 @@
+{
+  "eval_id": 7,
+  "eval_name": "agent-architecture",
+  "prompt": "Investiga la arquitectura de agentes especializados: qué agentes hay, qué tools tiene cada uno, y cómo se diferencian los locators de los analyzers",
+  "assertions": [
+    {"id": "spawns-parallel", "text": "Spawns at least 2 sub-agents in parallel (visible as concurrent Task tool calls), not sequentially one after another", "type": "behavior"},
+    {"id": "lists-most-agents", "text": "Identifies at least 7 of the 9 total agents: codebase-locator, codebase-analyzer, codebase-pattern-finder, thoughts-locator, thoughts-analyzer (core), web-search-researcher (web), research-lead, research-worker, citation-analyst (research)", "type": "capability"},
+    {"id": "tools-per-agent", "text": "Lists the specific tools for at least 2 agents (e.g., codebase-locator uses Grep/Glob/LS; codebase-analyzer uses Read/Grep/Glob/LS)", "type": "capability"},
+    {"id": "locator-vs-analyzer", "text": "Explains the distinction: locators find WHERE things are (file discovery), analyzers understand HOW things work (implementation details)", "type": "capability"}
+  ]
+}

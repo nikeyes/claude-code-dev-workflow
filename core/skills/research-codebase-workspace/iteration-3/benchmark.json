@@ -1,0 +1,125 @@
+{
+  "metadata": {
+    "skill_name": "research-codebase",
+    "skill_path": "/Users/jorge.castro/mordor/personal/stepwise-dev/core/skills/research-codebase/SKILL.md",
+    "executor_model": "claude-sonnet-4-6",
+    "timestamp": "2026-04-26T03:00:00Z",
+    "evals_run": [1, 2, 3, 4, 5, 6, 7],
+    "runs_per_configuration": 1
+  },
+  "runs": [
+    {
+      "eval_id": 1, "eval_name": "create-plan-agents", "configuration": "with_skill", "run_number": 1,
+      "result": {"pass_rate": 1.0, "passed": 5, "failed": 0, "total": 5}
+    },
+    {
+      "eval_id": 1, "eval_name": "create-plan-agents", "configuration": "without_skill", "run_number": 1,
+      "result": {"pass_rate": 1.0, "passed": 5, "failed": 0, "total": 5}
+    },
+    {
+      "eval_id": 2, "eval_name": "data-flow", "configuration": "with_skill", "run_number": 1,
+      "result": {"pass_rate": 1.0, "passed": 5, "failed": 0, "total": 5}
+    },
+    {
+      "eval_id": 2, "eval_name": "data-flow", "configuration": "without_skill", "run_number": 1,
+      "result": {"pass_rate": 1.0, "passed": 5, "failed": 0, "total": 5}
+    },
+    {
+      "eval_id": 3, "eval_name": "ambiguous-prompt", "configuration": "with_skill", "run_number": 1,
+      "result": {"pass_rate": 1.0, "passed": 2, "failed": 0, "total": 2}
+    },
+    {
+      "eval_id": 3, "eval_name": "ambiguous-prompt", "configuration": "without_skill", "run_number": 1,
+      "result": {"pass_rate": 0.0, "passed": 0, "failed": 2, "total": 2}
+    },
+    {
+      "eval_id": 4, "eval_name": "nonexistent-topic", "configuration": "with_skill", "run_number": 1,
+      "result": {"pass_rate": 1.0, "passed": 3, "failed": 0, "total": 3}
+    },
+    {
+      "eval_id": 4, "eval_name": "nonexistent-topic", "configuration": "without_skill", "run_number": 1,
+      "result": {"pass_rate": 1.0, "passed": 3, "failed": 0, "total": 3}
+    },
+    {
+      "eval_id": 5, "eval_name": "thoughts-init-file", "configuration": "with_skill", "run_number": 1,
+      "result": {"pass_rate": 1.0, "passed": 4, "failed": 0, "total": 4}
+    },
+    {
+      "eval_id": 5, "eval_name": "thoughts-init-file", "configuration": "without_skill", "run_number": 1,
+      "result": {"pass_rate": 1.0, "passed": 4, "failed": 0, "total": 4}
+    },
+    {
+      "eval_id": 6, "eval_name": "plugin-architecture", "configuration": "with_skill", "run_number": 1,
+      "result": {"pass_rate": 1.0, "passed": 5, "failed": 0, "total": 5}
+    },
+    {
+      "eval_id": 6, "eval_name": "plugin-architecture", "configuration": "without_skill", "run_number": 1,
+      "result": {"pass_rate": 0.8, "passed": 4, "failed": 1, "total": 5}
+    },
+    {
+      "eval_id": 7, "eval_name": "agent-architecture", "configuration": "with_skill", "run_number": 1,
+      "result": {"pass_rate": 1.0, "passed": 4, "failed": 0, "total": 4}
+    },
+    {
+      "eval_id": 7, "eval_name": "agent-architecture", "configuration": "without_skill", "run_number": 1,
+      "result": {"pass_rate": 0.75, "passed": 3, "failed": 1, "total": 4}
+    }
+  ],
+  "run_summary": {
+    "with_skill": {
+      "pass_rate": {"mean": 1.0, "stddev": 0.0, "min": 1.0, "max": 1.0}
+    },
+    "without_skill": {
+      "pass_rate": {"mean": 0.79, "stddev": 0.36, "min": 0.0, "max": 1.0}
+    },
+    "delta": {
+      "pass_rate": "+0.21"
+    }
+  },
+  "per_eval_comparison": [
+    {"eval": "1-create-plan-agents", "with_skill": 1.0, "without_skill": 1.0, "delta": 0.0, "note": "Both perfect. Non-discriminating eval."},
+    {"eval": "2-data-flow", "with_skill": 1.0, "without_skill": 1.0, "delta": 0.0, "note": "Baseline improved from 0.8 → 1.0 (was missing cross-plugin in iter-2). Non-discriminating now."},
+    {"eval": "3-ambiguous-prompt", "with_skill": 1.0, "without_skill": 0.0, "delta": 1.0, "note": "MAJOR IMPROVEMENT. Skill now asks clarification (was 0.0 in iter-2). Baseline still fails. Strongest discriminator."},
+    {"eval": "4-nonexistent-topic", "with_skill": 1.0, "without_skill": 1.0, "delta": 0.0, "note": "Both perfect. Non-discriminating eval."},
+    {"eval": "5-thoughts-init-file", "with_skill": 1.0, "without_skill": 1.0, "delta": 0.0, "note": "Both perfect. Non-discriminating eval."},
+    {"eval": "6-plugin-architecture", "with_skill": 1.0, "without_skill": 0.8, "delta": 0.2, "note": "Skill enforces saves-to-thoughts convention. Same as iter-2."},
+    {"eval": "7-agent-architecture", "with_skill": 1.0, "without_skill": 0.75, "delta": 0.25, "note": "Skill enforces parallel agent spawning. Same as iter-2."}
+  ],
+  "iteration_comparison": {
+    "iteration_2": {
+      "with_skill_mean": 0.86,
+      "without_skill_mean": 0.76,
+      "delta": "+0.10"
+    },
+    "iteration_3": {
+      "with_skill_mean": 1.0,
+      "without_skill_mean": 0.79,
+      "delta": "+0.21"
+    },
+    "improvement": {
+      "with_skill": "+0.14 (0.86 → 1.00)",
+      "without_skill": "+0.03 (0.76 → 0.79)",
+      "delta_improvement": "+0.11 (skill advantage grew from +0.10 to +0.21)"
+    },
+    "key_change": "Eval 3 (ambiguous-prompt) flipped from 0.0/0.0 tie to 1.0/0.0 — the skill now correctly asks for clarification while baseline still dives in."
+  },
+  "analysis": {
+    "skill_value": "Skill achieves 100% pass rate across all 7 evals, up from 86% in iteration-2. The +0.21 delta over baseline is double the +0.10 from iteration-2.",
+    "where_skill_wins": [
+      "Eval 3 (ambiguous-prompt): Strongest discriminator. Skill asks clarification, baseline dives into comprehensive research. This was the known design gap that has been fixed.",
+      "Eval 6 (plugin-architecture): saves-to-thoughts convention. Structural, not capability.",
+      "Eval 7 (agent-architecture): Parallel sub-agent spawning behavior."
+    ],
+    "where_baseline_matches": [
+      "Eval 1 (create-plan-agents): Factual accuracy — baseline equally capable.",
+      "Eval 2 (data-flow): Baseline improved this iteration, now matches skill (cross-plugin connection found by both).",
+      "Eval 4 (nonexistent-topic): Anti-hallucination — both perfect.",
+      "Eval 5 (thoughts-init-file): File-specific documentation — both perfect."
+    ],
+    "non_discriminating": [
+      "4 of 7 evals are now non-discriminating (evals 1, 2, 4, 5). These test capabilities the model has regardless of skill."
+    ],
+    "what_changed_since_iter2": "The SKILL.md ambiguity handling was improved. The skill now treats vague prompts ('Investiga los tests') as requiring clarification instead of proceeding blindly. This single change accounts for the entire +0.14 improvement in with_skill pass rate.",
+    "key_insight": "The skill is now a capability amplifier, not just a workflow enforcer. On the one eval where the model genuinely needs guidance (ambiguous prompts), the skill provides decisive value. On capability evals (factual accuracy, anti-hallucination), the baseline is equally strong — which is expected and healthy."
+  }
+}

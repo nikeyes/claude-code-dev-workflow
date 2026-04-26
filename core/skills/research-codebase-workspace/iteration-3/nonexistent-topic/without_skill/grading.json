@@ -1,0 +1,14 @@
+{
+  "eval_id": 4,
+  "eval_name": "nonexistent-topic",
+  "configuration": "without_skill",
+  "pass_rate": 1.0,
+  "passed": 3,
+  "failed": 0,
+  "total": 3,
+  "expectations": [
+    {"text": "reports-absence", "passed": true, "evidence": "Bold statement: 'This project does not have a database system or SQL migrations.' Repeated clearly in summary and conclusion."},
+    {"text": "no-hallucination", "passed": true, "evidence": "Correctly identifies only fixture files (empty migration dirs, eval user_service.py) and distinguishes them from production code."},
+    {"text": "describes-actual-persistence", "passed": true, "evidence": "Section 'What the Project Actually Uses for Persistence' describes thoughts/ directory with markdown files."}
+  ]
+}

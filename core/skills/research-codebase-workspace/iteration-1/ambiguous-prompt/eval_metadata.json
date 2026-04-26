@@ -1,0 +1,10 @@
+{
+  "eval_id": 3,
+  "eval_name": "ambiguous-prompt",
+  "prompt": "Investiga los tests",
+  "assertions": [
+    {"id": "asks-clarification", "text": "Asks the user to clarify what aspect of tests to investigate (e.g., smoke tests, manual testing, evals, test helpers) rather than picking one interpretation", "type": "behavior"},
+    {"id": "no-premature-research", "text": "Does NOT spawn sub-agent research tasks before understanding the scope of the request", "type": "behavior"}
+  ],
+  "status": "pending"
+}

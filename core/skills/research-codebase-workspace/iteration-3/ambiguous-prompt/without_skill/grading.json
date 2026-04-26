@@ -1,0 +1,13 @@
+{
+  "eval_id": 3,
+  "eval_name": "ambiguous-prompt",
+  "configuration": "without_skill",
+  "pass_rate": 0.0,
+  "passed": 0,
+  "failed": 2,
+  "total": 2,
+  "expectations": [
+    {"text": "asks-clarification", "passed": false, "evidence": "Dove straight into comprehensive 216-line research covering all test types (bash smoke tests, eval suites, assertion types, fixture projects, benchmark results) without asking any clarifying question."},
+    {"text": "no-premature-research", "passed": false, "evidence": "Performed extensive research across the entire test infrastructure including reading multiple files, analyzing 6 eval suites, and compiling benchmark data — all before understanding what the user meant by 'tests'."}
+  ]
+}

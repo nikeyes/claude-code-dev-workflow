@@ -1,0 +1,10 @@
+{
+  "eval_id": 4,
+  "eval_name": "nonexistent-topic",
+  "prompt": "Investiga el sistema de base de datos y las migraciones SQL de este proyecto",
+  "assertions": [
+    {"id": "reports-absence", "text": "Clearly states that there is no database system or SQL migrations in this project", "type": "capability"},
+    {"id": "no-hallucination", "text": "Does NOT describe or invent a database system, ORM, migration framework, or SQL files that don't exist", "type": "capability"},
+    {"id": "describes-actual-persistence", "text": "Mentions that the project uses file-based persistence (thoughts/ directory with markdown files) as the actual storage mechanism", "type": "capability"}
+  ]
+}

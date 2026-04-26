@@ -1,0 +1,10 @@
+{
+  "expectations": [
+    {"text": "Identifies at least 3 agents used by create-plan: codebase-locator, codebase-analyzer, and at least one of (codebase-pattern-finder, thoughts-locator, thoughts-analyzer)", "passed": true, "evidence": "Lists all 5 agents across two batches. Table at lines 26-28 and 43-49."},
+    {"text": "Correctly states that initial research agents are spawned in parallel, not sequentially", "passed": true, "evidence": "Line 19: 'Before asking the user any questions, use specialized agents to research in parallel'. Diagram at lines 76-80 shows 'all 3 launched concurrently'."},
+    {"text": "References core/skills/create-plan/SKILL.md as a source with specific line numbers or quoted content", "passed": true, "evidence": "Line 5: source file path. Line 19: 'SKILL.md lines 59-69'. Line 38: 'SKILL.md lines 116-129'. Line 51: 'SKILL.md line 132'."},
+    {"text": "Does NOT invent agents that don't exist in the codebase", "passed": true, "evidence": "All 5 agents are real. Table at lines 57-63 lists only existing agents with correct file paths."},
+    {"text": "Does NOT suggest improvements, optimizations, or critique the implementation", "passed": true, "evidence": "'Key observations' section (line 108) is purely descriptive, no recommendations."}
+  ],
+  "summary": {"passed": 5, "failed": 0, "total": 5, "pass_rate": 1.0}
+}

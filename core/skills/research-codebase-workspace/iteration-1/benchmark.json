@@ -7,182 +7,28 @@
     "evals_run": [1, 2, 3],
     "runs_per_configuration": 1
   },
-  "runs": [
-    {
-      "eval_id": 1,
-      "eval_name": "plugin-architecture",
-      "configuration": "with_skill",
-      "run_number": 1,
-      "result": {
-        "pass_rate": 0.86,
-        "passed": 6,
-        "failed": 1,
-        "total": 7,
-        "time_seconds": 169.3,
-        "tokens": 87078,
-        "tool_calls": 35,
-        "errors": 0
-      },
-      "expectations": [
-        {"text": "YAML frontmatter with date, researcher, git_commit", "passed": true, "evidence": "Full YAML frontmatter lines 1-12"},
-        {"text": "Filename follows YYYY-MM-DD-description.md", "passed": false, "evidence": "Filename is 'research-document.md'"},
-        {"text": "Has 'Historical Context (from thoughts/)' section", "passed": true, "evidence": "Section at line 313"},
-        {"text": "Has 'Open Questions' section", "passed": true, "evidence": "Section at line 325"},
-        {"text": "Has 'Architecture Documentation' section", "passed": true, "evidence": "Section at line 266"},
-        {"text": "Has 'Related Research' section", "passed": true, "evidence": "Section at line 319"},
-        {"text": "Has 'Code References' section with file paths", "passed": true, "evidence": "Section at line 243 with 20+ paths"}
-      ]
-    },
-    {
-      "eval_id": 1,
-      "eval_name": "plugin-architecture",
-      "configuration": "without_skill",
-      "run_number": 1,
-      "result": {
-        "pass_rate": 0.71,
-        "passed": 5,
-        "failed": 2,
-        "total": 7,
-        "time_seconds": 249.4,
-        "tokens": 115644,
-        "tool_calls": 57,
-        "errors": 0
-      },
-      "expectations": [
-        {"text": "YAML frontmatter with date, researcher, git_commit", "passed": true, "evidence": "YAML frontmatter present lines 1-12"},
-        {"text": "Filename follows YYYY-MM-DD-description.md", "passed": false, "evidence": "Filename is 'research.md'"},
-        {"text": "Has 'Historical Context (from thoughts/)' section", "passed": true, "evidence": "Section at line 352"},
-        {"text": "Has 'Open Questions' section", "passed": true, "evidence": "Section at line 356"},
-        {"text": "Has 'Architecture Documentation' section", "passed": true, "evidence": "Section at line 319"},
-        {"text": "Has 'Related Research' section", "passed": false, "evidence": "No 'Related Research' section found"},
-        {"text": "Has 'Code References' section with file paths", "passed": true, "evidence": "Section at line 303"}
-      ]
-    },
-    {
-      "eval_id": 2,
-      "eval_name": "thoughts-management",
-      "configuration": "with_skill",
-      "run_number": 1,
-      "result": {
-        "pass_rate": 1.0,
-        "passed": 7,
-        "failed": 0,
-        "total": 7,
-        "time_seconds": 158.4,
-        "tokens": 38885,
-        "tool_calls": 33,
-        "errors": 0
-      },
-      "expectations": [
-        {"text": "YAML frontmatter with date, researcher, git_commit", "passed": true, "evidence": "Full YAML frontmatter lines 1-12"},
-        {"text": "Filename follows YYYY-MM-DD-description.md", "passed": true, "evidence": "Filename: 2026-04-24-thoughts-management-system.md"},
-        {"text": "Has 'Historical Context (from thoughts/)' section", "passed": true, "evidence": "Section at line 225"},
-        {"text": "Has 'Open Questions' section", "passed": true, "evidence": "Section at line 235"},
-        {"text": "Has 'Architecture Documentation' section", "passed": true, "evidence": "Section at line 212"},
-        {"text": "Has 'Related Research' section", "passed": true, "evidence": "Section at line 230"},
-        {"text": "Has 'Code References' section with file paths", "passed": true, "evidence": "Section at line 196"}
-      ]
-    },
-    {
-      "eval_id": 2,
-      "eval_name": "thoughts-management",
-      "configuration": "without_skill",
-      "run_number": 1,
-      "result": {
-        "pass_rate": 0.14,
-        "passed": 1,
-        "failed": 6,
-        "total": 7,
-        "time_seconds": 112.9,
-        "tokens": 41973,
-        "tool_calls": 19,
-        "errors": 0
-      },
-      "expectations": [
-        {"text": "YAML frontmatter with date, researcher, git_commit", "passed": false, "evidence": "No YAML frontmatter. Bold text metadata only."},
-        {"text": "Filename follows YYYY-MM-DD-description.md", "passed": false, "evidence": "Filename is 'research.md'"},
-        {"text": "Has 'Historical Context (from thoughts/)' section", "passed": false, "evidence": "Section not found"},
-        {"text": "Has 'Open Questions' section", "passed": false, "evidence": "Section not found"},
-        {"text": "Has 'Architecture Documentation' section", "passed": false, "evidence": "Has 'Architecture Summary' but not the expected name"},
-        {"text": "Has 'Related Research' section", "passed": false, "evidence": "Section not found"},
-        {"text": "Has 'Code References' section with file paths", "passed": true, "evidence": "Section at line 238"}
-      ]
-    },
-    {
-      "eval_id": 3,
-      "eval_name": "create-plan-flow",
-      "configuration": "with_skill",
-      "run_number": 1,
-      "result": {
-        "pass_rate": 1.0,
-        "passed": 7,
-        "failed": 0,
-        "total": 7,
-        "time_seconds": 150.0,
-        "tokens": 57555,
-        "tool_calls": 19,
-        "errors": 0
-      },
-      "expectations": [
-        {"text": "YAML frontmatter with date, researcher, git_commit", "passed": true, "evidence": "Full YAML frontmatter lines 1-12"},
-        {"text": "Filename follows YYYY-MM-DD-description.md", "passed": true, "evidence": "Filename: 2026-04-24-create-plan-flow.md"},
-        {"text": "Has 'Historical Context (from thoughts/)' section", "passed": true, "evidence": "Section at line 291"},
-        {"text": "Has 'Open Questions' section", "passed": true, "evidence": "Section at line 299"},
-        {"text": "Has 'Architecture Documentation' section", "passed": true, "evidence": "Section at line 275"},
-        {"text": "Has 'Related Research' section", "passed": true, "evidence": "Section at line 297"},
-        {"text": "Has 'Code References' section with file paths", "passed": true, "evidence": "Section at line 249"}
-      ]
-    },
-    {
-      "eval_id": 3,
-      "eval_name": "create-plan-flow",
-      "configuration": "without_skill",
-      "run_number": 1,
-      "result": {
-        "pass_rate": 0.0,
-        "passed": 0,
-        "failed": 7,
-        "total": 7,
-        "time_seconds": 120.0,
-        "tokens": 34576,
-        "tool_calls": 13,
-        "errors": 0
-      },
-      "expectations": [
-        {"text": "YAML frontmatter with date, researcher, git_commit", "passed": false, "evidence": "No YAML frontmatter. Metadata in table format."},
-        {"text": "Filename follows YYYY-MM-DD-description.md", "passed": false, "evidence": "Filename is 'research.md'"},
-        {"text": "Has 'Historical Context (from thoughts/)' section", "passed": false, "evidence": "Section not found"},
-        {"text": "Has 'Open Questions' section", "passed": false, "evidence": "Section not found"},
-        {"text": "Has 'Architecture Documentation' section", "passed": false, "evidence": "Section not found"},
-        {"text": "Has 'Related Research' section", "passed": false, "evidence": "Section not found"},
-        {"text": "Has 'Code References' section with file paths", "passed": false, "evidence": "Has 'Archivos clave' table but not 'Code References'"}
-      ]
-    }
-  ],
-  "run_summary": {
-    "with_skill": {
-      "pass_rate": {"mean": 0.95, "stddev": 0.08, "min": 0.86, "max": 1.0},
-      "time_seconds": {"mean": 159.2, "stddev": 9.7, "min": 150.0, "max": 169.3},
-      "tokens": {"mean": 61173, "stddev": 24233, "min": 38885, "max": 87078}
-    },
-    "without_skill": {
-      "pass_rate": {"mean": 0.29, "stddev": 0.37, "min": 0.0, "max": 0.71},
-      "time_seconds": {"mean": 160.8, "stddev": 74.5, "min": 112.9, "max": 249.4},
-      "tokens": {"mean": 64064, "stddev": 44834, "min": 34576, "max": 115644}
-    },
-    "delta": {
-      "pass_rate": "+0.66",
-      "time_seconds": "-1.6",
-      "tokens": "-2891"
-    }
+  "status": "INVALIDATED",
+  "invalidation_reason": "Assertions were redesigned on 2026-04-26. Previous results measured template conformity only (section names, frontmatter presence). New assertions measure capability (factual accuracy, anti-hallucination, cross-component tracing), behavior (clarification requests, read-before-spawn ordering, parallel agent spawning), and structure as a minority subset. Previous pass rates are not comparable. Re-run required.",
+  "previous_summary": {
+    "with_skill": {"mean_pass_rate": 0.95},
+    "without_skill": {"mean_pass_rate": 0.29},
+    "note": "These numbers only measured template conformity. A document with correct section names but wrong content would pass. The +0.66 delta was real but trivial — it proved the skill enforces its own template, not that it produces better research."
   },
-  "notes": [
-    "With new skill-differentiating assertions, with_skill averages 95% vs baseline 29% — a +66% delta",
-    "Eval 1 baseline is an outlier (71%) because it produced some structural sections, likely because the topic itself demanded structured documentation",
-    "Evals 2 and 3 baselines score 14% and 0% respectively — without the skill, Claude uses ad-hoc formatting",
-    "The only assertion baselines consistently pass is 'Code References' — Claude naturally lists files it finds",
-    "with_skill failed the filename convention in Eval 1 ('research-document.md' instead of YYYY-MM-DD-*.md) — a gap in skill adherence",
-    "Token usage is similar between configurations, but with_skill produces dramatically more consistent structure",
-    "The skill's main value is not better content (both investigate well) but enforcing a consistent, searchable, machine-parseable document template"
-  ]
+  "new_eval_suite": {
+    "total_evals": 7,
+    "assertion_types": {
+      "capability": 22,
+      "behavior": 7,
+      "structure_check": 2
+    },
+    "scenarios": [
+      "Eval 1: Verifiable facts (agents used by create-plan)",
+      "Eval 2: Cross-component data flow tracing",
+      "Eval 3: Ambiguous prompt — should ask clarification",
+      "Eval 4: Nonexistent topic — anti-hallucination",
+      "Eval 5: Explicit file read — ordering behavior",
+      "Eval 6: Inter-plugin relationships (replaces old plugin-architecture)",
+      "Eval 7: Agent architecture — parallel spawning + factual completeness"
+    ]
+  }
 }

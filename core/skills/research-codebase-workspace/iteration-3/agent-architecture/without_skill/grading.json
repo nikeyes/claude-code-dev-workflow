@@ -1,0 +1,15 @@
+{
+  "eval_id": 7,
+  "eval_name": "agent-architecture",
+  "configuration": "without_skill",
+  "pass_rate": 0.75,
+  "passed": 3,
+  "failed": 1,
+  "total": 4,
+  "expectations": [
+    {"text": "spawns-parallel", "passed": false, "evidence": "Without the skill, there is no explicit instruction to spawn sub-agents in parallel. Research was likely sequential."},
+    {"text": "lists-most-agents", "passed": true, "evidence": "Lists all 9 agents across all 3 plugins with detailed descriptions"},
+    {"text": "tools-per-agent", "passed": true, "evidence": "Lists tools for all 9 agents with exact tool names in a comprehensive table"},
+    {"text": "locator-vs-analyzer", "passed": true, "evidence": "Dedicated section with comparison table: Locators find WHERE (Grep,Glob,LS, haiku), Analyzers understand HOW (Read+Grep+Glob+LS, sonnet)"}
+  ]
+}

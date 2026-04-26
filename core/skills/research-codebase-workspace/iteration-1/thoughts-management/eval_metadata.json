@@ -1,14 +1,13 @@
 {
-  "eval_id": 2,
-  "eval_name": "thoughts-management",
-  "prompt": "Investiga cómo funciona el sistema de thoughts-management: qué scripts tiene, cómo se inicializa el directorio thoughts/, y qué metadata genera.",
+  "eval_id": 5,
+  "eval_name": "thoughts-init-file",
+  "prompt": "Lee el archivo core/skills/thoughts-management/scripts/thoughts-init y documenta exactamente qué directorios crea y qué README genera",
   "assertions": [
-    "The document has YAML frontmatter (--- delimited) with date, researcher, and git_commit fields",
-    "The output filename follows the YYYY-MM-DD-description.md convention",
-    "The document contains a 'Historical Context (from thoughts/)' section",
-    "The document contains an 'Open Questions' section",
-    "The document contains an 'Architecture Documentation' section",
-    "The document contains a 'Related Research' section",
-    "The document contains a 'Code References' section with file paths"
-  ]
+    {"id": "reads-file-first", "text": "Reads core/skills/thoughts-management/scripts/thoughts-init BEFORE spawning any sub-agents for additional research", "type": "behavior"},
+    {"id": "lists-directories", "text": "Lists the 5 directories created: $USERNAME/tickets, $USERNAME/notes, shared/research, shared/plans, shared/prs", "type": "capability"},
+    {"id": "describes-readme", "text": "Describes the README.md content including the directory structure documentation and the slash commands listed in it", "type": "capability"},
+    {"id": "mentions-env-var", "text": "Identifies THOUGHTS_USER as the environment variable for configuring the username (with default nikey_es)", "type": "capability"}
+  ],
+  "status": "pending_rerun",
+  "note": "Previous iteration-1 results are invalid — assertions were changed from template-only checks to capability checks"
 }

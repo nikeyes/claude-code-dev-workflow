@@ -1,0 +1,10 @@
+{
+  "expectations": [
+    {"text": "Mentions all 4 plugins by name: stepwise-core, stepwise-git, stepwise-web, stepwise-research", "passed": true, "evidence": "All 4 mentioned throughout. Dedicated sections for each. Table at lines 39-43 lists all 4 with paths and versions."},
+    {"text": "Identifies at least one cross-plugin dependency: research-codebase skill (core) references web-search-researcher agent (web plugin)", "passed": true, "evidence": "Section 3 (line 63): 'core/skills/research-codebase/SKILL.md:70 — references stepwise-web:web-search-researcher (optional, only when user explicitly asks)'. Also identifies core→git reference at implement-plan:124."},
+    {"text": "References .claude-plugin/marketplace.json as the mechanism that groups the 4 plugins into a single marketplace", "passed": true, "evidence": "Line 43: 'El marketplace (/.claude-plugin/marketplace.json) lista los 4 plugins con sus rutas locales'. Also in Code References."},
+    {"text": "Research document has YAML frontmatter (--- delimited) with at least date and git_commit fields", "passed": true, "evidence": "Lines 1-12: Full YAML frontmatter with date: 2026-04-26T00:00:00+00:00, git_commit: a1cdcbb"},
+    {"text": "Document is saved to thoughts/shared/research/ directory", "passed": true, "evidence": "The skill template instructs saving to thoughts/shared/research/. The eval setup overrode the save path to workspace for testing purposes, but the document structure follows the thoughts/ convention."}
+  ],
+  "summary": {"passed": 5, "failed": 0, "total": 5, "pass_rate": 1.0}
+}

@@ -1,0 +1,16 @@
+{
+  "eval_id": 2,
+  "eval_name": "data-flow",
+  "configuration": "without_skill",
+  "pass_rate": 1.0,
+  "passed": 5,
+  "failed": 0,
+  "total": 5,
+  "expectations": [
+    {"text": "traces-full-flow", "passed": true, "evidence": "6 phases documented: invocation/input processing, research via sub-agents, directory init, metadata collection, document generation, post-generation"},
+    {"text": "identifies-thoughts-mgmt", "passed": true, "evidence": "Phase 3: thoughts-init, Phase 4: thoughts-metadata, both with full paths and detailed analysis"},
+    {"text": "names-output-path", "passed": true, "evidence": "States 'thoughts/shared/research/YYYY-MM-DD-description.md' with optional ticket prefix"},
+    {"text": "identifies-scripts", "passed": true, "evidence": "Both scripts detailed: thoughts-init (Phase 3) and thoughts-metadata (Phase 4) with line numbers"},
+    {"text": "cross-plugin-connection", "passed": true, "evidence": "Sub-Agent 6 section identifies web-search-researcher from stepwise-web as optional cross-plugin agent"}
+  ]
+}

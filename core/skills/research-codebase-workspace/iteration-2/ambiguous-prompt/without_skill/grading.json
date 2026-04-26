@@ -1,0 +1,7 @@
+{
+  "expectations": [
+    {"text": "Asks the user to clarify what aspect of tests to investigate rather than picking one interpretation", "passed": false, "evidence": "Produced a full 234-line research document covering all 5 test categories. Added a 'Clarification Note' (line 13) acknowledging ambiguity but chose to cover everything rather than asking for clarification."},
+    {"text": "Does NOT spawn sub-agent research tasks before understanding the scope of the request", "passed": false, "evidence": "Proceeded with full research immediately (37 tool calls, 57k tokens)."}
+  ],
+  "summary": {"passed": 0, "failed": 2, "total": 2, "pass_rate": 0.0}
+}

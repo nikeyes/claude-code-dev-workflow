@@ -1,0 +1,16 @@
+{
+  "eval_id": 6,
+  "eval_name": "plugin-architecture",
+  "configuration": "without_skill",
+  "pass_rate": 0.8,
+  "passed": 4,
+  "failed": 1,
+  "total": 5,
+  "expectations": [
+    {"text": "all-4-plugins", "passed": true, "evidence": "All 4 plugins named in section 1 with separate plugin.json references"},
+    {"text": "inter-plugin-deps", "passed": true, "evidence": "Section 2 identifies core→web dependency (SKILL.md line 35 references stepwise-web:web-search-researcher)"},
+    {"text": "marketplace-json", "passed": true, "evidence": "Section 1: 'The marketplace is defined in /.claude-plugin/marketplace.json'"},
+    {"text": "frontmatter-present", "passed": true, "evidence": "YAML frontmatter with date: 2026-04-26T00:00:00+0000, git_commit: a1cdcbb"},
+    {"text": "saves-to-thoughts", "passed": false, "evidence": "Without the skill, there is no instruction to save to thoughts/shared/research/. Document has correct format but baseline lacks the persistence workflow."}
+  ]
+}

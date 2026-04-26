@@ -3,44 +3,86 @@
   "evals": [
     {
       "id": 1,
-      "prompt": "Quiero entender cómo está organizado el sistema de plugins en este repositorio. Cómo se registran, cómo se descubren las skills y agents, y cómo se relacionan entre sí los 4 plugins.",
-      "expected_output": "A structured research document covering plugin architecture, plugin.json files, marketplace.json, skill/agent registration, and inter-plugin relationships.",
+      "prompt": "¿Qué agentes usa la skill create-plan, en qué orden se ejecutan, y cuáles se lanzan en paralelo?",
+      "expected_output": "Research document identifying all agents used by create-plan, their execution order, and which run in parallel, with file references to SKILL.md.",
       "files": [],
-      "expectations": [
-        "The document mentions all 4 plugins by name: stepwise-core, stepwise-git, stepwise-web, stepwise-research",
-        "The document references plugin.json and/or marketplace.json files",
-        "The document includes concrete file paths with extensions (e.g., core/skills/..., .claude-plugin/plugin.json)",
-        "The document has YAML frontmatter with date, researcher, and git_commit fields",
-        "The document describes how skills are registered (SKILL.md as entrypoint or plugin.json configuration)",
-        "The document does NOT contain improvement recommendations, suggestions for changes, or critique of the implementation"
+      "assertions": [
+        {"id": "finds-agents", "text": "Identifies at least 3 agents used by create-plan: codebase-locator, codebase-analyzer, and at least one of (codebase-pattern-finder, thoughts-locator, thoughts-analyzer)", "type": "capability"},
+        {"id": "parallel-execution", "text": "Correctly states that initial research agents (codebase-locator, codebase-analyzer) are spawned in parallel, not sequentially", "type": "capability"},
+        {"id": "cites-source-file", "text": "References core/skills/create-plan/SKILL.md as a source with specific line numbers or quoted content", "type": "capability"},
+        {"id": "no-hallucinated-agents", "text": "Does NOT invent agents that don't exist in the codebase (the real agents are: codebase-locator, codebase-analyzer, codebase-pattern-finder, thoughts-locator, thoughts-analyzer, web-search-researcher, research-lead, research-worker, citation-analyst)", "type": "capability"},
+        {"id": "no-recommendations", "text": "Does NOT suggest improvements, optimizations, or critique the implementation", "type": "behavior"}
       ]
     },
     {
       "id": 2,
-      "prompt": "Investiga cómo funciona el sistema de thoughts-management: qué scripts tiene, cómo se inicializa el directorio thoughts/, y qué metadata genera.",
-      "expected_output": "A research document detailing thoughts-management scripts (thoughts-init, thoughts-metadata), directory structure, and metadata generation.",
+      "prompt": "¿Cómo fluyen los datos desde que un usuario invoca /research-codebase hasta que se genera el documento final en thoughts/? Quiero entender todos los componentes que intervienen.",
+      "expected_output": "Research document tracing the full data flow from skill invocation through agent spawning, synthesis, thoughts initialization, metadata generation, and document writing.",
       "files": [],
-      "expectations": [
-        "The document mentions both scripts: thoughts-init and thoughts-metadata",
-        "The document describes the thoughts/ directory structure (shared/, personal user directories)",
-        "The document includes concrete file paths to the scripts (e.g., core/skills/thoughts-management/scripts/thoughts-init)",
-        "The document has YAML frontmatter with date, researcher, and git_commit fields",
-        "The document describes what metadata the scripts generate (date, branch, commit, repository info, etc.)",
-        "The document does NOT contain improvement recommendations, suggestions for changes, or critique of the implementation"
+      "assertions": [
+        {"id": "traces-full-flow", "text": "Describes the flow including at least: invocation with arguments, decomposition of the research question, spawning sub-agents, waiting for results, synthesis, and writing to thoughts/shared/research/", "type": "capability"},
+        {"id": "identifies-thoughts-mgmt", "text": "Identifies that research-codebase depends on thoughts-management for directory initialization (thoughts-init script) and/or metadata generation (thoughts-metadata script)", "type": "capability"},
+        {"id": "names-output-path", "text": "Mentions the correct output path: thoughts/shared/research/ with YYYY-MM-DD naming convention", "type": "capability"},
+        {"id": "identifies-scripts", "text": "Mentions at least one of the scripts: thoughts-init or thoughts-metadata, located in core/skills/thoughts-management/scripts/", "type": "capability"},
+        {"id": "cross-plugin-connection", "text": "Identifies at least one cross-plugin connection: research-codebase (core) can optionally use web-search-researcher (web plugin) for external research", "type": "capability"}
       ]
     },
     {
       "id": 3,
-      "prompt": "Necesito entender el flujo completo de la skill create-plan. Lee el archivo core/skills/create-plan/SKILL.md y documenta qué agentes usa, en qué orden, y cómo genera el plan final.",
-      "expected_output": "A research document that first reads the specified file, then documents the full create-plan workflow including agent usage and plan generation.",
+      "prompt": "Investiga los tests",
+      "expected_output": "Should ask for clarification about which aspect of testing to investigate rather than diving into research with a vague prompt.",
       "files": [],
-      "expectations": [
-        "The document explicitly mentions core/skills/create-plan/SKILL.md as a source",
-        "The document lists the agents used by create-plan (e.g., codebase-locator, codebase-analyzer, codebase-pattern-finder)",
-        "The document describes the order/flow of steps in the create-plan workflow",
-        "The document has YAML frontmatter with date, researcher, and git_commit fields",
-        "The document includes at least 3 concrete file paths with extensions",
-        "The document does NOT contain improvement recommendations, suggestions for changes, or critique of the implementation"
+      "assertions": [
+        {"id": "asks-clarification", "text": "Asks the user to clarify what aspect of tests to investigate (e.g., smoke tests, manual testing, evals, test helpers) rather than picking one interpretation", "type": "behavior"},
+        {"id": "no-premature-research", "text": "Does NOT spawn sub-agent research tasks before understanding the scope of the request", "type": "behavior"}
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "Investiga el sistema de base de datos y las migraciones SQL de este proyecto",
+      "expected_output": "Should report that no database or SQL migrations exist in this project, without hallucinating components.",
+      "files": [],
+      "assertions": [
+        {"id": "reports-absence", "text": "Clearly states that there is no database system or SQL migrations in this project", "type": "capability"},
+        {"id": "no-hallucination", "text": "Does NOT describe or invent a database system, ORM, migration framework, or SQL files that don't exist", "type": "capability"},
+        {"id": "describes-actual-persistence", "text": "Mentions that the project uses file-based persistence (thoughts/ directory with markdown files) as the actual storage mechanism", "type": "capability"}
+      ]
+    },
+    {
+      "id": 5,
+      "prompt": "Lee el archivo core/skills/thoughts-management/scripts/thoughts-init y documenta exactamente qué directorios crea y qué README genera",
+      "expected_output": "Research document that reads the specified file first, then accurately documents the directories created and README content.",
+      "files": [],
+      "assertions": [
+        {"id": "reads-file-first", "text": "Reads core/skills/thoughts-management/scripts/thoughts-init BEFORE spawning any sub-agents for additional research", "type": "behavior"},
+        {"id": "lists-directories", "text": "Lists the 5 directories created: $USERNAME/tickets, $USERNAME/notes, shared/research, shared/plans, shared/prs", "type": "capability"},
+        {"id": "describes-readme", "text": "Describes the README.md content including the directory structure documentation and the slash commands listed in it", "type": "capability"},
+        {"id": "mentions-env-var", "text": "Identifies THOUGHTS_USER as the environment variable for configuring the username (with default nikey_es)", "type": "capability"}
+      ]
+    },
+    {
+      "id": 6,
+      "prompt": "Investiga cómo se relacionan los 4 plugins entre sí: stepwise-core, stepwise-git, stepwise-web, stepwise-research. ¿Comparten código? ¿Hay dependencias cruzadas?",
+      "expected_output": "Research document covering all 4 plugins, their relationships, and the marketplace registration mechanism.",
+      "files": [],
+      "assertions": [
+        {"id": "all-4-plugins", "text": "Mentions all 4 plugins by name: stepwise-core, stepwise-git, stepwise-web, stepwise-research", "type": "capability"},
+        {"id": "inter-plugin-deps", "text": "Identifies at least one cross-plugin dependency: research-codebase skill (core) references web-search-researcher agent (web plugin)", "type": "capability"},
+        {"id": "marketplace-json", "text": "References .claude-plugin/marketplace.json as the mechanism that groups the 4 plugins into a single marketplace", "type": "capability"},
+        {"id": "frontmatter-present", "text": "Research document has YAML frontmatter (--- delimited) with at least date and git_commit fields", "type": "structure_check"},
+        {"id": "saves-to-thoughts", "text": "Document is saved to thoughts/shared/research/ directory", "type": "structure_check"}
+      ]
+    },
+    {
+      "id": 7,
+      "prompt": "Investiga la arquitectura de agentes especializados: qué agentes hay, qué tools tiene cada uno, y cómo se diferencian los locators de los analyzers",
+      "expected_output": "Research document listing all agents across plugins with their tools and explaining the locator vs analyzer distinction.",
+      "files": [],
+      "assertions": [
+        {"id": "spawns-parallel", "text": "Spawns at least 2 sub-agents in parallel (visible as concurrent Task tool calls), not sequentially one after another", "type": "behavior"},
+        {"id": "lists-most-agents", "text": "Identifies at least 7 of the 9 total agents: codebase-locator, codebase-analyzer, codebase-pattern-finder, thoughts-locator, thoughts-analyzer (core), web-search-researcher (web), research-lead, research-worker, citation-analyst (research)", "type": "capability"},
+        {"id": "tools-per-agent", "text": "Lists the specific tools for at least 2 agents (e.g., codebase-locator uses Grep/Glob/LS; codebase-analyzer uses Read/Grep/Glob/LS)", "type": "capability"},
+        {"id": "locator-vs-analyzer", "text": "Explains the distinction: locators find WHERE things are (file discovery), analyzers understand HOW things work (implementation details)", "type": "capability"}
       ]
     }
   ]

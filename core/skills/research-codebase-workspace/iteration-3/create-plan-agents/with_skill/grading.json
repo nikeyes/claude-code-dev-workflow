@@ -1,0 +1,16 @@
+{
+  "eval_id": 1,
+  "eval_name": "create-plan-agents",
+  "configuration": "with_skill",
+  "pass_rate": 1.0,
+  "passed": 5,
+  "failed": 0,
+  "total": 5,
+  "expectations": [
+    {"text": "finds-agents", "passed": true, "evidence": "Lists all 5 agents: codebase-locator, codebase-analyzer, codebase-pattern-finder, thoughts-locator, thoughts-analyzer with full table and details"},
+    {"text": "parallel-execution", "passed": true, "evidence": "States '3 agentes en paralelo' in Step 1 (line 42) and 'hasta 5 agentes en paralelo' in Step 2 (line 52)"},
+    {"text": "cites-source-file", "passed": true, "evidence": "References core/skills/create-plan/SKILL.md with specific line numbers: lines 59-64, 112-132, 431-459"},
+    {"text": "no-hallucinated-agents", "passed": true, "evidence": "All agents listed are real agents defined in core/agents/"},
+    {"text": "no-recommendations", "passed": true, "evidence": "Pure documentation with no suggestions for improvement"}
+  ]
+}

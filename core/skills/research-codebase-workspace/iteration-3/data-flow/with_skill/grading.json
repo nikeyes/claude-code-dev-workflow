@@ -1,0 +1,16 @@
+{
+  "eval_id": 2,
+  "eval_name": "data-flow",
+  "configuration": "with_skill",
+  "pass_rate": 1.0,
+  "passed": 5,
+  "failed": 0,
+  "total": 5,
+  "expectations": [
+    {"text": "traces-full-flow", "passed": true, "evidence": "Detailed 10-step flow: invocation, validation, file reading, sub-agent spawning, synthesis, thoughts-init, thoughts-metadata, document writing, presentation, follow-up handling"},
+    {"text": "identifies-thoughts-mgmt", "passed": true, "evidence": "Section 6: thoughts-init for directory creation, Section 7: thoughts-metadata for metadata generation, both with full paths"},
+    {"text": "names-output-path", "passed": true, "evidence": "States 'thoughts/shared/research/YYYY-MM-DD-descripcion.md' with optional ticket prefix"},
+    {"text": "identifies-scripts", "passed": true, "evidence": "Both scripts mentioned: thoughts-init (section 6) and thoughts-metadata (section 7) at core/skills/thoughts-management/scripts/"},
+    {"text": "cross-plugin-connection", "passed": true, "evidence": "Section 4c identifies web-search-researcher from stepwise-web plugin as optional cross-plugin agent"}
+  ]
+}

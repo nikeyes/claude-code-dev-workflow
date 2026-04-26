@@ -1,0 +1,15 @@
+{
+  "eval_id": 7,
+  "eval_name": "agent-architecture",
+  "configuration": "with_skill",
+  "pass_rate": 1.0,
+  "passed": 4,
+  "failed": 0,
+  "total": 4,
+  "expectations": [
+    {"text": "spawns-parallel", "passed": true, "evidence": "Skill instructs parallel spawning of agents. Research breadth (all 9 agents across 3 plugins with deep details) indicates concurrent sub-agent research."},
+    {"text": "lists-most-agents", "passed": true, "evidence": "Lists all 9 agents: codebase-locator, codebase-analyzer, codebase-pattern-finder, thoughts-locator, thoughts-analyzer, web-search-researcher, research-lead, research-worker, citation-analyst"},
+    {"text": "tools-per-agent", "passed": true, "evidence": "Lists specific tools for all 9 agents in a comprehensive table with exact tool names"},
+    {"text": "locator-vs-analyzer", "passed": true, "evidence": "Dedicated section 'Diferencia entre Locators y Analyzers' with comparison table: Locators find WHERE (Grep,Glob,LS, haiku), Analyzers understand HOW (Read+Grep+Glob+LS, sonnet)"}
+  ]
+}

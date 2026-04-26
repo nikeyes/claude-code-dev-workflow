@@ -1,0 +1,12 @@
+{
+  "eval_id": 6,
+  "eval_name": "plugin-architecture",
+  "prompt": "Investiga cómo se relacionan los 4 plugins entre sí: stepwise-core, stepwise-git, stepwise-web, stepwise-research. ¿Comparten código? ¿Hay dependencias cruzadas?",
+  "assertions": [
+    {"id": "all-4-plugins", "text": "Mentions all 4 plugins by name: stepwise-core, stepwise-git, stepwise-web, stepwise-research", "type": "capability"},
+    {"id": "inter-plugin-deps", "text": "Identifies at least one cross-plugin dependency: research-codebase skill (core) references web-search-researcher agent (web plugin)", "type": "capability"},
+    {"id": "marketplace-json", "text": "References .claude-plugin/marketplace.json as the mechanism that groups the 4 plugins into a single marketplace", "type": "capability"},
+    {"id": "frontmatter-present", "text": "Research document has YAML frontmatter (--- delimited) with at least date and git_commit fields", "type": "structure_check"},
+    {"id": "saves-to-thoughts", "text": "Document is saved to thoughts/shared/research/ directory", "type": "structure_check"}
+  ]
+}
