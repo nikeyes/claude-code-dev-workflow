@@ -1,0 +1,50 @@
+{
+  "eval_id": 6,
+  "configuration": "with_skill",
+  "expectations": [
+    {
+      "text": "Identifies that tests use a fresh service fixture per test — correctly notes this satisfies Isolated",
+      "passed": true,
+      "evidence": "Property 1 'Isolated — PASS': 'Each test receives a fresh AuthService instance via the service pytest fixture... No shared mutable state exists between tests. Tests can run in any order with identical results.'"
+    },
+    {
+      "text": "Identifies that test names describe behavior, not implementation — correctly notes this satisfies Readable",
+      "passed": true,
+      "evidence": "Property 6 'Readable — PASS': 'Test names are descriptive and follow a consistent test_<subject>_<condition>_<outcome> convention throughout' with examples: test_register_duplicate_username_raises, etc."
+    },
+    {
+      "text": "Identifies that assertions go through the public API — correctly notes this satisfies Structure-insensitive",
+      "passed": true,
+      "evidence": "Property 8 'Structure-insensitive — PASS': 'No test accesses private attributes (_users, _sessions) or internal implementation details. All assertions go through the public interface.'"
+    },
+    {
+      "text": "At most flags one borderline Predictive concern: no dedicated test for the exact boundary of MAX_FAILED_ATTEMPTS (4 fails vs 5 fails)",
+      "passed": true,
+      "evidence": "Property 11 'Predictive — PASS WITH MINOR GAP': 'no dedicated test asserting that a correct password is rejected once the account is locked'. Only one concern flagged. Summary scorecard shows only Predictive as PASS* (minor gap)."
+    },
+    {
+      "text": "Does NOT flag false positives — does not claim violations for behaviors that are correct",
+      "passed": true,
+      "evidence": "All 12 properties assessed: 11 are PASS, 1 is PASS WITH MINOR GAP. No fabricated violations. Output explicitly states 'Overall verdict: These tests are well-written.'"
+    },
+    {
+      "text": "If Predictive is flagged, suggests adding a parameterized test for exactly MAX_FAILED_ATTEMPTS - 1 vs MAX_FAILED_ATTEMPTS failed attempts",
+      "passed": true,
+      "evidence": "Recommendation: 'Add explicit lockout-with-correct-password test' showing test_login_correct_password_rejected_when_account_locked with for _ in range(AuthService.MAX_FAILED_ATTEMPTS)"
+    },
+    {
+      "text": "Provides an overall quality summary acknowledging tests are in good shape",
+      "passed": true,
+      "evidence": "Output states: 'Overall verdict: These tests are well-written. They score strongly across all 12 Test Desiderata properties.' Conclusion: 'This is a high-quality test suite.'"
+    },
+    {
+      "text": "Does not manufacture violations to fill the report",
+      "passed": true,
+      "evidence": "The single recommendation is framed as 'This is the only meaningful recommendation. All other properties are in good shape.' No manufactured violations."
+    }
+  ],
+  "pass_rate": 1.0,
+  "passed": 8,
+  "failed": 0,
+  "total": 8
+}

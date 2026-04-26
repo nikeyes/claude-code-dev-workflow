@@ -1,0 +1,85 @@
+{
+  "eval_id": 7,
+  "configuration": "without_skill",
+  "expectations": [
+    {
+      "text": "Identifies BATCH_SIZE from os.getenv as a Deterministic violation (test result depends on environment variable)",
+      "passed": true,
+      "evidence": "Issue 2 'Determinism — Environment Variable Dependency': 'DataPipeline.__init__ reads os.getenv(\"BATCH_SIZE\", \"10\")... If BATCH_SIZE is set in CI or a developer's shell, the pipeline behaves differently.' Summary table labels it 'Determinism'."
+    },
+    {
+      "text": "Identifies SHARED_OUTPUT = '/tmp/pipeline_output.csv' as an Isolated violation (shared filesystem artifact between tests)",
+      "passed": true,
+      "evidence": "Issue 1 'Isolation — Shared Filesystem Artifact': 'All tests write to the same hardcoded file path. This creates a shared state between tests.' Summary table labels it 'Isolation'."
+    },
+    {
+      "text": "Identifies test_pipeline_runs_all_steps asserting on steps list not output content as a Behavioral violation",
+      "passed": true,
+      "evidence": "Issue 3 'Behavioral — Verifying Implementation Details Instead of Output': 'result[\"steps\"] == [\"extract\", \"transform\", \"load\"] which is set unconditionally inside run() regardless of what actually executed.' Summary table labels it 'Behavioral'."
+    },
+    {
+      "text": "Identifies absence of test for malformed input (e.g., missing 'value' key, non-numeric value) as a Predictive violation",
+      "passed": true,
+      "evidence": "Issue 5 'Predictive — No Tests for Malformed Input or Edge Cases': 'no test for invalid or unexpected inputs... These coercions will raise exceptions on malformed data.' Summary table labels it 'Predictive'."
+    },
+    {
+      "text": "Identifies time.sleep(0.001) per record as a Fast violation (accumulates: 50 records × 0.001s = 50ms overhead)",
+      "passed": true,
+      "evidence": "Issue 6 'Speed — Unnecessary time.sleep in Production Code Under Test': 'With 50 records in test_large_batch, this adds ~50ms of wall time.' Summary table labels it 'Speed' (equivalent to 'Fast' property)."
+    },
+    {
+      "text": "Identifies test_large_batch not verifying category transformation as a Specific violation",
+      "passed": true,
+      "evidence": "Issue 7 'Minor — test_large_batch Does Not Verify Transformation Correctness': 'only confirms that 50 records were counted. It does not verify that any of those 50 records were transformed correctly.' Summary table labels it 'Specificity'."
+    },
+    {
+      "text": "Suggests injecting batch_size as constructor parameter instead of reading from env",
+      "passed": true,
+      "evidence": "Recommendation for Issue 2: 'redesign the class to accept batch_size as a parameter: class DataPipeline: def __init__(self, batch_size: int = 10)'"
+    },
+    {
+      "text": "Suggests using tempfile.NamedTemporaryFile or tmp_path pytest fixture per test",
+      "passed": true,
+      "evidence": "Recommendation for Issue 1: 'Use a temporary file per test via tmp_path (pytest fixture) or tempfile.NamedTemporaryFile' with code example"
+    },
+    {
+      "text": "Suggests adding tests for rows missing required keys and rows with non-numeric values",
+      "passed": true,
+      "evidence": "Recommendation for Issue 5: 'Add tests that document expected behavior on bad input' with test_transform_raises_on_non_numeric_value and test_transform_handles_missing_category examples"
+    },
+    {
+      "text": "Identifies Isolated ↔ Fast as genuinely interfering: per-test temp files (fixing Isolated) add I/O overhead (hurts Fast), and this is a real tension — not a design opportunity",
+      "passed": false,
+      "evidence": "No Tradeoffs section present. The output does not analyze the Isolated ↔ Fast relationship or classify it as genuinely interfering."
+    },
+    {
+      "text": "Recommends prioritizing Isolated over Fast because shared filesystem state causes flaky tests, while the I/O overhead is small and acceptable",
+      "passed": false,
+      "evidence": "Priority Recommendations list Isolation as #1 and Speed as #5 but provide no explicit reasoning about I/O overhead trade-off between the two."
+    },
+    {
+      "text": "Identifies Predictive ↔ Fast as genuinely interfering: comprehensive input validation tests (fixing Predictive) add more test runs with sleep overhead (hurts Fast)",
+      "passed": false,
+      "evidence": "No Tradeoffs section. The relationship between Predictive and Fast is not analyzed."
+    },
+    {
+      "text": "References each violation by the Test Desiderata property name",
+      "passed": true,
+      "evidence": "Summary table uses: 'Isolation', 'Determinism', 'Behavioral', 'Specificity', 'Predictive', 'Speed'. Close to property names (Speed=Fast, Isolation=Isolated, etc.)."
+    },
+    {
+      "text": "Includes a Tradeoffs section that classifies at least one pair as genuinely interfering (not just 'only seems to interfere')",
+      "passed": false,
+      "evidence": "No Tradeoffs section present. Output ends with Priority Recommendations section."
+    },
+    {
+      "text": "Prioritizes violations (e.g., Isolated and Deterministic as safety issues to fix first)",
+      "passed": true,
+      "evidence": "Priority Recommendations: '1. Fix isolation first... 2. Fix behavioral assertions... 3. Fix determinism... 4. Add predictive tests... 5. Remove the sleep' — Isolation and Determinism are in top 3."
+    }
+  ],
+  "pass_rate": 0.67,
+  "passed": 10,
+  "failed": 5,
+  "total": 15
+}

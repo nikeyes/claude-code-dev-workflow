@@ -1,0 +1,75 @@
+{
+  "eval_id": 5,
+  "configuration": "without_skill",
+  "expectations": [
+    {
+      "text": "Identifies const cache outside describe as an Isolated violation (all tests share one cache instance)",
+      "passed": true,
+      "evidence": "Issue 1 'Broken Test Isolation — Shared Cache Instance': 'const cache = new LRUCache<string, number>(3, 1000)' declared at module scope. Summary table labels it 'Isolation'."
+    },
+    {
+      "text": "Identifies that vi.useFakeTimers() is called but vi.advanceTimersByTime() is never called — TTL never expires — as a Behavioral violation",
+      "passed": true,
+      "evidence": "Issue 2 'Non-Deterministic / Incorrect Behavioral Test — TTL Expiry': 'vi.useFakeTimers() but never advances the clock (no vi.advanceTimersByTime()... The TTL path in get() has zero meaningful coverage.' Summary table labels it 'Behavioral'."
+    },
+    {
+      "text": "Identifies that 'evicts LRU entry and expired TTL' covers two orthogonal concerns as a Composable violation",
+      "passed": true,
+      "evidence": "Issue 4 'Low Composability — Single Test Covers Two Orthogonal Concerns': 'two completely different cache behaviors: LRU eviction (a capacity concern) and TTL expiry (a time concern)'. Summary table labels it 'Composability'."
+    },
+    {
+      "text": "Identifies magic numbers 1000 and 3 in the shared cache constructor as a Readable violation",
+      "passed": true,
+      "evidence": "Issue 3 'Poor Readability — Magic Numbers': 'new LRUCache<string, number>(3, 1000) — what does 3 mean? what unit is 1000?'. Summary table labels it 'Readability'."
+    },
+    {
+      "text": "Explains that the TTL test passes for the wrong reason (value not expired, test assertion is weaker than intended)",
+      "passed": true,
+      "evidence": "Issue 2: 'The entry was just set, so Date.now() is still within TTL... The assertion expect(result).not.toBeUndefined() passes, but it documents the intent as expiry testing without actually testing expiry.'"
+    },
+    {
+      "text": "Suggests creating a fresh LRUCache instance inside each test (or using beforeEach)",
+      "passed": true,
+      "evidence": "Recommendation for Issue 1: 'Create a fresh instance inside each it block, or use beforeEach to reinitialise the shared instance' with beforeEach code example"
+    },
+    {
+      "text": "Suggests calling vi.advanceTimersByTime(ttlMs + 1) to actually expire the entry",
+      "passed": true,
+      "evidence": "Recommendation for Issue 2 includes code: 'vi.advanceTimersByTime(ttlMs + 1); expect(c.get(\"key\")).toBeUndefined()'"
+    },
+    {
+      "text": "Suggests splitting the test into 'evicts LRU when at capacity' and 'returns undefined for expired key'",
+      "passed": true,
+      "evidence": "Recommendation for Issue 4: 'Split into two tests with focused names: \"evicts the least recently used entry when capacity is full\" and \"expires entries after TTL elapses\"'"
+    },
+    {
+      "text": "Identifies Isolated ↔ Behavioral as a pair that supports each other: the shared cache instance contaminates state that masks the fake-timer bug; fixing Isolated (fresh instance per test) would make the Behavioral violation immediately visible because the TTL test would fail without prior state",
+      "passed": false,
+      "evidence": "No Tradeoffs section. The output does not analyze the Isolated ↔ Behavioral relationship or explain how the shared cache masks the fake-timer bug."
+    },
+    {
+      "text": "Recommends fixing Isolated first because it exposes the hidden Behavioral bug",
+      "passed": false,
+      "evidence": "Priority Order: '1. Fix the shared instance (Issue 1)... 2. Fix the TTL test (Issue 2)' — ordering matches, but no explanation that fixing Isolated exposes the Behavioral bug. The reason given is 'root cause of non-deterministic results', not that it reveals the Behavioral bug."
+    },
+    {
+      "text": "References each violation by the Test Desiderata property name",
+      "passed": true,
+      "evidence": "Summary table uses: 'Isolation', 'Behavioral', 'Readability', 'Composability'. Close to property names but uses noun forms rather than Kent Beck's adjective forms."
+    },
+    {
+      "text": "Highlights the Behavioral violation as high-priority (false confidence)",
+      "passed": true,
+      "evidence": "Priority Order item 2: 'Fix the TTL test (Issue 2) — the most dangerous issue because it produces false confidence; the expiry code path is untested.'"
+    },
+    {
+      "text": "Includes a Tradeoffs section analyzing at least one pair of interacting violated properties",
+      "passed": false,
+      "evidence": "No Tradeoffs section present. Output ends with Priority Order for Fixes with no tradeoff analysis."
+    }
+  ],
+  "pass_rate": 0.77,
+  "passed": 10,
+  "failed": 3,
+  "total": 13
+}

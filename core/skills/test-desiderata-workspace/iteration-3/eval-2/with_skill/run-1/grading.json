@@ -1,0 +1,75 @@
+{
+  "eval_id": 2,
+  "configuration": "with_skill",
+  "expectations": [
+    {
+      "text": "Identifies test1, test2, test3, test4 names as a Readable violation (names reveal no intent)",
+      "passed": true,
+      "evidence": "Issue 1 'Readable — test names describe nothing': 'test names test1, test2, test3, test4 behavioral violation' at Lines 46, 60, 75, 89. States 'A reader cannot understand what behavior is being verified without reading the entire test body.'"
+    },
+    {
+      "text": "Identifies 500ms setTimeout in test3 as a Fast violation",
+      "passed": true,
+      "evidence": "Issue 3 'Fast — real 500 ms setTimeout inside a test': 'Line 77 — await new Promise((resolve) => setTimeout(resolve, 500))' labeled as 'Fast' violation"
+    },
+    {
+      "text": "Identifies vi.spyOn mockResolvedValue(999) in test4 as a Behavioral violation (tests the mock, not the implementation)",
+      "passed": true,
+      "evidence": "Issue 4 'Behavioral — mock replaces the method under test': 'vi.spyOn(service, \"getTotal\").mockResolvedValue(999) then expect(total).toBe(999)'. 'The spy completely replaces getTotal with a function that always returns 999.'"
+    },
+    {
+      "text": "Identifies duplicated Order boilerplate across tests as a Writable violation",
+      "passed": true,
+      "evidence": "Issue 2 'Writable — order fixture boilerplate duplicated in every test': 'identical or near-identical Order object construction repeated four times' labeled as 'Writable' violation"
+    },
+    {
+      "text": "Identifies expect(true).toBe(true) in test3 as a vacuous/meaningless assertion",
+      "passed": true,
+      "evidence": "Issue 4 Note: 'Line 86 in test3 also contains a vacuous assertion (expect(true).toBe(true)). This is a secondary Behavioral violation: after cancelOrder no assertion verifies the cancellation occurred.'"
+    },
+    {
+      "text": "Suggests renaming tests to describe the behavior being verified (e.g., 'createOrder returns the order id')",
+      "passed": true,
+      "evidence": "Fix for Issue 1 provides renamed examples: 'createOrder returns the order id when items are present', 'getTotal sums qty * price across all items', etc."
+    },
+    {
+      "text": "Suggests removing or replacing setTimeout with synchronous or fake-timer equivalent",
+      "passed": true,
+      "evidence": "Fix for Issue 3: 'Remove the setTimeout entirely' and 'If the intent was to test a future time-based feature, use vi.useFakeTimers() so time can be advanced programmatically'"
+    },
+    {
+      "text": "Suggests extracting a shared order fixture or factory function to reduce boilerplate",
+      "passed": true,
+      "evidence": "Fix for Issue 2: 'Extract a shared factory function (or beforeEach helper)' with makeOrder function code example"
+    },
+    {
+      "text": "Identifies Writable ↔ Readable as a pair that only seems to interfere: extracting a factory with descriptive names simultaneously reduces boilerplate (Writable) and improves clarity (Readable)",
+      "passed": true,
+      "evidence": "Tradeoff 1 'Writable ↔ Readable (only seeming to interfere)': 'Extracting a well-named factory (makeOrder) resolves both simultaneously: Writable improves because new tests need only specify the fields they care about... Readable improves because each test body becomes compact'"
+    },
+    {
+      "text": "Recommends the factory extraction as a single change that resolves both violations",
+      "passed": true,
+      "evidence": "Tradeoff 1: 'This is a pure design win: there is no real tension between these two properties here.' and 'Priority: Fix Writable first (extract makeOrder) — the Readable improvement follows automatically.'"
+    },
+    {
+      "text": "References each violation by the Test Desiderata property name",
+      "passed": true,
+      "evidence": "Issues labeled 'Readable', 'Writable', 'Fast', 'Behavioral' by name throughout"
+    },
+    {
+      "text": "Provides at least one renamed test example",
+      "passed": true,
+      "evidence": "Fix for Issue 1 gives renamed examples: 'createOrder returns the order id when items are present', etc."
+    },
+    {
+      "text": "Includes a Tradeoffs section analyzing at least one pair of interacting violated properties",
+      "passed": true,
+      "evidence": "'## Tradeoffs' section with 4 tradeoff analyses, including Tradeoff 1: Writable ↔ Readable"
+    }
+  ],
+  "pass_rate": 1.0,
+  "passed": 13,
+  "failed": 0,
+  "total": 13
+}

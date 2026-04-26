@@ -1,0 +1,65 @@
+{
+  "eval_id": 4,
+  "configuration": "without_skill",
+  "expectations": [
+    {
+      "text": "Identifies service._last_sent_at <= datetime.now() as a Deterministic violation (race condition between assignment and assertion)",
+      "passed": true,
+      "evidence": "Issue 1 'Non-Deterministic Assertion (Determinism)': 'This assertion compares _last_sent_at... against a second call to datetime.now()... technically a race condition'. Summary table labels it 'Deterministic'."
+    },
+    {
+      "text": "Identifies absence of test for smtp.send raising an exception as a Predictive violation",
+      "passed": true,
+      "evidence": "Issue 4 'No Tests for Error / Failure Paths (Predictive)': 'send_welcome_email and send_password_reset both have try/except blocks... There are zero tests verifying this behavior.' Summary table labels it 'Predictive'."
+    },
+    {
+      "text": "Identifies absence of assertion on smtp.send 'to' argument as an Inspiring violation (test passes even if email sent to wrong address)",
+      "passed": true,
+      "evidence": "Issue 3 'Missing Verification of Core Behavior (Specificity / Inspiring)': 'never verifies that smtp.send was actually called with the correct recipient address... a broken implementation — for instance, one that sends the email to the wrong address — would still pass.' Labels it 'Inspiring / Specific'."
+    },
+    {
+      "text": "Identifies service._sent_count as a Structure-insensitive violation (private internal counter)",
+      "passed": true,
+      "evidence": "Issue 2 'Testing Private Internal State (Structure Sensitivity)': 'assert service._sent_count == 1' asserts on private attribute. Summary table labels it 'Structure-Insensitive'."
+    },
+    {
+      "text": "Notes the combined Predictive + Inspiring gap: no confidence that notifications reach the right person or survive SMTP failures",
+      "passed": false,
+      "evidence": "Issues are analyzed separately. No combined framing of Predictive + Inspiring as a confidence gap. Issues 3 and 4 are listed independently with no cross-analysis."
+    },
+    {
+      "text": "Suggests using freezegun or time.freeze or injecting a clock to make datetime deterministic",
+      "passed": true,
+      "evidence": "Recommendation for Issue 1: 'Freeze time using unittest.mock.patch on datetime.now or use a library like freezegun' with code example using patch('datetime.datetime.now', return_value=fixed_time)"
+    },
+    {
+      "text": "Suggests adding a test where smtp.send raises an exception and verifying send_welcome_email returns False",
+      "passed": true,
+      "evidence": "Recommendation for Issue 4: 'Add tests for SMTP failure for both methods' with test_send_welcome_email_returns_false_when_smtp_raises code example"
+    },
+    {
+      "text": "Suggests asserting smtp.send was called with the correct 'to' address",
+      "passed": true,
+      "evidence": "Recommendation for Issue 3: 'Assert the full call to smtp.send: smtp.send.assert_called_once_with(to=\"user@example.com\", subject=\"Welcome!\", body=...)'"
+    },
+    {
+      "text": "Suggests using get_stats() to observe sent count instead of _sent_count directly",
+      "passed": true,
+      "evidence": "Recommendation for Issue 2: 'Test the observable behavior instead. The service already exposes a get_stats() public method: stats = service.get_stats(); assert stats[\"sent\"] == 1'"
+    },
+    {
+      "text": "References each violation by the Test Desiderata property name",
+      "passed": true,
+      "evidence": "Summary table uses property names: 'Deterministic', 'Structure-Insensitive', 'Inspiring / Specific', 'Predictive'"
+    },
+    {
+      "text": "Explains the Predictive + Inspiring tradeoff or synergy",
+      "passed": false,
+      "evidence": "No synergy or combined analysis of Predictive and Inspiring. Both are identified as separate issues with no explanation of how they interact to create a confidence gap."
+    }
+  ],
+  "pass_rate": 0.82,
+  "passed": 9,
+  "failed": 2,
+  "total": 11
+}

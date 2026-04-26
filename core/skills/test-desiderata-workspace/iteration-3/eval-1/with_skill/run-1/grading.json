@@ -1,0 +1,75 @@
+{
+  "eval_id": 1,
+  "configuration": "with_skill",
+  "expectations": [
+    {
+      "text": "Identifies shared_balance global variable as an Isolated violation (test order dependency)",
+      "passed": true,
+      "evidence": "Issue 1 explicitly states: 'test_all_operations and test_deposit_updates_ledger violate the Isolated property' and 'module-level shared_balance = 0 is mutated by test_all_operations and then read by test_deposit_updates_ledger'"
+    },
+    {
+      "text": "Identifies random.randint in BankAccount.deposit as a Deterministic violation",
+      "passed": true,
+      "evidence": "Issue 2 states: 'BankAccount.deposit violates the Deterministic property' and 'Line 24 — tx_id = random.randint(1000, 9999) inside deposit()'"
+    },
+    {
+      "text": "Identifies test_all_operations as a Specific violation (multiple assertions covering deposit, withdraw, and balance in one test)",
+      "passed": true,
+      "evidence": "Issue 3 states: 'test_all_operations violates the Specific property' and 'a single test method performs a deposit, a withdrawal, checks the resulting balance, checks the ledger length, and checks the ledger entry type'"
+    },
+    {
+      "text": "Identifies assertion on account._ledger as a Structure-insensitive violation (private attribute)",
+      "passed": true,
+      "evidence": "Issue 4 states: 'test_all_operations and test_deposit_updates_ledger violate the Structure-insensitive property' citing 'account._ledger' assertions as the violation"
+    },
+    {
+      "text": "Notes that test_deposit_updates_ledger depends on shared_balance from previous test",
+      "passed": true,
+      "evidence": "Issue 1 explicitly explains: 'If test_deposit_updates_ledger runs before test_all_operations, Bob's account starts at 0... If it runs after, Bob's account starts at 70 (the side-effect left by the first test)'"
+    },
+    {
+      "text": "Suggests replacing shared_balance with a fresh instance per test (e.g., pytest fixture)",
+      "passed": true,
+      "evidence": "Fix for Issue 1: 'Remove shared_balance entirely. Each test should construct its BankAccount with an explicit, hard-coded initial balance' with before/after code example"
+    },
+    {
+      "text": "Suggests seeding or injecting the random ID to make deposit deterministic",
+      "passed": true,
+      "evidence": "Fix for Issue 2: 'Option A — injectable ID generator (preferred for testing)' and 'Option B — sequential counter' both provided"
+    },
+    {
+      "text": "Suggests splitting test_all_operations into focused single-concern tests",
+      "passed": true,
+      "evidence": "Fix for Issue 3: 'Split into one focused test per behavior' with code examples for test_deposit_increases_balance, test_withdraw_decreases_balance, test_deposit_then_withdraw_final_balance"
+    },
+    {
+      "text": "Identifies Isolated ↔ Specific as a pair that only seems to interfere: shared state (shared_balance) forces test_all_operations to be monolithic; with fresh instances per test, splitting into focused tests becomes safe",
+      "passed": true,
+      "evidence": "Tradeoff 1: 'Isolated vs. Specific (only seeming to interfere)' — 'The shared_balance global creates an Isolated violation... At the same time, test_all_operations packs multiple behaviors into one test (a Specific violation)... Removing shared_balance (fixing Isolated) immediately makes it safe to split test_all_operations into focused, single-concern tests (fixing Specific).'"
+    },
+    {
+      "text": "Recommends fixing Isolated first because it unblocks the Specific fix",
+      "passed": true,
+      "evidence": "Tradeoff 1: 'Priority: Fix Isolated first — flaky, order-dependent tests erode trust faster than verbose tests. Splitting naturally follows.'"
+    },
+    {
+      "text": "References each violation by the Test Desiderata property name (e.g., 'Isolated', 'Deterministic')",
+      "passed": true,
+      "evidence": "All four issues are labeled with property names: 'Isolated property', 'Deterministic property', 'Specific property', 'Structure-insensitive property'"
+    },
+    {
+      "text": "Provides at least one code-level fix example or concrete suggestion",
+      "passed": true,
+      "evidence": "Every violation has a code block showing before/after or concrete fix with Python examples"
+    },
+    {
+      "text": "Includes a Tradeoffs section analyzing at least one pair of interacting violated properties",
+      "passed": true,
+      "evidence": "Output has a '## Tradeoffs' section with 4 tradeoff analyses including Tradeoff 1: Isolated vs. Specific"
+    }
+  ],
+  "pass_rate": 1.0,
+  "passed": 13,
+  "failed": 0,
+  "total": 13
+}

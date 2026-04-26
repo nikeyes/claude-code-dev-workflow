@@ -1,0 +1,75 @@
+{
+  "eval_id": 3,
+  "configuration": "without_skill",
+  "expectations": [
+    {
+      "text": "Identifies globalInventory package-level variable as an Isolated violation (state shared across tests)",
+      "passed": true,
+      "evidence": "Issue 1 'Isolation — Shared Global State': 'var globalInventory = NewInventory()' shared across tests. Summary table labels it 'Isolation'. The concept 'Isolated' is captured (Isolation is the property name equivalent used)."
+    },
+    {
+      "text": "Identifies TestFullInventoryFlow as a Composable violation (covers four independent operations in one test)",
+      "passed": true,
+      "evidence": "Issue 2 'Composability — One Test Covers Multiple Behaviors': 'This single test exercises four distinct behaviors in sequence' with summary table label 'Composability'"
+    },
+    {
+      "text": "Identifies fmt.Printf/fmt.Println as an Automated violation (requires human to inspect stdout)",
+      "passed": true,
+      "evidence": "Issue 3 'Automated Verification — Manual Inspection via fmt.Println': 'requires a human to read the test output and manually verify the printed value'. Summary table labels it 'Automated'."
+    },
+    {
+      "text": "Identifies generic 'operation failed' error string as a Specific violation (caller cannot distinguish error types)",
+      "passed": true,
+      "evidence": "Issue 4 'Specificity — Generic Error Messages': 'Both AddStock and Reserve return the identical, undescriptive error string \"operation failed\"'. Summary table labels it 'Specific'."
+    },
+    {
+      "text": "Notes TestReserveExceedsStock implicitly depends on state left by TestFullInventoryFlow",
+      "passed": true,
+      "evidence": "Issue 1 explicitly: 'TestReserveExceedsStock implicitly depends on the state left by TestFullInventoryFlow. After the first test, globalInventory has SKU-1 with stock=10...'"
+    },
+    {
+      "text": "Suggests creating a fresh NewInventory() inside each test function",
+      "passed": true,
+      "evidence": "Recommendation for Issue 1: 'Each test should create its own Inventory instance via NewInventory(). Remove globalInventory entirely.' with code example showing inv := NewInventory()"
+    },
+    {
+      "text": "Suggests splitting TestFullInventoryFlow into TestAddStock, TestReserve, TestRelease, TestAvailable",
+      "passed": true,
+      "evidence": "Recommendation for Issue 2: 'Split into focused tests such as: TestAddStock_IncreasesAvailable, TestReserve_DecreasesAvailable, TestRelease_RestoresAvailable, TestAvailable_ReflectsNetStock'"
+    },
+    {
+      "text": "Suggests using t.Logf instead of fmt.Printf (only visible on failure)",
+      "passed": false,
+      "evidence": "Recommendation for Issue 3: 'Remove the fmt.Printf line and the fmt import entirely.' Does not suggest t.Logf as an alternative. Only says to remove entirely."
+    },
+    {
+      "text": "Identifies Isolated ↔ Composable as a pair that only seems to interfere: the shared globalInventory forces TestFullInventoryFlow to be monolithic because splitting it would expose inter-test state corruption; with fresh instances, decomposition becomes safe",
+      "passed": false,
+      "evidence": "No Tradeoffs section present. The output does not analyze the Isolated ↔ Composable interaction or classify the relationship."
+    },
+    {
+      "text": "Recommends fixing Isolated first (fresh instances) because it unblocks the Composable fix (splitting the monolith)",
+      "passed": false,
+      "evidence": "No Tradeoffs section. Priority is not explicitly articulated as Isolated-first-to-unblock-Composable."
+    },
+    {
+      "text": "References each violation by the Test Desiderata property name",
+      "passed": true,
+      "evidence": "Summary table uses: 'Isolation', 'Composability', 'Automated', 'Specific'. Property names referenced though 'Isolation'/'Composability' differ slightly from canonical 'Isolated'/'Composable'."
+    },
+    {
+      "text": "Identifies at least one inter-test dependency caused by shared state",
+      "passed": true,
+      "evidence": "Issue 1: 'TestReserveExceedsStock implicitly depends on the state left by TestFullInventoryFlow' explicitly stated"
+    },
+    {
+      "text": "Includes a Tradeoffs section analyzing at least one pair of interacting violated properties",
+      "passed": false,
+      "evidence": "No Tradeoffs section present. Output ends with a 'Recommended Refactored Structure' code block with no tradeoff analysis."
+    }
+  ],
+  "pass_rate": 0.69,
+  "passed": 9,
+  "failed": 4,
+  "total": 13
+}

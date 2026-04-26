@@ -1,0 +1,75 @@
+{
+  "eval_id": 1,
+  "configuration": "without_skill",
+  "expectations": [
+    {
+      "text": "Identifies shared_balance global variable as an Isolated violation (test order dependency)",
+      "passed": true,
+      "evidence": "Issue 1 covers 'Shared Global State Breaks Test Isolation' and the summary table labels it 'Isolated'. Explains the order dependency explicitly."
+    },
+    {
+      "text": "Identifies random.randint in BankAccount.deposit as a Deterministic violation",
+      "passed": true,
+      "evidence": "Issue 2 'Non-Deterministic Transaction IDs' covers random.randint. Summary table labels it 'Deterministic'."
+    },
+    {
+      "text": "Identifies test_all_operations as a Specific violation (multiple assertions covering deposit, withdraw, and balance in one test)",
+      "passed": true,
+      "evidence": "Issue 3 'One Test Verifies Multiple Unrelated Behaviours' covers test_all_operations. Summary table labels it 'Specific (one reason to fail)'."
+    },
+    {
+      "text": "Identifies assertion on account._ledger as a Structure-insensitive violation (private attribute)",
+      "passed": true,
+      "evidence": "Issue 4 'Assertions on Internal Implementation Details' covers _ledger assertions. Summary table labels it 'Structure-insensitive (behavioural)'."
+    },
+    {
+      "text": "Notes that test_deposit_updates_ledger depends on shared_balance from previous test",
+      "passed": true,
+      "evidence": "Issue 1 explicitly states: 'test_deposit_updates_ledger reads from it as the initial balance for the next account. This creates an implicit execution-order dependency'"
+    },
+    {
+      "text": "Suggests replacing shared_balance with a fresh instance per test (e.g., pytest fixture)",
+      "passed": true,
+      "evidence": "Recommendation for Issue 1: 'Remove shared_balance entirely. Each test should construct its own BankAccount with a hardcoded initial balance' with code example"
+    },
+    {
+      "text": "Suggests seeding or injecting the random ID to make deposit deterministic",
+      "passed": true,
+      "evidence": "Recommendation for Issue 2: 'Replace the random ID with a deterministic strategy, such as a sequential counter or a UUID' with code example using self._next_tx_id"
+    },
+    {
+      "text": "Suggests splitting test_all_operations into focused single-concern tests",
+      "passed": true,
+      "evidence": "Recommendation for Issue 3: 'Split into three focused tests, each with a descriptive name' with code examples"
+    },
+    {
+      "text": "Identifies Isolated ↔ Specific as a pair that only seems to interfere: shared state (shared_balance) forces test_all_operations to be monolithic; with fresh instances per test, splitting into focused tests becomes safe",
+      "passed": false,
+      "evidence": "No Tradeoffs section present. The output has a summary table and priority order but does not analyze the Isolated ↔ Specific interaction or classify it as 'only seeming to interfere'."
+    },
+    {
+      "text": "Recommends fixing Isolated first because it unblocks the Specific fix",
+      "passed": false,
+      "evidence": "Priority order exists but lists 'Split test_all_operations' as #1 and 'Remove shared_balance' as #2 — the reverse of the recommended order. No analysis of why one unblocks the other."
+    },
+    {
+      "text": "References each violation by the Test Desiderata property name (e.g., 'Isolated', 'Deterministic')",
+      "passed": true,
+      "evidence": "Summary table uses property names: 'Isolated', 'Deterministic', 'Specific (one reason to fail)', 'Structure-insensitive (behavioural)'"
+    },
+    {
+      "text": "Provides at least one code-level fix example or concrete suggestion",
+      "passed": true,
+      "evidence": "Every issue has a code block with concrete before/after or recommended fix"
+    },
+    {
+      "text": "Includes a Tradeoffs section analyzing at least one pair of interacting violated properties",
+      "passed": false,
+      "evidence": "No Tradeoffs section present. The output ends with a 'Priority Order for Fixes' section but does not include a Tradeoffs or tradeoff analysis section."
+    }
+  ],
+  "pass_rate": 0.77,
+  "passed": 10,
+  "failed": 3,
+  "total": 13
+}

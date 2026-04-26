@@ -1,0 +1,65 @@
+{
+  "eval_id": 4,
+  "configuration": "with_skill",
+  "expectations": [
+    {
+      "text": "Identifies service._last_sent_at <= datetime.now() as a Deterministic violation (race condition between assignment and assertion)",
+      "passed": true,
+      "evidence": "Property 3 'Deterministic — VIOLATION': 'test_send_welcome_email asserts service._last_sent_at <= datetime.now() using a live call to datetime.now() at assertion time... creates a race condition'"
+    },
+    {
+      "text": "Identifies absence of test for smtp.send raising an exception as a Predictive violation",
+      "passed": true,
+      "evidence": "Property 11 'Predictive — VIOLATION': 'There are no tests for the error path. Both send_welcome_email and send_password_reset catch all exceptions and return False, but this behavior is never tested.'"
+    },
+    {
+      "text": "Identifies absence of assertion on smtp.send 'to' argument as an Inspiring violation (test passes even if email sent to wrong address)",
+      "passed": true,
+      "evidence": "Property 12 'Inspiring — VIOLATION': 'test_send_welcome_email passes despite never verifying that the email was sent to the correct address... The most important contract of send_welcome_email — dispatch to the supplied address — is invisible in the tests.'"
+    },
+    {
+      "text": "Identifies service._sent_count as a Structure-insensitive violation (private internal counter)",
+      "passed": true,
+      "evidence": "Property 8 'Structure-insensitive — VIOLATION': 'test_send_welcome_email asserts directly on service._sent_count, a private internal attribute' labeled as Structure-insensitive violation"
+    },
+    {
+      "text": "Notes the combined Predictive + Inspiring gap: no confidence that notifications reach the right person or survive SMTP failures",
+      "passed": true,
+      "evidence": "Tradeoff Pair 5 'Behavioral ↔ Predictive (supporting each other)': 'Together they leave the two most important contracts of send_welcome_email completely untested: \"emails go to the right place\" and \"failures are handled gracefully\"'"
+    },
+    {
+      "text": "Suggests using freezegun or time.freeze or injecting a clock to make datetime deterministic",
+      "passed": true,
+      "evidence": "Fix for Deterministic: 'Freeze time using freezegun or unittest.mock.patch on datetime.now' with code example"
+    },
+    {
+      "text": "Suggests adding a test where smtp.send raises an exception and verifying send_welcome_email returns False",
+      "passed": true,
+      "evidence": "Fix for Predictive: 'Add tests that inject an smtp failure and assert the return value is False' with test_send_welcome_email_returns_false_when_smtp_fails code example"
+    },
+    {
+      "text": "Suggests asserting smtp.send was called with the correct 'to' address",
+      "passed": true,
+      "evidence": "Fix for Inspiring: 'Add assertions on the smtp mock call arguments: smtp.send.assert_called_once_with(to=\"user@example.com\", subject=\"Welcome!\", body=...)'"
+    },
+    {
+      "text": "Suggests using get_stats() to observe sent count instead of _sent_count directly",
+      "passed": true,
+      "evidence": "Fix for Structure-insensitive: 'Test through the public get_stats() method: stats = service.get_stats(); assert stats[\"sent\"] == 1'"
+    },
+    {
+      "text": "References each violation by the Test Desiderata property name",
+      "passed": true,
+      "evidence": "All violations labeled by property name: 'Deterministic', 'Predictive', 'Inspiring', 'Structure-insensitive' in section headings and violations summary table"
+    },
+    {
+      "text": "Explains the Predictive + Inspiring tradeoff or synergy",
+      "passed": true,
+      "evidence": "Tradeoff Pair 5 'Behavioral ↔ Predictive (supporting each other)': 'The Behavioral violation misses what happens when the system works correctly (correct recipient). The Predictive violation misses what happens when the system fails (SMTP exception). Together they leave the two most important contracts completely untested...'"
+    }
+  ],
+  "pass_rate": 1.0,
+  "passed": 11,
+  "failed": 0,
+  "total": 11
+}

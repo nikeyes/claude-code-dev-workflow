@@ -1,0 +1,50 @@
+{
+  "eval_id": 6,
+  "configuration": "without_skill",
+  "expectations": [
+    {
+      "text": "Identifies that tests use a fresh service fixture per test — correctly notes this satisfies Isolated",
+      "passed": true,
+      "evidence": "Strengths section 'Isolation': 'Each test receives a fresh AuthService instance via the service fixture. Tests do not share state.' Correctly identified as a strength."
+    },
+    {
+      "text": "Identifies that test names describe behavior, not implementation — correctly notes this satisfies Readable",
+      "passed": true,
+      "evidence": "Strengths section 'Readability': 'Test names are long and descriptive, following the test_<subject>_<scenario>_<expected_outcome> pattern.' Correctly identified as a strength."
+    },
+    {
+      "text": "Identifies that assertions go through the public API — correctly notes this satisfies Structure-insensitive",
+      "passed": true,
+      "evidence": "Strengths section 'Behavioral Testing': 'Tests verify observable behavior rather than internal state... test_register_new_user_succeeds does not inspect _users directly — it validates registration by successfully logging in.' Correctly identified as a strength."
+    },
+    {
+      "text": "At most flags one borderline Predictive concern: no dedicated test for the exact boundary of MAX_FAILED_ATTEMPTS (4 fails vs 5 fails)",
+      "passed": false,
+      "evidence": "The output flags 5 issues: (1) brute-force lockout not directly tested (Predictive), (2) silent exception swallowing, (3) missing test for correct-password rejection when locked (Predictive), (4) missing deactivated user token behavior test, (5) weak token assertion. This exceeds the 'at most one borderline concern' threshold."
+    },
+    {
+      "text": "Does NOT flag false positives — does not claim violations for behaviors that are correct",
+      "passed": true,
+      "evidence": "The flagged issues are genuine gaps or minor style concerns, not false positives claiming correct behavior is wrong. Issue 4 about deactivated user token behavior is a real unspecified scenario, not a false positive."
+    },
+    {
+      "text": "If Predictive is flagged, suggests adding a parameterized test for exactly MAX_FAILED_ATTEMPTS - 1 vs MAX_FAILED_ATTEMPTS failed attempts",
+      "passed": true,
+      "evidence": "Issue 1 recommendation: 'Add a focused test that drives exactly MAX_FAILED_ATTEMPTS wrong attempts and asserts the lockout message' with test_account_locks_after_max_failed_attempts code example"
+    },
+    {
+      "text": "Provides an overall quality summary acknowledging tests are in good shape",
+      "passed": true,
+      "evidence": "Overall Assessment: 'These tests are well-written and demonstrate strong adherence to good testing practices.' Conclusion: 'This is a high-quality test suite. The issues identified are all minor.'"
+    },
+    {
+      "text": "Does not manufacture violations to fill the report",
+      "passed": false,
+      "evidence": "The output flags 5 issues including Issue 4 (deactivated user token behavior) which is an unspecified but not incorrect behavior, and Issue 5 (token assertion is weak) which is a very minor style preference rather than a genuine violation. The quantity of concerns exceeds what a well-calibrated analysis of a well-written suite should produce."
+    }
+  ],
+  "pass_rate": 0.75,
+  "passed": 6,
+  "failed": 2,
+  "total": 8
+}

@@ -1,0 +1,75 @@
+{
+  "eval_id": 3,
+  "configuration": "with_skill",
+  "expectations": [
+    {
+      "text": "Identifies globalInventory package-level variable as an Isolated violation (state shared across tests)",
+      "passed": true,
+      "evidence": "Issue 1 'Isolated': 'Tests share a package-level mutable variable globalInventory' at 'Line 55 — var globalInventory = NewInventory() — shared by TestFullInventoryFlow and TestReserveExceedsStock'"
+    },
+    {
+      "text": "Identifies TestFullInventoryFlow as a Composable violation (covers four independent operations in one test)",
+      "passed": true,
+      "evidence": "Issue 2 'Composable': 'TestFullInventoryFlow tests four distinct behaviors — AddStock, Reserve, Release, and Available — in a single sequential scenario' labeled as 'Composable' violation"
+    },
+    {
+      "text": "Identifies fmt.Printf/fmt.Println as an Automated violation (requires human to inspect stdout)",
+      "passed": true,
+      "evidence": "Issue 3 'Automated': 'fmt.Printf on line 70 emits \"Available after release: %d\\n\" to stdout, requiring a human to read the output to confirm correctness' labeled as 'Automated' violation"
+    },
+    {
+      "text": "Identifies generic 'operation failed' error string as a Specific violation (caller cannot distinguish error types)",
+      "passed": true,
+      "evidence": "Issue 4 'Specific': 'Both AddStock and Reserve return the same generic error message \"operation failed\"' labeled as 'Specific' violation"
+    },
+    {
+      "text": "Notes TestReserveExceedsStock implicitly depends on state left by TestFullInventoryFlow",
+      "passed": true,
+      "evidence": "Issue 1: 'TestReserveExceedsStock passes only because TestFullInventoryFlow has already added 10 units of SKU-1 to globalInventory. If the tests run in a different order... globalInventory starts empty'"
+    },
+    {
+      "text": "Suggests creating a fresh NewInventory() inside each test function",
+      "passed": true,
+      "evidence": "Fix for Issue 1: 'Give each test its own *Inventory instance created with NewInventory()' with code example 'inv := NewInventory()'"
+    },
+    {
+      "text": "Suggests splitting TestFullInventoryFlow into TestAddStock, TestReserve, TestRelease, TestAvailable",
+      "passed": true,
+      "evidence": "Fix for Issue 2: 'Split into focused tests, one per behavior' with examples 'TestAddStock_IncreasesAvailableQty', 'TestReserve_DecreasesAvailableQty', 'TestRelease_RestoresAvailableQty'"
+    },
+    {
+      "text": "Suggests using t.Logf instead of fmt.Printf (only visible on failure)",
+      "passed": true,
+      "evidence": "Fix for Issue 3: 'use t.Logf (which only prints on failure)' with code example showing t.Logf replacement"
+    },
+    {
+      "text": "Identifies Isolated ↔ Composable as a pair that only seems to interfere: the shared globalInventory forces TestFullInventoryFlow to be monolithic because splitting it would expose inter-test state corruption; with fresh instances, decomposition becomes safe",
+      "passed": true,
+      "evidence": "Tradeoff 1 'Isolated ↔ Composable (only seeming to interfere)': 'The Isolated violation and the Composable violation are tightly linked... The monolithic structure exists partly because state accumulates across operations... This looks like a tension... But this is only a seeming interference.'"
+    },
+    {
+      "text": "Recommends fixing Isolated first (fresh instances) because it unblocks the Composable fix (splitting the monolith)",
+      "passed": true,
+      "evidence": "Tradeoff 1: 'Priority: Fix Isolated first. Shared mutable state causes intermittent failures that erode trust in the entire suite. Once globalInventory is gone, splitting TestFullInventoryFlow follows naturally'"
+    },
+    {
+      "text": "References each violation by the Test Desiderata property name",
+      "passed": true,
+      "evidence": "Issues labeled as 'Isolated', 'Composable', 'Automated', 'Specific' by property name in headings"
+    },
+    {
+      "text": "Identifies at least one inter-test dependency caused by shared state",
+      "passed": true,
+      "evidence": "Issue 1 explicitly: 'TestReserveExceedsStock passes only because TestFullInventoryFlow has already added 10 units of SKU-1 to globalInventory'"
+    },
+    {
+      "text": "Includes a Tradeoffs section analyzing at least one pair of interacting violated properties",
+      "passed": true,
+      "evidence": "'## Tradeoffs' section with 4 tradeoff analyses starting with 'Tradeoff 1: Isolated ↔ Composable (only seeming to interfere)'"
+    }
+  ],
+  "pass_rate": 1.0,
+  "passed": 13,
+  "failed": 0,
+  "total": 13
+}

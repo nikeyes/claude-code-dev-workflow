@@ -1,0 +1,75 @@
+{
+  "eval_id": 5,
+  "configuration": "with_skill",
+  "expectations": [
+    {
+      "text": "Identifies const cache outside describe as an Isolated violation (all tests share one cache instance)",
+      "passed": true,
+      "evidence": "Issue 1 'Isolated — Shared cache instance across all tests': 'const cache = new LRUCache<string, number>(3, 1000)' at Line 50. 'Every test in the describe block mutates the same cache object.'"
+    },
+    {
+      "text": "Identifies that vi.useFakeTimers() is called but vi.advanceTimersByTime() is never called — TTL never expires — as a Behavioral violation",
+      "passed": true,
+      "evidence": "Issue 2 'Behavioral — TTL expiry test passes for the wrong reason': 'time is never advanced, so entry hasn't expired' and 'vi.advanceTimersByTime() (or equivalent) is never called, so Date.now() stays at the moment set() was called, the entry never expires'"
+    },
+    {
+      "text": "Identifies that 'evicts LRU entry and expired TTL' covers two orthogonal concerns as a Composable violation",
+      "passed": true,
+      "evidence": "Issue 4 'Composable — Single test covers two orthogonal concerns': 'Lines 63–80, test name \"evicts LRU entry and expired TTL\"' — 'LRU eviction and TTL expiry are independent cache behaviors.' Labeled 'Composable' violation."
+    },
+    {
+      "text": "Identifies magic numbers 1000 and 3 in the shared cache constructor as a Readable violation",
+      "passed": true,
+      "evidence": "Issue 3 'Readable — Magic numbers without context': 'const cache = new LRUCache<string, number>(3, 1000)' at Line 50. 'Readers cannot tell what 3, 1000, 5000, or 42 represent without inspecting the implementation.' Labeled 'Readable' violation."
+    },
+    {
+      "text": "Explains that the TTL test passes for the wrong reason (value not expired, test assertion is weaker than intended)",
+      "passed": true,
+      "evidence": "Issue 2: 'The assertion not.toBeUndefined() then passes — but it asserts the opposite of what was intended for an expiry scenario... The behavior under test (TTL expiry returns undefined) is not actually exercised.'"
+    },
+    {
+      "text": "Suggests creating a fresh LRUCache instance inside each test (or using beforeEach)",
+      "passed": true,
+      "evidence": "Fix for Issue 1: 'Create a fresh cache instance in beforeEach (or at the top of each test)' with beforeEach code example"
+    },
+    {
+      "text": "Suggests calling vi.advanceTimersByTime(ttlMs + 1) to actually expire the entry",
+      "passed": true,
+      "evidence": "Fix for Issue 2: 'vi.advanceTimersByTime(ttlMs + 1)' in code example: 'ttlCache.set(\"temp\", 99); vi.advanceTimersByTime(ttlMs + 1); expect(ttlCache.get(\"temp\")).toBeUndefined()'"
+    },
+    {
+      "text": "Suggests splitting the test into 'evicts LRU when at capacity' and 'returns undefined for expired key'",
+      "passed": true,
+      "evidence": "Fix for Issue 4: Two separate tests shown: 'evicts the least-recently-used entry when capacity is exceeded' and 'returns undefined for a key whose TTL has expired'"
+    },
+    {
+      "text": "Identifies Isolated ↔ Behavioral as a pair that supports each other: the shared cache instance contaminates state that masks the fake-timer bug; fixing Isolated (fresh instance per test) would make the Behavioral violation immediately visible because the TTL test would fail without prior state",
+      "passed": false,
+      "evidence": "The output has Tradeoff 1 (Isolated ↔ Composable) and Tradeoff 2 (Behavioral ↔ Composable) but does NOT explicitly identify Isolated ↔ Behavioral as a supporting pair. No direct analysis of how the shared cache masks the fake-timer bug specifically."
+    },
+    {
+      "text": "Recommends fixing Isolated first because it exposes the hidden Behavioral bug",
+      "passed": true,
+      "evidence": "Priority Order: '1. Isolated (line 50) — root cause enabling several other violations; fix first. 2. Behavioral (lines 73–80) — a passing test that validates the wrong behavior is worse than a failing test; fix immediately after Isolated.'"
+    },
+    {
+      "text": "References each violation by the Test Desiderata property name",
+      "passed": true,
+      "evidence": "Issues labeled as 'Isolated', 'Behavioral', 'Readable', 'Composable' by property name in headings"
+    },
+    {
+      "text": "Highlights the Behavioral violation as high-priority (false confidence)",
+      "passed": true,
+      "evidence": "Priority Order lists Behavioral as #2 with: 'a passing test that validates the wrong behavior is worse than a failing test; fix immediately after Isolated.'"
+    },
+    {
+      "text": "Includes a Tradeoffs section analyzing at least one pair of interacting violated properties",
+      "passed": true,
+      "evidence": "'## Tradeoffs' section with 4 tradeoff analyses including 'Tradeoff 1: Isolated ↔ Composable' and 'Tradeoff 2: Behavioral ↔ Composable'"
+    }
+  ],
+  "pass_rate": 0.92,
+  "passed": 12,
+  "failed": 1,
+  "total": 13
+}

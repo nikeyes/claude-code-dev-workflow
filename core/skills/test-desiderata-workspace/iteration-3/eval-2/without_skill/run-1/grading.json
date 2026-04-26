@@ -1,0 +1,75 @@
+{
+  "eval_id": 2,
+  "configuration": "without_skill",
+  "expectations": [
+    {
+      "text": "Identifies test1, test2, test3, test4 names as a Readable violation (names reveal no intent)",
+      "passed": true,
+      "evidence": "Issue 1 'Unreadable Test Names (Readable violation)': 'Three of the four tests have names that communicate nothing about the behavior under test.' Priority table labels it 'Readable violation'."
+    },
+    {
+      "text": "Identifies 500ms setTimeout in test3 as a Fast violation",
+      "passed": true,
+      "evidence": "Issue 2 'Real Timer in a Test (Fast violation)': '500ms setTimeout is used inside the test body' labeled as 'Fast violation' in heading and priority table."
+    },
+    {
+      "text": "Identifies vi.spyOn mockResolvedValue(999) in test4 as a Behavioral violation (tests the mock, not the implementation)",
+      "passed": true,
+      "evidence": "Issue 4 'Mocking the Method Under Test (Behavioral violation)': 'vi.spyOn(service, \"getTotal\").mockResolvedValue(999) replaces the getTotal method with a stub... The real getTotal logic is never executed.' Labeled 'Behavioral violation'."
+    },
+    {
+      "text": "Identifies duplicated Order boilerplate across tests as a Writable violation",
+      "passed": true,
+      "evidence": "Issue 5 'Duplicated Setup Boilerplate (Writable violation)': 'Each test manually constructs an Order with id, customerId, and items... copy-paste boilerplate' labeled 'Writable violation'."
+    },
+    {
+      "text": "Identifies expect(true).toBe(true) in test3 as a vacuous/meaningless assertion",
+      "passed": true,
+      "evidence": "Issue 3 'Vacuous Assertion (Behavioral / Specificity violation)': 'The only assertion in test3 is a tautology. It always passes regardless of what cancelOrder does'"
+    },
+    {
+      "text": "Suggests renaming tests to describe the behavior being verified (e.g., 'createOrder returns the order id')",
+      "passed": true,
+      "evidence": "Recommendation for Issue 1 provides new names: 'createOrder returns the order id when given valid items', 'getTotal returns the sum of qty times price for all items', etc."
+    },
+    {
+      "text": "Suggests removing or replacing setTimeout with synchronous or fake-timer equivalent",
+      "passed": true,
+      "evidence": "Recommendation for Issue 2: 'Remove the setTimeout entirely. If the intent was to simulate some async behavior, OrderService's methods are already async and await-ing them is sufficient.'"
+    },
+    {
+      "text": "Suggests extracting a shared order fixture or factory function to reduce boilerplate",
+      "passed": true,
+      "evidence": "Recommendation for Issue 5: 'Extract a builder function' with buildOrder code example"
+    },
+    {
+      "text": "Identifies Writable ↔ Readable as a pair that only seems to interfere: extracting a factory with descriptive names simultaneously reduces boilerplate (Writable) and improves clarity (Readable)",
+      "passed": false,
+      "evidence": "No Tradeoffs section present. The output has no analysis of the Writable ↔ Readable interaction or classification of their relationship."
+    },
+    {
+      "text": "Recommends the factory extraction as a single change that resolves both violations",
+      "passed": false,
+      "evidence": "No Tradeoffs section. Factory extraction is recommended but not framed as resolving both Writable and Readable simultaneously."
+    },
+    {
+      "text": "References each violation by the Test Desiderata property name",
+      "passed": true,
+      "evidence": "Issues labeled by property name in headings: 'Readable violation', 'Fast violation', 'Behavioral / Specificity violation', 'Behavioral violation', 'Writable violation'"
+    },
+    {
+      "text": "Provides at least one renamed test example",
+      "passed": true,
+      "evidence": "Recommendation for Issue 1 provides renamed examples: 'createOrder returns the order id when given valid items', etc."
+    },
+    {
+      "text": "Includes a Tradeoffs section analyzing at least one pair of interacting violated properties",
+      "passed": false,
+      "evidence": "No Tradeoffs section present. Output ends with a prioritized recommendations table and revised test suite example."
+    }
+  ],
+  "pass_rate": 0.77,
+  "passed": 10,
+  "failed": 3,
+  "total": 13
+}
