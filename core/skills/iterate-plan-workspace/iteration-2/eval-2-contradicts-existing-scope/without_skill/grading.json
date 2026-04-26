@@ -1,0 +1,9 @@
+{
+  "expectations": [
+    {"text": "Reads the full plan including the 'What We're NOT Doing' section", "passed": true, "evidence": "Quotes both exclusions verbatim from the 'What We're NOT Doing' section."},
+    {"text": "Detects the conflict: requested change requires downtime but plan explicitly states 'must be zero-downtime rollout'", "passed": true, "evidence": "Says 'A new phase that restructures the job queue tables AND requires scheduled downtime contradicts both of these exclusions.'"},
+    {"text": "Informs the user of the conflict BEFORE making any edits", "passed": true, "evidence": "Says 'Before I update the plan, please clarify which of these is true' and presents 3 options."},
+    {"text": "Proposes alternatives (zero-downtime migration strategy, expand-contract pattern) or asks user to choose", "passed": true, "evidence": "Option A proposes 'online/rolling strategy (e.g., expand-contract pattern)'. Three options presented."},
+    {"text": "Does NOT silently add a downtime phase while leaving the 'NOT Doing' section unchanged", "passed": true, "evidence": "Plan not modified. Provides draft Phase 0 only 'If You Confirm Option B'."}
+  ]
+}

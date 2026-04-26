@@ -1,0 +1,8 @@
+{
+  "expectations": [
+    {"text": "Detects the dependency problem: new phase (between 1-2) requires webhook delivery from Phase 4 which doesn't exist yet", "passed": true, "evidence": "Says 'Critical dependency conflict identified. The new Analytics Dashboard phase needs to aggregate delivery metrics from the webhook delivery service. The webhook delivery service is created in Phase 4.'"},
+    {"text": "Does NOT silently insert the phase with a forward dependency that can't be satisfied", "passed": true, "evidence": "Says 'I will not update the plan until this conflict is resolved.' Plan not modified."},
+    {"text": "Explains why the requested position is problematic (Phase 4 must complete before analytics can aggregate its metrics)", "passed": true, "evidence": "Says 'This is an impossible dependency ordering: the Analytics Dashboard cannot aggregate metrics from a service that has not been built yet.'"},
+    {"text": "Proposes alternatives: move the new phase after Phase 4, or split it into phases (basic metrics after Phase 2, webhook metrics after Phase 4)", "passed": true, "evidence": "Three options: 1) Move after Phase 4, 2) Scope down to Phase 1 metrics only, 3) Reorder phases to move webhook earlier."}
+  ]
+}

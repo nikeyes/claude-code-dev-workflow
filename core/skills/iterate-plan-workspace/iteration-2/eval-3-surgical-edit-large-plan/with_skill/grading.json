@@ -1,0 +1,11 @@
+{
+  "expectations": [
+    {"text": "Phase 1 content is identical to original — no modifications", "passed": true, "evidence": "Agent summary confirms 'All other phases (1, 2, 4, 5) and the overall success criteria section remain identical to the original.'"},
+    {"text": "Phase 2 content is identical to original — no modifications", "passed": true, "evidence": "Agent confirms only Phase 3 was modified."},
+    {"text": "Phase 3 success criteria updated to include concurrent cross-tenant isolation tests", "passed": true, "evidence": "Added 'make test-isolation-concurrent — integration tests verify cross-tenant query isolation under concurrent requests'"},
+    {"text": "Phase 4 content is identical to original — no modifications", "passed": true, "evidence": "Agent confirms only Phase 3 was modified."},
+    {"text": "Phase 5 content is identical to original — no modifications", "passed": true, "evidence": "Agent confirms only Phase 3 was modified."},
+    {"text": "Overall success criteria updated to reflect the new concurrent isolation tests if applicable", "passed": false, "evidence": "Agent states overall success criteria remain identical. The new test target was not added to the overall section."},
+    {"text": "Does NOT rewrite, reformat, or restructure sections that were not requested to change", "passed": true, "evidence": "Single surgical edit: one new bullet in Phase 3 automated criteria. No reformatting."}
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "eval_id": 4,
+  "eval_name": "research-dependent-change",
+  "prompt": "/iterate-plan thoughts/shared/plans/2026-04-20-order-validation.md Replace the custom validation functions in Phase 1 with the existing validator framework from src/validators/ — use BaseValidator, StringValidator, NumericValidator, and CompositeValidator instead of writing custom functions",
+  "assertions": [
+    {"text": "Researches src/validators/ directory to discover existing validator classes", "type": "behavior"},
+    {"text": "References real class names from the codebase: BaseValidator, StringValidator, NumericValidator, CompositeValidator", "type": "capability"},
+    {"text": "References the ValidationResult dataclass and its merge() method from base.py", "type": "capability"},
+    {"text": "References CompositeValidator.for_entity() as the pattern for composing field validators", "type": "capability"},
+    {"text": "Updated plan uses real file paths from src/validators/ (not invented paths)", "type": "output"},
+    {"text": "Does NOT produce generic 'use the validator pattern' instructions — references specific classes and methods", "type": "capability"}
+  ]
+}

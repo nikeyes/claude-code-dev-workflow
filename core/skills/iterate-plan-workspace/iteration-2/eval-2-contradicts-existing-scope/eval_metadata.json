@@ -1,0 +1,12 @@
+{
+  "eval_id": 2,
+  "eval_name": "contradicts-existing-scope",
+  "prompt": "/iterate-plan thoughts/shared/plans/2026-04-20-background-jobs.md Add a database migration phase that requires scheduled downtime to restructure the job queue tables",
+  "assertions": [
+    {"text": "Reads the full plan including the 'What We're NOT Doing' section", "type": "behavior"},
+    {"text": "Detects the conflict: requested change requires downtime but plan explicitly states 'must be zero-downtime rollout'", "type": "capability"},
+    {"text": "Informs the user of the conflict BEFORE making any edits", "type": "behavior"},
+    {"text": "Proposes alternatives (zero-downtime migration strategy, expand-contract pattern) or asks user to choose", "type": "capability"},
+    {"text": "Does NOT silently add a downtime phase while leaving the 'NOT Doing' section unchanged", "type": "behavior"}
+  ]
+}

@@ -1,0 +1,7 @@
+{
+  "expectations": [
+    {"text": "Asks the user to provide a plan file path", "passed": true, "evidence": "Asks 'Which plan? Share the path to the plan file' and hints at thoughts/shared/plans/ location."},
+    {"text": "Does NOT attempt to read or modify any file", "passed": true, "evidence": "Only asks clarifying questions. No file operations."},
+    {"text": "Includes usage example showing the expected invocation format", "passed": false, "evidence": "No usage syntax like '/iterate-plan [args]'. Asks 3 open-ended questions instead."}
+  ]
+}

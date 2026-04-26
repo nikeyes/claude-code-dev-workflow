@@ -1,0 +1,9 @@
+{
+  "expectations": [
+    {"text": "Reads the full plan including the 'What We're NOT Doing' section", "passed": true, "evidence": "Explicitly quotes both relevant exclusions from 'What We're NOT Doing' section."},
+    {"text": "Detects the conflict: requested change requires downtime but plan explicitly states 'must be zero-downtime rollout'", "passed": true, "evidence": "Says 'The requested change directly contradicts both exclusions: 1. It adds a database migration phase 2. It requires scheduled downtime'"},
+    {"text": "Informs the user of the conflict BEFORE making any edits", "passed": true, "evidence": "Explicitly states 'I am NOT making this change yet because it contradicts two explicit scope decisions in the plan.'"},
+    {"text": "Proposes alternatives (zero-downtime migration strategy, expand-contract pattern) or asks user to choose", "passed": true, "evidence": "Question 3: 'standard patterns (expand-contract via Alembic, blue-green deployment, dual-write during transition) can often achieve zero downtime'"},
+    {"text": "Does NOT silently add a downtime phase while leaving the 'NOT Doing' section unchanged", "passed": true, "evidence": "Plan not modified. Four clarifying questions asked before any changes."}
+  ]
+}

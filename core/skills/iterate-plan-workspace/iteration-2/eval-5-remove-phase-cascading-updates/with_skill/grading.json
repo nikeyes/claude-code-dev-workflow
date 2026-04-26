@@ -1,0 +1,10 @@
+{
+  "expectations": [
+    {"text": "Removes Phase 2 (Search Query Service) from the plan", "passed": true, "evidence": "Says 'Phase 2 (Search Query Service) removed entirely. The phase, its scope, changes, and success criteria are gone.'"},
+    {"text": "Detects that Phase 3 (Search API Endpoint) depends on Phase 2's search service and flags the broken dependency", "passed": true, "evidence": "Says 'Key dependency issue identified: Removing Phase 2 would leave Phase 3 with no implementation path for the search query logic'"},
+    {"text": "Updates phase numbering (old Phase 3 becomes Phase 2, or plan restructured consistently)", "passed": true, "evidence": "Former Phase 3 renumbered to Phase 2. Clean two-phase structure: Phase 1 (Index), Phase 2 (API + Highlighting)."},
+    {"text": "Updates overall success criteria to remove Phase 2-specific items (test-search references)", "passed": true, "evidence": "Says 'Removed make test-search (it was the service-layer test target; no longer applicable)'"},
+    {"text": "Proposes how to handle the broken dependency (stub the service, reorder, or defer Phase 3 too)", "passed": true, "evidence": "Resolution: 'Fold the search query logic directly into the route handler' with inline query construction."},
+    {"text": "Preserves Phase 1 (Search Index Setup) content without loss", "passed": true, "evidence": "Phase 1 listed as unchanged in the summary table."}
+  ]
+}

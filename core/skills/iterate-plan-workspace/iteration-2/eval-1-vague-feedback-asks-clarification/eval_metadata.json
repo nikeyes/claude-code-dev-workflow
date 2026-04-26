@@ -1,0 +1,11 @@
+{
+  "eval_id": 1,
+  "eval_name": "vague-feedback-asks-clarification",
+  "prompt": "/iterate-plan thoughts/shared/plans/2026-04-24-bugfix-skill.md make it better",
+  "assertions": [
+    {"text": "Does NOT modify or edit the plan file", "type": "behavior"},
+    {"text": "Asks the user to clarify what 'make it better' means — what specific aspect to improve", "type": "behavior"},
+    {"text": "Does NOT invent arbitrary improvements without user direction", "type": "behavior"},
+    {"text": "Suggests concrete areas the user could specify (scope, criteria, phases, approach)", "type": "output"}
+  ]
+}

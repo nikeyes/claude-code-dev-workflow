@@ -1,0 +1,8 @@
+{
+  "expectations": [
+    {"text": "Does NOT modify or edit the plan file", "passed": true, "evidence": "Response only asks for clarification. No file edits or modifications reported. Plan left unchanged."},
+    {"text": "Asks the user to clarify what 'make it better' means — what specific aspect to improve", "passed": true, "evidence": "Says 'make it better is too vague for me to proceed with confidence' and 'Could you clarify what you'd like improved?'"},
+    {"text": "Does NOT invent arbitrary improvements without user direction", "passed": true, "evidence": "Lists 6 possible areas to improve but does not implement any. Waits for user direction."},
+    {"text": "Suggests concrete areas the user could specify (scope, criteria, phases, approach)", "passed": true, "evidence": "Lists: more detail in Phase 1, add a new phase, strengthen success criteria, scope change, split a phase, add error handling."}
+  ]
+}

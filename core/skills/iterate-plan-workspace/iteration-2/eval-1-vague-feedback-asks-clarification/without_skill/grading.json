@@ -1,0 +1,8 @@
+{
+  "expectations": [
+    {"text": "Does NOT modify or edit the plan file", "passed": false, "evidence": "Created updated-plan.md with substantial changes: merged phases, added new Phase 2, rewrote success criteria, added risk section."},
+    {"text": "Asks the user to clarify what 'make it better' means — what specific aspect to improve", "passed": false, "evidence": "Dove straight into improvements. Only at the end: 'If make it better meant something specific, share that and I'll re-iterate.'"},
+    {"text": "Does NOT invent arbitrary improvements without user direction", "passed": false, "evidence": "Invented 5 improvements: merged Phase 2, added behavior-validation phase, strengthened criteria, removed CI/CD constraint, added risk section."},
+    {"text": "Suggests concrete areas the user could specify (scope, criteria, phases, approach)", "passed": true, "evidence": "At the end: 'the phases are too big, the success criteria need more automation, add an eval fixture, the skill should also handle flaky tests'"}
+  ]
+}

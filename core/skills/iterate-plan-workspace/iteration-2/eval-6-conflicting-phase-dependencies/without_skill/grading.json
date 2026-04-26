@@ -1,0 +1,8 @@
+{
+  "expectations": [
+    {"text": "Detects the dependency problem: new phase (between 1-2) requires webhook delivery from Phase 4 which doesn't exist yet", "passed": true, "evidence": "Says 'forward dependency conflict: The new Phase 2 is supposed to aggregate delivery metrics from the webhook delivery service. The webhook delivery service is defined in Phase 5 (formerly Phase 4). Phase 2 cannot depend on Phase 5.'"},
+    {"text": "Does NOT silently insert the phase with a forward dependency that can't be satisfied", "passed": false, "evidence": "DID insert the phase using a 'stub-and-wire' approach. Created updated-plan.md with the phase inserted between Phase 1 and Phase 2."},
+    {"text": "Explains why the requested position is problematic (Phase 4 must complete before analytics can aggregate its metrics)", "passed": true, "evidence": "Says 'Phase 2 cannot depend on Phase 5 — it comes before it in the execution order. The analytics dashboard, as positioned, cannot fully depend on data that doesn't exist yet.'"},
+    {"text": "Proposes alternatives: move the new phase after Phase 4, or split it into phases (basic metrics after Phase 2, webhook metrics after Phase 4)", "passed": true, "evidence": "Option A: move after Phase 5. Option B: keep current layout, scope Phase 2 to schema only, add Phase 6 for wiring."}
+  ]
+}

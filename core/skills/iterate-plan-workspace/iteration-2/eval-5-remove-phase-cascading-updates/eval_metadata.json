@@ -1,0 +1,13 @@
+{
+  "eval_id": 5,
+  "eval_name": "remove-phase-cascading-updates",
+  "prompt": "/iterate-plan thoughts/shared/plans/2026-04-18-search.md Remove Phase 2 (Search Query Service) entirely — we'll handle the search service in a separate ticket. Adjust the rest of the plan accordingly.",
+  "assertions": [
+    {"text": "Removes Phase 2 (Search Query Service) from the plan", "type": "output"},
+    {"text": "Detects that Phase 3 (Search API Endpoint) depends on Phase 2's search service and flags the broken dependency", "type": "capability"},
+    {"text": "Updates phase numbering (old Phase 3 becomes Phase 2, or plan restructured consistently)", "type": "output"},
+    {"text": "Updates overall success criteria to remove Phase 2-specific items (test-search references)", "type": "output"},
+    {"text": "Proposes how to handle the broken dependency (stub the service, reorder, or defer Phase 3 too)", "type": "capability"},
+    {"text": "Preserves Phase 1 (Search Index Setup) content without loss", "type": "output"}
+  ]
+}

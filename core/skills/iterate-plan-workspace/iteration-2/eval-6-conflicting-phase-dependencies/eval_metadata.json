@@ -1,0 +1,11 @@
+{
+  "eval_id": 6,
+  "eval_name": "conflicting-phase-dependencies",
+  "prompt": "/iterate-plan thoughts/shared/plans/2026-04-19-notifications.md Add a new 'Notification Analytics Dashboard' phase between Phase 1 and Phase 2 that aggregates delivery metrics from the webhook delivery service in Phase 4",
+  "assertions": [
+    {"text": "Detects the dependency problem: new phase (between 1-2) requires webhook delivery from Phase 4 which doesn't exist yet", "type": "capability"},
+    {"text": "Does NOT silently insert the phase with a forward dependency that can't be satisfied", "type": "behavior"},
+    {"text": "Explains why the requested position is problematic (Phase 4 must complete before analytics can aggregate its metrics)", "type": "capability"},
+    {"text": "Proposes alternatives: move the new phase after Phase 4, or split it into phases (basic metrics after Phase 2, webhook metrics after Phase 4)", "type": "capability"}
+  ]
+}

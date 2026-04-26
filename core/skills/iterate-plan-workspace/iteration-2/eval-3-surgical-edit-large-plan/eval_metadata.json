@@ -1,0 +1,14 @@
+{
+  "eval_id": 3,
+  "eval_name": "surgical-edit-large-plan",
+  "prompt": "/iterate-plan thoughts/shared/plans/2026-04-15-multi-tenant.md Update Phase 3 success criteria to include integration tests that verify cross-tenant query isolation under concurrent requests",
+  "assertions": [
+    {"text": "Phase 1 content is identical to original — no modifications", "type": "output"},
+    {"text": "Phase 2 content is identical to original — no modifications", "type": "output"},
+    {"text": "Phase 3 success criteria updated to include concurrent cross-tenant isolation tests", "type": "output"},
+    {"text": "Phase 4 content is identical to original — no modifications", "type": "output"},
+    {"text": "Phase 5 content is identical to original — no modifications", "type": "output"},
+    {"text": "Overall success criteria updated to reflect the new concurrent isolation tests if applicable", "type": "output"},
+    {"text": "Does NOT rewrite, reformat, or restructure sections that were not requested to change", "type": "behavior"}
+  ]
+}

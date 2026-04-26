@@ -1,0 +1,10 @@
+{
+  "expectations": [
+    {"text": "Researches src/validators/ directory to discover existing validator classes", "passed": true, "evidence": "Says 'I read the plan, the validator framework, the order service, and the existing tests'. References all 4 classes."},
+    {"text": "References real class names from the codebase: BaseValidator, StringValidator, NumericValidator, CompositeValidator", "passed": true, "evidence": "Lists all four: BaseValidator, StringValidator, NumericValidator, CompositeValidator with their capabilities."},
+    {"text": "References the ValidationResult dataclass and its merge() method from base.py", "passed": false, "evidence": "Mentions ValidationResult.is_valid and ValidationResult.errors but does not reference the merge() method."},
+    {"text": "References CompositeValidator.for_entity() as the pattern for composing field validators", "passed": true, "evidence": "Says 'CompositeValidator.for_entity(dict) factory that takes a dict of {field_name: validator} and wires up field names automatically'"},
+    {"text": "Updated plan uses real file paths from src/validators/ (not invented paths)", "passed": true, "evidence": "References src.validators imports, correct class names."},
+    {"text": "Does NOT produce generic 'use the validator pattern' instructions — references specific classes and methods", "passed": true, "evidence": "Includes exact validator constructors per field with specific parameters. build_order_validator() function defined."}
+  ]
+}

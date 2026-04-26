@@ -1,0 +1,260 @@
+{
+  "metadata": {
+    "skill_name": "iterate-plan",
+    "skill_path": "core/skills/iterate-plan/SKILL.md",
+    "timestamp": "2026-04-26T00:10:00Z",
+    "evals_run": [
+      "vague-feedback-asks-clarification",
+      "contradicts-existing-scope",
+      "surgical-edit-large-plan",
+      "research-dependent-change",
+      "remove-phase-cascading-updates",
+      "conflicting-phase-dependencies",
+      "no-args-help"
+    ],
+    "runs_per_configuration": 1
+  },
+  "runs": [
+    {
+      "eval_id": 1,
+      "eval_name": "vague-feedback-asks-clarification",
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 4,
+        "failed": 0,
+        "total": 4,
+        "time_seconds": 34.4,
+        "tokens": 18604,
+        "errors": 0
+      }
+    },
+    {
+      "eval_id": 1,
+      "eval_name": "vague-feedback-asks-clarification",
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.25,
+        "passed": 1,
+        "failed": 3,
+        "total": 4,
+        "time_seconds": 76.6,
+        "tokens": 17141,
+        "errors": 0
+      }
+    },
+    {
+      "eval_id": 2,
+      "eval_name": "contradicts-existing-scope",
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 5,
+        "failed": 0,
+        "total": 5,
+        "time_seconds": 60.2,
+        "tokens": 19709,
+        "errors": 0
+      }
+    },
+    {
+      "eval_id": 2,
+      "eval_name": "contradicts-existing-scope",
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 5,
+        "failed": 0,
+        "total": 5,
+        "time_seconds": 41.0,
+        "tokens": 15614,
+        "errors": 0
+      }
+    },
+    {
+      "eval_id": 3,
+      "eval_name": "surgical-edit-large-plan",
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.86,
+        "passed": 6,
+        "failed": 1,
+        "total": 7,
+        "time_seconds": 84.0,
+        "tokens": 24279,
+        "errors": 0
+      }
+    },
+    {
+      "eval_id": 3,
+      "eval_name": "surgical-edit-large-plan",
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.86,
+        "passed": 6,
+        "failed": 1,
+        "total": 7,
+        "time_seconds": 59.7,
+        "tokens": 21882,
+        "errors": 0
+      }
+    },
+    {
+      "eval_id": 4,
+      "eval_name": "research-dependent-change",
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 6,
+        "failed": 0,
+        "total": 6,
+        "time_seconds": 108.2,
+        "tokens": 27052,
+        "errors": 0
+      }
+    },
+    {
+      "eval_id": 4,
+      "eval_name": "research-dependent-change",
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.83,
+        "passed": 5,
+        "failed": 1,
+        "total": 6,
+        "time_seconds": 91.2,
+        "tokens": 22068,
+        "errors": 0
+      }
+    },
+    {
+      "eval_id": 5,
+      "eval_name": "remove-phase-cascading-updates",
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 6,
+        "failed": 0,
+        "total": 6,
+        "time_seconds": 96.6,
+        "tokens": 25112,
+        "errors": 0
+      }
+    },
+    {
+      "eval_id": 5,
+      "eval_name": "remove-phase-cascading-updates",
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 6,
+        "failed": 0,
+        "total": 6,
+        "time_seconds": 59.3,
+        "tokens": 16363,
+        "errors": 0
+      }
+    },
+    {
+      "eval_id": 6,
+      "eval_name": "conflicting-phase-dependencies",
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 4,
+        "failed": 0,
+        "total": 4,
+        "time_seconds": 52.6,
+        "tokens": 20060,
+        "errors": 0
+      }
+    },
+    {
+      "eval_id": 6,
+      "eval_name": "conflicting-phase-dependencies",
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.75,
+        "passed": 3,
+        "failed": 1,
+        "total": 4,
+        "time_seconds": 75.7,
+        "tokens": 17660,
+        "errors": 0
+      }
+    },
+    {
+      "eval_id": 7,
+      "eval_name": "no-args-help",
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 3,
+        "failed": 0,
+        "total": 3,
+        "time_seconds": 23.5,
+        "tokens": 16591,
+        "errors": 0
+      }
+    },
+    {
+      "eval_id": 7,
+      "eval_name": "no-args-help",
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.67,
+        "passed": 2,
+        "failed": 1,
+        "total": 3,
+        "time_seconds": 15.7,
+        "tokens": 13095,
+        "errors": 0
+      }
+    }
+  ],
+  "run_summary": {
+    "with_skill": {
+      "pass_rate": {"mean": 0.98, "stddev": 0.05},
+      "time_seconds": {"mean": 65.6, "stddev": 30.1},
+      "tokens": {"mean": 21630, "stddev": 3600}
+    },
+    "without_skill": {
+      "pass_rate": {"mean": 0.77, "stddev": 0.25},
+      "time_seconds": {"mean": 59.9, "stddev": 26.0},
+      "tokens": {"mean": 17689, "stddev": 3200}
+    },
+    "delta": {
+      "pass_rate": "+0.21",
+      "time_seconds": "+5.7",
+      "tokens": "+3941"
+    }
+  },
+  "notes": [
+    "with_skill: 98% pass rate (34/35 assertions) vs baseline 77% (27/35)",
+    "Eval 1 (vague-feedback) is the strongest discriminator: with_skill 4/4 vs baseline 1/4. Baseline invents improvements instead of asking for clarification.",
+    "Eval 2 (contradicts-scope) is NON-DISCRIMINATING: both configurations detect the conflict and refuse to edit. Baseline is equally capable here.",
+    "Eval 3 (surgical-edit) is NON-DISCRIMINATING: both configurations make the same surgical edit and fail the same assertion (overall criteria not updated). 6/7 each.",
+    "Eval 4 (research-dependent) shows minor discrimination: with_skill 6/6 vs baseline 5/6. Baseline misses ValidationResult.merge() reference.",
+    "Eval 5 (remove-phase-cascade) is NON-DISCRIMINATING: both handle the cascading updates identically. 6/6 each.",
+    "Eval 6 (conflicting-deps) discriminates on behavior: with_skill blocks the edit entirely (4/4), baseline inserts with stub-and-wire workaround (3/4).",
+    "Eval 7 (no-args-help) carries over from iteration-1: with_skill 3/3 vs baseline 2/3 (no usage format).",
+    "Cost delta is much smaller than iteration-1: +22% tokens, +10% time (vs +72% tokens, +70% time in iteration-1). New evals don't require heavy research phases.",
+    "3 of 7 evals are non-discriminating (evals 2, 3, 5). The model baseline handles scope conflicts, surgical edits, and cascading updates well without the skill.",
+    "The skill's unique value is concentrated in 2 areas: (1) refusing to act on vague input (eval 1), (2) refusing to insert phases with impossible dependencies (eval 6).",
+    "COMPARISON WITH ITERATION-1: Pass rate delta is identical (+0.21) but measured across much harder, more adversarial evals. The skill's advantage is narrower but more honest."
+  ]
+}

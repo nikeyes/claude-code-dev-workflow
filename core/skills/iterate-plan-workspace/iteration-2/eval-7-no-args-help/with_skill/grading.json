@@ -1,0 +1,7 @@
+{
+  "expectations": [
+    {"text": "Asks the user to provide a plan file path", "passed": true, "evidence": "Says 'Which plan would you like to update? Please provide the path to the plan file and changes to make.'"},
+    {"text": "Does NOT attempt to read or modify any file", "passed": true, "evidence": "Only outputs the help message template. No file operations."},
+    {"text": "Includes usage example showing the expected invocation format", "passed": true, "evidence": "Shows 'Usage: /stepwise-core:iterate-plan [plan-file-path] [changes to make]' and a concrete example."}
+  ]
+}

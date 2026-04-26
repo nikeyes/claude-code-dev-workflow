@@ -1,0 +1,10 @@
+{
+  "expectations": [
+    {"text": "Removes Phase 2 (Search Query Service) from the plan", "passed": true, "evidence": "Says 'Phase 2: Search Query Service — the entire phase is gone.'"},
+    {"text": "Detects that Phase 3 (Search API Endpoint) depends on Phase 2's search service and flags the broken dependency", "passed": true, "evidence": "Says 'Removed the note Uses the search service from Phase 2 from the scope description, since that service layer no longer exists'"},
+    {"text": "Updates phase numbering (old Phase 3 becomes Phase 2, or plan restructured consistently)", "passed": true, "evidence": "Table shows Phase 1 (unchanged), Phase 2 (was Phase 3, query logic absorbed)."},
+    {"text": "Updates overall success criteria to remove Phase 2-specific items (test-search references)", "passed": true, "evidence": "Says 'Removed make test-search from the overall automated verification list'"},
+    {"text": "Proposes how to handle the broken dependency (stub the service, reorder, or defer Phase 3 too)", "passed": true, "evidence": "Absorbed query logic directly into the endpoint: 'The endpoint will implement the search query logic directly against the PostgreSQL tsvector index'"},
+    {"text": "Preserves Phase 1 (Search Index Setup) content without loss", "passed": true, "evidence": "Table shows Phase 1: 'Unchanged'"}
+  ]
+}
