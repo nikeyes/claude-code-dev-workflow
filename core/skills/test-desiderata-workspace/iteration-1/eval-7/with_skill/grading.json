@@ -1,0 +1,141 @@
+{
+  "expectations": [
+    {
+      "text": "Identifies BATCH_SIZE from os.getenv as a Deterministic violation (test result depends on environment variable)",
+      "passed": true,
+      "evidence": "analysis.md Section 2 (Deterministic — VIOLATED): 'Issue A — Environment variable dependency: DataPipeline.__init__ reads os.getenv(\"BATCH_SIZE\", \"10\") at construction time (line 21). [...] If BATCH_SIZE is set in the CI environment or a developer's shell, the pipeline may behave differently than in a clean environment.' Also present in transcript Step 3."
+    },
+    {
+      "text": "Identifies SHARED_OUTPUT = '/tmp/pipeline_output.csv' as an Isolated violation (shared filesystem artifact between tests)",
+      "passed": true,
+      "evidence": "analysis.md Section 1 (Isolated — VIOLATED): 'All four tests write to the same hardcoded filesystem path SHARED_OUTPUT = \"/tmp/pipeline_output.csv\". [...] Tests are not independent. If one test runs concurrently with another, they will race to write the same file.' Line references 56, 65, 74, 81, 87 provided."
+    },
+    {
+      "text": "Identifies test_pipeline_runs_all_steps asserting on steps list not output content as a Behavioral violation",
+      "passed": true,
+      "evidence": "analysis.md Section 4 (Behavioral — VIOLATED): 'test_pipeline_runs_all_steps (line 63) verifies that result[\"steps\"] == [\"extract\", \"transform\", \"load\"] — a check on the list of step names, not on the actual output data. This assertion tests implementation mechanics, not observable behavior.'"
+    },
+    {
+      "text": "Identifies absence of test for malformed input (e.g., missing 'value' key, non-numeric value) as a Predictive violation",
+      "passed": true,
+      "evidence": "analysis.md Section 6 (Predictive — VIOLATED): 'Malformed/missing fields: What happens when value is None, \"N/A\", or an empty string? float(record.get(\"value\", 0)) will raise ValueError for non-numeric strings.' and 'Missing keys entirely: A row with no keys at all.' Fix section provides test_transform_raises_on_non_numeric_value example."
+    },
+    {
+      "text": "Identifies time.sleep(0.001) per record as a Fast violation (accumulates: 50 records x 0.001s = 50ms overhead)",
+      "passed": true,
+      "evidence": "analysis.md Section 3 (Fast — VIOLATED): 'DataPipeline.transform calls time.sleep(0.001) for every record processed (line 30). [...] With 50 records in test_large_batch, this alone contributes 50 ms per test run.' The exact 50 records x 0.001s = 50ms calculation matches the expectation."
+    },
+    {
+      "text": "Identifies test_large_batch not verifying category transformation as a Specific violation",
+      "passed": true,
+      "evidence": "analysis.md Section 5 (Specific — VIOLATED): 'test_transform_uppercases_category asserts only on aggregate record count (records_processed == 2), which is too coarse to diagnose failures.' The transcript Step 3 also notes: 'test_large_batch — 50 records × 0.001s = 50ms artificial sleep; no assertion on transformed content.' The Specific violation is directly documented, though the primary location cited is test_transform_uppercases_category rather than test_large_batch. The transcript explicitly links lack of content assertions to test_large_batch at Step 2, line 42."
+    },
+    {
+      "text": "Suggests injecting batch_size as constructor parameter instead of reading from env",
+      "passed": true,
+      "evidence": "analysis.md Deterministic Fix section: 'Or inject batch_size as a constructor argument (better design): class DataPipeline: def __init__(self, batch_size: int = 10): self.batch_size = batch_size'"
+    },
+    {
+      "text": "Suggests using tempfile.NamedTemporaryFile or tmp_path pytest fixture per test",
+      "passed": true,
+      "evidence": "analysis.md Isolated Fix section: 'Use pytest's built-in tmp_path fixture, which provides a unique temporary directory per test invocation.' Code example shown using 'tmp_path / \"output.csv\"'. Also referenced in Prioritized Recommendations: 'Replace SHARED_OUTPUT with pytest's tmp_path fixture in all four tests.'"
+    },
+    {
+      "text": "Suggests adding tests for rows missing required keys and rows with non-numeric values",
+      "passed": true,
+      "evidence": "analysis.md Predictive Fix section provides explicit code examples: 'def test_transform_raises_on_non_numeric_value(self): source = [{\"id\": 1, \"value\": \"N/A\", \"category\": \"sales\"}]' and notes 'Missing keys entirely: A row with no keys at all.' as an additional case."
+    },
+    {
+      "text": "Explains the Isolated vs Fast tradeoff (per-test temp files add I/O overhead but are necessary for correctness)",
+      "passed": false,
+      "evidence": "The analysis discusses the Isolated vs Writable tradeoff ('Using SHARED_OUTPUT was chosen for simplicity (Writable), avoiding per-test path management. But it breaks Isolated.') but does not discuss the Isolated vs Fast tradeoff. The expected tradeoff — that per-test temp files add I/O overhead but are necessary for correctness — is not present. The Fast vs Predictive and Specific vs Predictive tradeoffs are discussed, but not Isolated vs Fast."
+    },
+    {
+      "text": "References each violation by the Test Desiderata property name",
+      "passed": true,
+      "evidence": "analysis.md uses explicit property names as section headers: '1. Isolated — VIOLATED', '2. Deterministic — VIOLATED', '3. Fast — VIOLATED', '4. Behavioral — VIOLATED', '5. Specific — VIOLATED', '6. Predictive — VIOLATED'. Summary Table lists all 12 properties by name."
+    },
+    {
+      "text": "Explicitly discusses at least one tradeoff between competing properties",
+      "passed": true,
+      "evidence": "analysis.md Tradeoff Analysis section covers three explicit tradeoffs: 'Fast vs Predictive', 'Specific vs Predictive', and 'Isolated vs Writable'. Each explains the tension between properties and a resolution."
+    },
+    {
+      "text": "Prioritizes violations (e.g., Isolated and Deterministic as safety issues to fix first)",
+      "passed": true,
+      "evidence": "analysis.md Prioritized Recommendations: 'Priority 1 — Safety (Isolated + Deterministic): These cause intermittent, hard-to-diagnose failures that erode trust in the test suite.' Followed by Priority 2 (Fast), Priority 3 (Behavioral + Specific), Priority 4 (Predictive)."
+    }
+  ],
+  "summary": {
+    "passed": 12,
+    "failed": 1,
+    "total": 13,
+    "pass_rate": 0.923
+  },
+  "execution_metrics": {
+    "tool_calls": {},
+    "total_tool_calls": null,
+    "total_steps": 6,
+    "errors_encountered": 0,
+    "output_chars": 6842,
+    "transcript_chars": 4782
+  },
+  "timing": {
+    "executor_duration_seconds": 123.3,
+    "grader_duration_seconds": null,
+    "total_duration_seconds": 123.3
+  },
+  "claims": [
+    {
+      "claim": "6 violations documented with Issue / Location / Impact / Fix / Tradeoff format",
+      "type": "quality",
+      "verified": true,
+      "evidence": "analysis.md contains exactly 6 violation sections, each with Issue, Location, Impact, Fix, and Tradeoff subsections (though some label it differently, the content is present for all 6)."
+    },
+    {
+      "claim": "test_transform_uppercases_category name says 'uppercases category' but assertion is records_processed == 2",
+      "type": "factual",
+      "verified": true,
+      "evidence": "analysis.md Behavioral section: 'test_transform_uppercases_category (line 70) is named to suggest it verifies uppercase transformation, but the only assertion is result[\"records_processed\"] == 2 (line 78). This test does not verify that any category was uppercased.'"
+    },
+    {
+      "claim": "time.sleep(0.001) simulates network latency according to source code comment",
+      "type": "factual",
+      "verified": true,
+      "evidence": "analysis.md Fast section states the sleep 'simulates \"network latency\" but latency simulation belongs in integration tests, not unit tests.' Consistent with the source file comment flagging this as an intentional violation."
+    },
+    {
+      "claim": "Isolated violation rated Critical and Deterministic violation rated Critical",
+      "type": "quality",
+      "verified": true,
+      "evidence": "Summary Table in analysis.md shows Isolated: Critical and Deterministic: Critical. Priority 1 in Recommendations also groups them as 'Safety' issues."
+    },
+    {
+      "claim": "No metrics.json present in outputs directory",
+      "type": "factual",
+      "verified": true,
+      "evidence": "Directory listing showed only analysis.md and transcript.md in outputs/. No metrics.json file exists."
+    }
+  ],
+  "user_notes_summary": {
+    "uncertainties": [],
+    "needs_review": [],
+    "workarounds": []
+  },
+  "eval_feedback": {
+    "suggestions": [
+      {
+        "assertion": "Identifies test_large_batch not verifying category transformation as a Specific violation",
+        "reason": "The assertion targets test_large_batch specifically, but analysis.md primarily addresses test_transform_uppercases_category under Specific (correctly — that is where the aggregate count assertion lives). test_large_batch is mentioned in the transcript as having 'no assertion on transformed content' but the Specific section does not call it out by name. The assertion passes on somewhat ambiguous evidence. Consider making the assertion more precise: either target test_large_batch explicitly or accept test_transform_uppercases_category as the relevant Specific example."
+      },
+      {
+        "assertion": "Explains the Isolated vs Fast tradeoff (per-test temp files add I/O overhead but are necessary for correctness)",
+        "reason": "This is the one failed expectation. The skill discussed Isolated vs Writable instead. The expected tradeoff (I/O overhead of per-test temp files) is a real concern worth covering, but the skill chose to discuss Writable (boilerplate/ergonomics) as the competing property rather than Fast. The eval could be rephrased as 'discusses the competing motivation for using a shared path (either Writable or Fast)' to be more flexible while still checking that a tradeoff exists."
+      },
+      {
+        "reason": "No assertion checks whether the fix suggestions are correct Python (e.g., the tmp_path fixture is used correctly with pytest). The code examples in analysis.md look correct, but a discriminating eval would verify this. Consider adding an assertion like 'Code examples use tmp_path as a method parameter, not a class-level fixture.'"
+      }
+    ],
+    "overall": "Strong eval suite — 12 of 13 assertions have clear, substantive evidence. The one failed assertion (Isolated vs Fast tradeoff) reflects a genuine gap in the output, not a weak assertion. The Specific/test_large_batch assertion is the only borderline case worth tightening."
+  }
+}

@@ -1,0 +1,204 @@
+{
+  "skill_name": "test-desiderata",
+  "min_runs_per_configuration": 3,
+  "scoring": {
+    "detection_weight": 0.6,
+    "recommendation_weight": 0.25,
+    "format_weight": 0.15,
+    "efficiency_metric": "violations_detected_per_1k_tokens"
+  },
+  "evals": [
+    {
+      "id": 1,
+      "name": "Python BankAccount — Isolated, Deterministic, Specific, Structure-insensitive (easy)",
+      "difficulty": "easy",
+      "prompt": "/test-desiderata evals/files/test_bank_account.py",
+      "expected_output": "Detects four concrete violations: shared global state (Isolated), random.randint in production path (Deterministic), single test covering multiple concerns (Specific), assertions on _ledger private attribute (Structure-insensitive). Provides actionable fix suggestions for each.",
+      "files": [
+        "evals/files/test_bank_account.py"
+      ],
+      "detection_expectations": [
+        "Identifies shared_balance global variable as an Isolated violation (test order dependency)",
+        "Identifies random.randint in BankAccount.deposit as a Deterministic violation",
+        "Identifies test_all_operations as a Specific violation (multiple assertions covering deposit, withdraw, and balance in one test)",
+        "Identifies assertion on account._ledger as a Structure-insensitive violation (private attribute)",
+        "Notes that test_deposit_updates_ledger depends on shared_balance from previous test"
+      ],
+      "recommendation_expectations": [
+        "Suggests replacing shared_balance with a fresh instance per test (e.g., pytest fixture)",
+        "Suggests seeding or injecting the random ID to make deposit deterministic",
+        "Suggests splitting test_all_operations into focused single-concern tests"
+      ],
+      "format_expectations": [
+        "References each violation by the Test Desiderata property name (e.g., 'Isolated', 'Deterministic')",
+        "Provides at least one code-level fix example or concrete suggestion"
+      ]
+    },
+    {
+      "id": 2,
+      "name": "TypeScript OrderService — Readable, Fast, Behavioral, Writable (easy)",
+      "difficulty": "easy",
+      "prompt": "/test-desiderata evals/files/test_order_service.ts",
+      "expected_output": "Detects four violations: meaningless test names test1/test2/test3/test4 (Readable), 500ms setTimeout (Fast), mock overriding the method under test making assertion vacuous (Behavioral), boilerplate order object duplicated across every test (Writable).",
+      "files": [
+        "evals/files/test_order_service.ts"
+      ],
+      "detection_expectations": [
+        "Identifies test1, test2, test3, test4 names as a Readable violation (names reveal no intent)",
+        "Identifies 500ms setTimeout in test3 as a Fast violation",
+        "Identifies vi.spyOn mockResolvedValue(999) in test4 as a Behavioral violation (tests the mock, not the implementation)",
+        "Identifies duplicated Order boilerplate across tests as a Writable violation",
+        "Identifies expect(true).toBe(true) in test3 as a vacuous/meaningless assertion"
+      ],
+      "recommendation_expectations": [
+        "Suggests renaming tests to describe the behavior being verified (e.g., 'createOrder returns the order id')",
+        "Suggests removing or replacing setTimeout with synchronous or fake-timer equivalent",
+        "Suggests extracting a shared order fixture or factory function to reduce boilerplate"
+      ],
+      "format_expectations": [
+        "References each violation by the Test Desiderata property name",
+        "Provides at least one renamed test example"
+      ]
+    },
+    {
+      "id": 3,
+      "name": "Go Inventory — Isolated, Composable, Automated, Specific (easy)",
+      "difficulty": "easy",
+      "prompt": "/test-desiderata evals/files/test_inventory.go",
+      "expected_output": "Detects: package-level globalInventory shared across tests (Isolated), TestFullInventoryFlow covering add/reserve/release/available in one test (Composable), fmt.Println requiring human inspection (Automated), generic 'operation failed' error message making failures hard to diagnose (Specific).",
+      "files": [
+        "evals/files/test_inventory.go"
+      ],
+      "detection_expectations": [
+        "Identifies globalInventory package-level variable as an Isolated violation (state shared across tests)",
+        "Identifies TestFullInventoryFlow as a Composable violation (covers four independent operations in one test)",
+        "Identifies fmt.Printf/fmt.Println as an Automated violation (requires human to inspect stdout)",
+        "Identifies generic 'operation failed' error string as a Specific violation (caller cannot distinguish error types)",
+        "Notes TestReserveExceedsStock implicitly depends on state left by TestFullInventoryFlow"
+      ],
+      "recommendation_expectations": [
+        "Suggests creating a fresh NewInventory() inside each test function",
+        "Suggests splitting TestFullInventoryFlow into TestAddStock, TestReserve, TestRelease, TestAvailable",
+        "Suggests using t.Logf instead of fmt.Printf (only visible on failure)"
+      ],
+      "format_expectations": [
+        "References each violation by the Test Desiderata property name",
+        "Identifies at least one inter-test dependency caused by shared state"
+      ]
+    },
+    {
+      "id": 4,
+      "name": "Python NotificationService — Deterministic, Predictive, Inspiring, Structure-insensitive (medium)",
+      "difficulty": "medium",
+      "prompt": "/test-desiderata evals/files/test_notification_service.py",
+      "expected_output": "Detects: datetime.now() race condition in assertion (Deterministic), no tests for SMTP exception path (Predictive), smtp.send called but 'to' recipient never verified (Inspiring), assertion on _sent_count private counter (Structure-insensitive). Notes that Predictive and Inspiring together create a confidence gap.",
+      "files": [
+        "evals/files/test_notification_service.py"
+      ],
+      "detection_expectations": [
+        "Identifies service._last_sent_at <= datetime.now() as a Deterministic violation (race condition between assignment and assertion)",
+        "Identifies absence of test for smtp.send raising an exception as a Predictive violation",
+        "Identifies absence of assertion on smtp.send 'to' argument as an Inspiring violation (test passes even if email sent to wrong address)",
+        "Identifies service._sent_count as a Structure-insensitive violation (private internal counter)",
+        "Notes the combined Predictive + Inspiring gap: no confidence that notifications reach the right person or survive SMTP failures"
+      ],
+      "recommendation_expectations": [
+        "Suggests using freezegun or time.freeze or injecting a clock to make datetime deterministic",
+        "Suggests adding a test where smtp.send raises an exception and verifying send_welcome_email returns False",
+        "Suggests asserting smtp.send was called with the correct 'to' address",
+        "Suggests using get_stats() to observe sent count instead of _sent_count directly"
+      ],
+      "format_expectations": [
+        "References each violation by the Test Desiderata property name",
+        "Explains the Predictive + Inspiring tradeoff or synergy"
+      ]
+    },
+    {
+      "id": 5,
+      "name": "TypeScript LRUCache — Isolated, Behavioral, Readable, Composable (medium)",
+      "difficulty": "medium",
+      "prompt": "/test-desiderata evals/files/test_cache.ts",
+      "expected_output": "Detects: shared `cache` constant across all describe tests (Isolated), fake timers set up but time never advanced so TTL expiry is never actually triggered (Behavioral), magic numbers 1000/3/5 without explanation (Readable), single test covering both eviction and TTL (Composable). Notes this is a particularly dangerous Behavioral violation because the test passes for the wrong reason.",
+      "files": [
+        "evals/files/test_cache.ts"
+      ],
+      "detection_expectations": [
+        "Identifies const cache outside describe as an Isolated violation (all tests share one cache instance)",
+        "Identifies that vi.useFakeTimers() is called but vi.advanceTimersByTime() is never called — TTL never expires — as a Behavioral violation",
+        "Identifies that 'evicts LRU entry and expired TTL' covers two orthogonal concerns as a Composable violation",
+        "Identifies magic numbers 1000 and 3 in the shared cache constructor as a Readable violation",
+        "Explains that the TTL test passes for the wrong reason (value not expired, test assertion is weaker than intended)"
+      ],
+      "recommendation_expectations": [
+        "Suggests creating a fresh LRUCache instance inside each test (or using beforeEach)",
+        "Suggests calling vi.advanceTimersByTime(ttlMs + 1) to actually expire the entry",
+        "Suggests splitting the test into 'evicts LRU when at capacity' and 'returns undefined for expired key'"
+      ],
+      "format_expectations": [
+        "References each violation by the Test Desiderata property name",
+        "Highlights the Behavioral violation as high-priority (false confidence)"
+      ]
+    },
+    {
+      "id": 6,
+      "name": "Python AuthService — well-written tests, false-positive check (hard)",
+      "difficulty": "hard",
+      "prompt": "/test-desiderata evals/files/test_auth_service.py",
+      "expected_output": "The tests are well-written. The skill should find few or no major violations. Acceptable output: acknowledging tests score well on Isolated (fresh fixture), Deterministic (no randomness), Readable (clear names), Behavioral (tests behavior via public API), Specific (focused tests), Automated (no manual steps). At most one borderline finding: Predictive gap (brute-force lockout tested only implicitly via compound test).",
+      "files": [
+        "evals/files/test_auth_service.py"
+      ],
+      "detection_expectations": [
+        "Identifies that tests use a fresh service fixture per test — correctly notes this satisfies Isolated",
+        "Identifies that test names describe behavior, not implementation — correctly notes this satisfies Readable",
+        "Identifies that assertions go through the public API — correctly notes this satisfies Structure-insensitive",
+        "At most flags one borderline Predictive concern: no dedicated test for the exact boundary of MAX_FAILED_ATTEMPTS (4 fails vs 5 fails)"
+      ],
+      "recommendation_expectations": [
+        "Does NOT flag false positives — does not claim violations for behaviors that are correct",
+        "If Predictive is flagged, suggests adding a parameterized test for exactly MAX_FAILED_ATTEMPTS - 1 vs MAX_FAILED_ATTEMPTS failed attempts"
+      ],
+      "format_expectations": [
+        "Provides an overall quality summary acknowledging tests are in good shape",
+        "Does not manufacture violations to fill the report"
+      ]
+    },
+    {
+      "id": 7,
+      "name": "Python DataPipeline — multiple violations requiring tradeoff analysis (hard)",
+      "difficulty": "hard",
+      "prompt": "/test-desiderata evals/files/test_data_pipeline.py",
+      "expected_output": "Detects five violations spanning six properties, including a tradeoff: Deterministic (BATCH_SIZE from env), Isolated (shared /tmp output file), Behavioral (steps list checked instead of output correctness), Predictive (no test for malformed input), Fast (sleep per record). Requires tradeoff analysis: Isolated vs Fast (per-test temp files add overhead) and Predictive vs Fast (comprehensive input tests slow the suite).",
+      "files": [
+        "evals/files/test_data_pipeline.py"
+      ],
+      "detection_expectations": [
+        "Identifies BATCH_SIZE from os.getenv as a Deterministic violation (test result depends on environment variable)",
+        "Identifies SHARED_OUTPUT = '/tmp/pipeline_output.csv' as an Isolated violation (shared filesystem artifact between tests)",
+        "Identifies test_pipeline_runs_all_steps asserting on steps list not output content as a Behavioral violation",
+        "Identifies absence of test for malformed input (e.g., missing 'value' key, non-numeric value) as a Predictive violation",
+        "Identifies time.sleep(0.001) per record as a Fast violation (accumulates: 50 records × 0.001s = 50ms overhead)",
+        "Identifies test_large_batch not verifying category transformation as a Specific violation"
+      ],
+      "recommendation_expectations": [
+        "Suggests injecting batch_size as constructor parameter instead of reading from env",
+        "Suggests using tempfile.NamedTemporaryFile or tmp_path pytest fixture per test",
+        "Suggests adding tests for rows missing required keys and rows with non-numeric values",
+        "Explains the Isolated vs Fast tradeoff (per-test temp files add I/O overhead but are necessary for correctness)"
+      ],
+      "format_expectations": [
+        "References each violation by the Test Desiderata property name",
+        "Explicitly discusses at least one tradeoff between competing properties",
+        "Prioritizes violations (e.g., Isolated and Deterministic as safety issues to fix first)"
+      ]
+    }
+  ],
+  "grading_guide": {
+    "detection_expectations": "Each expectation is binary: did the output identify this specific violation and name the correct Test Desiderata property? Naming only the category ('this test is slow') without referencing the property ('Fast') does not count. Evidence must be in the analysis output, not inferred.",
+    "recommendation_expectations": "Evaluates whether suggestions are actionable and correct. A recommendation must target the identified violation specifically — generic advice ('write better tests') does not count. For the false-positive eval (#6), any flagged 'violation' that is actually correct behavior counts as a quality failure.",
+    "format_expectations": "Evaluates adherence to the skill's prescribed output format: property names referenced, code-level examples or suggestions present, tradeoff analysis included where prompted. Scored separately from detection.",
+    "efficiency_metric": "Calculate: total detection_expectations passed / (tokens / 1000). Higher is better. Report for both with_skill and without_skill configurations.",
+    "statistical_requirements": "With min_runs=3, report mean, stddev, min, max for each metric. A delta is only meaningful if the confidence intervals don't overlap. Note any eval where with_skill and without_skill distributions overlap significantly.",
+    "false_positive_calibration": "Eval #6 specifically tests calibration. If the skill flags >1 major violation in a well-written test suite, it is over-detecting. If it flags 0 concerns and misses the borderline Predictive gap, it is under-detecting. Ideal: 0-1 concerns flagged, correctly qualified as minor."
+  }
+}

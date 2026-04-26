@@ -1,0 +1,17 @@
+{
+  "eval_id": 3,
+  "eval_name": "go-inventory-easy",
+  "prompt": "Analyze the test file at /Users/jorge.castro/mordor/personal/stepwise-dev/core/skills/test-desiderata-workspace/evals/files/test_inventory.go for test quality issues using the Test Desiderata framework",
+  "assertions": [
+    "Identifies globalInventory package-level variable as an Isolated violation (state shared across tests)",
+    "Identifies TestFullInventoryFlow as a Composable violation (covers four independent operations in one test)",
+    "Identifies fmt.Printf/fmt.Println as an Automated violation (requires human to inspect stdout)",
+    "Identifies generic 'operation failed' error string as a Specific violation (caller cannot distinguish error types)",
+    "Notes TestReserveExceedsStock implicitly depends on state left by TestFullInventoryFlow",
+    "Suggests creating a fresh NewInventory() inside each test function",
+    "Suggests splitting TestFullInventoryFlow into TestAddStock, TestReserve, TestRelease, TestAvailable",
+    "Suggests using t.Logf instead of fmt.Printf (only visible on failure)",
+    "References each violation by the Test Desiderata property name",
+    "Identifies at least one inter-test dependency caused by shared state"
+  ]
+}

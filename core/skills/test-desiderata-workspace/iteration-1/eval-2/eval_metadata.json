@@ -1,0 +1,17 @@
+{
+  "eval_id": 2,
+  "eval_name": "typescript-orderservice-easy",
+  "prompt": "Analyze the test file at /Users/jorge.castro/mordor/personal/stepwise-dev/core/skills/test-desiderata-workspace/evals/files/test_order_service.ts for test quality issues using the Test Desiderata framework",
+  "assertions": [
+    "Identifies test1, test2, test3, test4 names as a Readable violation (names reveal no intent)",
+    "Identifies 500ms setTimeout in test3 as a Fast violation",
+    "Identifies vi.spyOn mockResolvedValue(999) in test4 as a Behavioral violation (tests the mock, not the implementation)",
+    "Identifies duplicated Order boilerplate across tests as a Writable violation",
+    "Identifies expect(true).toBe(true) in test3 as a vacuous/meaningless assertion",
+    "Suggests renaming tests to describe the behavior being verified (e.g., 'createOrder returns the order id')",
+    "Suggests removing or replacing setTimeout with synchronous or fake-timer equivalent",
+    "Suggests extracting a shared order fixture or factory function to reduce boilerplate",
+    "References each violation by the Test Desiderata property name",
+    "Provides at least one renamed test example"
+  ]
+}

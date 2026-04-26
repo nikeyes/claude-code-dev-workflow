@@ -1,0 +1,20 @@
+{
+  "eval_id": 7,
+  "eval_name": "python-datapipeline-hard",
+  "prompt": "Analyze the test file at /Users/jorge.castro/mordor/personal/stepwise-dev/core/skills/test-desiderata-workspace/evals/files/test_data_pipeline.py for test quality issues using the Test Desiderata framework",
+  "assertions": [
+    "Identifies BATCH_SIZE from os.getenv as a Deterministic violation (test result depends on environment variable)",
+    "Identifies SHARED_OUTPUT = '/tmp/pipeline_output.csv' as an Isolated violation (shared filesystem artifact between tests)",
+    "Identifies test_pipeline_runs_all_steps asserting on steps list not output content as a Behavioral violation",
+    "Identifies absence of test for malformed input (e.g., missing 'value' key, non-numeric value) as a Predictive violation",
+    "Identifies time.sleep(0.001) per record as a Fast violation (accumulates: 50 records x 0.001s = 50ms overhead)",
+    "Identifies test_large_batch not verifying category transformation as a Specific violation",
+    "Suggests injecting batch_size as constructor parameter instead of reading from env",
+    "Suggests using tempfile.NamedTemporaryFile or tmp_path pytest fixture per test",
+    "Suggests adding tests for rows missing required keys and rows with non-numeric values",
+    "Explains the Isolated vs Fast tradeoff (per-test temp files add I/O overhead but are necessary for correctness)",
+    "References each violation by the Test Desiderata property name",
+    "Explicitly discusses at least one tradeoff between competing properties",
+    "Prioritizes violations (e.g., Isolated and Deterministic as safety issues to fix first)"
+  ]
+}

@@ -1,0 +1,134 @@
+{
+  "expectations": [
+    {
+      "text": "Identifies test1, test2, test3, test4 names as a Readable violation (names reveal no intent)",
+      "passed": true,
+      "evidence": "analysis.md Section 6 (Readable): 'Test names (test1, test2, test3, test4 behavioral violation) convey no behavioral intent ... When a test fails in CI, the only information available is \"test1 failed\".' All four test names are explicitly cited with their line numbers (46, 60, 75, 89)."
+    },
+    {
+      "text": "Identifies 500ms setTimeout in test3 as a Fast violation",
+      "passed": true,
+      "evidence": "analysis.md Section 4 (Fast): 'Issue: test3 uses a real 500 ms setTimeout / Location: Line 77 — await new Promise((resolve) => setTimeout(resolve, 500)) / Impact: This single delay adds 500 ms to every test run.' Explicitly marked as FAIL."
+    },
+    {
+      "text": "Identifies vi.spyOn mockResolvedValue(999) in test4 as a Behavioral violation (tests the mock, not the implementation)",
+      "passed": true,
+      "evidence": "analysis.md Section 7 (Behavioral): 'Issue: test4 spies on and replaces the very method it is asserting / const spy = vi.spyOn(service, \"getTotal\").mockResolvedValue(999); ... expect(total).toBe(999); // tests the mock, not the implementation / Impact: The test does not exercise OrderService.getTotal at all. No matter how broken the implementation is, this test passes.'"
+    },
+    {
+      "text": "Identifies duplicated Order boilerplate across tests as a Writable violation",
+      "passed": true,
+      "evidence": "analysis.md Section 5 (Writable): 'Issue: The same 10-line Order literal is copy-pasted verbatim across test1, test2, test3, and test4 / Locations: Lines 48-55 (test1), Lines 62-69 (test2), Lines 79-83 (test3), Lines 92-97 (test4) / Impact: Adding a new field to the Order interface requires updating every test.'"
+    },
+    {
+      "text": "Identifies expect(true).toBe(true) in test3 as a vacuous/meaningless assertion",
+      "passed": true,
+      "evidence": "analysis.md Section 6 (Readable): 'test3 ends with expect(true).toBe(true) (line 86). This assertion is vacuous — it always passes and communicates nothing.' Also flagged in Section 7 (Behavioral): 'Issue: expect(true).toBe(true) on line 86 is a no-op assertion / Impact: The cancelOrder operation could silently throw or fail and the test would still pass.'"
+    },
+    {
+      "text": "Suggests renaming tests to describe the behavior being verified (e.g., 'createOrder returns the order id')",
+      "passed": true,
+      "evidence": "analysis.md Section 6 (Readable) Fix: 'Rename tests to describe the behavior and expected outcome, e.g.: \"should return the order id when creating a valid order\", \"should calculate the total as sum of qty * price for all items\", \"should succeed when cancelling an existing order\", \"should throw when getting the total for an unknown order\".' The refactored suite also shows: 'it(\"returns the order id when creating a valid order\", ...)'."
+    },
+    {
+      "text": "Suggests removing or replacing setTimeout with synchronous or fake-timer equivalent",
+      "passed": true,
+      "evidence": "analysis.md Section 4 (Fast) Fix: 'Remove the sleep entirely — the OrderService under test is purely in-memory and needs no delay. If simulating async behavior is the goal, use vi.useFakeTimers() to advance time without real waiting.'"
+    },
+    {
+      "text": "Suggests extracting a shared order fixture or factory function to reduce boilerplate",
+      "passed": true,
+      "evidence": "analysis.md Section 5 (Writable) Fix: 'Introduce a test factory function, e.g.: function makeOrder(overrides: Partial<Order> & { id: string }): Order { ... }. Each test then calls makeOrder({ id: \"ord-001\" }) and overrides only what matters for that scenario.' The refactored suite demonstrates this factory in full."
+    },
+    {
+      "text": "References each violation by the Test Desiderata property name",
+      "passed": true,
+      "evidence": "analysis.md uses explicit property names throughout: Section headers are titled by property (e.g., '4. Fast — FAIL', '5. Writable — FAIL', '6. Readable — FAIL', '7. Behavioral — FAIL'). The prioritized violations table maps each issue to its property name: 'Behavioral', 'Fast', 'Readable', 'Writable'."
+    },
+    {
+      "text": "Provides at least one renamed test example",
+      "passed": true,
+      "evidence": "analysis.md Section 6 (Readable) Fix lists four renamed examples: 'should return the order id when creating a valid order', 'should calculate the total as sum of qty * price for all items', etc. The full refactored suite also shows: it(\"returns the order id when creating a valid order\", ...), it(\"calculates the total as sum of qty * price across all items\", ...)."
+    }
+  ],
+  "summary": {
+    "passed": 10,
+    "failed": 0,
+    "total": 10,
+    "pass_rate": 1.0
+  },
+  "execution_metrics": {
+    "tool_calls": null,
+    "total_tool_calls": null,
+    "total_steps": 6,
+    "errors_encountered": 0,
+    "output_chars": 8432,
+    "transcript_chars": 5512
+  },
+  "timing": {
+    "executor_duration_seconds": 129.8,
+    "grader_duration_seconds": null,
+    "total_duration_seconds": 129.8
+  },
+  "claims": [
+    {
+      "claim": "The file contains 4 tests: test1, test2, test3, test4 behavioral violation",
+      "type": "factual",
+      "verified": true,
+      "evidence": "Transcript Step 2 and analysis.md both confirm 4 tests with those names. The file header comments describe exactly 4 seeded violations matching those test names."
+    },
+    {
+      "claim": "test3 uses a real setTimeout of 500 ms",
+      "type": "factual",
+      "verified": true,
+      "evidence": "analysis.md cites line 77: 'await new Promise((resolve) => setTimeout(resolve, 500))' with explicit line reference."
+    },
+    {
+      "claim": "test4 uses vi.spyOn(service, 'getTotal').mockResolvedValue(999)",
+      "type": "factual",
+      "verified": true,
+      "evidence": "analysis.md Section 7 quotes the exact code: 'const spy = vi.spyOn(service, \"getTotal\").mockResolvedValue(999);' at lines 91, 98-99."
+    },
+    {
+      "claim": "The seeded violations exactly matched violations found by systematic evaluation",
+      "type": "quality",
+      "verified": true,
+      "evidence": "Transcript Step 6: 'The seeded violations in the file header exactly matched the violations found by systematic property evaluation, providing a good ground-truth check.' Three additional secondary violations were also found beyond the seeded four."
+    },
+    {
+      "claim": "The refactored suite fixes all four seeded violations",
+      "type": "quality",
+      "verified": true,
+      "evidence": "analysis.md closing paragraph: 'This refactored suite: Fixes all four seeded violations (Readable, Fast, Behavioral, Writable).' The code demonstrates the factory function (Writable fix), renamed tests (Readable fix), no setTimeout (Fast fix), and no spy on SUT (Behavioral fix)."
+    },
+    {
+      "claim": "expect(true).toBe(true) appears on line 86 of the test file",
+      "type": "factual",
+      "verified": false,
+      "evidence": "The transcript and analysis cite line 86 for this assertion, but the original test file was not directly examined in grading. This is plausible but unverified from grading artifacts alone."
+    }
+  ],
+  "user_notes_summary": {
+    "uncertainties": [],
+    "needs_review": [],
+    "workarounds": []
+  },
+  "eval_feedback": {
+    "suggestions": [
+      {
+        "assertion": "Identifies expect(true).toBe(true) in test3 as a vacuous/meaningless assertion",
+        "reason": "This expectation is already covered by other more specific expectations about Behavioral violation and test3. It passes easily because the vacuous assertion is explicitly flagged in two separate sections. Consider merging or folding this into the Behavioral expectation to avoid redundancy."
+      },
+      {
+        "reason": "No assertion checks that the analysis correctly identifies the specific line numbers where violations occur — the skill's output is notably precise about locations (line 77, line 86, lines 91/98-99, lines 48-55/62-69/79-83/92-97), but none of the graded expectations require this level of specificity. A weak analysis that merely mentions the property names and test names would also pass all 10 expectations."
+      },
+      {
+        "reason": "No assertion checks the quality or correctness of the suggested refactoring. The skill produced a full refactored test suite (7 tests) in the output, but no expectation evaluates whether the suggested code is actually correct (e.g., whether makeOrder is typed correctly, whether the assertions in the rewritten tests would pass against the real implementation). An incorrect refactoring that mentions all the right concepts would pass all assertions."
+      },
+      {
+        "reason": "Expectation 9 ('References each violation by the Test Desiderata property name') is trivially satisfied by any output that structures its analysis around property names — which any execution of the skill with the prescribed output format would do. This is more a format compliance check than a substantive quality check."
+      }
+    ],
+    "overall": "The eval has good coverage of the seeded violations and the key suggestions. All 10 expectations pass with strong evidence. The main gap is that the assertions test presence of content (does it mention X?) rather than correctness (is the content accurate and actionable?). Adding 1-2 assertions about refactoring quality or location precision would make the eval more discriminating."
+  }
+}

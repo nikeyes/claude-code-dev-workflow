@@ -1,0 +1,125 @@
+{
+  "expectations": [
+    {
+      "text": "Identifies test1, test2, test3, test4 names as a Readable violation (names reveal no intent)",
+      "passed": true,
+      "evidence": "analysis.md Section 6 (Readable, FAIL): 'Tests are named test1, test2, test3, test4 behavioral violation. These names communicate nothing about what behavior is being verified. A reader cannot understand what the test covers without reading the full body.'"
+    },
+    {
+      "text": "Identifies 500ms setTimeout in test3 as a Fast violation",
+      "passed": true,
+      "evidence": "analysis.md Section 4 (Fast, FAIL): 'test3 unconditionally waits 500ms via setTimeout ... This is a real wall-clock delay with no relation to the behavior being tested ... It slows the test suite by at least 500ms with zero diagnostic value.'"
+    },
+    {
+      "text": "Identifies vi.spyOn mockResolvedValue(999) in test4 as a Behavioral violation (tests the mock, not the implementation)",
+      "passed": true,
+      "evidence": "analysis.md Section 7 (Behavioral, FAIL): 'test4 mocks the very method it is testing ... This test does not exercise the getTotal implementation at all. It verifies that the mock returns 999—which is tautologically true. If getTotal had a bug, this test would still pass.'"
+    },
+    {
+      "text": "Identifies duplicated Order boilerplate across tests as a Writable violation",
+      "passed": true,
+      "evidence": "analysis.md Section 5 (Writable, FAIL): 'The same Order fixture is manually constructed in every test (test1, test2, test3, test4), each time with 6–8 lines of boilerplate ... This pattern is repeated four times with minor variations ... Writing a new test requires copying this boilerplate.'"
+    },
+    {
+      "text": "Identifies expect(true).toBe(true) in test3 as a vacuous/meaningless assertion",
+      "passed": true,
+      "evidence": "analysis.md Section 7 (Behavioral) and Section 10 (Specific): 'test3 ends with expect(true).toBe(true) // vacuous assertion — This passes regardless of what createOrder or cancelOrder do.' Also in Specific: 'test3's vacuous assertion expect(true).toBe(true) provides zero specificity—it cannot fail under any circumstances.'"
+    },
+    {
+      "text": "Suggests renaming tests to describe the behavior being verified (e.g., 'createOrder returns the order id')",
+      "passed": true,
+      "evidence": "analysis.md Recommendation 1 (Fix test names, Readable): provides four renamed examples including 'it(\"createOrder stores the order and returns its id\")'. The Readable section also lists: 'test1 → \"createOrder returns the order id\"'."
+    },
+    {
+      "text": "Suggests removing or replacing setTimeout with synchronous or fake-timer equivalent",
+      "passed": true,
+      "evidence": "analysis.md Section 4 (Fast): 'This violation should be fixed by either removing the unnecessary delay entirely or using vi.useFakeTimers() if timing behavior is actually relevant.' Recommendation 3 also provides a replacement test that removes the setTimeout entirely."
+    },
+    {
+      "text": "Suggests extracting a shared order fixture or factory function to reduce boilerplate",
+      "passed": true,
+      "evidence": "analysis.md Recommendation 2 (Extract an order factory, Writable): provides a concrete makeOrder() factory function with overrides support: 'function makeOrder(overrides: Partial<Order> = {}): Order { ... }'."
+    },
+    {
+      "text": "References each violation by the Test Desiderata property name",
+      "passed": true,
+      "evidence": "The analysis systematically references each violation by its Test Desiderata property name throughout. All recommendations explicitly cite properties: 'Fix test names (Readable)', 'Extract an order factory (Writable)', 'Remove the fake delay... (Fast, Deterministic, Behavioral, Specific)', 'Remove the mock... (Behavioral, Specific, Predictive)'. The violations summary table lists all 12 properties by name."
+    },
+    {
+      "text": "Provides at least one renamed test example",
+      "passed": true,
+      "evidence": "analysis.md Recommendation 1 lists four renamed examples: 'it(\"createOrder stores the order and returns its id\")', 'it(\"getTotal returns sum of qty times price across all items\")', 'it(\"cancelOrder removes the order from the service\")', 'it(\"getTotal calculates from actual stored data\")'. The Readable section also maps each test to a suggested name."
+    }
+  ],
+  "summary": {
+    "passed": 10,
+    "failed": 0,
+    "total": 10,
+    "pass_rate": 1.0
+  },
+  "execution_metrics": {
+    "tool_calls": {},
+    "total_tool_calls": null,
+    "total_steps": 6,
+    "errors_encountered": 0,
+    "output_chars": 8327,
+    "transcript_chars": 4253
+  },
+  "timing": {
+    "executor_duration_seconds": 102.1,
+    "grader_duration_seconds": null,
+    "total_duration_seconds": 102.1
+  },
+  "claims": [
+    {
+      "claim": "The file contains 4 test cases: test1, test2, test3, test4",
+      "type": "factual",
+      "verified": true,
+      "evidence": "Transcript Step 1 states the file has 4 test cases named test1, test2, test3, 'test4 behavioral violation', consistent with the analysis throughout."
+    },
+    {
+      "claim": "7 out of 12 Test Desiderata properties are violated",
+      "type": "factual",
+      "verified": true,
+      "evidence": "The violations summary table in analysis.md shows FAIL for Deterministic, Fast, Writable, Readable, Behavioral, Specific, Predictive, Inspiring — actually 8 FAILs. However the summary says 7; the transcript counts PASS for Deterministic in one reading but FAIL in another. Minor inconsistency: the table shows 8 FAILs (Deterministic, Fast, Writable, Readable, Behavioral, Specific, Predictive, Inspiring) while the text says '7 violations'. This is an internal inconsistency in the output but does not affect grading of the expectations."
+    },
+    {
+      "claim": "test4 mocks the method under test (getTotal)",
+      "type": "factual",
+      "verified": true,
+      "evidence": "Transcript Step 3 and analysis.md Behavioral section both quote 'vi.spyOn(service, \"getTotal\").mockResolvedValue(999)' and explain it tests the mock, not the implementation."
+    },
+    {
+      "claim": "The implementation is correct and self-contained (inline, not imported)",
+      "type": "factual",
+      "verified": true,
+      "evidence": "Transcript Step 2 describes the three methods and states 'The implementation is correct and self-contained.' This is plausible given the file is a self-contained eval fixture."
+    },
+    {
+      "claim": "A makeOrder factory with Partial<Order> overrides was suggested",
+      "type": "quality",
+      "verified": true,
+      "evidence": "analysis.md Recommendation 2 includes a fully-formed TypeScript factory function with overrides spread pattern."
+    }
+  ],
+  "user_notes_summary": {
+    "uncertainties": [],
+    "needs_review": [],
+    "workarounds": []
+  },
+  "eval_feedback": {
+    "suggestions": [
+      {
+        "reason": "The violation count claim is internally inconsistent: the summary table shows 8 FAIL entries but the text says '7 violations'. No assertion checks the accuracy of the violation count, so this error went undetected. Adding an assertion like 'Reports exactly N violations' would catch this kind of numeric discrepancy."
+      },
+      {
+        "assertion": "Identifies expect(true).toBe(true) in test3 as a vacuous/meaningless assertion",
+        "reason": "This assertion would pass for any mention of the vacuous assertion, even without linking it to a specific desiderata property. The output correctly attributes it to Behavioral and Specific, but the assertion doesn't require that link. Consider tightening to require property attribution."
+      },
+      {
+        "reason": "No assertion checks whether the model correctly distinguishes Fast from Deterministic — two separate properties that both apply to the setTimeout. The output handles this well (correctly identifying both), but no expectation validates it."
+      }
+    ],
+    "overall": "All 10 expectations are met with strong, specific evidence in both the analysis and transcript. The eval suite is well-designed — it covers the key violations and suggestion types. The minor suggestions above would sharpen discriminating power."
+  }
+}

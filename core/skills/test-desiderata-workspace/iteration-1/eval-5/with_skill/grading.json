@@ -1,0 +1,116 @@
+{
+  "expectations": [
+    {
+      "text": "Identifies const cache outside describe as an Isolated violation (all tests share one cache instance)",
+      "passed": true,
+      "evidence": "analysis.md, section '1. Isolated — VIOLATED (Critical)': 'A single `cache` instance is shared across all tests in the `describe` block. Each `it` block mutates the shared object without resetting it.' Also in transcript Step 3: 'const cache = new LRUCache<string, number>(3, 1000) at line 50 is declared at module scope, outside any beforeEach or describe-level factory.'"
+    },
+    {
+      "text": "Identifies that vi.useFakeTimers() is called but vi.advanceTimersByTime() is never called — TTL never expires — as a Behavioral violation",
+      "passed": true,
+      "evidence": "analysis.md, section '2. Behavioral — VIOLATED (Critical)': 'the fake timers are activated (vi.useFakeTimers()) yet time is never advanced. As a result, cache.get(\"temp\") returns 99 (the entry is fresh)'. Transcript Step 3 §7 states: 'vi.useFakeTimers() is called at line 73... since time has NOT been advanced, the entry is not expired, and returns 99'."
+    },
+    {
+      "text": "Identifies that 'evicts LRU entry and expired TTL' covers two orthogonal concerns as a Composable violation",
+      "passed": true,
+      "evidence": "analysis.md, section '3. Composable — VIOLATED (Moderate)': 'A single test covers two orthogonal concerns: (1) LRU eviction when capacity is exceeded, and (2) TTL-based expiry. These are independent dimensions of the cache's behavior.' Transcript Step 3 §2 also states: 'These are completely independent behavioral dimensions.'"
+    },
+    {
+      "text": "Identifies magic numbers 1000 and 3 in the shared cache constructor as a Readable violation",
+      "passed": true,
+      "evidence": "analysis.md, section '4. Readable — VIOLATED (Low-Moderate)': 'Line 89: new LRUCache<number, string>(3, 5000) — 3 (capacity) and 5000 (TTL in ms) appear without any named constants' and transcript Step 3 §6 flags 'Line 50: new LRUCache<string, number>(3, 1000) — 3 capacity and 1000ms TTL unexplained'. Both the module-level constructor (3, 1000) and the local constructor (3, 5000) are flagged. The expectation specifically mentions 1000 and 3 from the shared constructor — both are identified."
+    },
+    {
+      "text": "Explains that the TTL test passes for the wrong reason (value not expired, test assertion is weaker than intended)",
+      "passed": true,
+      "evidence": "analysis.md: 'This is a false-positive: The TTL expiry branch (lines 26–29 of the implementation) is never executed by this test suite, yet the test suite passes entirely.' Also: 'cache.get(\"temp\") returns 99 (the entry is fresh), and the assertion expect(result).not.toBeUndefined() passes — but for the wrong reason.' Transcript Step 3 §7 elaborates: 'The expiry branch is never executed by this test. The test passes for the wrong reason, giving false confidence that expiry is tested.'"
+    },
+    {
+      "text": "Suggests creating a fresh LRUCache instance inside each test (or using beforeEach)",
+      "passed": true,
+      "evidence": "analysis.md, Fix for Isolated violation provides explicit code: 'describe(\"LRUCache\", () => { let cache: LRUCache<string, number>; beforeEach(() => { cache = new LRUCache<string, number>(3, 1000); }); ... })'. The suggestion to use beforeEach is concrete and correct."
+    },
+    {
+      "text": "Suggests calling vi.advanceTimersByTime(ttlMs + 1) to actually expire the entry",
+      "passed": true,
+      "evidence": "analysis.md, Fix for Behavioral violation: 'vi.advanceTimersByTime(1001);' which is ttlMs (1000) + 1. Also in the Composable fix: 'vi.advanceTimersByTime(1001);'. The exact value 1001 = 1000 + 1 is used, matching the expectation's pattern of ttlMs + 1."
+    },
+    {
+      "text": "Suggests splitting the test into 'evicts LRU when at capacity' and 'returns undefined for expired key'",
+      "passed": true,
+      "evidence": "analysis.md, Fix for Composable violation provides two named tests: 'it(\"evicts least-recently-used entry when at capacity\", ...)' and 'it(\"returns undefined for TTL-expired entry\", ...)'. The split is concrete with full code examples."
+    },
+    {
+      "text": "References each violation by the Test Desiderata property name",
+      "passed": true,
+      "evidence": "All four violations are titled with the property name: '1. Isolated — VIOLATED', '2. Behavioral — VIOLATED', '3. Composable — VIOLATED', '4. Readable — VIOLATED'. The transcript Step 3 sections are also labeled by property name. The analysis consistently uses the Test Desiderata vocabulary throughout."
+    },
+    {
+      "text": "Highlights the Behavioral violation as high-priority (false confidence)",
+      "passed": true,
+      "evidence": "analysis.md Priority 1 section: 'Fix Behavioral violation — advance fake timers by 1001ms in the TTL test. Eliminates the false-positive pass and actually exercises the expiry code path.' Both Isolated and Behavioral are listed as Priority 1 (Safety). The analysis also states: 'This is a false-positive' and 'A regression in the expiry logic would go undetected', clearly emphasizing the false-confidence risk. The transcript also flags it as 'Critical false-positive; expiry logic untested' in its priority list."
+    }
+  ],
+  "summary": {
+    "passed": 10,
+    "failed": 0,
+    "total": 10,
+    "pass_rate": 1.0
+  },
+  "execution_metrics": {
+    "tool_calls": {},
+    "total_tool_calls": null,
+    "total_steps": 5,
+    "errors_encountered": 0,
+    "output_chars": 5140,
+    "transcript_chars": 7025
+  },
+  "timing": {
+    "executor_duration_seconds": 112.1,
+    "grader_duration_seconds": null,
+    "total_duration_seconds": 112.1
+  },
+  "claims": [
+    {
+      "claim": "The expiry branch (lines 26–29) is never executed by this test suite",
+      "type": "factual",
+      "verified": true,
+      "evidence": "The transcript shows vi.useFakeTimers() is called but time is never advanced, so Date.now() never exceeds expiresAt. The get() call returns 99 (not undefined), confirming the expiry branch is bypassed."
+    },
+    {
+      "claim": "Test 2 depends on Test 1 having set key 'a'",
+      "type": "factual",
+      "verified": true,
+      "evidence": "analysis.md notes: 'The test at line 63 sets keys b, c, d and expects a to be the evicted entry — but whether a is even present depends on whether the earlier stores and retrieves a value test ran first.' The comment at line 69 in the test file also acknowledges this dependency."
+    },
+    {
+      "claim": "All 4 violations are categorized as Critical, Critical, Moderate, and Low-Moderate respectively",
+      "type": "quality",
+      "verified": true,
+      "evidence": "Section headers explicitly label: Isolated as '(Critical)', Behavioral as '(Critical)', Composable as '(Moderate)', Readable as '(Low-Moderate)'."
+    },
+    {
+      "claim": "The TTL test assertion expect(result).not.toBeUndefined() is weaker than intended",
+      "type": "quality",
+      "verified": true,
+      "evidence": "The assertion tests that the value is present (not undefined), but since time never advances, the value IS present and fresh — so the assertion passes trivially without exercising the expiry logic. The intended test should assert toBeUndefined() after advancing time."
+    }
+  ],
+  "user_notes_summary": {
+    "uncertainties": [],
+    "needs_review": [],
+    "workarounds": []
+  },
+  "eval_feedback": {
+    "suggestions": [
+      {
+        "reason": "No assertion checks that the output correctly identifies the assertion direction flaw: the test uses .not.toBeUndefined() (checking the value is present) instead of .toBeUndefined() (checking it is absent after expiry). This subtle inversion is the root behavioral bug, and it's not directly tested as a separate expectation. Expectation 5 touches on it loosely, but a more precise assertion would require the output to identify the wrong assertion direction."
+      },
+      {
+        "assertion": "Identifies magic numbers 1000 and 3 in the shared cache constructor as a Readable violation",
+        "reason": "The expectation specifies '1000 and 3 in the shared cache constructor' — both values are flagged, but the output also flags 5000 and values in other locations. The assertion would pass for any output that mentions 1000 and 3 anywhere, even incidentally. A more discriminating version would require the output to connect the magic numbers specifically to the readability impact."
+      }
+    ],
+    "overall": "The eval suite is strong and comprehensive. All 10 expectations are well-targeted at specific, meaningful outcomes. The skill demonstrated genuine analysis depth — not just surface pattern matching. Minor suggestions above relate to precision, not coverage gaps."
+  }
+}

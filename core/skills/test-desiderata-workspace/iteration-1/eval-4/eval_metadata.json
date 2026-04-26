@@ -1,0 +1,18 @@
+{
+  "eval_id": 4,
+  "eval_name": "python-notificationservice-medium",
+  "prompt": "Analyze the test file at /Users/jorge.castro/mordor/personal/stepwise-dev/core/skills/test-desiderata-workspace/evals/files/test_notification_service.py for test quality issues using the Test Desiderata framework",
+  "assertions": [
+    "Identifies service._last_sent_at <= datetime.now() as a Deterministic violation (race condition between assignment and assertion)",
+    "Identifies absence of test for smtp.send raising an exception as a Predictive violation",
+    "Identifies absence of assertion on smtp.send 'to' argument as an Inspiring violation (test passes even if email sent to wrong address)",
+    "Identifies service._sent_count as a Structure-insensitive violation (private internal counter)",
+    "Notes the combined Predictive + Inspiring gap: no confidence that notifications reach the right person or survive SMTP failures",
+    "Suggests using freezegun or time.freeze or injecting a clock to make datetime deterministic",
+    "Suggests adding a test where smtp.send raises an exception and verifying send_welcome_email returns False",
+    "Suggests asserting smtp.send was called with the correct 'to' address",
+    "Suggests using get_stats() to observe sent count instead of _sent_count directly",
+    "References each violation by the Test Desiderata property name",
+    "Explains the Predictive + Inspiring tradeoff or synergy"
+  ]
+}

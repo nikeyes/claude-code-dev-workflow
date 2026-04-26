@@ -1,0 +1,17 @@
+{
+  "eval_id": 1,
+  "eval_name": "python-bankaccount-easy",
+  "prompt": "Analyze the test file at /Users/jorge.castro/mordor/personal/stepwise-dev/core/skills/test-desiderata-workspace/evals/files/test_bank_account.py for test quality issues using the Test Desiderata framework",
+  "assertions": [
+    "Identifies shared_balance global variable as an Isolated violation (test order dependency)",
+    "Identifies random.randint in BankAccount.deposit as a Deterministic violation",
+    "Identifies test_all_operations as a Specific violation (multiple assertions covering deposit, withdraw, and balance in one test)",
+    "Identifies assertion on account._ledger as a Structure-insensitive violation (private attribute)",
+    "Notes that test_deposit_updates_ledger depends on shared_balance from previous test",
+    "Suggests replacing shared_balance with a fresh instance per test (e.g., pytest fixture)",
+    "Suggests seeding or injecting the random ID to make deposit deterministic",
+    "Suggests splitting test_all_operations into focused single-concern tests",
+    "References each violation by the Test Desiderata property name (e.g., 'Isolated', 'Deterministic')",
+    "Provides at least one code-level fix example or concrete suggestion"
+  ]
+}

@@ -1,0 +1,135 @@
+{
+  "expectations": [
+    {
+      "text": "Identifies service._last_sent_at <= datetime.now() as a Deterministic violation (race condition between assignment and assertion)",
+      "passed": true,
+      "evidence": "Problem 1 in analysis.md explicitly targets line 60 (`assert service._last_sent_at <= datetime.now()`), labels it 'Non-Deterministic Assertion', and explains the race between the timestamp captured inside `send_welcome_email` and the freshly-computed `datetime.now()` at assertion time. Summary table row 1 labels it 'Deterministic'."
+    },
+    {
+      "text": "Identifies absence of test for smtp.send raising an exception as a Predictive violation",
+      "passed": true,
+      "evidence": "Problem 2 in analysis.md is titled 'Missing Error-Path Coverage (Predictive gap)' and states: 'There is no test for what happens when `smtp.send` raises an exception.' The summary table also labels it 'Predictive'."
+    },
+    {
+      "text": "Identifies absence of assertion on smtp.send 'to' argument as an Inspiring violation (test passes even if email sent to wrong address)",
+      "passed": true,
+      "evidence": "Problem 3 in analysis.md is titled 'Incomplete Assertion: Recipient Not Verified (Inspiring gap)' and states: 'It never verifies that the `smtp.send` mock was called with `to=\"user@example.com\"`. A bug that hardcodes the wrong recipient, or ignores the `to` parameter entirely, would not be caught.' The summary table labels it 'Inspiring'."
+    },
+    {
+      "text": "Identifies service._sent_count as a Structure-insensitive violation (private internal counter)",
+      "passed": true,
+      "evidence": "Problem 4 in analysis.md is titled 'Assertion on Private Internal State (Structure-Sensitive)' and targets `assert service._sent_count == 1`, explaining that `_sent_count` is a private implementation detail whose direct assertion couples the test to internal structure. Summary table labels it 'Structure-insensitive'."
+    },
+    {
+      "text": "Notes the combined Predictive + Inspiring gap: no confidence that notifications reach the right person or survive SMTP failures",
+      "passed": false,
+      "evidence": "The analysis treats each violation in isolation. There is no paragraph or statement synthesizing the Predictive and Inspiring gaps together into a combined concern about confidence in end-to-end delivery. The closest it comes is the 'Additional Observations' section, which notes both gaps persist in `test_send_password_reset`, but does not frame them as a combined systemic risk."
+    },
+    {
+      "text": "Suggests using freezegun or time.freeze or injecting a clock to make datetime deterministic",
+      "passed": true,
+      "evidence": "Problem 1 states: 'Alternatively, inject a fixed clock so the test is fully deterministic.' While `freezegun` and `time.freeze` are not named, injecting a clock is an equivalent technique explicitly recommended. The primary recommended fix uses timestamp bracketing, with clock injection offered as an alternative."
+    },
+    {
+      "text": "Suggests adding a test where smtp.send raises an exception and verifying send_welcome_email returns False",
+      "passed": true,
+      "evidence": "Problem 2 recommended additions include `test_send_welcome_email_returns_false_on_smtp_failure` with `smtp.send.side_effect = Exception('SMTP connection refused')` and `assert result is False`."
+    },
+    {
+      "text": "Suggests asserting smtp.send was called with the correct 'to' address",
+      "passed": true,
+      "evidence": "Problem 3 recommended fix shows `smtp.send.assert_called_once_with(to=\"user@example.com\", subject=\"Welcome!\", body=\"Hello Alice, welcome to our platform.\")`, explicitly asserting the `to` argument."
+    },
+    {
+      "text": "Suggests using get_stats() to observe sent count instead of _sent_count directly",
+      "passed": true,
+      "evidence": "Problem 4 recommended fix shows `assert service.get_stats()[\"sent\"] == 1`, replacing the private `_sent_count` with the public `get_stats()` accessor."
+    },
+    {
+      "text": "References each violation by the Test Desiderata property name",
+      "passed": true,
+      "evidence": "All four violations are labeled with Test Desiderata property names in both the problem headings and the summary table: 'Deterministic' (Problem 1), 'Predictive' (Problem 2), 'Inspiring' (Problem 3), 'Structure-insensitive' (Problem 4)."
+    },
+    {
+      "text": "Explains the Predictive + Inspiring tradeoff or synergy",
+      "passed": false,
+      "evidence": "The analysis never discusses any relationship, tradeoff, or synergy between the Predictive and Inspiring properties. Each violation is described independently. No statement connects the two gaps or explains how they compound each other's risk."
+    }
+  ],
+  "summary": {
+    "passed": 9,
+    "failed": 2,
+    "total": 11,
+    "pass_rate": 0.82
+  },
+  "execution_metrics": {
+    "tool_calls": {
+      "Read": 1,
+      "Bash": 1,
+      "Write": 2
+    },
+    "total_tool_calls": 4,
+    "total_steps": 4,
+    "errors_encountered": 0,
+    "output_chars": 5870,
+    "transcript_chars": 1890
+  },
+  "timing": {
+    "executor_duration_seconds": 74.8,
+    "grader_duration_seconds": null,
+    "total_duration_seconds": 74.8
+  },
+  "claims": [
+    {
+      "claim": "The file contained 83 lines",
+      "type": "factual",
+      "verified": false,
+      "evidence": "No independent verification was performed against the source file. The transcript states this but the grader did not re-read the file."
+    },
+    {
+      "claim": "Four seeded violations are documented in the module docstring",
+      "type": "factual",
+      "verified": false,
+      "evidence": "The transcript reports this but the source file was not read by the grader. The analysis itself correctly identifies all four violations, which is consistent with the claim."
+    },
+    {
+      "claim": "The service swallows all exceptions and returns False",
+      "type": "factual",
+      "verified": false,
+      "evidence": "Stated in the transcript as an observation from reading the source file; not independently verified by the grader."
+    },
+    {
+      "claim": "The recommended fix for Deterministic uses timestamp bracketing",
+      "type": "quality",
+      "verified": true,
+      "evidence": "analysis.md Problem 1 recommended fix clearly shows `before = datetime.now()` / call / `after = datetime.now()` / `assert before <= stats['last_sent_at'] <= after`."
+    },
+    {
+      "claim": "No internet access or additional file reads were required",
+      "type": "process",
+      "verified": true,
+      "evidence": "Transcript Step 3 confirms analysis was performed via manual reasoning after a single Read call. Tool list shows 1 Read, 1 Bash, 2 Write — consistent with the claim."
+    }
+  ],
+  "user_notes_summary": {
+    "uncertainties": [],
+    "needs_review": [],
+    "workarounds": []
+  },
+  "eval_feedback": {
+    "suggestions": [
+      {
+        "assertion": "Suggests using freezegun or time.freeze or injecting a clock to make datetime deterministic",
+        "reason": "The assertion passes for any mention of 'clock injection', which is weaker than the industry-standard `freezegun` approach. An output that only mentions bracketing with datetime.now() (which the analysis primarily recommends) would still leave a non-deterministic test in place. Consider tightening the assertion to require a fully deterministic fix, not just an alternative mention."
+      },
+      {
+        "assertion": "Notes the combined Predictive + Inspiring gap: no confidence that notifications reach the right person or survive SMTP failures",
+        "reason": "This is a high-value assertion that the model failed. The synthesis of multiple desiderata into a coherent risk narrative is a key differentiator for skilled analysis. It might be worth adding a simpler version that checks whether the output explicitly links these two gaps."
+      },
+      {
+        "reason": "No assertion checks whether the analysis correctly identifies that the Deterministic violation in the primary recommended fix (bracketing) still does not fully eliminate non-determinism on slow machines — only clock injection does. The analysis presents bracketing as the primary fix without noting this subtlety, which is a quality gap not covered by any expectation."
+      }
+    ],
+    "overall": "The evals are well-targeted and discriminating. The two failed assertions (expectations 5 and 11) correctly identify a genuine gap in the output: the model analyzed violations in isolation and never synthesized cross-cutting concerns. The strongest eval improvement would be to clarify expectation 6 to require a fully deterministic fix rather than a mere mention of clock injection as an alternative."
+  }
+}

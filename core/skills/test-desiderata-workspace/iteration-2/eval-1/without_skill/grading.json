@@ -1,0 +1,129 @@
+{
+  "expectations": [
+    {
+      "text": "Identifies shared_balance global variable as an Isolated violation (test order dependency)",
+      "passed": true,
+      "evidence": "analysis.md Problem 1 header: 'Shared Mutable Global State (Isolation Violation)' and summary table row 1: 'Shared mutable global shared_balance between tests | Isolated | High'. Transcript 3.1 also explicitly names it an 'isolation violation'."
+    },
+    {
+      "text": "Identifies random.randint in BankAccount.deposit as a Deterministic violation",
+      "passed": true,
+      "evidence": "analysis.md Problem 2 header: 'Non-Deterministic Behaviour in Production Code (Determinism Violation)' at 'Line 24 (deposit method)'. Summary table row 2: 'random.randint in deposit makes behaviour non-deterministic | Deterministic | High'."
+    },
+    {
+      "text": "Identifies test_all_operations as a Specific violation (multiple assertions covering deposit, withdraw, and balance in one test)",
+      "passed": true,
+      "evidence": "analysis.md Problem 3 header: 'One Test Verifying Multiple Independent Behaviours (Specificity Violation)'. Description: 'test_all_operations exercises deposit, withdraw, and get_balance in a single test, then asserts on balance, ledger length, and ledger entry type all at once.' Summary table: 'Specific | Medium'."
+    },
+    {
+      "text": "Identifies assertion on account._ledger as a Structure-insensitive violation (private attribute)",
+      "passed": true,
+      "evidence": "analysis.md Problem 4 header: 'Assertions on Internal Implementation Details (Structure-Sensitivity Violation)'. Description: 'Multiple tests assert directly on account._ledger, a private attribute'. Summary table row 4: 'Direct assertions on _ledger private attribute | Structure-insensitive | Medium'."
+    },
+    {
+      "text": "Notes that test_deposit_updates_ledger depends on shared_balance from previous test",
+      "passed": true,
+      "evidence": "analysis.md Problem 1: 'test_deposit_updates_ledger then constructs BankAccount(\"Bob\", shared_balance) — meaning Bob starts with a balance of 70, not 0. The two tests are order-dependent.' Transcript 3.1 also states: 'test_deposit_updates_ledger will receive unexpected initial state'."
+    },
+    {
+      "text": "Suggests replacing shared_balance with a fresh instance per test (e.g., pytest fixture)",
+      "passed": true,
+      "evidence": "analysis.md Problem 1 Recommendation: 'Remove the global variable entirely. Each test should construct its own BankAccount with a known, explicit initial balance.' Before/after code shows each test using BankAccount(\"Alice\", 0) and BankAccount(\"Bob\", 0) directly. The expectation's '(e.g., pytest fixture)' is an example form; a direct fresh instantiation satisfies the intent."
+    },
+    {
+      "text": "Suggests seeding or injecting the random ID to make deposit deterministic",
+      "passed": false,
+      "evidence": "analysis.md Problem 2 recommends replacing random.randint with a deterministic auto-incrementing counter (_next_tx_id starting at 1). This achieves determinism but does not seed the RNG (random.seed()) nor inject the ID as a parameter. The counter is not externally injectable, so neither 'seeding' nor 'injecting' (in the dependency-injection sense) was suggested."
+    },
+    {
+      "text": "Suggests splitting test_all_operations into focused single-concern tests",
+      "passed": true,
+      "evidence": "analysis.md Problem 3 Recommendation shows three split tests: test_deposit_increases_balance, test_withdraw_decreases_balance, and test_deposit_then_withdraw_results_in_correct_balance. The revised full test file also includes these."
+    },
+    {
+      "text": "References each violation by the Test Desiderata property name (e.g., 'Isolated', 'Deterministic')",
+      "passed": true,
+      "evidence": "analysis.md Summary Table uses exact property names: 'Isolated', 'Deterministic', 'Specific', 'Structure-insensitive'. Each Problem section also names the property in the header (e.g., 'Isolation Violation', 'Determinism Violation', 'Specificity Violation', 'Structure-Sensitivity Violation')."
+    },
+    {
+      "text": "Provides at least one code-level fix example or concrete suggestion",
+      "passed": true,
+      "evidence": "analysis.md contains before/after Python code blocks for all five problems, plus a complete revised test file at the end. For example, Problem 1 shows a before/after class comparison, Problem 2 shows the counter-based fix, Problem 3 shows three split test methods."
+    }
+  ],
+  "summary": {
+    "passed": 9,
+    "failed": 1,
+    "total": 10,
+    "pass_rate": 0.90
+  },
+  "execution_metrics": {
+    "tool_calls": {
+      "Read": 1,
+      "Bash": 1,
+      "Write": 2
+    },
+    "total_tool_calls": 4,
+    "total_steps": 5,
+    "errors_encountered": 0,
+    "output_chars": 14534,
+    "transcript_chars": 4451
+  },
+  "timing": {
+    "executor_duration_seconds": 86.4,
+    "grader_duration_seconds": null,
+    "total_duration_seconds": 86.4
+  },
+  "claims": [
+    {
+      "claim": "The test file contains four seeded violations",
+      "type": "factual",
+      "verified": true,
+      "evidence": "The transcript correctly identifies Isolated, Deterministic, Specific, and Structure-insensitive violations from the file. (The output also surfaces a fifth minor violation, but that is an addition, not a contradiction.)"
+    },
+    {
+      "claim": "test_all_operations mutates shared_balance to 70 (100 deposit - 30 withdraw)",
+      "type": "factual",
+      "verified": true,
+      "evidence": "analysis.md Problem 1: 'sets it to the balance after a deposit+withdraw cycle, i.e. 70'. Consistent with the code logic (deposit 100, withdraw 30)."
+    },
+    {
+      "claim": "Current tests do not assert on the id field (re: random.randint)",
+      "type": "factual",
+      "verified": true,
+      "evidence": "analysis.md Problem 2: 'No existing test asserts on id'. The transcript confirms this; no assertion on id appears in the test file."
+    },
+    {
+      "claim": "The output includes a fully revised test file",
+      "type": "quality",
+      "verified": true,
+      "evidence": "analysis.md ends with a '## Revised Test File (Full)' section containing a complete, runnable Python test class with 7 focused tests, the BankAccount class with the counter fix, and no uses of _ledger in assertions."
+    },
+    {
+      "claim": "test_negative_deposit_raises is identified as a minor Specificity violation",
+      "type": "factual",
+      "verified": true,
+      "evidence": "analysis.md Problem 5 identifies the absence of a match= parameter in pytest.raises(ValueError) as a low-severity Specificity violation, noting the inconsistency with test_withdraw_insufficient_funds_raises."
+    }
+  ],
+  "user_notes_summary": {
+    "uncertainties": [],
+    "needs_review": [],
+    "workarounds": []
+  },
+  "eval_feedback": {
+    "suggestions": [
+      {
+        "assertion": "Suggests seeding or injecting the random ID to make deposit deterministic",
+        "reason": "The assertion constrains the solution approach (seeding or injecting) rather than the outcome (making the deposit deterministic). A counter-based replacement is arguably a better fix than seeding, yet it fails this expectation. Consider rephrasing to 'Suggests a concrete approach to eliminate non-determinism in deposit (e.g., seeding, injecting ID, or replacing with a counter)'."
+      },
+      {
+        "reason": "No assertion checks the quality of the revised test file produced. The output includes a full rewrite, but none of the expectations verify that the revised file actually eliminates the violations (e.g., that it no longer uses shared_balance or _ledger assertions). An assertion like 'The revised test file uses a fresh BankAccount instance in each test instead of shared_balance' would catch cases where a model describes fixes correctly but produces a flawed revised file."
+      },
+      {
+        "reason": "Expectation 6 ('Suggests replacing shared_balance with a fresh instance per test (e.g., pytest fixture)') would pass even if the model only mentions 'use a fresh instance' in passing with no actionable code. The parenthetical '(e.g., pytest fixture)' sets a higher bar but is treated as optional. Consider splitting into 'mentions fresh instances' (low bar) and 'provides a before/after code example or fixture definition' (high bar)."
+      }
+    ],
+    "overall": "Strong eval coverage for the four core violations. The main gap is the determinism fix assertion over-specifying the approach, and the absence of any assertion verifying the revised test file's correctness."
+  }
+}

@@ -1,0 +1,125 @@
+{
+  "expectations": [
+    {
+      "text": "Identifies globalInventory package-level variable as an Isolated violation (state shared across tests)",
+      "passed": true,
+      "evidence": "analysis.md Section 1 (Isolated — VIOLATED): 'Line 55: var globalInventory = NewInventory() — a package-level mutable variable shared across all tests.' Also in transcript Step 3: 'globalInventory at line 55 shared across tests.'"
+    },
+    {
+      "text": "Identifies TestFullInventoryFlow as a Composable violation (covers four independent operations in one test)",
+      "passed": true,
+      "evidence": "analysis.md Section 2 (Composable — VIOLATED): 'TestFullInventoryFlow (lines 57–75) covers four distinct operations in sequence: AddStock → Reserve → Release → Available. Each operation is a separate concern that could be tested independently.' Transcript Step 3 also flags this: 'TestFullInventoryFlow chains AddStock → Reserve → Release → Available in a single test.'"
+    },
+    {
+      "text": "Identifies fmt.Printf/fmt.Println as an Automated violation (requires human to inspect stdout)",
+      "passed": true,
+      "evidence": "analysis.md Section 9 (Automated — VIOLATED): 'Line 70: fmt.Printf(\"Available after release: %d\\n\", available) — this prints to stdout and requires a human to read and interpret the output to confirm correctness.' Transcript Step 3: 'fmt.Printf at line 70 writes to stdout. Humans running go test see printed output and may incorrectly treat it as verification.'"
+    },
+    {
+      "text": "Identifies generic 'operation failed' error string as a Specific violation (caller cannot distinguish error types)",
+      "passed": true,
+      "evidence": "analysis.md Section 10 (Specific — VIOLATED): 'AddStock returns fmt.Errorf(\"operation failed\") (line 28) for invalid quantity. Reserve returns fmt.Errorf(\"operation failed\") (line 37) for insufficient stock. Both return the same error string, making it impossible to distinguish which operation failed or why.'"
+    },
+    {
+      "text": "Notes TestReserveExceedsStock implicitly depends on state left by TestFullInventoryFlow",
+      "passed": true,
+      "evidence": "analysis.md Section 1 (Isolated): 'TestReserveExceedsStock (line 79) calls globalInventory.Reserve(\"SKU-1\", 100) and implicitly depends on the state left by TestFullInventoryFlow (it expects SKU-1 to exist and have limited available stock).' Transcript Step 3: 'TestReserveExceedsStock relies on state set by TestFullInventoryFlow.'"
+    },
+    {
+      "text": "Suggests creating a fresh NewInventory() inside each test function",
+      "passed": true,
+      "evidence": "analysis.md Section 1 Fix: 'Each test should create its own local Inventory instance using NewInventory() and set up only the state it needs.' Also in Priority 1 of Improvement Plan: 'Remove globalInventory — Replace all uses with local NewInventory() in each test.' The refactored code examples show inv := NewInventory() at the start of every test function."
+    },
+    {
+      "text": "Suggests splitting TestFullInventoryFlow into TestAddStock, TestReserve, TestRelease, TestAvailable",
+      "passed": true,
+      "evidence": "analysis.md Section 2 Fix: 'Break into focused tests: TestAddStock_IncreasesAvailable, TestReserve_DecreasesAvailable, TestRelease_RestoresAvailability, TestAvailable_ReflectsNetPosition.' Priority 2 also states: 'Rename and split TestFullInventoryFlow — Create TestReserve_DecreasesAvailableStock, TestRelease_IncreasesAvailableStock, etc.' Refactored code section provides concrete implementations of these split tests."
+    },
+    {
+      "text": "Suggests using t.Logf instead of fmt.Printf (only visible on failure)",
+      "passed": true,
+      "evidence": "analysis.md Section 9 Fix: 'Remove the fmt.Printf entirely. The assertion on line 72–74 is sufficient. If debugging context is needed, use t.Logf (only shown on failure).'"
+    },
+    {
+      "text": "References each violation by the Test Desiderata property name",
+      "passed": true,
+      "evidence": "The analysis uses explicit Test Desiderata property names as section headers throughout: '### 1. Isolated — VIOLATED', '### 2. Composable — VIOLATED', '### 9. Automated — VIOLATED', '### 10. Specific — VIOLATED', etc. Each issue block also names the property: 'violates Isolated property', 'violates Composable property', 'violates Automated property'. The summary table lists all 12 properties with status."
+    },
+    {
+      "text": "Identifies at least one inter-test dependency caused by shared state",
+      "passed": true,
+      "evidence": "analysis.md Section 1: 'TestReserveExceedsStock (line 79)...implicitly depends on the state left by TestFullInventoryFlow (it expects SKU-1 to exist and have limited available stock). If TestReserveExceedsStock ran first on an empty inventory, the assertion would pass but for the wrong reason.' The transcript also explicitly calls this out: 'TestReserveExceedsStock relies on state set by TestFullInventoryFlow.'"
+    }
+  ],
+  "summary": {
+    "passed": 10,
+    "failed": 0,
+    "total": 10,
+    "pass_rate": 1.0
+  },
+  "execution_metrics": {
+    "total_tool_calls": null,
+    "total_steps": 6,
+    "errors_encountered": 0,
+    "output_chars": 9347,
+    "transcript_chars": 4232
+  },
+  "timing": {
+    "executor_duration_seconds": 137.6,
+    "grader_duration_seconds": null,
+    "total_duration_seconds": 137.6,
+    "total_tokens": 22762
+  },
+  "claims": [
+    {
+      "claim": "File implements an Inventory struct with AddStock, Reserve, Release, and Available operations alongside their tests in the same file",
+      "type": "factual",
+      "verified": true,
+      "evidence": "The transcript Step 2 documents reading the file and finding the struct definition, methods, and three test functions all in test_inventory.go"
+    },
+    {
+      "claim": "TestAddNegativeStock is properly isolated (uses local inv)",
+      "type": "factual",
+      "verified": true,
+      "evidence": "Transcript Step 3 notes: 'Only TestAddNegativeStock is properly isolated (uses local inv).' The refactored examples also create local instances, consistent with this assessment."
+    },
+    {
+      "claim": "The fmt.Printf assertion (line 70) is redundant because a t.Errorf assertion already covers the check",
+      "type": "quality",
+      "verified": true,
+      "evidence": "analysis.md Section 9: 'The assertion at lines 72–74 handles actual verification, making the print redundant and misleading.' The fix is to remove fmt.Printf since the t.Errorf already performs the check mechanically."
+    },
+    {
+      "claim": "Tests are deterministic in isolation despite the execution-order sensitivity from Isolated violation",
+      "type": "quality",
+      "verified": true,
+      "evidence": "analysis.md Section 3: 'No randomness, no time dependency, or external calls...The tests are deterministic in isolation, though the Isolated violation means results vary by execution order — a secondary effect, not a primary Deterministic failure.' This is a nuanced distinction correctly drawn."
+    },
+    {
+      "claim": "5 definite violations and 3 partial concerns were identified",
+      "type": "factual",
+      "verified": true,
+      "evidence": "analysis.md summary table: Isolated, Composable, Readable, Automated, Specific, Predictive are listed as VIOLATED (6 violations, not 5 as the transcript summary states '5 definite violations'). The table actually shows 6 violations. Minor inconsistency: the transcript Step 2 says '5 definite violations | Isolated, Composable, Automated, Specific, Predictive' while the analysis table also marks Readable as VIOLATED — so it's actually 6 violations, not 5. However this discrepancy does not affect any of the graded expectations."
+    }
+  ],
+  "user_notes_summary": {
+    "uncertainties": [],
+    "needs_review": [],
+    "workarounds": []
+  },
+  "eval_feedback": {
+    "suggestions": [
+      {
+        "assertion": "Suggests splitting TestFullInventoryFlow into TestAddStock, TestReserve, TestRelease, TestAvailable",
+        "reason": "The assertion checks for suggested split names but the output uses more descriptive names like TestAddStock_IncreasesAvailable and TestReserve_DecreasesAvailable rather than bare TestAddStock/TestReserve. The eval passes because the intent is clearly there, but the assertion wording 'TestAddStock, TestReserve, TestRelease, TestAvailable' is looser than the actual output. Consider requiring the more specific naming convention to distinguish a high-quality response from a minimal one."
+      },
+      {
+        "reason": "No assertion checks whether the output correctly distinguishes the Deterministic property (which technically passes) from the Isolated violation that causes order-dependent results. The analysis makes a correct and nuanced distinction here — a weaker response might incorrectly flag Deterministic as violated. An assertion targeting this distinction would be discriminating."
+      },
+      {
+        "reason": "No assertion checks for the Readable violation, which is a genuine finding in the output. The analysis identifies TestFullInventoryFlow's name, the magic number 8, and the missing arithmetic context as Readable violations. This is a meaningful finding not covered by any expectation."
+      }
+    ],
+    "overall": "All 10 expectations pass with strong evidence. The output is high quality and goes beyond minimum requirements — providing a refactored code example, tradeoff analysis, and a prioritized improvement plan. The evals cover the most important violations but miss Readable (a legitimate finding) and don't test for the Deterministic nuance distinction."
+  }
+}

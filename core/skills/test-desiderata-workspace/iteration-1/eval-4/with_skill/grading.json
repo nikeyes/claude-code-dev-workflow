@@ -1,0 +1,134 @@
+{
+  "expectations": [
+    {
+      "text": "Identifies service._last_sent_at <= datetime.now() as a Deterministic violation (race condition between assignment and assertion)",
+      "passed": true,
+      "evidence": "analysis.md, Section 3 (Deterministic - VIOLATION): 'This assertion captures datetime.now() at assertion time... creates a potential race if the system clock is monotonic only at coarse granularity... the assertion is semantically wrong and creates a potential race.' Transcript Step 3.3 also identifies this explicitly: 'Line 60: assert service._last_sent_at <= datetime.now() ... Root cause: No time injection or clock freezing.'"
+    },
+    {
+      "text": "Identifies absence of test for smtp.send raising an exception as a Predictive violation",
+      "passed": true,
+      "evidence": "analysis.md, Section 11 (Predictive - VIOLATION): 'There is no test that: Configures smtp.send to raise an exception / Verifies that send_welcome_email returns False / Verifies that send_password_reset returns False.' Transcript Step 3.11 also confirms: 'There is no test that: Calls smtp.send.side_effect = Exception(...) and verifies send_welcome_email returns False.'"
+    },
+    {
+      "text": "Identifies absence of assertion on smtp.send 'to' argument as an Inspiring violation (test passes even if email sent to wrong address)",
+      "passed": true,
+      "evidence": "analysis.md, Section 12 (Inspiring - VIOLATION): 'A developer could accidentally hardcode the recipient address, send to the wrong address... and this test would still pass.' The fix explicitly shows asserting smtp.send.assert_called_once_with(to=\"user@example.com\", ...). Transcript Step 3.12 states: 'A developer could introduce a bug that sends the email to admin@company.com instead of the provided address, and this test would still pass.'"
+    },
+    {
+      "text": "Identifies service._sent_count as a Structure-insensitive violation (private internal counter)",
+      "passed": true,
+      "evidence": "analysis.md, Section 8 (Structure-insensitive - VIOLATION): 'assert service._sent_count == 1 ... _sent_count is a private implementation attribute (Python convention: single underscore prefix signals internal). If the implementation is refactored... this assertion will break even though the observable behavior is identical.' Fix given: 'assert service.get_stats()[\"sent\"] == 1'."
+    },
+    {
+      "text": "Notes the combined Predictive + Inspiring gap: no confidence that notifications reach the right person or survive SMTP failures",
+      "passed": true,
+      "evidence": "analysis.md combines both violations explicitly. Predictive section: 'The suite cannot predict production behavior under failure conditions. Any regression in the exception-handling path will go undetected.' Inspiring section: 'Critical behavioral details (who received the email, what it said) are unverified.' The tradeoff table in analysis.md also states: 'Inspiring vs. Structure-insensitive: Asserting on SMTP call arguments couples to the message format (external interface), not internal state.' Transcript Step 4 synthesizes: 'Inspiring vs. Structure-insensitive' and 'Predictive vs. Fast' as distinct tradeoffs. However, neither the transcript nor analysis.md explicitly frames these two as a *combined* gap with a single statement about confidence in notifications reaching the right person AND surviving SMTP failures together. The violations are discussed individually rather than as a combined theme."
+    },
+    {
+      "text": "Suggests using freezegun or time.freeze or injecting a clock to make datetime deterministic",
+      "passed": true,
+      "evidence": "analysis.md, Section 3 fix: 'Freeze time using a library such as freezegun or inject a clock dependency, then assert on the exact expected value.' Code example shows '@freeze_time(\"2026-04-26 12:00:00\")'. Transcript Step 3.3: 'Fix: use freezegun or inject a clock.'"
+    },
+    {
+      "text": "Suggests adding a test where smtp.send raises an exception and verifying send_welcome_email returns False",
+      "passed": true,
+      "evidence": "analysis.md, Section 11 fix includes explicit test: 'def test_send_welcome_email_returns_false_when_smtp_fails(self): smtp.send.side_effect = Exception(\"SMTP connection refused\") ... assert result is False'. Transcript Step 3.11: 'Add smtp.send.side_effect = Exception(...) tests for both methods.'"
+    },
+    {
+      "text": "Suggests asserting smtp.send was called with the correct 'to' address",
+      "passed": true,
+      "evidence": "analysis.md, Section 12 fix: 'smtp.send.assert_called_once_with(to=\"user@example.com\", subject=\"Welcome!\", body=\"Hello Alice, welcome to our platform.\")'. The 'to' argument is explicitly included in the suggested assertion."
+    },
+    {
+      "text": "Suggests using get_stats() to observe sent count instead of _sent_count directly",
+      "passed": true,
+      "evidence": "analysis.md, Section 8 fix: 'Assert through the public interface: stats = service.get_stats() / assert stats[\"sent\"] == 1'. Transcript Step 3.8: 'Fix: assert service.get_stats()[\"sent\"] == 1'. Also repeated in Priority 1 of the improvement plan."
+    },
+    {
+      "text": "References each violation by the Test Desiderata property name",
+      "passed": true,
+      "evidence": "analysis.md uses explicit property names as section headers: '3. Deterministic - VIOLATION', '8. Structure-insensitive - VIOLATION', '11. Predictive - VIOLATION', '12. Inspiring - VIOLATION'. The summary table lists all 12 properties by name. Transcript also references them: 'Verdict: VIOLATION' under each named property section (3.3 Deterministic, 3.8 Structure-insensitive, 3.11 Predictive, 3.12 Inspiring)."
+    },
+    {
+      "text": "Explains the Predictive + Inspiring tradeoff or synergy",
+      "passed": false,
+      "evidence": "The analysis treats Predictive and Inspiring as separate, independent violations. The tradeoff section in analysis.md discusses 'Predictive vs. Fast', 'Inspiring vs. Structure-insensitive', and 'Deterministic vs. Writable' — but does not discuss a Predictive + Inspiring tradeoff or synergy. The transcript's Step 4 (Identify Tradeoffs) table similarly does not pair these two. There is no explicit statement connecting the two as complementary or synergistic concerns about notification reliability."
+    }
+  ],
+  "summary": {
+    "passed": 10,
+    "failed": 1,
+    "total": 11,
+    "pass_rate": 0.91
+  },
+  "execution_metrics": {
+    "tool_calls": null,
+    "total_tool_calls": null,
+    "total_steps": 5,
+    "errors_encountered": 0,
+    "output_chars": 7234,
+    "transcript_chars": 5234
+  },
+  "timing": {
+    "executor_duration_seconds": 123.4,
+    "grader_duration_seconds": null,
+    "total_duration_seconds": 123.4
+  },
+  "claims": [
+    {
+      "claim": "The file has 83 lines total",
+      "type": "factual",
+      "verified": false,
+      "evidence": "Transcript claims '83 lines total' for the analyzed file, but the grader did not read the source file directly to verify line count."
+    },
+    {
+      "claim": "test_send_password_reset correctly calls smtp.send.assert_called_once() and verifies the token in the body",
+      "type": "factual",
+      "verified": false,
+      "evidence": "Both transcript and analysis assert this as a positive example of correct behavioral testing, but the grader did not independently read the source file to confirm."
+    },
+    {
+      "claim": "The assertion assert service._last_sent_at <= datetime.now() is vacuously true for any past timestamp",
+      "type": "factual",
+      "verified": true,
+      "evidence": "This is logically correct: any timestamp captured before the assertion evaluation will be less than or equal to datetime.now() at assertion time, making the assertion always pass regardless of the actual timestamp value."
+    },
+    {
+      "claim": "get_stats() exposes _sent_count as a public API",
+      "type": "factual",
+      "verified": false,
+      "evidence": "Both transcript and analysis state this (transcript Step 2: 'get_stats() -> dict: returns {\"sent\": _sent_count, ...}'), but the grader did not directly read the source file to confirm."
+    },
+    {
+      "claim": "Both send methods have try/except blocks that return False on exception",
+      "type": "factual",
+      "verified": false,
+      "evidence": "Transcript Step 3.11 shows the code structure with try/except, but the grader did not read the source file to independently confirm this."
+    }
+  ],
+  "user_notes_summary": {
+    "uncertainties": [],
+    "needs_review": [],
+    "workarounds": []
+  },
+  "eval_feedback": {
+    "suggestions": [
+      {
+        "assertion": "Notes the combined Predictive + Inspiring gap: no confidence that notifications reach the right person or survive SMTP failures",
+        "reason": "This assertion is not clearly discriminating. The output discusses both violations thoroughly but independently. A response that covers both violations well would pass, but a response that explicitly synthesizes them as a 'combined gap' is doing something qualitatively different and arguably more insightful. The assertion conflates 'discusses both violations' with 'notes their combination as a unified concern'. Consider splitting into: (a) discusses Predictive violation thoroughly, (b) discusses Inspiring violation thoroughly, and separately (c) synthesizes both as a combined reliability gap."
+      },
+      {
+        "assertion": "Explains the Predictive + Inspiring tradeoff or synergy",
+        "reason": "This failed because the output does not explicitly discuss a Predictive + Inspiring tradeoff or synergy — yet the output is otherwise excellent. Consider whether this expectation is testing something truly important. If the goal is to test that the model understands how these two violations compound (a test can pass while both problems exist independently), the assertion should be more specific about what 'synergy' means in this context."
+      },
+      {
+        "reason": "No assertion checks whether the analysis correctly evaluates the 8 properties that PASS (Isolated, Composable, Fast, Writable, Readable, Behavioral, Automated, Specific). A skill that only identified violations without correctly evaluating passing properties could score 10/11 on these expectations. Consider adding at least one assertion that the passing properties are recognized as passing."
+      },
+      {
+        "reason": "No assertion checks whether the suggested code examples are syntactically correct Python. The analysis provides multiple code snippets (freezegun decorator, smtp.send.assert_called_once_with, side_effect tests) — an assertion that these are runnable/valid would improve eval discriminability."
+      }
+    ],
+    "overall": "The eval is well-designed and targets the four planted violations specifically. The main gap is that assertions 5 and 11 both try to test a 'combined' or 'synergistic' framing that the output doesn't provide explicitly, yet the output demonstrates genuine understanding of all four violations. Clarifying what 'combined gap' and 'synergy' require would sharpen these two assertions."
+  }
+}

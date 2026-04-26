@@ -1,0 +1,119 @@
+{
+  "expectations": [
+    {
+      "text": "Identifies shared_balance global variable as an Isolated violation (test order dependency)",
+      "passed": true,
+      "evidence": "analysis.md Section 1 (Isolated — FAIL): '`shared_balance` is a module-level mutable variable. `test_all_operations` writes to it (`shared_balance = account.get_balance()`), and `test_deposit_updates_ledger` reads from it... If `test_all_operations` has not run first, `shared_balance` remains `0`, so `test_deposit_updates_ledger` silently starts from the wrong state.'"
+    },
+    {
+      "text": "Identifies random.randint in BankAccount.deposit as a Deterministic violation",
+      "passed": true,
+      "evidence": "analysis.md Section 3 (Deterministic — FAIL): '`BankAccount.deposit` calls `random.randint(1000, 9999)` to generate a transaction ID. Any assertion that inspects `_ledger` entries... is at the mercy of this non-determinism.'"
+    },
+    {
+      "text": "Identifies test_all_operations as a Specific violation (multiple assertions covering deposit, withdraw, and balance in one test)",
+      "passed": true,
+      "evidence": "analysis.md Section 10 (Specific — FAIL): '`test_all_operations` exercises `deposit`, `withdraw`, and `get_balance` in a single test body, and then makes three assertions about balance, ledger length, and ledger content. A failure in this test could originate from any one of those three operations or any one of those three assertions.'"
+    },
+    {
+      "text": "Identifies assertion on account._ledger as a Structure-insensitive violation (private attribute)",
+      "passed": true,
+      "evidence": "analysis.md Section 8 (Structure-insensitive — FAIL): '`assert len(account._ledger) == 2` — hardcodes the expected length of the internal `_ledger` list. `assert account._ledger[0][\"type\"] == \"deposit\"` — hardcodes the dictionary key `\"type\"` and index `0` inside a private data structure.' Also covered under Behavioral — FAIL (Section 7)."
+    },
+    {
+      "text": "Notes that test_deposit_updates_ledger depends on shared_balance from previous test",
+      "passed": true,
+      "evidence": "analysis.md Section 1: '`test_deposit_updates_ledger` reads from it by passing `shared_balance` as `initial_balance` to a new account. If `test_all_operations` has not run first, `shared_balance` remains `0`, so `test_deposit_updates_ledger` silently starts from the wrong state.'"
+    },
+    {
+      "text": "Suggests replacing shared_balance with a fresh instance per test (e.g., pytest fixture)",
+      "passed": true,
+      "evidence": "analysis.md Section 1 Recommendation: 'Remove `shared_balance` entirely. Each test should construct its own `BankAccount` with a hardcoded initial balance appropriate to the scenario it is testing.' The suggestion covers constructing a fresh instance per test, though it does not specifically mention pytest fixtures by name."
+    },
+    {
+      "text": "Suggests seeding or injecting the random ID to make deposit deterministic",
+      "passed": true,
+      "evidence": "analysis.md Section 3 Recommendation: 'Make `tx_id` deterministic in tests — either by injecting a seeded random, by using a counter/UUID generator that can be swapped with a test double, or by removing randomness from the production path entirely if it has no functional value.'"
+    },
+    {
+      "text": "Suggests splitting test_all_operations into focused single-concern tests",
+      "passed": true,
+      "evidence": "analysis.md Section 10 Recommendation: 'Split `test_all_operations` into focused single-responsibility tests: one for deposit updating the balance, one for withdrawal updating the balance, one for the combined balance after both operations.' Also listed as Prioritized Recommendation #3: 'Split `test_all_operations` — fixes Specific and improves Readable and Inspiring.'"
+    },
+    {
+      "text": "References each violation by the Test Desiderata property name (e.g., 'Isolated', 'Deterministic')",
+      "passed": true,
+      "evidence": "analysis.md uses named section headers throughout: '### 1. Isolated — FAIL', '### 3. Deterministic — FAIL', '### 8. Structure-insensitive — FAIL', '### 10. Specific — FAIL'. The violations summary table also maps each finding to its property name explicitly."
+    },
+    {
+      "text": "Provides at least one code-level fix example or concrete suggestion",
+      "passed": true,
+      "evidence": "analysis.md provides concrete API-level examples: 'assert account.get_balance() == expected_value is structure-insensitive' (Section 8), 'expose it through a dedicated public method (e.g., `get_transaction_history()`)' (Section 7), and 'injecting a seeded random' (Section 3). These are concrete suggestions with specific method names and patterns, though not full code blocks."
+    }
+  ],
+  "summary": {
+    "passed": 10,
+    "failed": 0,
+    "total": 10,
+    "pass_rate": 1.0
+  },
+  "execution_metrics": {
+    "tool_calls": null,
+    "total_tool_calls": null,
+    "total_steps": 5,
+    "errors_encountered": 0,
+    "output_chars": 10394,
+    "transcript_chars": 3956
+  },
+  "timing": {
+    "executor_duration_seconds": 90.6,
+    "grader_duration_seconds": null,
+    "total_duration_seconds": 90.6
+  },
+  "claims": [
+    {
+      "claim": "All 4 seeded violations (Isolated, Deterministic, Specific, Structure-insensitive) were found",
+      "type": "quality",
+      "verified": true,
+      "evidence": "analysis.md identifies all four with dedicated FAIL sections and detailed explanations. Transcript Step 3 also confirms all four violations are flagged in the property table."
+    },
+    {
+      "claim": "Two additional violations beyond the seeded four were identified (Readable, Inspiring)",
+      "type": "factual",
+      "verified": true,
+      "evidence": "analysis.md Sections 6 (Readable — FAIL) and 12 (Inspiring — FAIL) describe violations not listed in the seeded set. The violations summary table lists 7 failing properties total."
+    },
+    {
+      "claim": "The embedded module docstring was treated as confirmation, not as a substitute for independent analysis",
+      "type": "process",
+      "verified": true,
+      "evidence": "Transcript Notes: 'The embedded module docstring was treated as confirmation of seeded violations, not as a substitute for independent analysis. All 4 seeded violations were found, plus additional violations in Readable and Inspiring.' The analysis independently describes each violation with code-level specifics."
+    },
+    {
+      "claim": "Behavioral and Structure-insensitive are treated as distinct violations",
+      "type": "quality",
+      "verified": true,
+      "evidence": "analysis.md has separate sections 7 (Behavioral) and 8 (Structure-insensitive) with distinct definitions and different angles on the `_ledger` assertions. Behavioral focuses on public-vs-private API; Structure-insensitive focuses on refactoring breakage."
+    }
+  ],
+  "user_notes_summary": {
+    "uncertainties": [],
+    "needs_review": [],
+    "workarounds": []
+  },
+  "eval_feedback": {
+    "suggestions": [
+      {
+        "assertion": "Provides at least one code-level fix example or concrete suggestion",
+        "reason": "The assertion passes on concrete prose suggestions (method names, patterns) but does not require actual code snippets. A weaker output — one that says 'make it deterministic' without any specifics — would still pass. Consider requiring a code example showing the before/after change, or at minimum a specific pytest fixture pattern."
+      },
+      {
+        "reason": "No assertion checks whether the output correctly distinguishes Behavioral from Structure-insensitive, which are closely related. An output that conflates them into a single point would satisfy all current expectations. This is a meaningful quality differentiator — skilled analysis separates them; surface-level analysis merges them."
+      },
+      {
+        "reason": "No assertion verifies the analysis avoids false positives (e.g., marking passing properties as failures). An over-eager output that marks all 12 properties as FAIL would satisfy every current expectation. Consider adding an assertion like 'correctly identifies at least 4 properties as passing (e.g., Fast, Automated, Composable, Writable)'."
+      }
+    ],
+    "overall": "The eval suite covers all seeded violations and the core recommendations well. The main gap is that assertions check presence of correct findings but don't guard against false positives or overly vague recommendations."
+  }
+}

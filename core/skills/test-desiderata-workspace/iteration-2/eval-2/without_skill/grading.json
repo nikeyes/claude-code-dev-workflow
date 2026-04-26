@@ -1,0 +1,125 @@
+{
+  "expectations": [
+    {
+      "text": "Identifies test1, test2, test3, test4 names as a Readable violation (names reveal no intent)",
+      "passed": false,
+      "evidence": "analysis.md Issue #1 'Unreadable Test Names (Readable violation)' correctly identifies test1, test2, test3 — but test4 is explicitly excluded. The analysis notes test4 'partially acknowledges the violation (\"behavioral violation\")' in the transcript but does not classify it under Readable. The expectation requires all four names to be flagged."
+    },
+    {
+      "text": "Identifies 500ms setTimeout in test3 as a Fast violation",
+      "passed": true,
+      "evidence": "analysis.md Issue #2 'Real setTimeout Delay in a Unit Test (Fast violation)' quotes the exact line 'await new Promise((resolve) => setTimeout(resolve, 500))' in test3 and labels it a Fast violation."
+    },
+    {
+      "text": "Identifies vi.spyOn mockResolvedValue(999) in test4 as a Behavioral violation (tests the mock, not the implementation)",
+      "passed": true,
+      "evidence": "analysis.md Issue #3 'Mocking the Method Under Test (Behavioral violation)' quotes 'vi.spyOn(service, \"getTotal\").mockResolvedValue(999)' and states 'the test exercises only the mocking framework, not the production code'."
+    },
+    {
+      "text": "Identifies duplicated Order boilerplate across tests as a Writable violation",
+      "passed": true,
+      "evidence": "analysis.md Issue #5 'Duplicated Order-Construction Boilerplate (Writable violation)' identifies boilerplate in test1 (lines 48–55), test2 (lines 62–69), test3 (lines 79–83), test4 (lines 92–96) and labels it a Writable violation."
+    },
+    {
+      "text": "Identifies expect(true).toBe(true) in test3 as a vacuous/meaningless assertion",
+      "passed": true,
+      "evidence": "analysis.md Issue #4 'Vacuous Assertion (Behavioral violation)' quotes 'expect(true).toBe(true)' in test3 and states 'This assertion always passes regardless of any production behavior. It provides zero signal.'"
+    },
+    {
+      "text": "Suggests renaming tests to describe the behavior being verified (e.g., 'createOrder returns the order id')",
+      "passed": true,
+      "evidence": "analysis.md Issue #1 Recommendation provides four concrete renamed examples including 'returns the order id when a valid order is created', which directly parallels the expected example. The refactored file also uses these names."
+    },
+    {
+      "text": "Suggests removing or replacing setTimeout with synchronous or fake-timer equivalent",
+      "passed": true,
+      "evidence": "analysis.md Issue #2 Recommendation states 'Remove the delay entirely' and adds 'If a delay were meaningful... use Vitest's fake timers (vi.useFakeTimers()) instead of real setTimeout'."
+    },
+    {
+      "text": "Suggests extracting a shared order fixture or factory function to reduce boilerplate",
+      "passed": true,
+      "evidence": "analysis.md Issue #5 Recommendation provides a complete 'buildOrder' factory function example and explains 'Each test then calls buildOrder({ id: \"ord-001\" }) or overrides only what is relevant'."
+    },
+    {
+      "text": "References each violation by the Test Desiderata property name",
+      "passed": true,
+      "evidence": "Each issue in analysis.md is titled with an explicit property name in parentheses: '(Readable violation)', '(Fast violation)', '(Behavioral violation)', '(Writable violation)'. The summary table also uses these property names."
+    },
+    {
+      "text": "Provides at least one renamed test example",
+      "passed": true,
+      "evidence": "analysis.md Issue #1 provides four renamed examples ('returns the order id when a valid order is created', 'calculates the correct total...', 'removes the order from the store when cancelled', 'returns the real computed total, not a stubbed value'). The refactored file reinforces these with actual it() calls."
+    }
+  ],
+  "summary": {
+    "passed": 9,
+    "failed": 1,
+    "total": 10,
+    "pass_rate": 0.9
+  },
+  "execution_metrics": {
+    "tool_calls": {},
+    "total_tool_calls": null,
+    "total_steps": 6,
+    "errors_encountered": 0,
+    "output_chars": 5950,
+    "transcript_chars": 2650
+  },
+  "timing": {
+    "executor_duration_seconds": 78.3,
+    "grader_duration_seconds": null,
+    "total_duration_seconds": 78.3
+  },
+  "claims": [
+    {
+      "claim": "The file is a self-contained Vitest test suite with OrderService defined inline",
+      "type": "factual",
+      "verified": true,
+      "evidence": "The transcript states this and the refactored output in analysis.md reproduces the OrderService class definition inline, confirming the structure was read correctly."
+    },
+    {
+      "claim": "Comment annotations in the file explicitly call out four categories of violations",
+      "type": "factual",
+      "verified": true,
+      "evidence": "The analysis identifies exactly four labeled violation categories (Readable, Fast, Behavioral, Writable), consistent with intentional fixture annotations."
+    },
+    {
+      "claim": "test4 partially acknowledges the violation in its name ('behavioral violation')",
+      "type": "factual",
+      "verified": true,
+      "evidence": "The transcript notes test4 is named 'test4 behavioral violation', which is referenced in Issue #3 of analysis.md."
+    },
+    {
+      "claim": "cancelOrder throws on missing order and createOrder throws on empty items — not tested",
+      "type": "quality",
+      "verified": true,
+      "evidence": "The analysis Issue #6 correctly identifies three untested error-throwing guard clauses and provides example tests for all three."
+    },
+    {
+      "claim": "The output directory was empty before writing",
+      "type": "process",
+      "verified": true,
+      "evidence": "Transcript Step 2 confirms the directory was present and empty, and the final outputs contain exactly analysis.md and transcript.md."
+    }
+  ],
+  "user_notes_summary": {
+    "uncertainties": [],
+    "needs_review": [],
+    "workarounds": []
+  },
+  "eval_feedback": {
+    "suggestions": [
+      {
+        "assertion": "Identifies test1, test2, test3, test4 names as a Readable violation (names reveal no intent)",
+        "reason": "test4 is named 'test4 behavioral violation', which is only marginally more informative than 'test4' — it describes the violation category but not the behavior under test. However, a reasonable analysis might classify this as a Behavioral violation (the name itself flags a code smell) rather than a Readable one. The assertion is ambiguous on whether partial naming counts. Consider tightening: 'identifies that test4's name describes the violation type rather than the behavior being verified, which is also a Readable issue'."
+      },
+      {
+        "reason": "No assertion checks whether the output explicitly connects the vacuous assertion (expect(true).toBe(true)) to the Behavioral property rather than a separate unnamed category. The analysis does label it Behavioral, but the expectation (#5) and expectation (#3) could be conflated by a model that calls them both 'Behavioral' without distinguishing the two failure modes."
+      },
+      {
+        "reason": "No assertion verifies that the suggested renamed tests are semantically correct (i.e., the new name matches what the test body actually verifies). An output could provide renamed examples that are plausible-sounding but misaligned with the test body — this would pass expectation #6/#10 without genuine accuracy."
+      }
+    ],
+    "overall": "Strong eval suite that covers the main Test Desiderata properties. The main gap is that expectation #1 is under-specified about test4, leading to a borderline fail on an otherwise high-quality analysis. Consider splitting the Readable check: one assertion for test1/test2/test3 (clear fail) and a separate one for test4 (debatable)."
+  }
+}

@@ -1,0 +1,112 @@
+{
+  "expectations": [
+    {
+      "text": "Identifies that tests use a fresh service fixture per test — correctly notes this satisfies Isolated",
+      "passed": true,
+      "evidence": "analysis.md Section 1 (Isolated — PASS): 'Each test uses a fresh AuthService instance via the service or registered_user fixture. Tests do not share mutable state between them.' Transcript Step 2 also states: 'Each test gets a fresh AuthService via service fixture. No shared mutable state. Clear pass.'"
+    },
+    {
+      "text": "Identifies that test names describe behavior, not implementation — correctly notes this satisfies Readable",
+      "passed": true,
+      "evidence": "analysis.md Section 6 (Readable — PASS): 'Test names clearly describe the scenario and expected outcome (e.g., test_login_wrong_password_raises, test_deactivated_user_cannot_login). The inline comments add helpful intent signals without over-explaining. Test bodies are short and linear.'"
+    },
+    {
+      "text": "Identifies that assertions go through the public API — correctly notes this satisfies Structure-insensitive",
+      "passed": true,
+      "evidence": "analysis.md Section 8 (Structure-insensitive — PASS): 'Tests do not rely on internal data structures, class hierarchies, or implementation internals (e.g., _users, _sessions). Renaming or refactoring internal data structures would not break these tests, as assertions are made via the public API only.' Also Section 7 (Behavioral) makes the same point."
+    },
+    {
+      "text": "At most flags one borderline Predictive concern: no dedicated test for the exact boundary of MAX_FAILED_ATTEMPTS (4 fails vs 5 fails)",
+      "passed": true,
+      "evidence": "analysis.md Section 11 (Predictive — MINOR GAP): 'the test test_login_increments_failed_attempts_on_wrong_password verifies that 5 failures lock the account, but it does so via an indirect loop and does not test the exact boundary (e.g., that exactly 4 failures do NOT lock, but 5 do). The edge case at MAX_FAILED_ATTEMPTS - 1 is not explicitly covered.' This is the only concern raised — no other properties are flagged."
+    },
+    {
+      "text": "Does NOT flag false positives — does not claim violations for behaviors that are correct",
+      "passed": true,
+      "evidence": "analysis.md awards PASS to all 11 remaining properties (Isolated, Composable, Deterministic, Fast, Writable, Readable, Behavioral, Structure-insensitive, Automated, Specific, Inspiring). The verdict section confirms: 'No major violations were found.' The transcript Step 3 conclusion states 'Correct verdict for this false positive eval: the suite is high quality and should not be flagged.'"
+    },
+    {
+      "text": "If Predictive is flagged, suggests adding a parameterized test for exactly MAX_FAILED_ATTEMPTS - 1 vs MAX_FAILED_ATTEMPTS failed attempts",
+      "passed": false,
+      "evidence": "The analysis flags the Predictive gap (boundary between 4 and 5 failures) but does not suggest adding a parameterized test. Section 11 only describes the gap without offering a concrete remedy such as parameterization. The analysis says 'This is a minor gap rather than a critical deficiency' and stops there without prescribing a fix."
+    },
+    {
+      "text": "Provides an overall quality summary acknowledging tests are in good shape",
+      "passed": true,
+      "evidence": "analysis.md Summary section: 'This test file is well-written overall and scores positively across most of Kent Beck's 12 Test Desiderata.' Overall Assessment verdict: 'High-quality test suite. 11 of 12 properties are fully satisfied... This suite can serve as a positive reference example.'"
+    },
+    {
+      "text": "Does not manufacture violations to fill the report",
+      "passed": true,
+      "evidence": "Only one concern (Predictive boundary) is raised. All other 11 properties receive unambiguous PASS verdicts. The report does not inflate minor stylistic choices into violations. The analysis explicitly notes it is a false positive eval and confirms no major violations were found."
+    }
+  ],
+  "summary": {
+    "passed": 7,
+    "failed": 1,
+    "total": 8,
+    "pass_rate": 0.875
+  },
+  "execution_metrics": {
+    "tool_calls": {},
+    "total_tool_calls": null,
+    "total_steps": 3,
+    "errors_encountered": 0,
+    "output_chars": 3336,
+    "transcript_chars": 2078
+  },
+  "timing": {
+    "executor_duration_seconds": 67.8,
+    "grader_duration_seconds": null,
+    "total_duration_seconds": 67.8
+  },
+  "claims": [
+    {
+      "claim": "The test file contains 13 test methods total",
+      "type": "factual",
+      "verified": false,
+      "evidence": "The transcript states '13 test methods total'. This cannot be verified without reading the source file, but is consistent with 4 test classes covering registration, login, logout, and deactivation scenarios."
+    },
+    {
+      "claim": "The brute-force lockout is triggered by exactly 5 failed attempts (MAX_FAILED_ATTEMPTS = 5)",
+      "type": "factual",
+      "verified": true,
+      "evidence": "analysis.md Section 11 states: 'verifies that 5 failures lock the account' and 'that exactly 4 failures do NOT lock, but 5 do'. The transcript corroborates: 'The test verifies that 5 failures lock the account'. Both references consistently use 5 as the threshold."
+    },
+    {
+      "claim": "Tests use SHA-256 with fixed inputs, making them deterministic",
+      "type": "factual",
+      "verified": false,
+      "evidence": "analysis.md Section 3 states 'The AuthService implementation uses deterministic hashing (SHA-256 with a fixed input)'. Cannot verify the SHA-256 claim without reading the source file, but the conclusion (Deterministic: PASS) appears well-reasoned."
+    },
+    {
+      "claim": "Assertions are made through the public API (e.g., verifying registration by logging in, not inspecting _users)",
+      "type": "quality",
+      "verified": true,
+      "evidence": "analysis.md Section 7 explicitly cites this example: 'test_register_new_user_succeeds verifies registration by confirming the user can subsequently log in — it does not inspect internal dict state.' This is a specific, verifiable claim about test behavior."
+    },
+    {
+      "claim": "The suite is a correct verdict for the false positive eval",
+      "type": "quality",
+      "verified": true,
+      "evidence": "The transcript notes the file header documents this as a 'hard — good tests' eval not intended to trigger major violations, and the analysis correctly avoided flagging false positives while identifying the one genuine borderline gap."
+    }
+  ],
+  "user_notes_summary": {
+    "uncertainties": [],
+    "needs_review": [],
+    "workarounds": []
+  },
+  "eval_feedback": {
+    "suggestions": [
+      {
+        "assertion": "If Predictive is flagged, suggests adding a parameterized test for exactly MAX_FAILED_ATTEMPTS - 1 vs MAX_FAILED_ATTEMPTS failed attempts",
+        "reason": "This assertion is easy to partially satisfy: identifying the gap is sufficient to pass expectations 4, but the remediation suggestion (parameterized test) goes undelivered and the assertion fails. The eval correctly discriminates — the model identified the gap but did not prescribe the fix. No change needed, but worth noting the model stopped short of actionable remediation."
+      },
+      {
+        "reason": "No assertion checks whether the analysis correctly distinguishes 'Behavioral' from 'Structure-insensitive' — both properties relate to internal vs. public API. The model handled this correctly (citing different evidence for each), but a discriminating assertion could verify the model doesn't conflate them."
+      }
+    ],
+    "overall": "The evals are well-constructed for a false positive scenario. They correctly test that the model avoids over-detection while still identifying the one genuine gap. The single failure (no remediation suggestion for the Predictive gap) is a meaningful discriminator, not noise."
+  }
+}

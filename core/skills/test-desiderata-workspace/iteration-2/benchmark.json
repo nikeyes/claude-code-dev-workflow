@@ -1,0 +1,1061 @@
+{
+  "metadata": {
+    "skill_name": "test-desiderata",
+    "iteration": 2,
+    "timestamp": "2026-04-26T12:24:53.369592",
+    "evals_run": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "runs_per_configuration": 1,
+    "note": "with_skill from iteration-1; without_skill = honest baseline (no framework hint)"
+  },
+  "runs": [
+    {
+      "eval_id": 1,
+      "eval_name": "Python BankAccount (easy)",
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 10,
+        "failed": 0,
+        "total": 10,
+        "time_seconds": 125.4,
+        "tokens": 22311,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "Identifies shared_balance global variable as an Isolated violation (test order dependency)",
+          "passed": true,
+          "evidence": "analysis.md Section 1 (Isolated \u2014 VIOLATED): 'Issue: `test_all_operations` and `test_deposit_updates_ledger` share `shared_balance` global state. Location: Line 12 (declaration)... Impact: If tests run in a different order (e.g., pytest-randomly), `test_deposit_updates_ledger` receives an unexpected initial balance (70 instead of 0)'. Transcript Step 3 Property 1 also says: '`shared_balance` is declared at module level (line 12)... VIOLATED \u2014 tests are order-dependent.'"
+        },
+        {
+          "text": "Identifies random.randint in BankAccount.deposit as a Deterministic violation",
+          "passed": true,
+          "evidence": "analysis.md Section 3 (Deterministic \u2014 VIOLATED): 'Issue: `BankAccount.deposit()` calls `random.randint(1000, 9999)` to generate a transaction ID. Location: Line 24 (production code) \u2014 `tx_id = random.randint(1000, 9999)`'. Transcript Step 3 Property 3 corroborates: 'BankAccount.deposit() calls random.randint(1000, 9999) to assign tx_id (line 24). VIOLATED.'"
+        },
+        {
+          "text": "Identifies test_all_operations as a Specific violation (multiple assertions covering deposit, withdraw, and balance in one test)",
+          "passed": true,
+          "evidence": "analysis.md Section 10 (Specific \u2014 VIOLATED): 'Issue: `test_all_operations` has three assertions (balance value, ledger length, ledger entry type) in a single test. Location: Lines 51-53. Impact: When this test fails, it is unclear which operation caused the failure \u2014 the deposit, the withdrawal, or the ledger recording.' Transcript Step 3 Property 10 also confirms: 'test_all_operations has 3 assertions on lines 51-53... VIOLATED.'"
+        },
+        {
+          "text": "Identifies assertion on account._ledger as a Structure-insensitive violation (private attribute)",
+          "passed": true,
+          "evidence": "analysis.md Section 8 (Structure-insensitive \u2014 VIOLATED): 'Issue: Tests assert directly on the private `_ledger` attribute. Location: Line 52 \u2014 `assert len(account._ledger) == 2`, Line 53 \u2014 `assert account._ledger[0][\"type\"] == \"deposit\"`, Line 59 \u2014 `assert len(account._ledger) == 1`, Line 60. Impact: Any refactoring that renames `_ledger`... will break these tests even if the external behavior is unchanged.' Transcript Step 3 Property 8 confirms: 'Four direct assertions on `account._ledger` (lines 52, 53, 59, 60). VIOLATED.'"
+        },
+        {
+          "text": "Notes that test_deposit_updates_ledger depends on shared_balance from previous test",
+          "passed": true,
+          "evidence": "analysis.md Section 1 Issue 2: 'Issue: `test_deposit_updates_ledger` initialises its account with `shared_balance`, coupling it to `test_all_operations`. Location: Line 57 \u2014 `account = BankAccount(\"Bob\", shared_balance)`. Impact: This test is meaningless in isolation; it silently passes or fails depending on the side effect of the previous test.' Transcript Step 3 Property 1 also states: '`test_deposit_updates_ledger` then reads `shared_balance` (now 70) as its initial balance (line 57).'"
+        },
+        {
+          "text": "Suggests replacing shared_balance with a fresh instance per test (e.g., pytest fixture)",
+          "passed": true,
+          "evidence": "analysis.md Section 1: 'Fix: Each test should create its own `BankAccount` with an explicit, fixed initial balance. Remove `shared_balance` entirely.' Prioritized Recommendations Priority 1: 'Remove `shared_balance` \u2014 Replace all uses with explicit, local initial balances in each test.' The refactored example uses a `make_account` factory helper. The transcript Step 6 also mentions 'Followed the skill's prescribed format... for each violation.'"
+        },
+        {
+          "text": "Suggests seeding or injecting the random ID to make deposit deterministic",
+          "passed": true,
+          "evidence": "analysis.md Section 3 Fix: 'Use a deterministic ID generator \u2014 a counter, a UUID seeded from a known value in tests, or an injected factory. Example: Inject an `id_generator` callable into `__init__` with a default of `lambda: uuid.uuid4()`, and in tests pass `id_generator=itertools.count(1).__next__`.' Priority 1 recommendation: 'Fix non-deterministic ID generation \u2014 Inject an `id_generator` into `BankAccount.__init__` so tests can pass a deterministic counter.'"
+        },
+        {
+          "text": "Suggests splitting test_all_operations into focused single-concern tests",
+          "passed": true,
+          "evidence": "analysis.md Section 10 Fix: 'Split into three focused tests, one per assertion: `test_deposit_increases_balance_by_deposit_amount`, `test_withdraw_decreases_balance_by_withdrawal_amount`, `test_deposit_records_entry_in_ledger`'. Priority 3 also states: 'Split `test_all_operations` \u2014 One assertion per test for deposit behavior, withdrawal behavior.' The refactored example provides concrete method names."
+        },
+        {
+          "text": "References each violation by the Test Desiderata property name (e.g., 'Isolated', 'Deterministic')",
+          "passed": true,
+          "evidence": "The analysis.md uses explicit property names as section headers throughout: '### 1. Isolated \u2014 VIOLATED', '### 3. Deterministic \u2014 VIOLATED', '### 8. Structure-insensitive \u2014 VIOLATED', '### 10. Specific \u2014 VIOLATED'. The Violations Summary Table lists all 12 properties by name. The transcript summary table also uses property names verbatim."
+        },
+        {
+          "text": "Provides at least one code-level fix example or concrete suggestion",
+          "passed": true,
+          "evidence": "analysis.md contains a full 'Example Refactored Test (illustrative)' section with Python code showing `make_account` factory, `test_deposit_increases_balance_by_deposited_amount`, `test_withdraw_decreases_balance_by_withdrawn_amount`, `test_withdraw_insufficient_funds_raises_value_error`, and `test_deposit_is_recorded_in_transaction_history` using a public `transaction_history()` API. The Deterministic fix also shows a code-level injection pattern: `id_generator=itertools.count(1).__next__`."
+        }
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": 1,
+      "eval_name": "Python BankAccount (easy)",
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.9,
+        "passed": 9,
+        "failed": 1,
+        "total": 10,
+        "time_seconds": 86.4,
+        "tokens": 18164,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "Identifies shared_balance global variable as an Isolated violation (test order dependency)",
+          "passed": true,
+          "evidence": "analysis.md Problem 1 header: 'Shared Mutable Global State (Isolation Violation)' and summary table row 1: 'Shared mutable global shared_balance between tests | Isolated | High'. Transcript 3.1 also explicitly names it an 'isolation violation'."
+        },
+        {
+          "text": "Identifies random.randint in BankAccount.deposit as a Deterministic violation",
+          "passed": true,
+          "evidence": "analysis.md Problem 2 header: 'Non-Deterministic Behaviour in Production Code (Determinism Violation)' at 'Line 24 (deposit method)'. Summary table row 2: 'random.randint in deposit makes behaviour non-deterministic | Deterministic | High'."
+        },
+        {
+          "text": "Identifies test_all_operations as a Specific violation (multiple assertions covering deposit, withdraw, and balance in one test)",
+          "passed": true,
+          "evidence": "analysis.md Problem 3 header: 'One Test Verifying Multiple Independent Behaviours (Specificity Violation)'. Description: 'test_all_operations exercises deposit, withdraw, and get_balance in a single test, then asserts on balance, ledger length, and ledger entry type all at once.' Summary table: 'Specific | Medium'."
+        },
+        {
+          "text": "Identifies assertion on account._ledger as a Structure-insensitive violation (private attribute)",
+          "passed": true,
+          "evidence": "analysis.md Problem 4 header: 'Assertions on Internal Implementation Details (Structure-Sensitivity Violation)'. Description: 'Multiple tests assert directly on account._ledger, a private attribute'. Summary table row 4: 'Direct assertions on _ledger private attribute | Structure-insensitive | Medium'."
+        },
+        {
+          "text": "Notes that test_deposit_updates_ledger depends on shared_balance from previous test",
+          "passed": true,
+          "evidence": "analysis.md Problem 1: 'test_deposit_updates_ledger then constructs BankAccount(\"Bob\", shared_balance) \u2014 meaning Bob starts with a balance of 70, not 0. The two tests are order-dependent.' Transcript 3.1 also states: 'test_deposit_updates_ledger will receive unexpected initial state'."
+        },
+        {
+          "text": "Suggests replacing shared_balance with a fresh instance per test (e.g., pytest fixture)",
+          "passed": true,
+          "evidence": "analysis.md Problem 1 Recommendation: 'Remove the global variable entirely. Each test should construct its own BankAccount with a known, explicit initial balance.' Before/after code shows each test using BankAccount(\"Alice\", 0) and BankAccount(\"Bob\", 0) directly. The expectation's '(e.g., pytest fixture)' is an example form; a direct fresh instantiation satisfies the intent."
+        },
+        {
+          "text": "Suggests seeding or injecting the random ID to make deposit deterministic",
+          "passed": false,
+          "evidence": "analysis.md Problem 2 recommends replacing random.randint with a deterministic auto-incrementing counter (_next_tx_id starting at 1). This achieves determinism but does not seed the RNG (random.seed()) nor inject the ID as a parameter. The counter is not externally injectable, so neither 'seeding' nor 'injecting' (in the dependency-injection sense) was suggested."
+        },
+        {
+          "text": "Suggests splitting test_all_operations into focused single-concern tests",
+          "passed": true,
+          "evidence": "analysis.md Problem 3 Recommendation shows three split tests: test_deposit_increases_balance, test_withdraw_decreases_balance, and test_deposit_then_withdraw_results_in_correct_balance. The revised full test file also includes these."
+        },
+        {
+          "text": "References each violation by the Test Desiderata property name (e.g., 'Isolated', 'Deterministic')",
+          "passed": true,
+          "evidence": "analysis.md Summary Table uses exact property names: 'Isolated', 'Deterministic', 'Specific', 'Structure-insensitive'. Each Problem section also names the property in the header (e.g., 'Isolation Violation', 'Determinism Violation', 'Specificity Violation', 'Structure-Sensitivity Violation')."
+        },
+        {
+          "text": "Provides at least one code-level fix example or concrete suggestion",
+          "passed": true,
+          "evidence": "analysis.md contains before/after Python code blocks for all five problems, plus a complete revised test file at the end. For example, Problem 1 shows a before/after class comparison, Problem 2 shows the counter-based fix, Problem 3 shows three split test methods."
+        }
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": 2,
+      "eval_name": "TypeScript OrderService (easy)",
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 10,
+        "failed": 0,
+        "total": 10,
+        "time_seconds": 129.8,
+        "tokens": 23036,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "Identifies test1, test2, test3, test4 names as a Readable violation (names reveal no intent)",
+          "passed": true,
+          "evidence": "analysis.md Section 6 (Readable): 'Test names (test1, test2, test3, test4 behavioral violation) convey no behavioral intent ... When a test fails in CI, the only information available is \"test1 failed\".' All four test names are explicitly cited with their line numbers (46, 60, 75, 89)."
+        },
+        {
+          "text": "Identifies 500ms setTimeout in test3 as a Fast violation",
+          "passed": true,
+          "evidence": "analysis.md Section 4 (Fast): 'Issue: test3 uses a real 500 ms setTimeout / Location: Line 77 \u2014 await new Promise((resolve) => setTimeout(resolve, 500)) / Impact: This single delay adds 500 ms to every test run.' Explicitly marked as FAIL."
+        },
+        {
+          "text": "Identifies vi.spyOn mockResolvedValue(999) in test4 as a Behavioral violation (tests the mock, not the implementation)",
+          "passed": true,
+          "evidence": "analysis.md Section 7 (Behavioral): 'Issue: test4 spies on and replaces the very method it is asserting / const spy = vi.spyOn(service, \"getTotal\").mockResolvedValue(999); ... expect(total).toBe(999); // tests the mock, not the implementation / Impact: The test does not exercise OrderService.getTotal at all. No matter how broken the implementation is, this test passes.'"
+        },
+        {
+          "text": "Identifies duplicated Order boilerplate across tests as a Writable violation",
+          "passed": true,
+          "evidence": "analysis.md Section 5 (Writable): 'Issue: The same 10-line Order literal is copy-pasted verbatim across test1, test2, test3, and test4 / Locations: Lines 48-55 (test1), Lines 62-69 (test2), Lines 79-83 (test3), Lines 92-97 (test4) / Impact: Adding a new field to the Order interface requires updating every test.'"
+        },
+        {
+          "text": "Identifies expect(true).toBe(true) in test3 as a vacuous/meaningless assertion",
+          "passed": true,
+          "evidence": "analysis.md Section 6 (Readable): 'test3 ends with expect(true).toBe(true) (line 86). This assertion is vacuous \u2014 it always passes and communicates nothing.' Also flagged in Section 7 (Behavioral): 'Issue: expect(true).toBe(true) on line 86 is a no-op assertion / Impact: The cancelOrder operation could silently throw or fail and the test would still pass.'"
+        },
+        {
+          "text": "Suggests renaming tests to describe the behavior being verified (e.g., 'createOrder returns the order id')",
+          "passed": true,
+          "evidence": "analysis.md Section 6 (Readable) Fix: 'Rename tests to describe the behavior and expected outcome, e.g.: \"should return the order id when creating a valid order\", \"should calculate the total as sum of qty * price for all items\", \"should succeed when cancelling an existing order\", \"should throw when getting the total for an unknown order\".' The refactored suite also shows: 'it(\"returns the order id when creating a valid order\", ...)'."
+        },
+        {
+          "text": "Suggests removing or replacing setTimeout with synchronous or fake-timer equivalent",
+          "passed": true,
+          "evidence": "analysis.md Section 4 (Fast) Fix: 'Remove the sleep entirely \u2014 the OrderService under test is purely in-memory and needs no delay. If simulating async behavior is the goal, use vi.useFakeTimers() to advance time without real waiting.'"
+        },
+        {
+          "text": "Suggests extracting a shared order fixture or factory function to reduce boilerplate",
+          "passed": true,
+          "evidence": "analysis.md Section 5 (Writable) Fix: 'Introduce a test factory function, e.g.: function makeOrder(overrides: Partial<Order> & { id: string }): Order { ... }. Each test then calls makeOrder({ id: \"ord-001\" }) and overrides only what matters for that scenario.' The refactored suite demonstrates this factory in full."
+        },
+        {
+          "text": "References each violation by the Test Desiderata property name",
+          "passed": true,
+          "evidence": "analysis.md uses explicit property names throughout: Section headers are titled by property (e.g., '4. Fast \u2014 FAIL', '5. Writable \u2014 FAIL', '6. Readable \u2014 FAIL', '7. Behavioral \u2014 FAIL'). The prioritized violations table maps each issue to its property name: 'Behavioral', 'Fast', 'Readable', 'Writable'."
+        },
+        {
+          "text": "Provides at least one renamed test example",
+          "passed": true,
+          "evidence": "analysis.md Section 6 (Readable) Fix lists four renamed examples: 'should return the order id when creating a valid order', 'should calculate the total as sum of qty * price for all items', etc. The full refactored suite also shows: it(\"returns the order id when creating a valid order\", ...), it(\"calculates the total as sum of qty * price across all items\", ...)."
+        }
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": 2,
+      "eval_name": "TypeScript OrderService (easy)",
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.9,
+        "passed": 9,
+        "failed": 1,
+        "total": 10,
+        "time_seconds": 78.3,
+        "tokens": 18131,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "Identifies test1, test2, test3, test4 names as a Readable violation (names reveal no intent)",
+          "passed": false,
+          "evidence": "analysis.md Issue #1 'Unreadable Test Names (Readable violation)' correctly identifies test1, test2, test3 \u2014 but test4 is explicitly excluded. The analysis notes test4 'partially acknowledges the violation (\"behavioral violation\")' in the transcript but does not classify it under Readable. The expectation requires all four names to be flagged."
+        },
+        {
+          "text": "Identifies 500ms setTimeout in test3 as a Fast violation",
+          "passed": true,
+          "evidence": "analysis.md Issue #2 'Real setTimeout Delay in a Unit Test (Fast violation)' quotes the exact line 'await new Promise((resolve) => setTimeout(resolve, 500))' in test3 and labels it a Fast violation."
+        },
+        {
+          "text": "Identifies vi.spyOn mockResolvedValue(999) in test4 as a Behavioral violation (tests the mock, not the implementation)",
+          "passed": true,
+          "evidence": "analysis.md Issue #3 'Mocking the Method Under Test (Behavioral violation)' quotes 'vi.spyOn(service, \"getTotal\").mockResolvedValue(999)' and states 'the test exercises only the mocking framework, not the production code'."
+        },
+        {
+          "text": "Identifies duplicated Order boilerplate across tests as a Writable violation",
+          "passed": true,
+          "evidence": "analysis.md Issue #5 'Duplicated Order-Construction Boilerplate (Writable violation)' identifies boilerplate in test1 (lines 48\u201355), test2 (lines 62\u201369), test3 (lines 79\u201383), test4 (lines 92\u201396) and labels it a Writable violation."
+        },
+        {
+          "text": "Identifies expect(true).toBe(true) in test3 as a vacuous/meaningless assertion",
+          "passed": true,
+          "evidence": "analysis.md Issue #4 'Vacuous Assertion (Behavioral violation)' quotes 'expect(true).toBe(true)' in test3 and states 'This assertion always passes regardless of any production behavior. It provides zero signal.'"
+        },
+        {
+          "text": "Suggests renaming tests to describe the behavior being verified (e.g., 'createOrder returns the order id')",
+          "passed": true,
+          "evidence": "analysis.md Issue #1 Recommendation provides four concrete renamed examples including 'returns the order id when a valid order is created', which directly parallels the expected example. The refactored file also uses these names."
+        },
+        {
+          "text": "Suggests removing or replacing setTimeout with synchronous or fake-timer equivalent",
+          "passed": true,
+          "evidence": "analysis.md Issue #2 Recommendation states 'Remove the delay entirely' and adds 'If a delay were meaningful... use Vitest's fake timers (vi.useFakeTimers()) instead of real setTimeout'."
+        },
+        {
+          "text": "Suggests extracting a shared order fixture or factory function to reduce boilerplate",
+          "passed": true,
+          "evidence": "analysis.md Issue #5 Recommendation provides a complete 'buildOrder' factory function example and explains 'Each test then calls buildOrder({ id: \"ord-001\" }) or overrides only what is relevant'."
+        },
+        {
+          "text": "References each violation by the Test Desiderata property name",
+          "passed": true,
+          "evidence": "Each issue in analysis.md is titled with an explicit property name in parentheses: '(Readable violation)', '(Fast violation)', '(Behavioral violation)', '(Writable violation)'. The summary table also uses these property names."
+        },
+        {
+          "text": "Provides at least one renamed test example",
+          "passed": true,
+          "evidence": "analysis.md Issue #1 provides four renamed examples ('returns the order id when a valid order is created', 'calculates the correct total...', 'removes the order from the store when cancelled', 'returns the real computed total, not a stubbed value'). The refactored file reinforces these with actual it() calls."
+        }
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": 3,
+      "eval_name": "Go Inventory (easy)",
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 10,
+        "failed": 0,
+        "total": 10,
+        "time_seconds": 137.6,
+        "tokens": 22762,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "Identifies globalInventory package-level variable as an Isolated violation (state shared across tests)",
+          "passed": true,
+          "evidence": "analysis.md Section 1 (Isolated \u2014 VIOLATED): 'Line 55: var globalInventory = NewInventory() \u2014 a package-level mutable variable shared across all tests.' Also in transcript Step 3: 'globalInventory at line 55 shared across tests.'"
+        },
+        {
+          "text": "Identifies TestFullInventoryFlow as a Composable violation (covers four independent operations in one test)",
+          "passed": true,
+          "evidence": "analysis.md Section 2 (Composable \u2014 VIOLATED): 'TestFullInventoryFlow (lines 57\u201375) covers four distinct operations in sequence: AddStock \u2192 Reserve \u2192 Release \u2192 Available. Each operation is a separate concern that could be tested independently.' Transcript Step 3 also flags this: 'TestFullInventoryFlow chains AddStock \u2192 Reserve \u2192 Release \u2192 Available in a single test.'"
+        },
+        {
+          "text": "Identifies fmt.Printf/fmt.Println as an Automated violation (requires human to inspect stdout)",
+          "passed": true,
+          "evidence": "analysis.md Section 9 (Automated \u2014 VIOLATED): 'Line 70: fmt.Printf(\"Available after release: %d\\n\", available) \u2014 this prints to stdout and requires a human to read and interpret the output to confirm correctness.' Transcript Step 3: 'fmt.Printf at line 70 writes to stdout. Humans running go test see printed output and may incorrectly treat it as verification.'"
+        },
+        {
+          "text": "Identifies generic 'operation failed' error string as a Specific violation (caller cannot distinguish error types)",
+          "passed": true,
+          "evidence": "analysis.md Section 10 (Specific \u2014 VIOLATED): 'AddStock returns fmt.Errorf(\"operation failed\") (line 28) for invalid quantity. Reserve returns fmt.Errorf(\"operation failed\") (line 37) for insufficient stock. Both return the same error string, making it impossible to distinguish which operation failed or why.'"
+        },
+        {
+          "text": "Notes TestReserveExceedsStock implicitly depends on state left by TestFullInventoryFlow",
+          "passed": true,
+          "evidence": "analysis.md Section 1 (Isolated): 'TestReserveExceedsStock (line 79) calls globalInventory.Reserve(\"SKU-1\", 100) and implicitly depends on the state left by TestFullInventoryFlow (it expects SKU-1 to exist and have limited available stock).' Transcript Step 3: 'TestReserveExceedsStock relies on state set by TestFullInventoryFlow.'"
+        },
+        {
+          "text": "Suggests creating a fresh NewInventory() inside each test function",
+          "passed": true,
+          "evidence": "analysis.md Section 1 Fix: 'Each test should create its own local Inventory instance using NewInventory() and set up only the state it needs.' Also in Priority 1 of Improvement Plan: 'Remove globalInventory \u2014 Replace all uses with local NewInventory() in each test.' The refactored code examples show inv := NewInventory() at the start of every test function."
+        },
+        {
+          "text": "Suggests splitting TestFullInventoryFlow into TestAddStock, TestReserve, TestRelease, TestAvailable",
+          "passed": true,
+          "evidence": "analysis.md Section 2 Fix: 'Break into focused tests: TestAddStock_IncreasesAvailable, TestReserve_DecreasesAvailable, TestRelease_RestoresAvailability, TestAvailable_ReflectsNetPosition.' Priority 2 also states: 'Rename and split TestFullInventoryFlow \u2014 Create TestReserve_DecreasesAvailableStock, TestRelease_IncreasesAvailableStock, etc.' Refactored code section provides concrete implementations of these split tests."
+        },
+        {
+          "text": "Suggests using t.Logf instead of fmt.Printf (only visible on failure)",
+          "passed": true,
+          "evidence": "analysis.md Section 9 Fix: 'Remove the fmt.Printf entirely. The assertion on line 72\u201374 is sufficient. If debugging context is needed, use t.Logf (only shown on failure).'"
+        },
+        {
+          "text": "References each violation by the Test Desiderata property name",
+          "passed": true,
+          "evidence": "The analysis uses explicit Test Desiderata property names as section headers throughout: '### 1. Isolated \u2014 VIOLATED', '### 2. Composable \u2014 VIOLATED', '### 9. Automated \u2014 VIOLATED', '### 10. Specific \u2014 VIOLATED', etc. Each issue block also names the property: 'violates Isolated property', 'violates Composable property', 'violates Automated property'. The summary table lists all 12 properties with status."
+        },
+        {
+          "text": "Identifies at least one inter-test dependency caused by shared state",
+          "passed": true,
+          "evidence": "analysis.md Section 1: 'TestReserveExceedsStock (line 79)...implicitly depends on the state left by TestFullInventoryFlow (it expects SKU-1 to exist and have limited available stock). If TestReserveExceedsStock ran first on an empty inventory, the assertion would pass but for the wrong reason.' The transcript also explicitly calls this out: 'TestReserveExceedsStock relies on state set by TestFullInventoryFlow.'"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": 3,
+      "eval_name": "Go Inventory (easy)",
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.9,
+        "passed": 9,
+        "failed": 1,
+        "total": 10,
+        "time_seconds": 72.2,
+        "tokens": 17087,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "Identifies globalInventory package-level variable as an Isolated violation (state shared across tests)",
+          "passed": true,
+          "evidence": "analysis.md Issue 1: 'Isolation Violation \u2014 Shared Global State. var globalInventory = NewInventory(). Both TestFullInventoryFlow and TestReserveExceedsStock mutate the same globalInventory variable.' Issue summary table confirms 'Isolated' as the violated desideratum."
+        },
+        {
+          "text": "Identifies TestFullInventoryFlow as a Composable violation (covers four independent operations in one test)",
+          "passed": true,
+          "evidence": "analysis.md Issue 2: 'Composability Violation \u2014 One Test Covering Multiple Behaviors. The single test exercises AddStock, Reserve, Release, and Available in a sequential chain.' Issue summary table confirms 'Composable' as the violated desideratum."
+        },
+        {
+          "text": "Identifies fmt.Printf/fmt.Println as an Automated violation (requires human to inspect stdout)",
+          "passed": true,
+          "evidence": "analysis.md Issue 3: 'Automation Violation \u2014 Manual Inspection via fmt.Println. fmt.Printf(\"Available after release: %d\\n\", available). This line prints the computed value to stdout, requiring a human to read the output and judge whether it looks correct.' Issue summary table confirms 'Automated' as the violated desideratum."
+        },
+        {
+          "text": "Identifies generic 'operation failed' error string as a Specific violation (caller cannot distinguish error types)",
+          "passed": true,
+          "evidence": "analysis.md Issue 4: 'Specificity Violation \u2014 Generic Error Messages in Production Code. return fmt.Errorf(\"operation failed\"). Tests that check err == nil cannot distinguish between the two failure modes. A caller receiving \"operation failed\" has no actionable information.' Issue summary table confirms 'Specific' as the violated desideratum."
+        },
+        {
+          "text": "Notes TestReserveExceedsStock implicitly depends on state left by TestFullInventoryFlow",
+          "passed": true,
+          "evidence": "analysis.md Issue 1 explicitly states: 'TestReserveExceedsStock implicitly requires TestFullInventoryFlow to have run first and to have left globalInventory in a specific state (SKU-1 with some stock and reserved units). If tests run in isolation or in a different order, TestReserveExceedsStock will either fail spuriously or produce a false positive.'"
+        },
+        {
+          "text": "Suggests creating a fresh NewInventory() inside each test function",
+          "passed": true,
+          "evidence": "analysis.md Issue 1 recommendation: 'Each test should create its own Inventory instance using NewInventory() and set it up to the exact precondition it needs. Remove the package-level globalInventory variable entirely.' The recommended rewrite sketch also shows inv := NewInventory() inside every test function."
+        },
+        {
+          "text": "Suggests splitting TestFullInventoryFlow into TestAddStock, TestReserve, TestRelease, TestAvailable",
+          "passed": true,
+          "evidence": "analysis.md Issue 2 recommendation lists: TestAddStock_IncreasesAvailableQty, TestReserve_DecreasesAvailableQty, TestRelease_RestoresAvailableQty, TestAvailable_ReflectsStockMinusReserved. The rewrite sketch implements TestAddStock_IncreasesAvailableQty, TestReserve_DecreasesAvailableQty, TestRelease_RestoresAvailableQty covering all four behaviors."
+        },
+        {
+          "text": "Suggests using t.Logf instead of fmt.Printf (only visible on failure)",
+          "passed": false,
+          "evidence": "analysis.md Issue 3 recommendation says only 'Remove the fmt.Printf statement entirely. The assertion on line 72 is sufficient and machine-verifiable.' No mention of t.Logf as an alternative. The recommendation is to delete the line, not replace it with t.Logf."
+        },
+        {
+          "text": "References each violation by the Test Desiderata property name",
+          "passed": true,
+          "evidence": "Each issue section in analysis.md is headed with the property name: 'Isolation Violation', 'Composability Violation', 'Automation Violation', 'Specificity Violation'. The issue summary table also lists 'Desideratum Violated' column with Isolated, Composable, Automated, Specific. Transcript key findings table also names the violated property for each finding."
+        },
+        {
+          "text": "Identifies at least one inter-test dependency caused by shared state",
+          "passed": true,
+          "evidence": "analysis.md Issue 1: 'TestReserveExceedsStock implicitly requires TestFullInventoryFlow to have run first and to have left globalInventory in a specific state (SKU-1 with some stock and reserved units).' This explicitly identifies the inter-test dependency caused by the shared globalInventory."
+        }
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": 4,
+      "eval_name": "Python NotificationService (medium)",
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.9090909090909091,
+        "passed": 10,
+        "failed": 1,
+        "total": 11,
+        "time_seconds": 123.4,
+        "tokens": 22280,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "Identifies service._last_sent_at <= datetime.now() as a Deterministic violation (race condition between assignment and assertion)",
+          "passed": true,
+          "evidence": "analysis.md, Section 3 (Deterministic - VIOLATION): 'This assertion captures datetime.now() at assertion time... creates a potential race if the system clock is monotonic only at coarse granularity... the assertion is semantically wrong and creates a potential race.' Transcript Step 3.3 also identifies this explicitly: 'Line 60: assert service._last_sent_at <= datetime.now() ... Root cause: No time injection or clock freezing.'"
+        },
+        {
+          "text": "Identifies absence of test for smtp.send raising an exception as a Predictive violation",
+          "passed": true,
+          "evidence": "analysis.md, Section 11 (Predictive - VIOLATION): 'There is no test that: Configures smtp.send to raise an exception / Verifies that send_welcome_email returns False / Verifies that send_password_reset returns False.' Transcript Step 3.11 also confirms: 'There is no test that: Calls smtp.send.side_effect = Exception(...) and verifies send_welcome_email returns False.'"
+        },
+        {
+          "text": "Identifies absence of assertion on smtp.send 'to' argument as an Inspiring violation (test passes even if email sent to wrong address)",
+          "passed": true,
+          "evidence": "analysis.md, Section 12 (Inspiring - VIOLATION): 'A developer could accidentally hardcode the recipient address, send to the wrong address... and this test would still pass.' The fix explicitly shows asserting smtp.send.assert_called_once_with(to=\"user@example.com\", ...). Transcript Step 3.12 states: 'A developer could introduce a bug that sends the email to admin@company.com instead of the provided address, and this test would still pass.'"
+        },
+        {
+          "text": "Identifies service._sent_count as a Structure-insensitive violation (private internal counter)",
+          "passed": true,
+          "evidence": "analysis.md, Section 8 (Structure-insensitive - VIOLATION): 'assert service._sent_count == 1 ... _sent_count is a private implementation attribute (Python convention: single underscore prefix signals internal). If the implementation is refactored... this assertion will break even though the observable behavior is identical.' Fix given: 'assert service.get_stats()[\"sent\"] == 1'."
+        },
+        {
+          "text": "Notes the combined Predictive + Inspiring gap: no confidence that notifications reach the right person or survive SMTP failures",
+          "passed": true,
+          "evidence": "analysis.md combines both violations explicitly. Predictive section: 'The suite cannot predict production behavior under failure conditions. Any regression in the exception-handling path will go undetected.' Inspiring section: 'Critical behavioral details (who received the email, what it said) are unverified.' The tradeoff table in analysis.md also states: 'Inspiring vs. Structure-insensitive: Asserting on SMTP call arguments couples to the message format (external interface), not internal state.' Transcript Step 4 synthesizes: 'Inspiring vs. Structure-insensitive' and 'Predictive vs. Fast' as distinct tradeoffs. However, neither the transcript nor analysis.md explicitly frames these two as a *combined* gap with a single statement about confidence in notifications reaching the right person AND surviving SMTP failures together. The violations are discussed individually rather than as a combined theme."
+        },
+        {
+          "text": "Suggests using freezegun or time.freeze or injecting a clock to make datetime deterministic",
+          "passed": true,
+          "evidence": "analysis.md, Section 3 fix: 'Freeze time using a library such as freezegun or inject a clock dependency, then assert on the exact expected value.' Code example shows '@freeze_time(\"2026-04-26 12:00:00\")'. Transcript Step 3.3: 'Fix: use freezegun or inject a clock.'"
+        },
+        {
+          "text": "Suggests adding a test where smtp.send raises an exception and verifying send_welcome_email returns False",
+          "passed": true,
+          "evidence": "analysis.md, Section 11 fix includes explicit test: 'def test_send_welcome_email_returns_false_when_smtp_fails(self): smtp.send.side_effect = Exception(\"SMTP connection refused\") ... assert result is False'. Transcript Step 3.11: 'Add smtp.send.side_effect = Exception(...) tests for both methods.'"
+        },
+        {
+          "text": "Suggests asserting smtp.send was called with the correct 'to' address",
+          "passed": true,
+          "evidence": "analysis.md, Section 12 fix: 'smtp.send.assert_called_once_with(to=\"user@example.com\", subject=\"Welcome!\", body=\"Hello Alice, welcome to our platform.\")'. The 'to' argument is explicitly included in the suggested assertion."
+        },
+        {
+          "text": "Suggests using get_stats() to observe sent count instead of _sent_count directly",
+          "passed": true,
+          "evidence": "analysis.md, Section 8 fix: 'Assert through the public interface: stats = service.get_stats() / assert stats[\"sent\"] == 1'. Transcript Step 3.8: 'Fix: assert service.get_stats()[\"sent\"] == 1'. Also repeated in Priority 1 of the improvement plan."
+        },
+        {
+          "text": "References each violation by the Test Desiderata property name",
+          "passed": true,
+          "evidence": "analysis.md uses explicit property names as section headers: '3. Deterministic - VIOLATION', '8. Structure-insensitive - VIOLATION', '11. Predictive - VIOLATION', '12. Inspiring - VIOLATION'. The summary table lists all 12 properties by name. Transcript also references them: 'Verdict: VIOLATION' under each named property section (3.3 Deterministic, 3.8 Structure-insensitive, 3.11 Predictive, 3.12 Inspiring)."
+        },
+        {
+          "text": "Explains the Predictive + Inspiring tradeoff or synergy",
+          "passed": false,
+          "evidence": "The analysis treats Predictive and Inspiring as separate, independent violations. The tradeoff section in analysis.md discusses 'Predictive vs. Fast', 'Inspiring vs. Structure-insensitive', and 'Deterministic vs. Writable' \u2014 but does not discuss a Predictive + Inspiring tradeoff or synergy. The transcript's Step 4 (Identify Tradeoffs) table similarly does not pair these two. There is no explicit statement connecting the two as complementary or synergistic concerns about notification reliability."
+        }
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": 4,
+      "eval_name": "Python NotificationService (medium)",
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.8181818181818182,
+        "passed": 9,
+        "failed": 2,
+        "total": 11,
+        "time_seconds": 74.8,
+        "tokens": 17645,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "Identifies service._last_sent_at <= datetime.now() as a Deterministic violation (race condition between assignment and assertion)",
+          "passed": true,
+          "evidence": "Problem 1 in analysis.md explicitly targets line 60 (`assert service._last_sent_at <= datetime.now()`), labels it 'Non-Deterministic Assertion', and explains the race between the timestamp captured inside `send_welcome_email` and the freshly-computed `datetime.now()` at assertion time. Summary table row 1 labels it 'Deterministic'."
+        },
+        {
+          "text": "Identifies absence of test for smtp.send raising an exception as a Predictive violation",
+          "passed": true,
+          "evidence": "Problem 2 in analysis.md is titled 'Missing Error-Path Coverage (Predictive gap)' and states: 'There is no test for what happens when `smtp.send` raises an exception.' The summary table also labels it 'Predictive'."
+        },
+        {
+          "text": "Identifies absence of assertion on smtp.send 'to' argument as an Inspiring violation (test passes even if email sent to wrong address)",
+          "passed": true,
+          "evidence": "Problem 3 in analysis.md is titled 'Incomplete Assertion: Recipient Not Verified (Inspiring gap)' and states: 'It never verifies that the `smtp.send` mock was called with `to=\"user@example.com\"`. A bug that hardcodes the wrong recipient, or ignores the `to` parameter entirely, would not be caught.' The summary table labels it 'Inspiring'."
+        },
+        {
+          "text": "Identifies service._sent_count as a Structure-insensitive violation (private internal counter)",
+          "passed": true,
+          "evidence": "Problem 4 in analysis.md is titled 'Assertion on Private Internal State (Structure-Sensitive)' and targets `assert service._sent_count == 1`, explaining that `_sent_count` is a private implementation detail whose direct assertion couples the test to internal structure. Summary table labels it 'Structure-insensitive'."
+        },
+        {
+          "text": "Notes the combined Predictive + Inspiring gap: no confidence that notifications reach the right person or survive SMTP failures",
+          "passed": false,
+          "evidence": "The analysis treats each violation in isolation. There is no paragraph or statement synthesizing the Predictive and Inspiring gaps together into a combined concern about confidence in end-to-end delivery. The closest it comes is the 'Additional Observations' section, which notes both gaps persist in `test_send_password_reset`, but does not frame them as a combined systemic risk."
+        },
+        {
+          "text": "Suggests using freezegun or time.freeze or injecting a clock to make datetime deterministic",
+          "passed": true,
+          "evidence": "Problem 1 states: 'Alternatively, inject a fixed clock so the test is fully deterministic.' While `freezegun` and `time.freeze` are not named, injecting a clock is an equivalent technique explicitly recommended. The primary recommended fix uses timestamp bracketing, with clock injection offered as an alternative."
+        },
+        {
+          "text": "Suggests adding a test where smtp.send raises an exception and verifying send_welcome_email returns False",
+          "passed": true,
+          "evidence": "Problem 2 recommended additions include `test_send_welcome_email_returns_false_on_smtp_failure` with `smtp.send.side_effect = Exception('SMTP connection refused')` and `assert result is False`."
+        },
+        {
+          "text": "Suggests asserting smtp.send was called with the correct 'to' address",
+          "passed": true,
+          "evidence": "Problem 3 recommended fix shows `smtp.send.assert_called_once_with(to=\"user@example.com\", subject=\"Welcome!\", body=\"Hello Alice, welcome to our platform.\")`, explicitly asserting the `to` argument."
+        },
+        {
+          "text": "Suggests using get_stats() to observe sent count instead of _sent_count directly",
+          "passed": true,
+          "evidence": "Problem 4 recommended fix shows `assert service.get_stats()[\"sent\"] == 1`, replacing the private `_sent_count` with the public `get_stats()` accessor."
+        },
+        {
+          "text": "References each violation by the Test Desiderata property name",
+          "passed": true,
+          "evidence": "All four violations are labeled with Test Desiderata property names in both the problem headings and the summary table: 'Deterministic' (Problem 1), 'Predictive' (Problem 2), 'Inspiring' (Problem 3), 'Structure-insensitive' (Problem 4)."
+        },
+        {
+          "text": "Explains the Predictive + Inspiring tradeoff or synergy",
+          "passed": false,
+          "evidence": "The analysis never discusses any relationship, tradeoff, or synergy between the Predictive and Inspiring properties. Each violation is described independently. No statement connects the two gaps or explains how they compound each other's risk."
+        }
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": 5,
+      "eval_name": "TypeScript LRUCache (medium)",
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 10,
+        "failed": 0,
+        "total": 10,
+        "time_seconds": 112.1,
+        "tokens": 21624,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "Identifies const cache outside describe as an Isolated violation (all tests share one cache instance)",
+          "passed": true,
+          "evidence": "analysis.md, section '1. Isolated \u2014 VIOLATED (Critical)': 'A single `cache` instance is shared across all tests in the `describe` block. Each `it` block mutates the shared object without resetting it.' Also in transcript Step 3: 'const cache = new LRUCache<string, number>(3, 1000) at line 50 is declared at module scope, outside any beforeEach or describe-level factory.'"
+        },
+        {
+          "text": "Identifies that vi.useFakeTimers() is called but vi.advanceTimersByTime() is never called \u2014 TTL never expires \u2014 as a Behavioral violation",
+          "passed": true,
+          "evidence": "analysis.md, section '2. Behavioral \u2014 VIOLATED (Critical)': 'the fake timers are activated (vi.useFakeTimers()) yet time is never advanced. As a result, cache.get(\"temp\") returns 99 (the entry is fresh)'. Transcript Step 3 \u00a77 states: 'vi.useFakeTimers() is called at line 73... since time has NOT been advanced, the entry is not expired, and returns 99'."
+        },
+        {
+          "text": "Identifies that 'evicts LRU entry and expired TTL' covers two orthogonal concerns as a Composable violation",
+          "passed": true,
+          "evidence": "analysis.md, section '3. Composable \u2014 VIOLATED (Moderate)': 'A single test covers two orthogonal concerns: (1) LRU eviction when capacity is exceeded, and (2) TTL-based expiry. These are independent dimensions of the cache's behavior.' Transcript Step 3 \u00a72 also states: 'These are completely independent behavioral dimensions.'"
+        },
+        {
+          "text": "Identifies magic numbers 1000 and 3 in the shared cache constructor as a Readable violation",
+          "passed": true,
+          "evidence": "analysis.md, section '4. Readable \u2014 VIOLATED (Low-Moderate)': 'Line 89: new LRUCache<number, string>(3, 5000) \u2014 3 (capacity) and 5000 (TTL in ms) appear without any named constants' and transcript Step 3 \u00a76 flags 'Line 50: new LRUCache<string, number>(3, 1000) \u2014 3 capacity and 1000ms TTL unexplained'. Both the module-level constructor (3, 1000) and the local constructor (3, 5000) are flagged. The expectation specifically mentions 1000 and 3 from the shared constructor \u2014 both are identified."
+        },
+        {
+          "text": "Explains that the TTL test passes for the wrong reason (value not expired, test assertion is weaker than intended)",
+          "passed": true,
+          "evidence": "analysis.md: 'This is a false-positive: The TTL expiry branch (lines 26\u201329 of the implementation) is never executed by this test suite, yet the test suite passes entirely.' Also: 'cache.get(\"temp\") returns 99 (the entry is fresh), and the assertion expect(result).not.toBeUndefined() passes \u2014 but for the wrong reason.' Transcript Step 3 \u00a77 elaborates: 'The expiry branch is never executed by this test. The test passes for the wrong reason, giving false confidence that expiry is tested.'"
+        },
+        {
+          "text": "Suggests creating a fresh LRUCache instance inside each test (or using beforeEach)",
+          "passed": true,
+          "evidence": "analysis.md, Fix for Isolated violation provides explicit code: 'describe(\"LRUCache\", () => { let cache: LRUCache<string, number>; beforeEach(() => { cache = new LRUCache<string, number>(3, 1000); }); ... })'. The suggestion to use beforeEach is concrete and correct."
+        },
+        {
+          "text": "Suggests calling vi.advanceTimersByTime(ttlMs + 1) to actually expire the entry",
+          "passed": true,
+          "evidence": "analysis.md, Fix for Behavioral violation: 'vi.advanceTimersByTime(1001);' which is ttlMs (1000) + 1. Also in the Composable fix: 'vi.advanceTimersByTime(1001);'. The exact value 1001 = 1000 + 1 is used, matching the expectation's pattern of ttlMs + 1."
+        },
+        {
+          "text": "Suggests splitting the test into 'evicts LRU when at capacity' and 'returns undefined for expired key'",
+          "passed": true,
+          "evidence": "analysis.md, Fix for Composable violation provides two named tests: 'it(\"evicts least-recently-used entry when at capacity\", ...)' and 'it(\"returns undefined for TTL-expired entry\", ...)'. The split is concrete with full code examples."
+        },
+        {
+          "text": "References each violation by the Test Desiderata property name",
+          "passed": true,
+          "evidence": "All four violations are titled with the property name: '1. Isolated \u2014 VIOLATED', '2. Behavioral \u2014 VIOLATED', '3. Composable \u2014 VIOLATED', '4. Readable \u2014 VIOLATED'. The transcript Step 3 sections are also labeled by property name. The analysis consistently uses the Test Desiderata vocabulary throughout."
+        },
+        {
+          "text": "Highlights the Behavioral violation as high-priority (false confidence)",
+          "passed": true,
+          "evidence": "analysis.md Priority 1 section: 'Fix Behavioral violation \u2014 advance fake timers by 1001ms in the TTL test. Eliminates the false-positive pass and actually exercises the expiry code path.' Both Isolated and Behavioral are listed as Priority 1 (Safety). The analysis also states: 'This is a false-positive' and 'A regression in the expiry logic would go undetected', clearly emphasizing the false-confidence risk. The transcript also flags it as 'Critical false-positive; expiry logic untested' in its priority list."
+        }
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": 5,
+      "eval_name": "TypeScript LRUCache (medium)",
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.8,
+        "passed": 8,
+        "failed": 2,
+        "total": 10,
+        "time_seconds": 77.0,
+        "tokens": 17765,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "Identifies const cache outside describe as an Isolated violation (all tests share one cache instance)",
+          "passed": true,
+          "evidence": "analysis.md Issue 1 states: 'A single `cache` instance is created outside the `describe` block and reused across all tests. Each test mutates this shared state.' Labeled explicitly as 'Isolation Violation \u2014 Shared Cache Instance Across Tests'. Line reference: line 50. Transcript Step 5 also traces shared cache state across all 4 tests."
+        },
+        {
+          "text": "Identifies that vi.useFakeTimers() is called but vi.advanceTimersByTime() is never called \u2014 TTL never expires \u2014 as a Behavioral violation",
+          "passed": true,
+          "evidence": "analysis.md Issue 2 states: 'The test uses `vi.useFakeTimers()` to presumably test TTL expiry behavior, but it never calls `vi.advanceTimersByTime()` to simulate the passage of time.' Labeled 'Behavioral Violation \u2014 Fake Timers Never Advance Time'. Transcript Step 4 also confirms: 'Time is never advanced. The entry is freshly set and has not expired.'"
+        },
+        {
+          "text": "Identifies that 'evicts LRU entry and expired TTL' covers two orthogonal concerns as a Composable violation",
+          "passed": true,
+          "evidence": "analysis.md Issue 3 states: 'The test attempts to verify two independent behaviors: LRU eviction (capacity enforcement) and TTL expiry. These are separate axes of functionality.' Labeled 'Composability Violation \u2014 Single Test Covers Two Orthogonal Concerns'. Test name quoted verbatim."
+        },
+        {
+          "text": "Identifies magic numbers 1000 and 3 in the shared cache constructor as a Readable violation",
+          "passed": true,
+          "evidence": "analysis.md Issue 4 states: 'const cache = new LRUCache<string, number>(3, 1000); // What is 3? What is 1000?' Labeled 'Readability Violation \u2014 Magic Numbers Without Explanation'. Both 1000 and 3 are explicitly cited at line 50."
+        },
+        {
+          "text": "Explains that the TTL test passes for the wrong reason (value not expired, test assertion is weaker than intended)",
+          "passed": true,
+          "evidence": "analysis.md states: 'The entry is set and immediately retrieved \u2014 it hasn't expired, so `result` is `99`, and the assertion `not.toBeUndefined()` passes. However, the comment says the intent was to test that the key had expired. The test neither documents nor validates expiry correctly: it documents wrong intent and passes for the wrong reason.' Transcript Step 4 confirms the same with a traced execution path."
+        },
+        {
+          "text": "Suggests creating a fresh LRUCache instance inside each test (or using beforeEach)",
+          "passed": true,
+          "evidence": "analysis.md Fix for Issue 1 shows: 'Create a fresh instance inside each test (or in a `beforeEach` hook)' with explicit code example using `beforeEach(() => { cache = new LRUCache<string, number>(3, 1000); })`."
+        },
+        {
+          "text": "Suggests calling vi.advanceTimersByTime(ttlMs + 1) to actually expire the entry",
+          "passed": true,
+          "evidence": "analysis.md Fix for Issue 2 shows: `vi.advanceTimersByTime(1001); // past the 1000ms TTL` in the 'Fix \u2014 if testing that an expired entry returns undefined' code example. The value 1001 is TTL (1000) + 1, matching the expectation."
+        },
+        {
+          "text": "Suggests splitting the test into 'evicts LRU when at capacity' and 'returns undefined for expired key'",
+          "passed": true,
+          "evidence": "analysis.md Fix for Issue 3 shows two split tests: `it('evicts least recently used entry when capacity is exceeded', ...)` and `it('returns undefined after TTL expires', ...)`. Both concerns are addressed as separate tests with complete code examples."
+        },
+        {
+          "text": "References each violation by the Test Desiderata property name",
+          "passed": false,
+          "evidence": "The analysis uses labels like 'Isolation Violation', 'Behavioral Violation', 'Composability Violation', and 'Readability Violation', but these are the analyst's own labels, not formal Test Desiderata property names. The transcript explicitly notes: 'No framework was applied explicitly.' The standard Test Desiderata properties (Isolated, Behavioral, Composable, Readable) are not used as formal references \u2014 the output uses informal variants. The transcript states the file header hints were used as hypotheses, not a named framework."
+        },
+        {
+          "text": "Highlights the Behavioral violation as high-priority (false confidence)",
+          "passed": false,
+          "evidence": "The prioritized fix table in analysis.md ranks the Behavioral violation as Priority 2, behind the Isolation violation (Priority 1). The expectation requires the Behavioral violation to be highlighted as *high-priority*, but it is ranked second. The rationale given for Behavioral is 'passes for the wrong reason', but Isolation is ranked higher. The false-confidence framing is present ('passes for the wrong reason') but the priority order does not place Behavioral first."
+        }
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": 6,
+      "eval_name": "Python AuthService \u2014 false positive (hard)",
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 8,
+        "failed": 0,
+        "total": 8,
+        "time_seconds": 126.5,
+        "tokens": 23182,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "Identifies that tests use a fresh service fixture per test \u2014 correctly notes this satisfies Isolated",
+          "passed": true,
+          "evidence": "analysis.md under 'Isolated \u2014 PASS': 'Each test receives a fresh AuthService instance via the service fixture, which returns a new object on every invocation. The registered_user fixture composes on top of service, inheriting the same per-test instantiation. No shared mutable state between tests.'"
+        },
+        {
+          "text": "Identifies that test names describe behavior, not implementation \u2014 correctly notes this satisfies Readable",
+          "passed": true,
+          "evidence": "analysis.md under 'Readable \u2014 PASS': 'Test names are descriptive and follow the pattern test_<action>_<condition>_<expected_outcome>' with examples test_register_duplicate_username_raises, test_login_wrong_password_raises, test_deactivated_user_cannot_login. Explicitly notes this as a Readable strength."
+        },
+        {
+          "text": "Identifies that assertions go through the public API \u2014 correctly notes this satisfies Structure-insensitive",
+          "passed": true,
+          "evidence": "analysis.md under 'Structure-insensitive \u2014 PASS': 'No test accesses private attributes (_users, _sessions) or internal methods. All assertions go through the public API (register, login, logout, is_authenticated, deactivate_user).'"
+        },
+        {
+          "text": "At most flags one borderline Predictive concern: no dedicated test for the exact boundary of MAX_FAILED_ATTEMPTS (4 fails vs 5 fails)",
+          "passed": true,
+          "evidence": "analysis.md flags exactly one Predictive concern: 'Missing boundary test for MAX_FAILED_ATTEMPTS threshold \u2014 no test asserting exactly 5 (not 4, not 6) attempts trigger lockout.' The other flagged concern is under Specific (different property), not Predictive. Only one Predictive concern was raised."
+        },
+        {
+          "text": "Does NOT flag false positives \u2014 does not claim violations for behaviors that are correct",
+          "passed": true,
+          "evidence": "9 of 12 properties scored 'Excellent' with 'No issues found.' The two minor issues flagged (Specific: complex lockout test; Predictive: missing boundary test) are legitimate observations backed by concrete code evidence, not false violations of well-written behaviors."
+        },
+        {
+          "text": "If Predictive is flagged, suggests adding a parameterized test for exactly MAX_FAILED_ATTEMPTS - 1 vs MAX_FAILED_ATTEMPTS failed attempts",
+          "passed": true,
+          "evidence": "analysis.md Priority 1 recommendation includes test_failed_attempts_do_not_lock_before_threshold (makes MAX_FAILED_ATTEMPTS - 1 wrong attempts, asserts account NOT locked) and test_account_locks_after_max_failed_attempts (makes exactly MAX_FAILED_ATTEMPTS wrong attempts, asserts locked). The boundary of MAX_FAILED_ATTEMPTS - 1 vs MAX_FAILED_ATTEMPTS is explicitly addressed. The form is two separate tests rather than a single pytest.mark.parametrize, but the substance \u2014 testing exactly that boundary \u2014 is fully satisfied."
+        },
+        {
+          "text": "Provides an overall quality summary acknowledging tests are in good shape",
+          "passed": true,
+          "evidence": "analysis.md Summary states 'This test file is well-written across nearly all 12 Test Desiderata properties.' The Overall Scorecard table gives 9 'Excellent' and 3 'Good' ratings. Conclusion: 'This is a high-quality test suite. The two minor improvements identified would strengthen an already well-designed set of tests.'"
+        },
+        {
+          "text": "Does not manufacture violations to fill the report",
+          "passed": true,
+          "evidence": "9 of 12 properties received 'No issues found' with 'Excellent' scores. The two flagged concerns are substantiated with specific code citations (lines 113-125 for the Specific concern, and explicit reasoning about what a MAX_FAILED_ATTEMPTS = 4 change would miss for the Predictive concern). No generic or vague violations were added to pad the report."
+        }
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": 6,
+      "eval_name": "Python AuthService \u2014 false positive (hard)",
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 8,
+        "failed": 0,
+        "total": 8,
+        "time_seconds": 81.0,
+        "tokens": 18421,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "Identifies that tests use a fresh service fixture per test \u2014 correctly notes this satisfies Isolated",
+          "passed": true,
+          "evidence": "analysis.md section 1 (Isolated): 'Each test class uses the `service` or `registered_user` fixture, both of which return fresh `AuthService` instances. Tests do not share state.' Transcript Step 4 confirms: 'Isolated: PASS. Fixture `service` returns a fresh `AuthService()` instance per test.'"
+        },
+        {
+          "text": "Identifies that test names describe behavior, not implementation \u2014 correctly notes this satisfies Readable",
+          "passed": true,
+          "evidence": "analysis.md section 4 (Inspiring / Readable): 'Test names describe expected behavior (`test_login_valid_credentials_returns_token`, `test_logout_invalidates_token`). Classes group related tests logically.' Transcript Step 4: 'Inspiring: PASS. Names like `test_login_resets_failed_attempts_on_success` are self-documenting.'"
+        },
+        {
+          "text": "Identifies that assertions go through the public API \u2014 correctly notes this satisfies Structure-insensitive",
+          "passed": true,
+          "evidence": "analysis.md section 9 (Structure-Insensitive): 'Tests do not import or reference internal attributes (`_users`, `_sessions`, `failed_attempts`). They interact only via the public API: `register`, `login`, `logout`, `is_authenticated`, `deactivate_user`. Refactoring internals would not break these tests.'"
+        },
+        {
+          "text": "At most flags one borderline Predictive concern: no dedicated test for the exact boundary of MAX_FAILED_ATTEMPTS (4 fails vs 5 fails)",
+          "passed": true,
+          "evidence": "analysis.md section 11 (Predictive, Minor Gap): 'There is no test verifying that 4 failed attempts do NOT lock the account (boundary before the threshold).' This is the only gap flagged. Only one dimension is flagged as anything other than Pass, and it is correctly labeled 'Minor Gap \u2014 borderline'."
+        },
+        {
+          "text": "Does NOT flag false positives \u2014 does not claim violations for behaviors that are correct",
+          "passed": true,
+          "evidence": "All 11 other dimensions (Isolated, Composable, Fast, Inspiring, Writable, Specific, Deterministic, Behavioral, Structure-Insensitive, Automated, Understandable) are marked Pass with no violations. The conclusion explicitly states: 'This suite should not be flagged for major violations.' No false positives were introduced."
+        },
+        {
+          "text": "If Predictive is flagged, suggests adding a parameterized test for exactly MAX_FAILED_ATTEMPTS - 1 vs MAX_FAILED_ATTEMPTS failed attempts",
+          "passed": true,
+          "evidence": "analysis.md section 11 includes a concrete test recommendation: `test_account_not_locked_before_max_attempts` \u2014 '4 wrong attempts should not lock the account' followed by a 5th correct-password attempt. This directly addresses the MAX_FAILED_ATTEMPTS - 1 (4 fails) vs MAX_FAILED_ATTEMPTS (5 fails) boundary. Note: the suggestion uses two separate tests rather than a parameterized test, but the substance \u2014 verifying the boundary at exactly 4 vs 5 \u2014 is fully covered."
+        },
+        {
+          "text": "Provides an overall quality summary acknowledging tests are in good shape",
+          "passed": true,
+          "evidence": "analysis.md Overall Verdict: 'These tests are well-written. They demonstrate good practices across nearly all quality dimensions.' Conclusion: 'This is a high-quality test suite. The only genuine improvement opportunity is adding two boundary tests ... All other dimensions are well-covered.'"
+        },
+        {
+          "text": "Does not manufacture violations to fill the report",
+          "passed": true,
+          "evidence": "The report finds 11 of 12 dimensions as Pass and flags only one Minor Gap in Predictive, which is substantiated by a real gap the file's own docstring calls out. No dimension is artificially downgraded. The analysis explicitly refuses to manufacture issues: 'This suite should not be flagged for major violations.'"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": 7,
+      "eval_name": "Python DataPipeline \u2014 tradeoffs (hard)",
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.9230769230769231,
+        "passed": 12,
+        "failed": 1,
+        "total": 13,
+        "time_seconds": 123.3,
+        "tokens": 22373,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "Identifies BATCH_SIZE from os.getenv as a Deterministic violation (test result depends on environment variable)",
+          "passed": true,
+          "evidence": "analysis.md Section 2 (Deterministic \u2014 VIOLATED): 'Issue A \u2014 Environment variable dependency: DataPipeline.__init__ reads os.getenv(\"BATCH_SIZE\", \"10\") at construction time (line 21). [...] If BATCH_SIZE is set in the CI environment or a developer's shell, the pipeline may behave differently than in a clean environment.' Also present in transcript Step 3."
+        },
+        {
+          "text": "Identifies SHARED_OUTPUT = '/tmp/pipeline_output.csv' as an Isolated violation (shared filesystem artifact between tests)",
+          "passed": true,
+          "evidence": "analysis.md Section 1 (Isolated \u2014 VIOLATED): 'All four tests write to the same hardcoded filesystem path SHARED_OUTPUT = \"/tmp/pipeline_output.csv\". [...] Tests are not independent. If one test runs concurrently with another, they will race to write the same file.' Line references 56, 65, 74, 81, 87 provided."
+        },
+        {
+          "text": "Identifies test_pipeline_runs_all_steps asserting on steps list not output content as a Behavioral violation",
+          "passed": true,
+          "evidence": "analysis.md Section 4 (Behavioral \u2014 VIOLATED): 'test_pipeline_runs_all_steps (line 63) verifies that result[\"steps\"] == [\"extract\", \"transform\", \"load\"] \u2014 a check on the list of step names, not on the actual output data. This assertion tests implementation mechanics, not observable behavior.'"
+        },
+        {
+          "text": "Identifies absence of test for malformed input (e.g., missing 'value' key, non-numeric value) as a Predictive violation",
+          "passed": true,
+          "evidence": "analysis.md Section 6 (Predictive \u2014 VIOLATED): 'Malformed/missing fields: What happens when value is None, \"N/A\", or an empty string? float(record.get(\"value\", 0)) will raise ValueError for non-numeric strings.' and 'Missing keys entirely: A row with no keys at all.' Fix section provides test_transform_raises_on_non_numeric_value example."
+        },
+        {
+          "text": "Identifies time.sleep(0.001) per record as a Fast violation (accumulates: 50 records x 0.001s = 50ms overhead)",
+          "passed": true,
+          "evidence": "analysis.md Section 3 (Fast \u2014 VIOLATED): 'DataPipeline.transform calls time.sleep(0.001) for every record processed (line 30). [...] With 50 records in test_large_batch, this alone contributes 50 ms per test run.' The exact 50 records x 0.001s = 50ms calculation matches the expectation."
+        },
+        {
+          "text": "Identifies test_large_batch not verifying category transformation as a Specific violation",
+          "passed": true,
+          "evidence": "analysis.md Section 5 (Specific \u2014 VIOLATED): 'test_transform_uppercases_category asserts only on aggregate record count (records_processed == 2), which is too coarse to diagnose failures.' The transcript Step 3 also notes: 'test_large_batch \u2014 50 records \u00d7 0.001s = 50ms artificial sleep; no assertion on transformed content.' The Specific violation is directly documented, though the primary location cited is test_transform_uppercases_category rather than test_large_batch. The transcript explicitly links lack of content assertions to test_large_batch at Step 2, line 42."
+        },
+        {
+          "text": "Suggests injecting batch_size as constructor parameter instead of reading from env",
+          "passed": true,
+          "evidence": "analysis.md Deterministic Fix section: 'Or inject batch_size as a constructor argument (better design): class DataPipeline: def __init__(self, batch_size: int = 10): self.batch_size = batch_size'"
+        },
+        {
+          "text": "Suggests using tempfile.NamedTemporaryFile or tmp_path pytest fixture per test",
+          "passed": true,
+          "evidence": "analysis.md Isolated Fix section: 'Use pytest's built-in tmp_path fixture, which provides a unique temporary directory per test invocation.' Code example shown using 'tmp_path / \"output.csv\"'. Also referenced in Prioritized Recommendations: 'Replace SHARED_OUTPUT with pytest's tmp_path fixture in all four tests.'"
+        },
+        {
+          "text": "Suggests adding tests for rows missing required keys and rows with non-numeric values",
+          "passed": true,
+          "evidence": "analysis.md Predictive Fix section provides explicit code examples: 'def test_transform_raises_on_non_numeric_value(self): source = [{\"id\": 1, \"value\": \"N/A\", \"category\": \"sales\"}]' and notes 'Missing keys entirely: A row with no keys at all.' as an additional case."
+        },
+        {
+          "text": "Explains the Isolated vs Fast tradeoff (per-test temp files add I/O overhead but are necessary for correctness)",
+          "passed": false,
+          "evidence": "The analysis discusses the Isolated vs Writable tradeoff ('Using SHARED_OUTPUT was chosen for simplicity (Writable), avoiding per-test path management. But it breaks Isolated.') but does not discuss the Isolated vs Fast tradeoff. The expected tradeoff \u2014 that per-test temp files add I/O overhead but are necessary for correctness \u2014 is not present. The Fast vs Predictive and Specific vs Predictive tradeoffs are discussed, but not Isolated vs Fast."
+        },
+        {
+          "text": "References each violation by the Test Desiderata property name",
+          "passed": true,
+          "evidence": "analysis.md uses explicit property names as section headers: '1. Isolated \u2014 VIOLATED', '2. Deterministic \u2014 VIOLATED', '3. Fast \u2014 VIOLATED', '4. Behavioral \u2014 VIOLATED', '5. Specific \u2014 VIOLATED', '6. Predictive \u2014 VIOLATED'. Summary Table lists all 12 properties by name."
+        },
+        {
+          "text": "Explicitly discusses at least one tradeoff between competing properties",
+          "passed": true,
+          "evidence": "analysis.md Tradeoff Analysis section covers three explicit tradeoffs: 'Fast vs Predictive', 'Specific vs Predictive', and 'Isolated vs Writable'. Each explains the tension between properties and a resolution."
+        },
+        {
+          "text": "Prioritizes violations (e.g., Isolated and Deterministic as safety issues to fix first)",
+          "passed": true,
+          "evidence": "analysis.md Prioritized Recommendations: 'Priority 1 \u2014 Safety (Isolated + Deterministic): These cause intermittent, hard-to-diagnose failures that erode trust in the test suite.' Followed by Priority 2 (Fast), Priority 3 (Behavioral + Specific), Priority 4 (Predictive)."
+        }
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": 7,
+      "eval_name": "Python DataPipeline \u2014 tradeoffs (hard)",
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.8461538461538461,
+        "passed": 11,
+        "failed": 2,
+        "total": 13,
+        "time_seconds": 95.1,
+        "tokens": 18738,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "Identifies BATCH_SIZE from os.getenv as a Deterministic violation (test result depends on environment variable)",
+          "passed": true,
+          "evidence": "analysis.md Section 1 'Non-Deterministic: Environment Variable Dependency': 'self.batch_size = int(os.getenv(\"BATCH_SIZE\", \"10\")) ... Any test that runs self.pipeline = DataPipeline() will behave differently depending on what BATCH_SIZE is set to in the shell or CI environment.' Transcript also notes: 'os.getenv(\"BATCH_SIZE\", \"10\") in __init__ makes test behavior depend on the environment.'"
+        },
+        {
+          "text": "Identifies SHARED_OUTPUT = '/tmp/pipeline_output.csv' as an Isolated violation (shared filesystem artifact between tests)",
+          "passed": true,
+          "evidence": "analysis.md Section 2 'Not Isolated: Shared Filesystem Artifact': 'SHARED_OUTPUT = \"/tmp/pipeline_output.csv\" (line 56), used in every test. All four tests write to the same hardcoded path /tmp/pipeline_output.csv. This causes two problems: Test interference... Leaked state...'"
+        },
+        {
+          "text": "Identifies test_pipeline_runs_all_steps asserting on steps list not output content as a Behavioral violation",
+          "passed": true,
+          "evidence": "analysis.md Section 3 'Not Behavioral: Checking Implementation Internals': 'assert result[\"steps\"] == [\"extract\", \"transform\", \"load\"] ... This assertion verifies that _steps_executed is populated with specific internal step names, not that the pipeline produced the correct output.' Transcript also notes: 'test_pipeline_runs_all_steps asserts result[\"steps\"] == [...] \u2014 it does not reflect whether extract, transform, or load actually executed correctly.'"
+        },
+        {
+          "text": "Identifies absence of test for malformed input (e.g., missing 'value' key, non-numeric value) as a Predictive violation",
+          "passed": true,
+          "evidence": "analysis.md Section 4 'Not Predictive: Missing Error and Edge-Case Coverage': 'The transform method does float(record.get(\"value\", 0)) \u2014 if value is \"abc\" or None, this raises a ValueError. There is no test for: Malformed rows (missing keys, wrong types); None values that trigger AttributeError on .upper(); Non-numeric strings in value.'"
+        },
+        {
+          "text": "Identifies time.sleep(0.001) per record as a Fast violation (accumulates: 50 records x 0.001s = 50ms overhead)",
+          "passed": true,
+          "evidence": "analysis.md Section 5 'Not Fast: Unnecessary time.sleep in Production Code Under Test': 'A 1 ms sleep per record adds 50 ms to test_large_batch alone.' Transcript also notes: 'test_large_batch processes 50 records = minimum 50 ms of artificial latency.'"
+        },
+        {
+          "text": "Identifies test_large_batch not verifying category transformation as a Specific violation",
+          "passed": true,
+          "evidence": "analysis.md Section 6 'Not Specific: Assertions on Aggregate Counts, Not Individual Records': 'test_large_batch checks that 50 records were processed but makes no assertions about whether any record was transformed correctly.' The section explicitly calls out both test_transform_uppercases_category and test_large_batch for only asserting counts."
+        },
+        {
+          "text": "Suggests injecting batch_size as constructor parameter instead of reading from env",
+          "passed": true,
+          "evidence": "analysis.md Section 1 recommendation: 'Better yet, remove the env-var coupling entirely from the production code and accept it as a parameter: class DataPipeline: def __init__(self, batch_size: int = 10): self.batch_size = batch_size'. The rewritten test suite also uses DataPipeline(batch_size=10)."
+        },
+        {
+          "text": "Suggests using tempfile.NamedTemporaryFile or tmp_path pytest fixture per test",
+          "passed": true,
+          "evidence": "analysis.md Section 2 recommendation: 'Use tempfile.NamedTemporaryFile or pytest's tmp_path fixture for a unique, automatically cleaned-up path per test' with a code example using 'def test_pipeline_runs_all_steps(self, tmp_path):'. The rewritten suite uses tmp_path throughout."
+        },
+        {
+          "text": "Suggests adding tests for rows missing required keys and rows with non-numeric values",
+          "passed": true,
+          "evidence": "analysis.md Section 4 recommendation includes concrete test examples: 'test_transform_raises_on_non_numeric_value' (source = [{\"id\": 1, \"value\": \"not_a_number\", ...}]) and 'test_transform_handles_missing_category' (source = [{\"id\": 1, \"value\": \"5.0\"}] with no \"category\" key). Both are also in the rewritten suite."
+        },
+        {
+          "text": "Explains the Isolated vs Fast tradeoff (per-test temp files add I/O overhead but are necessary for correctness)",
+          "passed": false,
+          "evidence": "The analysis recommends using tmp_path for isolation and flags time.sleep as a Fast violation, but it never explicitly discusses the tradeoff between these two properties. The prioritized recommendations table marks the tmp_path fix as 'High' and the sleep as 'Low', but there is no discussion acknowledging that per-test temp files introduce I/O overhead that competes with the Fast desideratum. The tradeoff is not mentioned anywhere in the output."
+        },
+        {
+          "text": "References each violation by the Test Desiderata property name",
+          "passed": true,
+          "evidence": "Each of the six sections is titled with the property name: 'Non-Deterministic', 'Not Isolated', 'Not Behavioral', 'Not Predictive', 'Not Fast', 'Not Specific'. The transcript similarly uses these names: 'Deterministic (env dependency)', 'Isolated (shared filesystem artifact)', 'Behavioral (step count not output correctness)', 'Predictive (no error/edge-case coverage)', 'Fast (unnecessary sleep)', 'Specific (aggregate count assertions)'."
+        },
+        {
+          "text": "Explicitly discusses at least one tradeoff between competing properties",
+          "passed": false,
+          "evidence": "No tradeoff discussion is present in either analysis.md or the transcript. The analysis addresses each property in isolation. The prioritized recommendations table does implicitly rank them (High/Medium/Low), but does not frame any tension between competing desiderata (e.g., Fast vs Isolated, Predictive vs Fast)."
+        },
+        {
+          "text": "Prioritizes violations (e.g., Isolated and Deterministic as safety issues to fix first)",
+          "passed": true,
+          "evidence": "analysis.md 'Prioritized Recommendations' table explicitly ranks issues: 'High' for shared output path (Isolated) and the assertion issues; 'Medium' for malformed input (Predictive) and BATCH_SIZE env var (Deterministic); 'Low' for time.sleep (Fast) and teardown. Note: Deterministic is ranked Medium rather than High, so the exact framing differs slightly from the expectation, but explicit prioritization of Isolated as High is present and the table clearly prioritizes some issues over others."
+        }
+      ],
+      "notes": []
+    }
+  ],
+  "run_summary": {
+    "with_skill": {
+      "pass_rate": {
+        "mean": 0.9760239760239761,
+        "stddev": 0.041145421967575015,
+        "min": 0.9090909090909091,
+        "max": 1.0
+      },
+      "time_seconds": {
+        "mean": 125.44285714285715,
+        "stddev": 7.688705383625418,
+        "min": 112.1,
+        "max": 137.6
+      },
+      "tokens": {
+        "mean": 22509.714285714286,
+        "stddev": 530.4132710398922,
+        "min": 21624,
+        "max": 23182
+      }
+    },
+    "without_skill": {
+      "pass_rate": {
+        "mean": 0.8806193806193806,
+        "stddev": 0.06703775591289539,
+        "min": 0.8,
+        "max": 1.0
+      },
+      "time_seconds": {
+        "mean": 80.68571428571428,
+        "stddev": 7.815034350836974,
+        "min": 72.2,
+        "max": 95.1
+      },
+      "tokens": {
+        "mean": 17993,
+        "stddev": 544.7351038195843,
+        "min": 17087,
+        "max": 18738
+      }
+    },
+    "delta": {
+      "pass_rate": "+0.095",
+      "time_seconds": "+44.8",
+      "tokens": "+4517"
+    }
+  },
+  "notes": [
+    "with_skill 97.6% (70/72) vs without_skill 88.1% (63/72)",
+    "Delta: +9.5%  |  Token overhead: +25.1%",
+    "Honest baseline: prompt = 'Analyze this test file for quality issues and suggest improvements'",
+    "Main skill gains: property name enforcement (+eval-1,2,3,5), tradeoff synthesis (+eval-4,7)",
+    "Eval-6 (false positive): tie \u2014 both scored 8/8 with honest baseline",
+    "Without-skill misses: exact Desiderata property names (uses 'Isolation violation' not 'Isolated'), cross-property tradeoff synthesis"
+  ]
+}

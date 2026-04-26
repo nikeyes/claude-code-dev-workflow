@@ -1,0 +1,126 @@
+{
+  "expectations": [
+    {
+      "text": "Identifies const cache outside describe as an Isolated violation (all tests share one cache instance)",
+      "passed": true,
+      "evidence": "analysis.md Issue 1 states: 'A single `cache` instance is created outside the `describe` block and reused across all tests. Each test mutates this shared state.' Labeled explicitly as 'Isolation Violation — Shared Cache Instance Across Tests'. Line reference: line 50. Transcript Step 5 also traces shared cache state across all 4 tests."
+    },
+    {
+      "text": "Identifies that vi.useFakeTimers() is called but vi.advanceTimersByTime() is never called — TTL never expires — as a Behavioral violation",
+      "passed": true,
+      "evidence": "analysis.md Issue 2 states: 'The test uses `vi.useFakeTimers()` to presumably test TTL expiry behavior, but it never calls `vi.advanceTimersByTime()` to simulate the passage of time.' Labeled 'Behavioral Violation — Fake Timers Never Advance Time'. Transcript Step 4 also confirms: 'Time is never advanced. The entry is freshly set and has not expired.'"
+    },
+    {
+      "text": "Identifies that 'evicts LRU entry and expired TTL' covers two orthogonal concerns as a Composable violation",
+      "passed": true,
+      "evidence": "analysis.md Issue 3 states: 'The test attempts to verify two independent behaviors: LRU eviction (capacity enforcement) and TTL expiry. These are separate axes of functionality.' Labeled 'Composability Violation — Single Test Covers Two Orthogonal Concerns'. Test name quoted verbatim."
+    },
+    {
+      "text": "Identifies magic numbers 1000 and 3 in the shared cache constructor as a Readable violation",
+      "passed": true,
+      "evidence": "analysis.md Issue 4 states: 'const cache = new LRUCache<string, number>(3, 1000); // What is 3? What is 1000?' Labeled 'Readability Violation — Magic Numbers Without Explanation'. Both 1000 and 3 are explicitly cited at line 50."
+    },
+    {
+      "text": "Explains that the TTL test passes for the wrong reason (value not expired, test assertion is weaker than intended)",
+      "passed": true,
+      "evidence": "analysis.md states: 'The entry is set and immediately retrieved — it hasn't expired, so `result` is `99`, and the assertion `not.toBeUndefined()` passes. However, the comment says the intent was to test that the key had expired. The test neither documents nor validates expiry correctly: it documents wrong intent and passes for the wrong reason.' Transcript Step 4 confirms the same with a traced execution path."
+    },
+    {
+      "text": "Suggests creating a fresh LRUCache instance inside each test (or using beforeEach)",
+      "passed": true,
+      "evidence": "analysis.md Fix for Issue 1 shows: 'Create a fresh instance inside each test (or in a `beforeEach` hook)' with explicit code example using `beforeEach(() => { cache = new LRUCache<string, number>(3, 1000); })`."
+    },
+    {
+      "text": "Suggests calling vi.advanceTimersByTime(ttlMs + 1) to actually expire the entry",
+      "passed": true,
+      "evidence": "analysis.md Fix for Issue 2 shows: `vi.advanceTimersByTime(1001); // past the 1000ms TTL` in the 'Fix — if testing that an expired entry returns undefined' code example. The value 1001 is TTL (1000) + 1, matching the expectation."
+    },
+    {
+      "text": "Suggests splitting the test into 'evicts LRU when at capacity' and 'returns undefined for expired key'",
+      "passed": true,
+      "evidence": "analysis.md Fix for Issue 3 shows two split tests: `it('evicts least recently used entry when capacity is exceeded', ...)` and `it('returns undefined after TTL expires', ...)`. Both concerns are addressed as separate tests with complete code examples."
+    },
+    {
+      "text": "References each violation by the Test Desiderata property name",
+      "passed": false,
+      "evidence": "The analysis uses labels like 'Isolation Violation', 'Behavioral Violation', 'Composability Violation', and 'Readability Violation', but these are the analyst's own labels, not formal Test Desiderata property names. The transcript explicitly notes: 'No framework was applied explicitly.' The standard Test Desiderata properties (Isolated, Behavioral, Composable, Readable) are not used as formal references — the output uses informal variants. The transcript states the file header hints were used as hypotheses, not a named framework."
+    },
+    {
+      "text": "Highlights the Behavioral violation as high-priority (false confidence)",
+      "passed": false,
+      "evidence": "The prioritized fix table in analysis.md ranks the Behavioral violation as Priority 2, behind the Isolation violation (Priority 1). The expectation requires the Behavioral violation to be highlighted as *high-priority*, but it is ranked second. The rationale given for Behavioral is 'passes for the wrong reason', but Isolation is ranked higher. The false-confidence framing is present ('passes for the wrong reason') but the priority order does not place Behavioral first."
+    }
+  ],
+  "summary": {
+    "passed": 8,
+    "failed": 2,
+    "total": 10,
+    "pass_rate": 0.80
+  },
+  "execution_metrics": {
+    "tool_calls": {},
+    "total_tool_calls": null,
+    "total_steps": 7,
+    "errors_encountered": 0,
+    "output_chars": 4612,
+    "transcript_chars": 4168
+  },
+  "timing": {
+    "executor_duration_seconds": 77.0,
+    "grader_duration_seconds": null,
+    "total_duration_seconds": 77.0
+  },
+  "claims": [
+    {
+      "claim": "The file header comments already declared the intended violations",
+      "type": "factual",
+      "verified": true,
+      "evidence": "Transcript Step 2 states the file header (lines 1–10) declared violations for Isolated, Behavioral, Readable, and Composable. This is consistent with the known test fixture file."
+    },
+    {
+      "claim": "Test 4 ('respects capacity') creates its own local LRUCache instance and is correctly isolated",
+      "type": "factual",
+      "verified": true,
+      "evidence": "Transcript Step 3 (Test 4) states: 'Creates its own local `LRUCache` instance — correctly isolated.' This is a legitimate observation."
+    },
+    {
+      "claim": "The test as written cannot detect a bug where TTL is never enforced",
+      "type": "quality",
+      "verified": true,
+      "evidence": "analysis.md states: 'The test as written cannot detect a bug where TTL is never enforced.' This follows logically: since time is never advanced, any implementation that stores values at all would pass the not.toBeUndefined() assertion regardless of TTL handling."
+    },
+    {
+      "claim": "The 'nonexistent key' test (Test 3) is safe from isolation issues only by accident",
+      "type": "quality",
+      "verified": true,
+      "evidence": "Transcript Step 3 notes: 'This test is safe from isolation issues only by accident (the key was never used by prior tests).' This is accurate — if a previous test happened to set 'nonexistent', the test would fail."
+    },
+    {
+      "claim": "No framework was applied explicitly",
+      "type": "process",
+      "verified": true,
+      "evidence": "The transcript explicitly states this in the 'Approach Used' section. The analysis does not invoke Test Desiderata by name, using instead informal variant labels."
+    }
+  ],
+  "user_notes_summary": {
+    "uncertainties": [],
+    "needs_review": [],
+    "workarounds": []
+  },
+  "eval_feedback": {
+    "suggestions": [
+      {
+        "assertion": "References each violation by the Test Desiderata property name",
+        "reason": "This expectation is too vague about what counts as a valid reference. The output uses labels like 'Isolation Violation' and 'Behavioral Violation' which map clearly to the Desiderata properties (Isolated, Behavioral) but are not verbatim names. The assertion should specify whether informal-but-unambiguous references count, or require the exact canonical names (e.g., 'Isolated', 'Behavioral', 'Composable', 'Readable'). As written, it creates a borderline judgment."
+      },
+      {
+        "assertion": "Highlights the Behavioral violation as high-priority (false confidence)",
+        "reason": "The output does explain the false-confidence problem ('passes for the wrong reason') but ranks Behavioral second in the priority table. The expectation likely intends that the false-confidence framing is present AND prominent. Consider splitting into: (a) 'Explains the false-confidence risk of the Behavioral violation' and (b) 'Ranks Behavioral violation as equal or higher priority than Isolation'. Currently the single expectation is ambiguous about whether priority ranking or framing is the criterion."
+      },
+      {
+        "reason": "No assertion checks that the output avoids false positives — e.g., that it does NOT claim the fake-timers test correctly validates TTL expiry. A weak analysis might note the violation but still say the test 'mostly works', creating partial false confidence. An assertion like 'Does not conclude the TTL test is acceptable as-is' would catch this."
+      }
+    ],
+    "overall": "The eval suite is well-targeted and covers the key behaviors. The two failures reveal genuine gaps: the output avoids using the formal Test Desiderata framework name and deprioritizes the Behavioral violation relative to Isolation. The suggestions above would make the boundary conditions of the assertions clearer."
+  }
+}

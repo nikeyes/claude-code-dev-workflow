@@ -1,0 +1,116 @@
+{
+  "expectations": [
+    {
+      "text": "Identifies const cache outside describe as an Isolated violation (all tests share one cache instance)",
+      "passed": true,
+      "evidence": "analysis.md Section 1 (Isolated): 'The `cache` instance is declared at module scope (line 50) and shared across all four tests. Tests run sequentially and mutate the same cache, meaning later tests inherit state from earlier ones.' Transcript Step 2 also confirms: 'Line 50: `const cache = new LRUCache<string, number>(3, 1000);` is defined outside the describe block. All four tests share and mutate the same object.'"
+    },
+    {
+      "text": "Identifies that vi.useFakeTimers() is called but vi.advanceTimersByTime() is never called — TTL never expires — as a Behavioral violation",
+      "passed": true,
+      "evidence": "analysis.md Section 7 (Behavioral): 'vi.useFakeTimers() is called but vi.advanceTimersByTime() is never invoked. Therefore the TTL never elapses inside the test.' Transcript Step 2 Behavioral: 'No call to vi.advanceTimersByTime(...) is made' and 'since time has not advanced, Date.now() < expiresAt, so the entry is NOT expired'. Labeled explicitly as a Behavioral violation."
+    },
+    {
+      "text": "Identifies that 'evicts LRU entry and expired TTL' covers two orthogonal concerns as a Composable violation",
+      "passed": true,
+      "evidence": "analysis.md Section 2 (Composable): 'The test \"evicts LRU entry and expired TTL\" (line 63) tests two completely orthogonal concerns in a single test case: LRU eviction policy and TTL expiry.' Transcript Step 2 Composable: 'Test \"evicts LRU entry and expired TTL\" performs two logically separate checks: 1. Inserting four items... 2. Inserting a \"temp\" key and checking its TTL behaviour. These are orthogonal concerns that should be in separate tests.'"
+    },
+    {
+      "text": "Identifies magic numbers 1000 and 3 in the shared cache constructor as a Readable violation",
+      "passed": true,
+      "evidence": "analysis.md Section 6 (Readable): Lists magic numbers including '1000 (line 50) — TTL in milliseconds, not labelled' and '3 (line 50, 89) — capacity limit, not labelled'. The recommendation provides named constants including CAPACITY = 3 and TTL_MS = 1_000. Transcript Step 2 Readable also confirms both."
+    },
+    {
+      "text": "Explains that the TTL test passes for the wrong reason (value not expired, test assertion is weaker than intended)",
+      "passed": true,
+      "evidence": "analysis.md Section 7 (Behavioral): 'The assertion `expect(result).not.toBeUndefined()` then passes — but for the wrong reason (the entry is fresh, not expired). The test's documented intent is to verify that an expired entry returns `undefined`, but it never exercises that path.' Transcript Step 2: 'The assertion is `expect(result).not.toBeUndefined()` — this passes, but for the wrong reason (the entry is fresh, not because TTL was correctly handled). The comment on line 80 acknowledges this: \"accidentally passes for wrong reason\"'"
+    },
+    {
+      "text": "Suggests creating a fresh LRUCache instance inside each test (or using beforeEach)",
+      "passed": true,
+      "evidence": "analysis.md Section 1 recommendation: 'Create a fresh `LRUCache` instance inside each `it` block (or in a `beforeEach`)' with a code snippet showing `beforeEach(() => { cache = new LRUCache<string, number>(3, 1000); })`. Transcript Step 4 also recommends: 'Move `cache` into `beforeEach(() => { cache = new LRUCache(...) })`'"
+    },
+    {
+      "text": "Suggests calling vi.advanceTimersByTime(ttlMs + 1) to actually expire the entry",
+      "passed": true,
+      "evidence": "analysis.md Section 7 recommendation provides exactly: `vi.advanceTimersByTime(1001); // past TTL_MS` — which is TTL_MS (1000) + 1. Transcript Step 4 recommends: 'Add `vi.advanceTimersByTime(1001)` after `cache.set(\"temp\", 99)` and change the assertion to `toBeUndefined()`'"
+    },
+    {
+      "text": "Suggests splitting the test into 'evicts LRU when at capacity' and 'returns undefined for expired key'",
+      "passed": true,
+      "evidence": "analysis.md Section 2 recommendation: 'Split into two independent tests: `it(\"evicts the least-recently-used entry when capacity is exceeded\", ...)` and `it(\"returns undefined for a key whose TTL has elapsed\", ...)`'. The names match the expected split intent precisely (eviction at capacity + undefined for expired key)."
+    },
+    {
+      "text": "References each violation by the Test Desiderata property name",
+      "passed": true,
+      "evidence": "analysis.md uses explicit section headings for each property: '### 1. Isolated', '### 2. Composable', '### 6. Readable', '### 7. Behavioral', etc. Every violation is labeled with its property name. The Violations Summary Table also lists all properties by name."
+    },
+    {
+      "text": "Highlights the Behavioral violation as high-priority (false confidence)",
+      "passed": true,
+      "evidence": "analysis.md Priority Recommendations section lists Behavioral fix as item 2 with explicit language: 'Fix the behavioral bug: add `vi.advanceTimersByTime(TTL_MS + 1)` before asserting expiry.' The analysis text also uses 'logical flaw' and explains the false confidence: 'The test's documented intent is to verify that an expired entry returns `undefined`, but it never exercises that path.' The transcript notes the comment in the test file says 'accidentally passes for wrong reason', reinforcing the false-confidence framing."
+    }
+  ],
+  "summary": {
+    "passed": 10,
+    "failed": 0,
+    "total": 10,
+    "pass_rate": 1.0
+  },
+  "execution_metrics": {
+    "output_chars": 7560,
+    "transcript_chars": 3792
+  },
+  "timing": {
+    "total_duration_seconds": 81.4
+  },
+  "claims": [
+    {
+      "claim": "The file is 97 lines and contains an inline LRUCache implementation",
+      "type": "factual",
+      "verified": true,
+      "evidence": "The transcript states the file is 97 lines with a Map-backed LRUCache. This is consistent with the eval fixture described in the test suite."
+    },
+    {
+      "claim": "Comments in the file explicitly name four intended violations: Isolated, Behavioral, Readable, Composable",
+      "type": "factual",
+      "verified": true,
+      "evidence": "Transcript Step 1 states: 'Comments in the file explicitly naming four intended violations: Isolated, Behavioral, Readable, Composable'. The comment on line 80 ('accidentally passes for wrong reason') is also quoted in the Behavioral analysis."
+    },
+    {
+      "claim": "The test assertion `expect(result).not.toBeUndefined()` passes for the wrong reason",
+      "type": "quality",
+      "verified": true,
+      "evidence": "The analysis correctly explains the mechanism: fake timers are set but time is never advanced, so the entry is fresh (not expired), and the assertion passes vacuously. This matches the intended violation seeded in the fixture."
+    },
+    {
+      "claim": "The comment on line 88 references '5' but the actual value is 5000 — a minor inconsistency",
+      "type": "factual",
+      "verified": false,
+      "evidence": "The transcript mentions this inconsistency, but the source file was not independently read during grading to confirm the exact line content. It is plausible given the context but unverifiable here."
+    },
+    {
+      "claim": "Deterministic is a derived violation caused by the Isolated violation",
+      "type": "quality",
+      "verified": true,
+      "evidence": "analysis.md Section 3 explicitly frames Deterministic as an indirect consequence: 'Because the shared cache carries state between tests, the outcome of \"evicts LRU entry and expired TTL\" depends on the order in which tests execute.' The recommendation also notes fixing Isolated resolves non-determinism simultaneously."
+    }
+  ],
+  "user_notes_summary": {
+    "uncertainties": [],
+    "needs_review": [],
+    "workarounds": []
+  },
+  "eval_feedback": {
+    "suggestions": [
+      {
+        "assertion": "Highlights the Behavioral violation as high-priority (false confidence)",
+        "reason": "The assertion is satisfied because the word 'behavioral bug' and priority item #2 appear in the output, but the ranking is Isolated #1 and Behavioral #2. A stronger version might require it to be listed first or explicitly labeled 'highest priority' or 'false confidence' — the current wording only requires it to be 'highlighted', which is ambiguous enough that any mention with a fix recommendation would pass."
+      },
+      {
+        "reason": "No assertion checks whether the corrected assertion direction is stated: the analysis should recommend changing `not.toBeUndefined()` to `toBeUndefined()` when advancing timers. The analysis does recommend this (transcript Step 4: 'change the assertion to `toBeUndefined()`'), but no expectation verifies this crucial detail — fixing the timer without flipping the assertion would still produce a wrong test."
+      }
+    ],
+    "overall": "Evals are well-targeted and all 10 pass with clear evidence. The two suggestions above identify a minor ambiguity in expectation 10 and a missing check on assertion polarity correction."
+  }
+}

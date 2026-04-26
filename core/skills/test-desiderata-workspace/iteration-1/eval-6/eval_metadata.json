@@ -1,0 +1,15 @@
+{
+  "eval_id": 6,
+  "eval_name": "python-authservice-false-positive",
+  "prompt": "Analyze the test file at /Users/jorge.castro/mordor/personal/stepwise-dev/core/skills/test-desiderata-workspace/evals/files/test_auth_service.py for test quality issues using the Test Desiderata framework",
+  "assertions": [
+    "Identifies that tests use a fresh service fixture per test — correctly notes this satisfies Isolated",
+    "Identifies that test names describe behavior, not implementation — correctly notes this satisfies Readable",
+    "Identifies that assertions go through the public API — correctly notes this satisfies Structure-insensitive",
+    "At most flags one borderline Predictive concern: no dedicated test for the exact boundary of MAX_FAILED_ATTEMPTS (4 fails vs 5 fails)",
+    "Does NOT flag false positives — does not claim violations for behaviors that are correct",
+    "If Predictive is flagged, suggests adding a parameterized test for exactly MAX_FAILED_ATTEMPTS - 1 vs MAX_FAILED_ATTEMPTS failed attempts",
+    "Provides an overall quality summary acknowledging tests are in good shape",
+    "Does not manufacture violations to fill the report"
+  ]
+}

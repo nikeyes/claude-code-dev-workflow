@@ -1,0 +1,121 @@
+{
+  "expectations": [
+    {
+      "text": "Identifies shared_balance global variable as an Isolated violation (test order dependency)",
+      "passed": true,
+      "evidence": "analysis.md Section 1 (Isolated — VIOLATED): 'Issue: `test_all_operations` and `test_deposit_updates_ledger` share `shared_balance` global state. Location: Line 12 (declaration)... Impact: If tests run in a different order (e.g., pytest-randomly), `test_deposit_updates_ledger` receives an unexpected initial balance (70 instead of 0)'. Transcript Step 3 Property 1 also says: '`shared_balance` is declared at module level (line 12)... VIOLATED — tests are order-dependent.'"
+    },
+    {
+      "text": "Identifies random.randint in BankAccount.deposit as a Deterministic violation",
+      "passed": true,
+      "evidence": "analysis.md Section 3 (Deterministic — VIOLATED): 'Issue: `BankAccount.deposit()` calls `random.randint(1000, 9999)` to generate a transaction ID. Location: Line 24 (production code) — `tx_id = random.randint(1000, 9999)`'. Transcript Step 3 Property 3 corroborates: 'BankAccount.deposit() calls random.randint(1000, 9999) to assign tx_id (line 24). VIOLATED.'"
+    },
+    {
+      "text": "Identifies test_all_operations as a Specific violation (multiple assertions covering deposit, withdraw, and balance in one test)",
+      "passed": true,
+      "evidence": "analysis.md Section 10 (Specific — VIOLATED): 'Issue: `test_all_operations` has three assertions (balance value, ledger length, ledger entry type) in a single test. Location: Lines 51-53. Impact: When this test fails, it is unclear which operation caused the failure — the deposit, the withdrawal, or the ledger recording.' Transcript Step 3 Property 10 also confirms: 'test_all_operations has 3 assertions on lines 51-53... VIOLATED.'"
+    },
+    {
+      "text": "Identifies assertion on account._ledger as a Structure-insensitive violation (private attribute)",
+      "passed": true,
+      "evidence": "analysis.md Section 8 (Structure-insensitive — VIOLATED): 'Issue: Tests assert directly on the private `_ledger` attribute. Location: Line 52 — `assert len(account._ledger) == 2`, Line 53 — `assert account._ledger[0][\"type\"] == \"deposit\"`, Line 59 — `assert len(account._ledger) == 1`, Line 60. Impact: Any refactoring that renames `_ledger`... will break these tests even if the external behavior is unchanged.' Transcript Step 3 Property 8 confirms: 'Four direct assertions on `account._ledger` (lines 52, 53, 59, 60). VIOLATED.'"
+    },
+    {
+      "text": "Notes that test_deposit_updates_ledger depends on shared_balance from previous test",
+      "passed": true,
+      "evidence": "analysis.md Section 1 Issue 2: 'Issue: `test_deposit_updates_ledger` initialises its account with `shared_balance`, coupling it to `test_all_operations`. Location: Line 57 — `account = BankAccount(\"Bob\", shared_balance)`. Impact: This test is meaningless in isolation; it silently passes or fails depending on the side effect of the previous test.' Transcript Step 3 Property 1 also states: '`test_deposit_updates_ledger` then reads `shared_balance` (now 70) as its initial balance (line 57).'"
+    },
+    {
+      "text": "Suggests replacing shared_balance with a fresh instance per test (e.g., pytest fixture)",
+      "passed": true,
+      "evidence": "analysis.md Section 1: 'Fix: Each test should create its own `BankAccount` with an explicit, fixed initial balance. Remove `shared_balance` entirely.' Prioritized Recommendations Priority 1: 'Remove `shared_balance` — Replace all uses with explicit, local initial balances in each test.' The refactored example uses a `make_account` factory helper. The transcript Step 6 also mentions 'Followed the skill's prescribed format... for each violation.'"
+    },
+    {
+      "text": "Suggests seeding or injecting the random ID to make deposit deterministic",
+      "passed": true,
+      "evidence": "analysis.md Section 3 Fix: 'Use a deterministic ID generator — a counter, a UUID seeded from a known value in tests, or an injected factory. Example: Inject an `id_generator` callable into `__init__` with a default of `lambda: uuid.uuid4()`, and in tests pass `id_generator=itertools.count(1).__next__`.' Priority 1 recommendation: 'Fix non-deterministic ID generation — Inject an `id_generator` into `BankAccount.__init__` so tests can pass a deterministic counter.'"
+    },
+    {
+      "text": "Suggests splitting test_all_operations into focused single-concern tests",
+      "passed": true,
+      "evidence": "analysis.md Section 10 Fix: 'Split into three focused tests, one per assertion: `test_deposit_increases_balance_by_deposit_amount`, `test_withdraw_decreases_balance_by_withdrawal_amount`, `test_deposit_records_entry_in_ledger`'. Priority 3 also states: 'Split `test_all_operations` — One assertion per test for deposit behavior, withdrawal behavior.' The refactored example provides concrete method names."
+    },
+    {
+      "text": "References each violation by the Test Desiderata property name (e.g., 'Isolated', 'Deterministic')",
+      "passed": true,
+      "evidence": "The analysis.md uses explicit property names as section headers throughout: '### 1. Isolated — VIOLATED', '### 3. Deterministic — VIOLATED', '### 8. Structure-insensitive — VIOLATED', '### 10. Specific — VIOLATED'. The Violations Summary Table lists all 12 properties by name. The transcript summary table also uses property names verbatim."
+    },
+    {
+      "text": "Provides at least one code-level fix example or concrete suggestion",
+      "passed": true,
+      "evidence": "analysis.md contains a full 'Example Refactored Test (illustrative)' section with Python code showing `make_account` factory, `test_deposit_increases_balance_by_deposited_amount`, `test_withdraw_decreases_balance_by_withdrawn_amount`, `test_withdraw_insufficient_funds_raises_value_error`, and `test_deposit_is_recorded_in_transaction_history` using a public `transaction_history()` API. The Deterministic fix also shows a code-level injection pattern: `id_generator=itertools.count(1).__next__`."
+    }
+  ],
+  "summary": {
+    "passed": 10,
+    "failed": 0,
+    "total": 10,
+    "pass_rate": 1.0
+  },
+  "execution_metrics": {
+    "tool_calls": null,
+    "total_tool_calls": null,
+    "total_steps": 6,
+    "errors_encountered": 0,
+    "output_chars": 8850,
+    "transcript_chars": 4150
+  },
+  "timing": {
+    "executor_duration_seconds": 125.4,
+    "grader_duration_seconds": null,
+    "total_duration_seconds": 125.4,
+    "total_tokens": 22311,
+    "duration_ms": 125447
+  },
+  "claims": [
+    {
+      "claim": "The file header comment explicitly lists intended violations: Isolated, Deterministic, Specific, Structure-insensitive",
+      "type": "factual",
+      "verified": true,
+      "evidence": "Transcript Step 2 states this. All four listed violations are confirmed by the analysis."
+    },
+    {
+      "claim": "4 hard violations (Isolated, Deterministic, Structure-insensitive, Specific), 6 warnings, 2 passes",
+      "type": "factual",
+      "verified": true,
+      "evidence": "Violations Summary Table in analysis.md lists exactly 4 VIOLATED, 6 WARNING, 2 PASS entries consistent with this claim."
+    },
+    {
+      "claim": "No genuine tradeoffs identified — all violations can be fixed without sacrificing other properties",
+      "type": "quality",
+      "verified": true,
+      "evidence": "Tradeoff Analysis section in analysis.md: 'No genuine tradeoffs identified — all violations in this file can be fixed without sacrificing other properties.' This is a reasonable conclusion given the nature of the violations."
+    },
+    {
+      "claim": "Current tests do not assert on tx_id directly, so no test currently fails due to non-determinism",
+      "type": "factual",
+      "verified": true,
+      "evidence": "Analysis Section 3 notes the non-determinism is 'latent' because 'the current tests do not assert on `tx_id` directly'. This is consistent with the tests only asserting on balance and ledger entry type, not on tx_id values."
+    }
+  ],
+  "user_notes_summary": {
+    "uncertainties": [],
+    "needs_review": [],
+    "workarounds": []
+  },
+  "eval_feedback": {
+    "suggestions": [
+      {
+        "reason": "No assertion checks whether the skill correctly prioritizes violations (e.g., Isolated and Deterministic as Safety-critical vs. Specific as High). The skill has an explicit prioritization framework and the output uses it — this is a meaningful outcome that the evals miss entirely."
+      },
+      {
+        "assertion": "Suggests seeding or injecting the random ID to make deposit deterministic",
+        "reason": "This assertion would pass for any output that mentions 'seed' or 'inject' near 'random', even without a concrete actionable fix. Consider tightening it to require a specific injection mechanism or code example demonstrating how to pass a deterministic generator in tests."
+      },
+      {
+        "reason": "No assertion checks the quality or correctness of the refactored code example. The output provides a full Python example — verifying that the example actually addresses the identified violations (e.g., uses no shared state, has one assertion per test) would be a more discriminating eval."
+      }
+    ],
+    "overall": "Assertions are well-targeted and map cleanly to the intentional violations embedded in the fixture file. Coverage is strong for identification and suggestion expectations. The main gap is that no assertion validates prioritization or the quality of the concrete code example produced."
+  }
+}

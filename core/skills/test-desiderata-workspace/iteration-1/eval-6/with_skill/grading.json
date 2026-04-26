@@ -1,0 +1,106 @@
+{
+  "expectations": [
+    {
+      "text": "Identifies that tests use a fresh service fixture per test — correctly notes this satisfies Isolated",
+      "passed": true,
+      "evidence": "analysis.md under 'Isolated — PASS': 'Each test receives a fresh AuthService instance via the service fixture, which returns a new object on every invocation. The registered_user fixture composes on top of service, inheriting the same per-test instantiation. No shared mutable state between tests.'"
+    },
+    {
+      "text": "Identifies that test names describe behavior, not implementation — correctly notes this satisfies Readable",
+      "passed": true,
+      "evidence": "analysis.md under 'Readable — PASS': 'Test names are descriptive and follow the pattern test_<action>_<condition>_<expected_outcome>' with examples test_register_duplicate_username_raises, test_login_wrong_password_raises, test_deactivated_user_cannot_login. Explicitly notes this as a Readable strength."
+    },
+    {
+      "text": "Identifies that assertions go through the public API — correctly notes this satisfies Structure-insensitive",
+      "passed": true,
+      "evidence": "analysis.md under 'Structure-insensitive — PASS': 'No test accesses private attributes (_users, _sessions) or internal methods. All assertions go through the public API (register, login, logout, is_authenticated, deactivate_user).'"
+    },
+    {
+      "text": "At most flags one borderline Predictive concern: no dedicated test for the exact boundary of MAX_FAILED_ATTEMPTS (4 fails vs 5 fails)",
+      "passed": true,
+      "evidence": "analysis.md flags exactly one Predictive concern: 'Missing boundary test for MAX_FAILED_ATTEMPTS threshold — no test asserting exactly 5 (not 4, not 6) attempts trigger lockout.' The other flagged concern is under Specific (different property), not Predictive. Only one Predictive concern was raised."
+    },
+    {
+      "text": "Does NOT flag false positives — does not claim violations for behaviors that are correct",
+      "passed": true,
+      "evidence": "9 of 12 properties scored 'Excellent' with 'No issues found.' The two minor issues flagged (Specific: complex lockout test; Predictive: missing boundary test) are legitimate observations backed by concrete code evidence, not false violations of well-written behaviors."
+    },
+    {
+      "text": "If Predictive is flagged, suggests adding a parameterized test for exactly MAX_FAILED_ATTEMPTS - 1 vs MAX_FAILED_ATTEMPTS failed attempts",
+      "passed": true,
+      "evidence": "analysis.md Priority 1 recommendation includes test_failed_attempts_do_not_lock_before_threshold (makes MAX_FAILED_ATTEMPTS - 1 wrong attempts, asserts account NOT locked) and test_account_locks_after_max_failed_attempts (makes exactly MAX_FAILED_ATTEMPTS wrong attempts, asserts locked). The boundary of MAX_FAILED_ATTEMPTS - 1 vs MAX_FAILED_ATTEMPTS is explicitly addressed. The form is two separate tests rather than a single pytest.mark.parametrize, but the substance — testing exactly that boundary — is fully satisfied."
+    },
+    {
+      "text": "Provides an overall quality summary acknowledging tests are in good shape",
+      "passed": true,
+      "evidence": "analysis.md Summary states 'This test file is well-written across nearly all 12 Test Desiderata properties.' The Overall Scorecard table gives 9 'Excellent' and 3 'Good' ratings. Conclusion: 'This is a high-quality test suite. The two minor improvements identified would strengthen an already well-designed set of tests.'"
+    },
+    {
+      "text": "Does not manufacture violations to fill the report",
+      "passed": true,
+      "evidence": "9 of 12 properties received 'No issues found' with 'Excellent' scores. The two flagged concerns are substantiated with specific code citations (lines 113-125 for the Specific concern, and explicit reasoning about what a MAX_FAILED_ATTEMPTS = 4 change would miss for the Predictive concern). No generic or vague violations were added to pad the report."
+    }
+  ],
+  "summary": {
+    "passed": 8,
+    "failed": 0,
+    "total": 8,
+    "pass_rate": 1.0
+  },
+  "execution_metrics": {
+    "tool_calls": null,
+    "total_tool_calls": null,
+    "total_steps": 6,
+    "errors_encountered": 0,
+    "output_chars": 8536,
+    "transcript_chars": 4980
+  },
+  "timing": {
+    "executor_duration_seconds": 126.5,
+    "grader_duration_seconds": null,
+    "total_duration_seconds": 126.5
+  },
+  "claims": [
+    {
+      "claim": "The test file is intentionally well-written (false positive eval)",
+      "type": "factual",
+      "verified": true,
+      "evidence": "The transcript Step 2 notes the file docstring explicitly marks it as a 'false positive' eval. The skill recognized this and produced a largely positive assessment."
+    },
+    {
+      "claim": "No major violations found across 12 properties",
+      "type": "quality",
+      "verified": true,
+      "evidence": "analysis.md gives 9 'Excellent' ratings and 3 'Good' ratings. All 'Good' ratings are annotated as 'minor' with substantiated, specific concerns rather than major violations."
+    },
+    {
+      "claim": "The lockout test (test_login_increments_failed_attempts_on_wrong_password) uses a silent try/except loop",
+      "type": "factual",
+      "verified": true,
+      "evidence": "analysis.md quotes the test code verbatim at lines 113-125 showing the for loop with try/except/pass. The claim about the loop structure is accurate."
+    },
+    {
+      "claim": "Token validity is checked via is_authenticated, not _sessions inspection",
+      "type": "factual",
+      "verified": true,
+      "evidence": "Transcript Step 3 (Structure-insensitive): 'Token validity checked via is_authenticated, not via _sessions inspection.' This is consistent with the analysis and the source file structure."
+    }
+  ],
+  "user_notes_summary": {
+    "uncertainties": [],
+    "needs_review": [],
+    "workarounds": []
+  },
+  "eval_feedback": {
+    "suggestions": [
+      {
+        "assertion": "If Predictive is flagged, suggests adding a parameterized test for exactly MAX_FAILED_ATTEMPTS - 1 vs MAX_FAILED_ATTEMPTS failed attempts",
+        "reason": "The word 'parameterized' is ambiguous — it could mean pytest.mark.parametrize or simply 'tests with different parameter values.' The skill's response uses two separate focused tests rather than a single parametrized fixture. The assertion passes because the boundary is correctly tested, but the wording 'parameterized test' could cause a borderline fail in a stricter reading. Clarify whether the expectation requires pytest.mark.parametrize specifically or just coverage of both boundary values."
+      },
+      {
+        "reason": "No assertion checks whether the skill correctly distinguished between the two separately flagged concerns (Specific vs Predictive). The skill raised two concerns across two different properties; an eval that verifies the skill didn't conflate them would be more discriminating."
+      }
+    ],
+    "overall": "The eval is well-constructed for a false-positive check. All 8 assertions are meaningful and were genuinely satisfied by the skill's output. The 'parameterized' wording in expectation 6 is the only potential ambiguity worth clarifying."
+  }
+}

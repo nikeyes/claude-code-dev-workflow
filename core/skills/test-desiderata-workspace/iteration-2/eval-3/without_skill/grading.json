@@ -1,0 +1,116 @@
+{
+  "expectations": [
+    {
+      "text": "Identifies globalInventory package-level variable as an Isolated violation (state shared across tests)",
+      "passed": true,
+      "evidence": "analysis.md Issue 1: 'Isolation Violation — Shared Global State. var globalInventory = NewInventory(). Both TestFullInventoryFlow and TestReserveExceedsStock mutate the same globalInventory variable.' Issue summary table confirms 'Isolated' as the violated desideratum."
+    },
+    {
+      "text": "Identifies TestFullInventoryFlow as a Composable violation (covers four independent operations in one test)",
+      "passed": true,
+      "evidence": "analysis.md Issue 2: 'Composability Violation — One Test Covering Multiple Behaviors. The single test exercises AddStock, Reserve, Release, and Available in a sequential chain.' Issue summary table confirms 'Composable' as the violated desideratum."
+    },
+    {
+      "text": "Identifies fmt.Printf/fmt.Println as an Automated violation (requires human to inspect stdout)",
+      "passed": true,
+      "evidence": "analysis.md Issue 3: 'Automation Violation — Manual Inspection via fmt.Println. fmt.Printf(\"Available after release: %d\\n\", available). This line prints the computed value to stdout, requiring a human to read the output and judge whether it looks correct.' Issue summary table confirms 'Automated' as the violated desideratum."
+    },
+    {
+      "text": "Identifies generic 'operation failed' error string as a Specific violation (caller cannot distinguish error types)",
+      "passed": true,
+      "evidence": "analysis.md Issue 4: 'Specificity Violation — Generic Error Messages in Production Code. return fmt.Errorf(\"operation failed\"). Tests that check err == nil cannot distinguish between the two failure modes. A caller receiving \"operation failed\" has no actionable information.' Issue summary table confirms 'Specific' as the violated desideratum."
+    },
+    {
+      "text": "Notes TestReserveExceedsStock implicitly depends on state left by TestFullInventoryFlow",
+      "passed": true,
+      "evidence": "analysis.md Issue 1 explicitly states: 'TestReserveExceedsStock implicitly requires TestFullInventoryFlow to have run first and to have left globalInventory in a specific state (SKU-1 with some stock and reserved units). If tests run in isolation or in a different order, TestReserveExceedsStock will either fail spuriously or produce a false positive.'"
+    },
+    {
+      "text": "Suggests creating a fresh NewInventory() inside each test function",
+      "passed": true,
+      "evidence": "analysis.md Issue 1 recommendation: 'Each test should create its own Inventory instance using NewInventory() and set it up to the exact precondition it needs. Remove the package-level globalInventory variable entirely.' The recommended rewrite sketch also shows inv := NewInventory() inside every test function."
+    },
+    {
+      "text": "Suggests splitting TestFullInventoryFlow into TestAddStock, TestReserve, TestRelease, TestAvailable",
+      "passed": true,
+      "evidence": "analysis.md Issue 2 recommendation lists: TestAddStock_IncreasesAvailableQty, TestReserve_DecreasesAvailableQty, TestRelease_RestoresAvailableQty, TestAvailable_ReflectsStockMinusReserved. The rewrite sketch implements TestAddStock_IncreasesAvailableQty, TestReserve_DecreasesAvailableQty, TestRelease_RestoresAvailableQty covering all four behaviors."
+    },
+    {
+      "text": "Suggests using t.Logf instead of fmt.Printf (only visible on failure)",
+      "passed": false,
+      "evidence": "analysis.md Issue 3 recommendation says only 'Remove the fmt.Printf statement entirely. The assertion on line 72 is sufficient and machine-verifiable.' No mention of t.Logf as an alternative. The recommendation is to delete the line, not replace it with t.Logf."
+    },
+    {
+      "text": "References each violation by the Test Desiderata property name",
+      "passed": true,
+      "evidence": "Each issue section in analysis.md is headed with the property name: 'Isolation Violation', 'Composability Violation', 'Automation Violation', 'Specificity Violation'. The issue summary table also lists 'Desideratum Violated' column with Isolated, Composable, Automated, Specific. Transcript key findings table also names the violated property for each finding."
+    },
+    {
+      "text": "Identifies at least one inter-test dependency caused by shared state",
+      "passed": true,
+      "evidence": "analysis.md Issue 1: 'TestReserveExceedsStock implicitly requires TestFullInventoryFlow to have run first and to have left globalInventory in a specific state (SKU-1 with some stock and reserved units).' This explicitly identifies the inter-test dependency caused by the shared globalInventory."
+    }
+  ],
+  "summary": {
+    "passed": 9,
+    "failed": 1,
+    "total": 10,
+    "pass_rate": 0.90
+  },
+  "execution_metrics": {
+    "tool_calls": {},
+    "total_tool_calls": null,
+    "total_steps": 5,
+    "errors_encountered": 0,
+    "output_chars": 5170,
+    "transcript_chars": 2820
+  },
+  "timing": {
+    "executor_duration_seconds": 72.2,
+    "grader_duration_seconds": null,
+    "total_duration_seconds": 72.2
+  },
+  "claims": [
+    {
+      "claim": "Three of the four tests have problems; TestAddNegativeStock is acceptable",
+      "type": "factual",
+      "verified": true,
+      "evidence": "The fixture file analysis confirms globalInventory-based tests (TestFullInventoryFlow, TestReserveExceedsStock) have issues, and TestAddNegativeStock is correctly highlighted as the positive example with its own local inv := NewInventory()."
+    },
+    {
+      "claim": "fmt.Printf appears on line 70",
+      "type": "factual",
+      "verified": true,
+      "evidence": "The transcript Step 3 and analysis.md Issue 3 both cite 'Line 70' for the fmt.Printf statement, consistent with the fixture file structure."
+    },
+    {
+      "claim": "The analysis covers all four Test Desiderata violations planted in the eval fixture",
+      "type": "quality",
+      "verified": true,
+      "evidence": "Issues 1–4 in analysis.md map precisely to Isolated, Composable, Automated, and Specific — the four properties with planted violations in the fixture."
+    },
+    {
+      "claim": "No external resources were consulted",
+      "type": "process",
+      "verified": true,
+      "evidence": "Transcript Step 5 states 'No external resources consulted.' No web fetch or search tool calls appear in the transcript."
+    }
+  ],
+  "user_notes_summary": {
+    "uncertainties": [],
+    "needs_review": [],
+    "workarounds": []
+  },
+  "eval_feedback": {
+    "suggestions": [
+      {
+        "assertion": "Suggests using t.Logf instead of fmt.Printf (only visible on failure)",
+        "reason": "The expectation is too specific about the suggested remedy. A valid response may correctly identify the Automated violation and recommend removing the fmt.Printf entirely (which is arguably better advice than replacing it with t.Logf), yet still fail this assertion. Consider rewording to 'Suggests removing fmt.Printf or replacing it with a test-aware logging mechanism (e.g. t.Logf)' to credit both equally valid fixes."
+      },
+      {
+        "reason": "No assertion checks whether the output includes a corrected code example or rewrite sketch. The analysis.md provides a full recommended rewrite, which is high-value evidence of genuine understanding — but no expectation currently verifies this."
+      }
+    ],
+    "overall": "The eval is well-targeted. Nine of ten assertions are solidly discriminating. The one failure (t.Logf suggestion) reflects an overly narrow expectation rather than a gap in the assistant's analysis quality — the assistant gave a correct and arguably better recommendation (delete the line) that the assertion doesn't credit."
+  }
+}

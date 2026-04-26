@@ -1,0 +1,17 @@
+{
+  "eval_id": 5,
+  "eval_name": "typescript-lrucache-medium",
+  "prompt": "Analyze the test file at /Users/jorge.castro/mordor/personal/stepwise-dev/core/skills/test-desiderata-workspace/evals/files/test_cache.ts for test quality issues using the Test Desiderata framework",
+  "assertions": [
+    "Identifies const cache outside describe as an Isolated violation (all tests share one cache instance)",
+    "Identifies that vi.useFakeTimers() is called but vi.advanceTimersByTime() is never called — TTL never expires — as a Behavioral violation",
+    "Identifies that 'evicts LRU entry and expired TTL' covers two orthogonal concerns as a Composable violation",
+    "Identifies magic numbers 1000 and 3 in the shared cache constructor as a Readable violation",
+    "Explains that the TTL test passes for the wrong reason (value not expired, test assertion is weaker than intended)",
+    "Suggests creating a fresh LRUCache instance inside each test (or using beforeEach)",
+    "Suggests calling vi.advanceTimersByTime(ttlMs + 1) to actually expire the entry",
+    "Suggests splitting the test into 'evicts LRU when at capacity' and 'returns undefined for expired key'",
+    "References each violation by the Test Desiderata property name",
+    "Highlights the Behavioral violation as high-priority (false confidence)"
+  ]
+}

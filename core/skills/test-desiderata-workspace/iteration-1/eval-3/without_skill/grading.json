@@ -1,0 +1,131 @@
+{
+  "expectations": [
+    {
+      "text": "Identifies globalInventory package-level variable as an Isolated violation (state shared across tests)",
+      "passed": true,
+      "evidence": "analysis.md section '1. Isolated — VIOLATED': 'A package-level variable `globalInventory` is declared at line 55 and shared across `TestFullInventoryFlow` and `TestReserveExceedsStock`.' Also confirmed in transcript Step 2."
+    },
+    {
+      "text": "Identifies TestFullInventoryFlow as a Composable violation (covers four independent operations in one test)",
+      "passed": true,
+      "evidence": "analysis.md section '2. Composable — VIOLATED': '`TestFullInventoryFlow` exercises four distinct behaviors in sequence: `AddStock`, `Reserve`, `Release`, and `Available`. This is a scenario test, not a unit test.' Exactly four operations named."
+    },
+    {
+      "text": "Identifies fmt.Printf/fmt.Println as an Automated violation (requires human to inspect stdout)",
+      "passed": true,
+      "evidence": "analysis.md section '9. Automated — VIOLATED': 'Line 70 uses `fmt.Printf` to print the available quantity to stdout... This output requires a human to inspect the terminal to verify the value.' Transcript Step 3 also notes 'fmt.Printf on line 70'."
+    },
+    {
+      "text": "Identifies generic 'operation failed' error string as a Specific violation (caller cannot distinguish error types)",
+      "passed": true,
+      "evidence": "analysis.md section '10. Specific — VIOLATED': 'Both `AddStock` and `Reserve` return the same generic error message \"operation failed\"... When a test catches one of these errors, it cannot distinguish which failure condition triggered — invalid quantity vs. insufficient stock.'"
+    },
+    {
+      "text": "Notes TestReserveExceedsStock implicitly depends on state left by TestFullInventoryFlow",
+      "passed": true,
+      "evidence": "analysis.md section '1. Isolated — VIOLATED': '`TestReserveExceedsStock` implicitly depends on `globalInventory` having been populated with `SKU-1` stock by the previous test.' Also in transcript Key Observations: 'TestReserveExceedsStock — entirely depends on state from a previous test.'"
+    },
+    {
+      "text": "Suggests creating a fresh NewInventory() inside each test function",
+      "passed": true,
+      "evidence": "analysis.md Priority Recommendations #1: 'Remove `globalInventory` and add `inv := NewInventory()` inside each test function.' Also in section '1. Isolated — VIOLATED' recommendation: 'Each test should create its own `inv := NewInventory()`'."
+    },
+    {
+      "text": "Suggests splitting TestFullInventoryFlow into TestAddStock, TestReserve, TestRelease, TestAvailable",
+      "passed": true,
+      "evidence": "analysis.md section '2. Composable — VIOLATED' recommendation: 'Split into focused tests: `TestAddStock_IncreasesAvailableQuantity`, `TestReserve_DecreasesAvailableQuantity`, `TestRelease_RestoresAvailableQuantity`, `TestAvailable_ReflectsStockMinusReserved`'. The names differ slightly from the expectation but cover all four operations and clearly correspond to TestAddStock, TestReserve, TestRelease, TestAvailable."
+    },
+    {
+      "text": "Suggests using t.Logf instead of fmt.Printf (only visible on failure)",
+      "passed": false,
+      "evidence": "analysis.md section '9. Automated' recommendation says only 'Remove the `fmt.Printf` call entirely.' No mention of `t.Logf` as an alternative. The output recommends removing the call, not replacing it with t.Logf."
+    },
+    {
+      "text": "References each violation by the Test Desiderata property name",
+      "passed": true,
+      "evidence": "analysis.md uses explicit property names as section headers for all 12 properties (Isolated, Composable, Deterministic, Fast, Writable, Readable, Behavioral, Structure-insensitive, Automated, Specific, Predictive, Inspiring) and also includes a summary table listing each by name. Violations are consistently labeled by property name throughout."
+    },
+    {
+      "text": "Identifies at least one inter-test dependency caused by shared state",
+      "passed": true,
+      "evidence": "analysis.md section '1. Isolated': '`TestReserveExceedsStock` implicitly depends on `globalInventory` having been populated with `SKU-1` stock by the previous test.' Transcript Key Observations: 'TestReserveExceedsStock — entirely depends on state from a previous test. If run in isolation, it tests a different scenario than intended.'"
+    }
+  ],
+  "summary": {
+    "passed": 9,
+    "failed": 1,
+    "total": 10,
+    "pass_rate": 0.9
+  },
+  "execution_metrics": {
+    "tool_calls": null,
+    "total_tool_calls": null,
+    "total_steps": 5,
+    "errors_encountered": 0,
+    "output_chars": 6452,
+    "transcript_chars": 2947
+  },
+  "timing": {
+    "executor_duration_seconds": 96.1,
+    "grader_duration_seconds": null,
+    "total_duration_seconds": 96.1
+  },
+  "claims": [
+    {
+      "claim": "The file contains 3 test functions: TestFullInventoryFlow, TestReserveExceedsStock, TestAddNegativeStock",
+      "type": "factual",
+      "verified": true,
+      "evidence": "Transcript Step 1 states the file contains '3 test functions: TestFullInventoryFlow, TestReserveExceedsStock, TestAddNegativeStock'. This is consistent with all references in the analysis."
+    },
+    {
+      "claim": "The file is 92 lines long",
+      "type": "factual",
+      "verified": false,
+      "evidence": "Transcript claims the file is 92 lines but the source file was not independently checked in this grading run. Cannot verify without reading the source file."
+    },
+    {
+      "claim": "fmt.Printf appears on line 70",
+      "type": "factual",
+      "verified": false,
+      "evidence": "Transcript Step 3 and analysis.md both state the Printf is on line 70, but the source file was not read during grading to confirm the line number."
+    },
+    {
+      "claim": "globalInventory is declared at line 55",
+      "type": "factual",
+      "verified": false,
+      "evidence": "analysis.md states line 55 for globalInventory declaration, but the source file was not read during grading to verify."
+    },
+    {
+      "claim": "TestAddNegativeStock is the strongest test in the file (isolated, focused, no shared state)",
+      "type": "quality",
+      "verified": true,
+      "evidence": "Transcript Key Observations explicitly calls TestAddNegativeStock the 'Strongest test in the file' and explains why. The analysis corroborates this in section 12 (Inspiring) and section 5 (Writable)."
+    },
+    {
+      "claim": "All 4 seeded violations were identified",
+      "type": "quality",
+      "verified": true,
+      "evidence": "Transcript Step 2 lists 4 seeded violations from file comments (Isolated, Composable, Automated, Specific) and the analysis confirms VIOLATED status for all four. Transcript Step 5 states 'Confirmed all 4 seeded violations.'"
+    }
+  ],
+  "user_notes_summary": {
+    "uncertainties": [],
+    "needs_review": [],
+    "workarounds": []
+  },
+  "eval_feedback": {
+    "suggestions": [
+      {
+        "assertion": "Suggests using t.Logf instead of fmt.Printf (only visible on failure)",
+        "reason": "This is a specific remediation choice that the output does not make — the assistant recommends removal rather than replacement with t.Logf. While removal is arguably the correct fix, the assertion tests for a particular alternative that requires mentioning t.Logf by name. The eval is discriminating and reasonable, but the expected remediation may be too prescriptive. Consider accepting either 'remove fmt.Printf' or 'replace with t.Logf' as valid passing evidence."
+      },
+      {
+        "reason": "No assertion checks whether the output correctly evaluates all 12 Test Desiderata properties (not just the 4 seeded violations). The assistant did evaluate all 12, which is a meaningful quality indicator that goes uncaptured by the current eval set."
+      },
+      {
+        "reason": "No assertion checks whether the analysis correctly identified the latent non-determinism risk under `go test -shuffle=on`. The transcript surfaces this as a separate insight beyond the seeded violations — a discriminating check for depth of analysis."
+      }
+    ],
+    "overall": "The eval set is well-targeted at the seeded violations and concrete recommendations. The t.Logf assertion is the only one that fails, and it does so because the output gives a defensible but different answer (remove rather than replace). Consider relaxing that assertion or broadening it to accept removal as a valid alternative."
+  }
+}

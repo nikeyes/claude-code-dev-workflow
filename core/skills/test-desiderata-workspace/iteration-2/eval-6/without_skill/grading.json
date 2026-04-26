@@ -1,0 +1,106 @@
+{
+  "expectations": [
+    {
+      "text": "Identifies that tests use a fresh service fixture per test — correctly notes this satisfies Isolated",
+      "passed": true,
+      "evidence": "analysis.md section 1 (Isolated): 'Each test class uses the `service` or `registered_user` fixture, both of which return fresh `AuthService` instances. Tests do not share state.' Transcript Step 4 confirms: 'Isolated: PASS. Fixture `service` returns a fresh `AuthService()` instance per test.'"
+    },
+    {
+      "text": "Identifies that test names describe behavior, not implementation — correctly notes this satisfies Readable",
+      "passed": true,
+      "evidence": "analysis.md section 4 (Inspiring / Readable): 'Test names describe expected behavior (`test_login_valid_credentials_returns_token`, `test_logout_invalidates_token`). Classes group related tests logically.' Transcript Step 4: 'Inspiring: PASS. Names like `test_login_resets_failed_attempts_on_success` are self-documenting.'"
+    },
+    {
+      "text": "Identifies that assertions go through the public API — correctly notes this satisfies Structure-insensitive",
+      "passed": true,
+      "evidence": "analysis.md section 9 (Structure-Insensitive): 'Tests do not import or reference internal attributes (`_users`, `_sessions`, `failed_attempts`). They interact only via the public API: `register`, `login`, `logout`, `is_authenticated`, `deactivate_user`. Refactoring internals would not break these tests.'"
+    },
+    {
+      "text": "At most flags one borderline Predictive concern: no dedicated test for the exact boundary of MAX_FAILED_ATTEMPTS (4 fails vs 5 fails)",
+      "passed": true,
+      "evidence": "analysis.md section 11 (Predictive, Minor Gap): 'There is no test verifying that 4 failed attempts do NOT lock the account (boundary before the threshold).' This is the only gap flagged. Only one dimension is flagged as anything other than Pass, and it is correctly labeled 'Minor Gap — borderline'."
+    },
+    {
+      "text": "Does NOT flag false positives — does not claim violations for behaviors that are correct",
+      "passed": true,
+      "evidence": "All 11 other dimensions (Isolated, Composable, Fast, Inspiring, Writable, Specific, Deterministic, Behavioral, Structure-Insensitive, Automated, Understandable) are marked Pass with no violations. The conclusion explicitly states: 'This suite should not be flagged for major violations.' No false positives were introduced."
+    },
+    {
+      "text": "If Predictive is flagged, suggests adding a parameterized test for exactly MAX_FAILED_ATTEMPTS - 1 vs MAX_FAILED_ATTEMPTS failed attempts",
+      "passed": true,
+      "evidence": "analysis.md section 11 includes a concrete test recommendation: `test_account_not_locked_before_max_attempts` — '4 wrong attempts should not lock the account' followed by a 5th correct-password attempt. This directly addresses the MAX_FAILED_ATTEMPTS - 1 (4 fails) vs MAX_FAILED_ATTEMPTS (5 fails) boundary. Note: the suggestion uses two separate tests rather than a parameterized test, but the substance — verifying the boundary at exactly 4 vs 5 — is fully covered."
+    },
+    {
+      "text": "Provides an overall quality summary acknowledging tests are in good shape",
+      "passed": true,
+      "evidence": "analysis.md Overall Verdict: 'These tests are well-written. They demonstrate good practices across nearly all quality dimensions.' Conclusion: 'This is a high-quality test suite. The only genuine improvement opportunity is adding two boundary tests ... All other dimensions are well-covered.'"
+    },
+    {
+      "text": "Does not manufacture violations to fill the report",
+      "passed": true,
+      "evidence": "The report finds 11 of 12 dimensions as Pass and flags only one Minor Gap in Predictive, which is substantiated by a real gap the file's own docstring calls out. No dimension is artificially downgraded. The analysis explicitly refuses to manufacture issues: 'This suite should not be flagged for major violations.'"
+    }
+  ],
+  "summary": {
+    "passed": 8,
+    "failed": 0,
+    "total": 8,
+    "pass_rate": 1.0
+  },
+  "execution_metrics": {
+    "tool_calls": {},
+    "total_tool_calls": null,
+    "total_steps": 6,
+    "errors_encountered": 0,
+    "output_chars": 4527,
+    "transcript_chars": 2718
+  },
+  "timing": {
+    "executor_duration_seconds": 81.0,
+    "grader_duration_seconds": null,
+    "total_duration_seconds": 81.0
+  },
+  "claims": [
+    {
+      "claim": "The file contains 12 tests across 4 test classes",
+      "type": "factual",
+      "verified": true,
+      "evidence": "Transcript Step 1 states '12 tests' in 4 classes (TestRegistration 4, TestLogin 4, TestLogout 2, TestDeactivation 2). This is consistent with the self-contained file description and plausible given the analysis depth."
+    },
+    {
+      "claim": "The file's docstring flags brute-force lockout as the known gap",
+      "type": "factual",
+      "verified": true,
+      "evidence": "Transcript Step 1: 'The file's own docstring declares it as a 'hard' eval — intentionally well-written — and flags one borderline gap: brute-force lockout not tested.' The analysis correctly uses this as the basis for the Predictive gap rather than inventing issues."
+    },
+    {
+      "claim": "Behavioral dimension is verified without inspecting internal state",
+      "type": "quality",
+      "verified": true,
+      "evidence": "analysis.md section 8 cites specific behaviors verified via public API only (e.g., failed attempt accumulation verified by triggering lockout, not by reading `user.failed_attempts`). This is substantive, not superficial."
+    },
+    {
+      "claim": "The second recommended test (locked account rejects correct password) is already implicitly covered",
+      "type": "factual",
+      "verified": true,
+      "evidence": "analysis.md section 11: 'The second test is actually implicitly covered by `test_login_increments_failed_attempts_on_wrong_password` (line 124 uses the correct password after 5 failures), but making it an explicit named test would improve clarity.' This honest qualification is appropriate."
+    }
+  ],
+  "user_notes_summary": {
+    "uncertainties": [],
+    "needs_review": [],
+    "workarounds": []
+  },
+  "eval_feedback": {
+    "suggestions": [
+      {
+        "assertion": "If Predictive is flagged, suggests adding a parameterized test for exactly MAX_FAILED_ATTEMPTS - 1 vs MAX_FAILED_ATTEMPTS failed attempts",
+        "reason": "The assertion says 'parameterized test' but the output provides two separate test functions rather than a pytest.mark.parametrize approach. The expectation passes because the substance is correct, but the wording creates a mismatch. Consider rewording to 'suggests a test covering the boundary between 4 and 5 failed attempts' to match what is realistically expected."
+      },
+      {
+        "reason": "No assertion checks whether the Behavioral dimension is correctly distinguished from Structure-Insensitive. These two are easy to conflate, and a model could confuse them without being caught. An assertion like 'Correctly distinguishes Behavioral (no internal state access) from Structure-Insensitive (no internal attribute reference)' would be more discriminating."
+      }
+    ],
+    "overall": "The evals are well-calibrated for this false-positive scenario. All 8 assertions are substantive and require genuine analysis to satisfy. The only minor gap is the 'parameterized test' wording in expectation 6, which the output satisfies in spirit but not literally."
+  }
+}

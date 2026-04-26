@@ -1,0 +1,125 @@
+{
+  "expectations": [
+    {
+      "text": "Identifies service._last_sent_at <= datetime.now() as a Deterministic violation (race condition between assignment and assertion)",
+      "passed": true,
+      "evidence": "analysis.md Section 3 (Deterministic: FAIL) quotes the exact line 60 assertion and explains: 'This assertion uses datetime.now() at assertion time, which is different from the datetime.now() captured inside send_welcome_email... the code under test uses datetime.now() without injection, meaning there is no way to control or freeze time in tests.'"
+    },
+    {
+      "text": "Identifies absence of test for smtp.send raising an exception as a Predictive violation",
+      "passed": true,
+      "evidence": "analysis.md Section 11 (Predictive: FAIL) states: 'There are no tests for failure scenarios. The send_welcome_email and send_password_reset methods both catch exceptions and return False, but no test exercises this path.' Provides code example showing smtp.send.side_effect = Exception(...)."
+    },
+    {
+      "text": "Identifies absence of assertion on smtp.send 'to' argument as an Inspiring violation (test passes even if email sent to wrong address)",
+      "passed": true,
+      "evidence": "analysis.md Section 12 (Inspiring: FAIL) states: 'test_send_welcome_email never verifies the recipient address... A developer reading this suite cannot confidently conclude that emails are sent to the right people.' Also covered in Section 10 (Specific) which notes 'A bug where the to address is ignored or scrambled would not be caught.'"
+    },
+    {
+      "text": "Identifies service._sent_count as a Structure-insensitive violation (private internal counter)",
+      "passed": true,
+      "evidence": "analysis.md Section 8 (Structure-insensitive: FAIL) quotes line 58: 'assert service._sent_count == 1' and explains: 'This directly accesses a private attribute (_sent_count), coupling the test to the internal implementation. If the counter is renamed, moved, or replaced by a different mechanism, this test breaks even if behavior is unchanged.'"
+    },
+    {
+      "text": "Notes the combined Predictive + Inspiring gap: no confidence that notifications reach the right person or survive SMTP failures",
+      "passed": true,
+      "evidence": "analysis.md Section 12 (Inspiring: FAIL) lists both gaps together: 'test_send_welcome_email never verifies the recipient address or email subject/body content. No failure-path tests exist (see Predictive above). A developer reading this suite cannot confidently conclude that emails are sent to the right people with the right content when things go wrong.' Both the wrong-recipient and SMTP-failure risks are combined under Inspiring."
+    },
+    {
+      "text": "Suggests using freezegun or time.freeze or injecting a clock to make datetime deterministic",
+      "passed": true,
+      "evidence": "analysis.md Section 3 recommendation: 'Inject a clock dependency into NotificationService, or use unittest.mock.patch / freezegun to freeze time.' Also provides a code example using freezegun/patch."
+    },
+    {
+      "text": "Suggests adding a test where smtp.send raises an exception and verifying send_welcome_email returns False",
+      "passed": true,
+      "evidence": "analysis.md Section 11 provides exact code: 'def test_send_welcome_email_returns_false_when_smtp_fails(self): smtp.send.side_effect = Exception(\"SMTP connection refused\") ... assert result is False'"
+    },
+    {
+      "text": "Suggests asserting smtp.send was called with the correct 'to' address",
+      "passed": true,
+      "evidence": "analysis.md Section 10 recommendation provides: 'smtp.send.assert_called_once_with(to=\"user@example.com\", subject=\"Welcome!\", body=\"Hello Alice, welcome to our platform.\")'"
+    },
+    {
+      "text": "Suggests using get_stats() to observe sent count instead of _sent_count directly",
+      "passed": true,
+      "evidence": "analysis.md Section 8 recommendation: 'Use the public get_stats() API to observe the sent count: assert service.get_stats()[\"sent\"] == 1'. Also repeated in Section 7 (Behavioral)."
+    },
+    {
+      "text": "References each violation by the Test Desiderata property name",
+      "passed": true,
+      "evidence": "analysis.md uses full property names as section headers throughout: Deterministic, Structure-insensitive, Predictive, Inspiring, and all 12 properties are evaluated. The violations summary table explicitly names each property."
+    },
+    {
+      "text": "Explains the Predictive + Inspiring tradeoff or synergy",
+      "passed": false,
+      "evidence": "The analysis covers both Predictive and Inspiring failures separately and links them in the Inspiring section, but never explains the conceptual relationship between the two properties — why they are distinct, how they differ, or what the tradeoff/synergy means. The Inspiring section lists missing behaviors but does not articulate the design insight that Predictive tests protect against known failure modes while Inspiring tests build holistic confidence, or similar conceptual framing."
+    }
+  ],
+  "summary": {
+    "passed": 10,
+    "failed": 1,
+    "total": 11,
+    "pass_rate": 0.91
+  },
+  "execution_metrics": {
+    "tool_calls": null,
+    "total_tool_calls": null,
+    "total_steps": 3,
+    "errors_encountered": 0,
+    "output_chars": 9385,
+    "transcript_chars": 3752
+  },
+  "timing": {
+    "executor_duration_seconds": 83.1,
+    "grader_duration_seconds": null,
+    "total_duration_seconds": 83.1
+  },
+  "claims": [
+    {
+      "claim": "All 4 seeded violations were detected",
+      "type": "quality",
+      "verified": true,
+      "evidence": "analysis.md explicitly identifies Deterministic (line 60), Structure-insensitive (line 58), Predictive (no failure-path tests), and Inspiring (missing confidence) — all four match the file's own documented seeded violations."
+    },
+    {
+      "claim": "3 additional partial violations were identified (Behavioral, Readable, Specific)",
+      "type": "factual",
+      "verified": true,
+      "evidence": "analysis.md sections 6 (Readable: PARTIAL FAIL), 7 (Behavioral: PARTIAL FAIL), and 10 (Specific: PARTIAL FAIL) confirm three additional issues beyond the seeded four."
+    },
+    {
+      "claim": "Tests do not share state via class-level fixtures or module globals",
+      "type": "factual",
+      "verified": true,
+      "evidence": "The transcript Step 2 and analysis.md Section 1 confirm each test instantiates its own MagicMock and NotificationService. This is consistent with the test file structure described."
+    },
+    {
+      "claim": "The comments in the file explicitly acknowledge the Predictive gaps (lines 81-82)",
+      "type": "factual",
+      "verified": false,
+      "evidence": "The analysis.md states this but the actual test file was not read during this grading session to independently verify the line numbers. This claim is plausible given the file's documented inline violation comments, but cannot be confirmed from available outputs alone."
+    }
+  ],
+  "user_notes_summary": {
+    "uncertainties": [],
+    "needs_review": [],
+    "workarounds": []
+  },
+  "eval_feedback": {
+    "suggestions": [
+      {
+        "assertion": "Explains the Predictive + Inspiring tradeoff or synergy",
+        "reason": "This expectation is the hardest to satisfy and the only one that failed. It requires conceptual explanation of the relationship between two properties, not just listing both. Consider clarifying what 'tradeoff or synergy' means concretely — e.g., 'explains that Inspiring is a holistic feeling that emerges partly from Predictive coverage, or that improving Predictive tests is a concrete path to making the suite more Inspiring.'"
+      },
+      {
+        "assertion": "Identifies absence of assertion on smtp.send 'to' argument as an Inspiring violation",
+        "reason": "The output attributes the missing 'to' assertion primarily to Specific, not Inspiring. The expectation names Inspiring specifically. The analysis does mention it in the Inspiring section, but a stricter reading could fail this. Consider tightening the expectation to 'Identifies it under either Specific or Inspiring' to reflect how the desiderata naturally overlap."
+      },
+      {
+        "reason": "No expectation checks whether the analysis correctly distinguishes Behavioral from Structure-insensitive for the _sent_count violation. The analysis lists both as separate issues for the same line, which is insightful but also potentially redundant. An eval that checks for this distinction would reveal whether the model understands the nuance."
+      }
+    ],
+    "overall": "Strong coverage of all four seeded violations with concrete code-level evidence and actionable recommendations. The only failure is the conceptual framing of Predictive + Inspiring as a synergy, which is a higher-order analytical skill. Evals are mostly solid; minor refinements noted above."
+  }
+}
