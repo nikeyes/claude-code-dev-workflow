@@ -13,7 +13,7 @@
       "name": "Python BankAccount — Isolated, Deterministic, Specific, Structure-insensitive (easy)",
       "difficulty": "easy",
       "prompt": "/test-desiderata evals/files/test_bank_account.py",
-      "expected_output": "Detects four concrete violations: shared global state (Isolated), random.randint in production path (Deterministic), single test covering multiple concerns (Specific), assertions on _ledger private attribute (Structure-insensitive). Provides actionable fix suggestions for each.",
+      "expected_output": "Detects four concrete violations: shared global state (Isolated), random.randint in production path (Deterministic), single test covering multiple concerns (Specific), assertions on _ledger private attribute (Structure-insensitive). Provides actionable fix suggestions for each. Identifies that Isolated and Specific only seem to interfere: fixing shared state enables splitting the monolithic test.",
       "files": [
         "evals/files/test_bank_account.py"
       ],
@@ -29,9 +29,14 @@
         "Suggests seeding or injecting the random ID to make deposit deterministic",
         "Suggests splitting test_all_operations into focused single-concern tests"
       ],
+      "tradeoff_expectations": [
+        "Identifies Isolated ↔ Specific as a pair that only seems to interfere: shared state (shared_balance) forces test_all_operations to be monolithic; with fresh instances per test, splitting into focused tests becomes safe",
+        "Recommends fixing Isolated first because it unblocks the Specific fix"
+      ],
       "format_expectations": [
         "References each violation by the Test Desiderata property name (e.g., 'Isolated', 'Deterministic')",
-        "Provides at least one code-level fix example or concrete suggestion"
+        "Provides at least one code-level fix example or concrete suggestion",
+        "Includes a Tradeoffs section analyzing at least one pair of interacting violated properties"
       ]
     },
     {
@@ -39,7 +44,7 @@
       "name": "TypeScript OrderService — Readable, Fast, Behavioral, Writable (easy)",
       "difficulty": "easy",
       "prompt": "/test-desiderata evals/files/test_order_service.ts",
-      "expected_output": "Detects four violations: meaningless test names test1/test2/test3/test4 (Readable), 500ms setTimeout (Fast), mock overriding the method under test making assertion vacuous (Behavioral), boilerplate order object duplicated across every test (Writable).",
+      "expected_output": "Detects four violations: meaningless test names test1/test2/test3/test4 (Readable), 500ms setTimeout (Fast), mock overriding the method under test making assertion vacuous (Behavioral), boilerplate order object duplicated across every test (Writable). Identifies that Writable and Readable only seem to interfere: extracting a factory with descriptive names resolves both.",
       "files": [
         "evals/files/test_order_service.ts"
       ],
@@ -55,9 +60,14 @@
         "Suggests removing or replacing setTimeout with synchronous or fake-timer equivalent",
         "Suggests extracting a shared order fixture or factory function to reduce boilerplate"
       ],
+      "tradeoff_expectations": [
+        "Identifies Writable ↔ Readable as a pair that only seems to interfere: extracting a factory with descriptive names simultaneously reduces boilerplate (Writable) and improves clarity (Readable)",
+        "Recommends the factory extraction as a single change that resolves both violations"
+      ],
       "format_expectations": [
         "References each violation by the Test Desiderata property name",
-        "Provides at least one renamed test example"
+        "Provides at least one renamed test example",
+        "Includes a Tradeoffs section analyzing at least one pair of interacting violated properties"
       ]
     },
     {
@@ -65,7 +75,7 @@
       "name": "Go Inventory — Isolated, Composable, Automated, Specific (easy)",
       "difficulty": "easy",
       "prompt": "/test-desiderata evals/files/test_inventory.go",
-      "expected_output": "Detects: package-level globalInventory shared across tests (Isolated), TestFullInventoryFlow covering add/reserve/release/available in one test (Composable), fmt.Println requiring human inspection (Automated), generic 'operation failed' error message making failures hard to diagnose (Specific).",
+      "expected_output": "Detects: package-level globalInventory shared across tests (Isolated), TestFullInventoryFlow covering add/reserve/release/available in one test (Composable), fmt.Println requiring human inspection (Automated), generic 'operation failed' error message making failures hard to diagnose (Specific). Identifies that Isolated and Composable only seem to interfere: shared state forces the monolithic test; fresh instances make decomposition safe.",
       "files": [
         "evals/files/test_inventory.go"
       ],
@@ -81,9 +91,14 @@
         "Suggests splitting TestFullInventoryFlow into TestAddStock, TestReserve, TestRelease, TestAvailable",
         "Suggests using t.Logf instead of fmt.Printf (only visible on failure)"
       ],
+      "tradeoff_expectations": [
+        "Identifies Isolated ↔ Composable as a pair that only seems to interfere: the shared globalInventory forces TestFullInventoryFlow to be monolithic because splitting it would expose inter-test state corruption; with fresh instances, decomposition becomes safe",
+        "Recommends fixing Isolated first (fresh instances) because it unblocks the Composable fix (splitting the monolith)"
+      ],
       "format_expectations": [
         "References each violation by the Test Desiderata property name",
-        "Identifies at least one inter-test dependency caused by shared state"
+        "Identifies at least one inter-test dependency caused by shared state",
+        "Includes a Tradeoffs section analyzing at least one pair of interacting violated properties"
       ]
     },
     {
@@ -118,7 +133,7 @@
       "name": "TypeScript LRUCache — Isolated, Behavioral, Readable, Composable (medium)",
       "difficulty": "medium",
       "prompt": "/test-desiderata evals/files/test_cache.ts",
-      "expected_output": "Detects: shared `cache` constant across all describe tests (Isolated), fake timers set up but time never advanced so TTL expiry is never actually triggered (Behavioral), magic numbers 1000/3/5 without explanation (Readable), single test covering both eviction and TTL (Composable). Notes this is a particularly dangerous Behavioral violation because the test passes for the wrong reason.",
+      "expected_output": "Detects: shared `cache` constant across all describe tests (Isolated), fake timers set up but time never advanced so TTL expiry is never actually triggered (Behavioral), magic numbers 1000/3/5 without explanation (Readable), single test covering both eviction and TTL (Composable). Notes this is a particularly dangerous Behavioral violation because the test passes for the wrong reason. Identifies that Isolated and Behavioral support each other: the shared cache masks the fake-timer bug; fixing Isolated exposes it.",
       "files": [
         "evals/files/test_cache.ts"
       ],
@@ -134,9 +149,14 @@
         "Suggests calling vi.advanceTimersByTime(ttlMs + 1) to actually expire the entry",
         "Suggests splitting the test into 'evicts LRU when at capacity' and 'returns undefined for expired key'"
       ],
+      "tradeoff_expectations": [
+        "Identifies Isolated ↔ Behavioral as a pair that supports each other: the shared cache instance contaminates state that masks the fake-timer bug; fixing Isolated (fresh instance per test) would make the Behavioral violation immediately visible because the TTL test would fail without prior state",
+        "Recommends fixing Isolated first because it exposes the hidden Behavioral bug"
+      ],
       "format_expectations": [
         "References each violation by the Test Desiderata property name",
-        "Highlights the Behavioral violation as high-priority (false confidence)"
+        "Highlights the Behavioral violation as high-priority (false confidence)",
+        "Includes a Tradeoffs section analyzing at least one pair of interacting violated properties"
       ]
     },
     {
@@ -168,7 +188,7 @@
       "name": "Python DataPipeline — multiple violations requiring tradeoff analysis (hard)",
       "difficulty": "hard",
       "prompt": "/test-desiderata evals/files/test_data_pipeline.py",
-      "expected_output": "Detects five violations spanning six properties, including a tradeoff: Deterministic (BATCH_SIZE from env), Isolated (shared /tmp output file), Behavioral (steps list checked instead of output correctness), Predictive (no test for malformed input), Fast (sleep per record). Requires tradeoff analysis: Isolated vs Fast (per-test temp files add overhead) and Predictive vs Fast (comprehensive input tests slow the suite).",
+      "expected_output": "Detects five violations spanning six properties, including tradeoffs: Deterministic (BATCH_SIZE from env), Isolated (shared /tmp output file), Behavioral (steps list checked instead of output correctness), Predictive (no test for malformed input), Fast (sleep per record). Requires tradeoff analysis: Isolated ↔ Fast is genuinely interfering (per-test temp files add I/O overhead but correctness wins), Predictive ↔ Fast is genuinely interfering (more validation tests accumulate sleep overhead).",
       "files": [
         "evals/files/test_data_pipeline.py"
       ],
@@ -183,12 +203,16 @@
       "recommendation_expectations": [
         "Suggests injecting batch_size as constructor parameter instead of reading from env",
         "Suggests using tempfile.NamedTemporaryFile or tmp_path pytest fixture per test",
-        "Suggests adding tests for rows missing required keys and rows with non-numeric values",
-        "Explains the Isolated vs Fast tradeoff (per-test temp files add I/O overhead but are necessary for correctness)"
+        "Suggests adding tests for rows missing required keys and rows with non-numeric values"
+      ],
+      "tradeoff_expectations": [
+        "Identifies Isolated ↔ Fast as genuinely interfering: per-test temp files (fixing Isolated) add I/O overhead (hurts Fast), and this is a real tension — not a design opportunity",
+        "Recommends prioritizing Isolated over Fast because shared filesystem state causes flaky tests, while the I/O overhead is small and acceptable",
+        "Identifies Predictive ↔ Fast as genuinely interfering: comprehensive input validation tests (fixing Predictive) add more test runs with sleep overhead (hurts Fast)"
       ],
       "format_expectations": [
         "References each violation by the Test Desiderata property name",
-        "Explicitly discusses at least one tradeoff between competing properties",
+        "Includes a Tradeoffs section that classifies at least one pair as genuinely interfering (not just 'only seems to interfere')",
         "Prioritizes violations (e.g., Isolated and Deterministic as safety issues to fix first)"
       ]
     }
@@ -196,7 +220,8 @@
   "grading_guide": {
     "detection_expectations": "Each expectation is binary: did the output identify this specific violation and name the correct Test Desiderata property? Naming only the category ('this test is slow') without referencing the property ('Fast') does not count. Evidence must be in the analysis output, not inferred.",
     "recommendation_expectations": "Evaluates whether suggestions are actionable and correct. A recommendation must target the identified violation specifically — generic advice ('write better tests') does not count. For the false-positive eval (#6), any flagged 'violation' that is actually correct behavior counts as a quality failure.",
-    "format_expectations": "Evaluates adherence to the skill's prescribed output format: property names referenced, code-level examples or suggestions present, tradeoff analysis included where prompted. Scored separately from detection.",
+    "tradeoff_expectations": "Each expectation is binary: did the output (1) identify the specific pair of properties, (2) classify the relationship correctly (supporting, interfering, or only seeming to interfere), and (3) explain the design insight or priority recommendation? Naming two properties without explaining their relationship does not count. These assertions are the primary skill differentiator — the baseline model detects individual violations but rarely analyzes how they interact.",
+    "format_expectations": "Evaluates adherence to the skill's prescribed output format: property names referenced, code-level examples or suggestions present, Tradeoffs section present when 2+ violations detected. Scored separately from detection.",
     "efficiency_metric": "Calculate: total detection_expectations passed / (tokens / 1000). Higher is better. Report for both with_skill and without_skill configurations.",
     "statistical_requirements": "With min_runs=3, report mean, stddev, min, max for each metric. A delta is only meaningful if the confidence intervals don't overlap. Note any eval where with_skill and without_skill distributions overlap significantly.",
     "false_positive_calibration": "Eval #6 specifically tests calibration. If the skill flags >1 major violation in a well-written test suite, it is over-detecting. If it flags 0 concerns and misses the borderline Predictive gap, it is under-detecting. Ideal: 0-1 concerns flagged, correctly qualified as minor."

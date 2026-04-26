@@ -135,22 +135,38 @@ Passing tests inspire confidence in the system. Comprehensive coverage of import
 
 ## Analyzing Tradeoffs
 
-Kent Beck's key insight: properties can support, interfere, or only seem to interfere with each other.
+Kent Beck's key insight: properties can support, interfere, or **only seem to interfere** with each other. When violations only seem to interfere, it signals a design opportunity — fixing one enables fixing the other.
 
-**Supporting properties:**
+**This is the most valuable part of the analysis.** Detection alone is straightforward; understanding how violations interact reveals the root cause and the highest-leverage fix.
+
+### Three Relationships Between Properties
+
+**Supporting** — fixing one helps the other:
 - Isolated + Deterministic → More reliable tests
 - Fast + Automated → More frequent execution
 - Readable + Specific → Easier debugging
 
-**Interfering properties:**
+**Interfering** — real tension, must choose which to prioritize:
 - Predictive + Fast → Comprehensive tests are often slower
-- Fast + Isolated → Complete isolation may require more setup
+- Isolated + Fast → Per-test setup/teardown adds overhead (temp files, fresh DB connections)
 - Writable + Predictive → Simple tests may not catch all issues
+- Isolated + Writable → Fresh instances per test mean more setup code
 
-**Only seeming to interfere (design opportunities):**
-- Use Composable to make tests both Fast AND Predictive
-- Break monolithic tests into focused ones (Specific + Fast)
-- Smart test fixtures enable Writable + Isolated
+**Only seeming to interfere** — a design change resolves both:
+- Isolated ↔ Specific: shared state forces monolithic tests; fresh instances make splitting safe
+- Composable ↔ Fast: splitting tests adds setup, but lightweight fixtures eliminate the overhead
+- Writable ↔ Readable: extracting fixtures with descriptive names improves both
+- Isolated ↔ Writable: beforeEach/fixture patterns give isolation without boilerplate
+- Behavioral ↔ Composable: splitting a combined test exposes hidden behavioral bugs in each part
+
+### How to Report Tradeoffs
+
+When the analysis detects **2 or more violated properties**, actively look for relationships between them:
+
+1. **Identify pairs** — which violated properties interact? Not all do; some are independent.
+2. **Classify the relationship** — is it supporting, interfering, or only seeming to interfere?
+3. **Explain the design insight** — if "only seeming to interfere," name the specific design change that resolves both. If truly interfering, recommend which to prioritize for this codebase and why.
+4. **Include a Tradeoffs section** in the output that covers all identified pairs with concrete analysis.
 
 ## Prioritizing Improvements
 
@@ -171,7 +187,7 @@ When suggesting improvements:
 2. **Explain the principle** - Reference which Test Desiderata property is violated
 3. **Show the impact** - Describe why it matters
 4. **Suggest concrete fixes** - Provide actionable code examples
-5. **Note tradeoffs** - Acknowledge when improvements conflict with other properties
+5. **Analyze tradeoffs** - When two or more properties are violated, explain how they interact and which to fix first
 
 Example format:
 ```
@@ -179,7 +195,15 @@ Issue: Test "test_user_creation" violates Isolated property
 Location: Line 45 - shares database connection across tests
 Impact: Test results depend on execution order, causing intermittent failures
 Fix: Use fresh database connection per test with proper cleanup
-Tradeoff: Slightly slower but much more reliable
+```
+
+Tradeoff analysis example:
+```
+Tradeoff: Isolated ↔ Fast (only seeming to interfere)
+The shared database connection creates an Isolated violation, and fresh connections per test
+seem to conflict with Fast (more setup time). But this is a design opportunity: using an
+in-memory database or connection pool gives both Isolated AND Fast.
+Priority: Fix Isolated first — flaky tests erode trust faster than slow tests.
 ```
 
 ## Additional Resources
