@@ -289,21 +289,6 @@ Open `iteration-N/benchmark.md` for a quick summary table, or `benchmark.json` f
 
 Compare across iterations to track skill improvements over time.
 
-## 🐛 Troubleshooting
-
-### Plugin Issues
-
-**Commands not showing**:
-- Restart Claude Code
-- Check plugins enabled: `/plugin list`
-- Reinstall if needed
-
-**Plugin installation fails**:
-- Verify marketplace: `/plugin marketplace list`
-- Check network connection
-
-### Workflow Issues
-
 ## 📚 Learn More
 
 - **Original Article**: [I mastered the Claude Code workflow](https://medium.com/@ashleyha/i-mastered-the-claude-code-workflow-145d25e502cf) by Ashley Ha
@@ -321,7 +306,7 @@ Apache License 2.0 - See LICENSE file for details.
 
 Derived from [HumanLayer's Claude Code workflow](https://github.com/humanlayer/humanlayer/tree/main/.claude) under Apache License 2.0.
 
-See [NOTICE](NOTICE) for detailed attribution.
+Several skills are derived from [eferro's skill-factory](https://github.com/eferro/skill-factory) (hamburger-method, small-safe-steps, story-splitting, test-desiderata) and [Gojko Adzic's BugMagnet](https://github.com/gojko/bugmagnet-ai-assistant). See [NOTICE](NOTICE) for detailed attribution.
 
 **Major enhancements**:
 - Multi-plugin architecture for modular installation
