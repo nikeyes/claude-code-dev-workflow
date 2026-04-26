@@ -317,6 +317,16 @@ python /path/to/skill-creator/eval-viewer/generate_review.py \
 
 The viewer opens two tabs: **Outputs** (per-eval outputs, grading, and feedback) and **Benchmark** (aggregate pass rates, delta, timing, and token usage).
 
+**Example** — compare test-desiderata iteration-3 against iteration-1:
+
+```bash
+python ~/.claude/plugins/cache/claude-plugins-official/skill-creator/unknown/skills/skill-creator/eval-viewer/generate_review.py \
+  core/skills/test-desiderata-workspace/iteration-3 \
+  --skill-name "test-desiderata" \
+  --benchmark core/skills/test-desiderata-workspace/iteration-3/benchmark.json \
+  --previous-workspace core/skills/test-desiderata-workspace/iteration-1
+```
+
 ## 📚 Learn More
 
 - **Original Article**: [I mastered the Claude Code workflow](https://medium.com/@ashleyha/i-mastered-the-claude-code-workflow-145d25e502cf) by Ashley Ha
