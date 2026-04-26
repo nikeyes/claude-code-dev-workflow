@@ -1,58 +1,209 @@
 {
   "skill_name": "bugmagnet",
+  "min_runs_per_configuration": 3,
+  "scoring": {
+    "discovery_weight": 0.7,
+    "format_weight": 0.15,
+    "quality_weight": 0.15,
+    "efficiency_metric": "bugs_discovered_per_1k_tokens"
+  },
   "evals": [
     {
       "id": 1,
+      "name": "Python price_calculator (easy, seeded bugs)",
+      "difficulty": "easy",
       "prompt": "/bugmagnet evals/files/price_calculator.py",
       "expected_output": "Discovers coverage gaps in the price calculator: negative prices, zero division in split_payment, coupon producing negative totals, floating point rounding issues, empty items list, missing currency symbols. Writes tests following the skill's phased workflow.",
       "files": [
         "evals/files/price_calculator.py",
         "evals/files/test_price_calculator.py"
       ],
-      "expectations": [
+      "discovery_expectations": [
         "Tests split_payment with parts=0 (zero division bug)",
         "Tests negative price values in calculate_discount or calculate_total",
         "Tests calculate_total with empty items list",
         "Tests apply_coupon producing negative total (coupon value exceeds total)",
-        "Tests floating point rounding edge cases",
+        "Tests floating point rounding edge cases"
+      ],
+      "format_expectations": [
         "Documents at least one discovered bug as a skipped test with BUG notation",
         "Provides a structured test coverage summary at the end"
+      ],
+      "quality_expectations": [
+        "Generated tests compile and run without syntax errors",
+        "Skipped BUG tests actually fail when unskipped (bug is real, not a false positive)"
       ]
     },
     {
       "id": 2,
+      "name": "TypeScript user_validator (easy, seeded bugs)",
+      "difficulty": "easy",
       "prompt": "/bugmagnet evals/files/user_validator.ts",
       "expected_output": "Identifies validation gaps: emails with multiple @, whitespace-only names, age as NaN/Infinity, tags as empty array, normalizeEmail with missing @, formatUserDisplay with undefined tags, names with special characters. Writes tests in vitest format.",
       "files": [
         "evals/files/user_validator.ts",
         "evals/files/user_validator.test.ts"
       ],
-      "expectations": [
+      "discovery_expectations": [
         "Tests email validation edge cases (missing domain, multiple @, no @ at all)",
         "Tests age with NaN or Infinity values bypassing the range check",
         "Tests normalizeEmail with string that has no @ (destructuring crash)",
         "Tests whitespace-only name passes trim check",
         "Tests names with special characters (accents, apostrophes, unicode)",
-        "Tests tags as empty array vs undefined",
+        "Tests tags as empty array vs undefined"
+      ],
+      "format_expectations": [
         "Documents at least one discovered bug as a skipped test with BUG notation"
+      ],
+      "quality_expectations": [
+        "Generated tests compile and run without syntax errors",
+        "Skipped BUG tests actually fail when unskipped (bug is real, not a false positive)"
       ]
     },
     {
       "id": 3,
+      "name": "Go string_utils (easy, seeded bugs)",
+      "difficulty": "easy",
       "prompt": "/bugmagnet evals/files/string_utils.go",
       "expected_output": "Finds edge cases: Truncate with multibyte unicode (len vs rune count), SlugifyText with consecutive special chars, ExtractInitials with empty string (index panic), WrapText with single very long word, zero/negative maxLen. Writes Go table-driven tests.",
       "files": [
         "evals/files/string_utils.go",
         "evals/files/string_utils_test.go"
       ],
-      "expectations": [
+      "discovery_expectations": [
         "Discovers Truncate uses len() instead of rune count (unicode truncation bug)",
         "Tests ExtractInitials with empty string input (index out of range panic)",
         "Tests WrapText with zero or negative width",
         "Tests SlugifyText with input containing only special characters",
-        "Tests all functions with empty string input",
+        "Tests all functions with empty string input"
+      ],
+      "format_expectations": [
         "Documents at least one discovered bug as a skipped test with BUG notation"
+      ],
+      "quality_expectations": [
+        "Generated tests compile and run without syntax errors",
+        "Skipped BUG tests actually fail when unskipped (bug is real, not a false positive)"
+      ]
+    },
+    {
+      "id": 4,
+      "name": "Python rate_limiter (medium, subtle state bugs)",
+      "difficulty": "medium",
+      "prompt": "/bugmagnet evals/files/rate_limiter.py",
+      "expected_output": "Discovers state-dependent edge cases in the token bucket rate limiter: floating point token accumulation drift, get_wait_time not consuming tokens (state inconsistency if caller then calls is_allowed), cleanup_expired using last_refill instead of last activity, cost=0 always allowed, negative cost adding tokens, concurrent key interactions, refill overshooting when elapsed is very large after long idle.",
+      "files": [
+        "evals/files/rate_limiter.py",
+        "evals/files/test_rate_limiter.py"
+      ],
+      "discovery_expectations": [
+        "Tests get_wait_time returning 0 but subsequent is_allowed fails (TOCTOU: get_wait_time refills but does not reserve tokens)",
+        "Tests cost=0 is always allowed even when bucket is empty (degenerate input)",
+        "Tests negative cost parameter (adds tokens instead of consuming them)",
+        "Tests cleanup_expired does not remove active keys that just made requests recently",
+        "Tests token accumulation over many rapid refill cycles for floating point drift",
+        "Tests create_burst_limiter with burst followed by sustained requests at exactly the refill rate",
+        "Tests interaction between multiple keys (keys are independent, no cross-contamination)"
+      ],
+      "format_expectations": [
+        "Documents at least one discovered bug as a skipped test with BUG notation",
+        "Provides a structured test coverage summary at the end"
+      ],
+      "quality_expectations": [
+        "Generated tests compile and run without syntax errors",
+        "Skipped BUG tests actually fail when unskipped (bug is real, not a false positive)",
+        "No false positive bugs reported (behavior that is actually correct flagged as wrong)"
+      ]
+    },
+    {
+      "id": 5,
+      "name": "TypeScript config_parser (medium, data edge cases)",
+      "difficulty": "medium",
+      "prompt": "/bugmagnet evals/files/config_parser.ts",
+      "expected_output": "Discovers parsing edge cases: values containing = signs are truncated (split only takes first part), inline comments strip content inside quoted strings, getTypedValue coerces hex strings and whitespace-only to numbers, empty section names, duplicate section merging behavior, serializeConfig loses quotes and types, BOM handling.",
+      "files": [
+        "evals/files/config_parser.ts",
+        "evals/files/config_parser.test.ts"
+      ],
+      "discovery_expectations": [
+        "Discovers values containing '=' are truncated (parts[1] only takes first segment after split)",
+        "Tests inline comment stripping inside quoted strings (strips valid data: path = \"/usr/bin # not a comment\")",
+        "Tests getTypedValue with hex strings like '0x1F' (Number('0x1F') is 31, coerced silently)",
+        "Tests empty string or whitespace-only values (Number('') is 0, Number('  ') is 0 — coerced to number)",
+        "Tests serializeConfig round-trip loses type information (boolean true becomes string 'true')",
+        "Tests duplicate keys within same section (last wins silently)",
+        "Tests multiline values or values with special characters"
+      ],
+      "format_expectations": [
+        "Documents at least one discovered bug as a skipped test with BUG notation"
+      ],
+      "quality_expectations": [
+        "Generated tests compile and run without syntax errors",
+        "Skipped BUG tests actually fail when unskipped (bug is real, not a false positive)",
+        "No false positive bugs reported"
+      ]
+    },
+    {
+      "id": 6,
+      "name": "Go sorted_set (hard, no bugs — false positive test)",
+      "difficulty": "hard",
+      "prompt": "/bugmagnet evals/files/sorted_set.go",
+      "expected_output": "The implementation is correct for all operations. The eval tests whether the skill reports false positive bugs. Good output: comprehensive edge case tests that all pass, confirming correctness. Bad output: claiming bugs that don't exist.",
+      "files": [
+        "evals/files/sorted_set.go",
+        "evals/files/sorted_set_test.go"
+      ],
+      "discovery_expectations": [
+        "Tests Insert/Remove/Contains on empty set",
+        "Tests Range with low > high returns nil",
+        "Tests Range where no elements fall within bounds",
+        "Tests Min/Max on empty set returns false",
+        "Tests Rank of non-existent element returns -1",
+        "Tests large sequence of Insert/Remove operations maintains sorted order"
+      ],
+      "format_expectations": [
+        "Provides a structured test coverage summary at the end"
+      ],
+      "quality_expectations": [
+        "Generated tests compile and run without syntax errors",
+        "Does NOT report false positive bugs (no skipped BUG tests for behavior that is correct)",
+        "All generated tests pass (implementation is correct)"
+      ]
+    },
+    {
+      "id": 7,
+      "name": "Python order_processor (hard, large file, interaction bugs)",
+      "difficulty": "hard",
+      "prompt": "/bugmagnet evals/files/order_processor.py",
+      "expected_output": "Discovers interaction bugs in a 230+ line order processor: tax calculated on subtotal instead of discounted amount, discount applied to running discounted total (compounding), apply_refund proportional discount calculation uses wrong base, quantity break + item discount interaction (double discount), negative total possible from large fixed discounts, inventory not released on processing failure.",
+      "files": [
+        "evals/files/order_processor.py",
+        "evals/files/test_order_processor.py"
+      ],
+      "discovery_expectations": [
+        "Discovers tax is calculated on subtotal instead of discounted amount (process method passes subtotal to calculate_tax)",
+        "Discovers percentage discounts compound: second discount applies to already-discounted amount, not original subtotal",
+        "Tests fixed discount larger than subtotal produces negative total",
+        "Tests quantity break threshold + item discount interaction (double discounting)",
+        "Tests apply_refund with all items refunded (division by zero if subtotal becomes 0)",
+        "Tests inventory is NOT released when process() fails after reserve() (partial failure leaves inventory inconsistent)",
+        "Tests process_batch where one order's inventory reservation affects subsequent orders"
+      ],
+      "format_expectations": [
+        "Documents at least one discovered bug as a skipped test with BUG notation",
+        "Provides a structured test coverage summary at the end"
+      ],
+      "quality_expectations": [
+        "Generated tests compile and run without syntax errors",
+        "Skipped BUG tests actually fail when unskipped (bug is real, not a false positive)",
+        "No false positive bugs reported"
       ]
     }
-  ]
+  ],
+  "grading_guide": {
+    "discovery_expectations": "Each expectation is binary: did the output test or document this specific behavior? Evidence must show a test case or explicit mention, not just the category name. When grading, check the actual test file output, not only the summary.",
+    "format_expectations": "Evaluates adherence to the skill's prescribed output format (BUG notation, structured summary). These are scored separately and should NOT inflate the discovery score.",
+    "quality_expectations": "Evaluates whether the generated tests are correct themselves. Must verify: (1) tests can be executed, (2) reported bugs are real, (3) no false positives. For the false-positive eval (sorted_set), any BUG-flagged behavior that is actually correct counts as a quality failure.",
+    "efficiency_metric": "Calculate: total discovery_expectations passed / (tokens / 1000). Higher is better. Report for both with_skill and without_skill.",
+    "statistical_requirements": "With min_runs=3, report mean, stddev, min, max for each metric. A delta is only meaningful if the confidence intervals don't overlap. Note any eval where with_skill and without_skill distributions overlap significantly."
+  }
 }
