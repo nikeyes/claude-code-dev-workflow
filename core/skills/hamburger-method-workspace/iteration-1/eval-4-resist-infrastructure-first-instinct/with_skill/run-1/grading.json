@@ -1,0 +1,99 @@
+{
+  "expectations": [
+    {
+      "text": "Identifies functional layers for chat: message input, message delivery/routing, message display, history/persistence, presence/status",
+      "passed": false,
+      "evidence": "The output identifies 5 layers: Initiate a conversation, Route to an agent, Exchange messages, Display message history, Close/resolve the conversation. Message input is folded into 'Exchange messages', delivery/routing maps to Layers 2 and 3, message display and history/persistence are covered by Layers 3 and 4. However, 'presence/status' (online/offline indicators, typing indicators, read receipts) is never treated as a functional layer — it appears only as an omitted detail ('Typing indicators') in the smallest slice summary. The expectation specifically calls out presence/status as a required layer, and the output does not include it."
+    },
+    {
+      "text": "Generates at least 4 options per layer with quality gradient",
+      "passed": true,
+      "evidence": "Every layer generates exactly 5 options (1.1–1.5, 2.1–2.5, 3.1–3.5, 4.1–4.5, 5.1–5.5). Each layer follows a clear quality gradient from manual/no-tech (e.g., 3.1: shared Google Doc) through increasingly sophisticated automation to enterprise-scale (e.g., 3.5: WebSocket with typing indicators and read receipts). The self-check at the end explicitly confirms 'Options follow quality gradient (manual → scripted → automated → scalable → enterprise)'."
+    },
+    {
+      "text": "The smallest vertical slice does NOT use WebSockets, Kafka, or Redis — uses polling, email, or manual checking instead",
+      "passed": true,
+      "evidence": "Slice 1 explicitly selects option 3.3 ('Messages stored in DB, AJAX polling every 3s') for the Exchange layer. Step 3 states: 'No infrastructure. No WebSockets. No Redis. No queues.' Step 4 lists 'Anything requiring WebSockets, Redis, Kafka, or message brokers' as eliminated for the first slice. The self-check also confirms: 'Smallest slice does NOT require new infrastructure (no Redis, no WebSockets, no Kafka)'."
+    },
+    {
+      "text": "Explicitly challenges whether 'real-time' is needed for the first slice — asks 'can we validate the core value without real-time infrastructure?'",
+      "passed": true,
+      "evidence": "The Key Insight section directly addresses this: 'The instinct with \"real-time chat\" is to reach for WebSockets, Redis pub/sub, and message queues immediately. The Hamburger Method reveals that 3-second AJAX polling is indistinguishable from \"real-time\" for most support conversations — and it requires zero new infrastructure.' Step 3 also states: 'No infrastructure. No WebSockets. No Redis. No queues. Just something a real customer can use and that teaches you whether this flow has value.' While the exact phrasing 'can we validate the core value without real-time infrastructure?' is not used, the challenge is explicit and substantive."
+    },
+    {
+      "text": "Includes at least one 'manual/crutch' option per layer — e.g., support agent checks an email inbox instead of a realtime dashboard",
+      "passed": true,
+      "evidence": "Layer 1: option 1.1 — 'Customer sends an email to a support address; support agent opens a reply thread manually'. Layer 2: option 2.1 — 'A single hardcoded agent (you / a teammate) receives all chats via email notification or Slack ping'. Layer 3: option 3.1 — 'Both parties exchange messages by editing a shared Google Doc or Notion page (manual, no tech required)'. Layer 4: option 4.1 — 'No persistent history; messages exist only in the shared doc or live session'. Layer 5: option 5.1 — 'Agent closes the browser tab; no record kept'. Every layer has at least one genuinely manual/crutch option."
+    },
+    {
+      "text": "The smallest slice is designed to validate the core user value (customer gets help) before investing in real-time infrastructure",
+      "passed": true,
+      "evidence": "The 'Why this is enough to ship and learn from' section explicitly frames Slice 1 as a learning vehicle: 'You learn if customers actually want chat vs. email', 'You learn if agents can handle the volume', 'You learn what's missing'. The Key Insight section adds: 'The WebSocket investment becomes justified only after you've validated that customers use chat at all and agents can handle the volume. Ship the polling version first; upgrade to WebSockets when you have evidence it's a bottleneck.' The core user value — customer gets help from a support agent — is fully deliverable with Slice 1."
+    }
+  ],
+  "summary": {
+    "passed": 5,
+    "failed": 1,
+    "total": 6,
+    "pass_rate": 0.83
+  },
+  "execution_metrics": {
+    "output_chars": 5810,
+    "transcript_chars": null
+  },
+  "timing": {
+    "executor_duration_seconds": 68.4,
+    "grader_duration_seconds": null,
+    "total_duration_seconds": 68.4,
+    "total_tokens": 18628
+  },
+  "claims": [
+    {
+      "claim": "Identified 3–6 clear layers (5 functional layers, not technical tiers)",
+      "type": "quality",
+      "verified": true,
+      "evidence": "The 5 layers are all functional (initiate, route, exchange, display, close) rather than technical tiers like frontend/backend/DB."
+    },
+    {
+      "claim": "Smallest slice does NOT require new infrastructure (no Redis, no WebSockets, no Kafka)",
+      "type": "factual",
+      "verified": true,
+      "evidence": "Slice 1 uses static form, Slack webhook, AJAX polling, DB storage, and a resolve button — none of these require WebSockets, Redis, or Kafka."
+    },
+    {
+      "claim": "Smallest slice can be deployed in less than 1–3 days",
+      "type": "quality",
+      "verified": true,
+      "evidence": "Slice 1 is labeled 'target: deploy in 1–2 days' and individual components are estimated at 'a few hours to build' (option 1.2)."
+    },
+    {
+      "claim": "Options follow quality gradient (manual → scripted → automated → scalable → enterprise)",
+      "type": "quality",
+      "verified": true,
+      "evidence": "All 5 layers progress from fully manual (option x.1) through scripted, automated, and scalable to enterprise-grade (option x.5). E.g., Layer 3 goes from shared Google Doc → form POST with page refresh → AJAX polling → SSE → WebSocket."
+    },
+    {
+      "claim": "Proposed 2–3 follow-up slices showing incremental improvement",
+      "type": "factual",
+      "verified": true,
+      "evidence": "Step 6 proposes Slice 2, Slice 3, and Slice 4 with specific layer upgrades, rationale, and time estimates for each."
+    }
+  ],
+  "user_notes_summary": {
+    "uncertainties": [],
+    "needs_review": [],
+    "workarounds": []
+  },
+  "eval_feedback": {
+    "suggestions": [
+      {
+        "assertion": "Identifies functional layers for chat: message input, message delivery/routing, message display, history/persistence, presence/status",
+        "reason": "The enumerated layers in this assertion ('message input, message delivery/routing, message display, history/persistence, presence/status') do not match how the Hamburger Method typically segments a chat feature. A good hamburger decomposition might combine message input and delivery into one layer and treat presence/status as a cross-cutting concern rather than a layer. The assertion as written creates a false negative: the output covers the same semantic territory with better layer boundaries, but fails because 'presence/status' is not an explicit layer. Consider rephrasing to check whether the output identifies 4–6 meaningful functional layers that together cover the full end-to-end flow, rather than requiring a specific named list."
+      },
+      {
+        "reason": "No assertion checks whether the output explicitly defers WebSocket/Kafka/Redis to a later numbered slice (Slice 3 or 4) rather than simply omitting them. This is a meaningful signal — if the model omits real-time infrastructure entirely without explaining when and why it would be justified, the output misses the educational value of the Hamburger Method. The output does include this (Slice 4 defers WebSockets), but no assertion verifies it."
+      }
+    ],
+    "overall": "The assertions are mostly well-targeted. The main weakness is expectation 1, which specifies a particular layer taxonomy that doesn't align with what the skill is designed to produce. The other five assertions are discriminating and reflect genuine task success."
+  }
+}

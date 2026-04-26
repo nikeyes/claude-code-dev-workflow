@@ -1,0 +1,105 @@
+{
+  "expectations": [
+    {
+      "text": "Identifies layers that cover data pipeline AND presentation concerns — not just 'show metrics'",
+      "passed": true,
+      "evidence": "Output identifies 5 layers: (1) Data Source, (2) Data Processing, (3) Storage / Access, (4) Presentation / Visualization, (5) Delivery / Access Control. Layers 1–3 explicitly cover the data pipeline (raw data ingestion, aggregation, storage), and layers 4–5 cover presentation and delivery. The output states: 'These layers cover the end-to-end journey from raw data to CEO decision.'"
+    },
+    {
+      "text": "Generates at least 4 distinct options per layer with explicit quality gradient",
+      "passed": true,
+      "evidence": "Every layer contains exactly 5 options numbered X.1–X.5, each with a clearly escalating quality gradient. Example for Layer 1: 1.1 hardcoded sample data → 1.2 manual export → 1.3 scheduled pull → 1.4 ETL → 1.5 real-time streaming. The self-check confirms: 'Options follow a quality gradient (manual → scripted → automated → scalable → enterprise)'. All 5 layers follow this pattern."
+    },
+    {
+      "text": "The smallest vertical slice delivers exactly ONE metric (not all three) to validate the concept before building more",
+      "passed": false,
+      "evidence": "Slice 1 delivers all three metrics at once: 'CEO sees this month's revenue vs. last month / CEO sees top 5 products by revenue this month / CEO sees new customer count trend (last 3 months)'. There is no attempt to scope down to a single metric as a concept validator. The output treats all three KPIs as equally necessary for Slice 1."
+    },
+    {
+      "text": "Interactivity (drill-down, filters, custom date ranges) is deferred to a follow-up slice — NOT in the first slice",
+      "passed": true,
+      "evidence": "Slice 1 uses option 4.1 (plain text email/Slack), which has no interactivity. The 'What it does NOT include' list for Slice 1 explicitly excludes filters. Option 4.4 (interactive dashboard with filters) is deferred to Slice 4: 'Improve Layer 5 and Layer 4: add authentication and basic date filtering.'"
+    },
+    {
+      "text": "The smallest slice explicitly identifies who will use it (e.g., the CEO or one internal user) and what decision it enables",
+      "passed": true,
+      "evidence": "Slice 1 names the CEO as the user multiple times and states the decision enabled: 'CEO can make a real decision TODAY'. It also lists specific informational outputs: revenue vs. last month, top 5 products, new customer count trend. The feature description also anchors the stakeholder: 'so our CEO can make decisions'."
+    },
+    {
+      "text": "Uses the numbered option system (1.1, 1.2, 1.3... for layer 1; 2.1, 2.2... for layer 2) to label options",
+      "passed": true,
+      "evidence": "All options use the specified numbering convention throughout. Layer 1 options are labeled 1.1 through 1.5, Layer 2 options 2.1 through 2.5, and so on through Layer 5 (5.1–5.5). The Slice composition table also references these labels explicitly (e.g., '1.2 — Manual export from existing system')."
+    }
+  ],
+  "summary": {
+    "passed": 5,
+    "failed": 1,
+    "total": 6,
+    "pass_rate": 0.83
+  },
+  "execution_metrics": {
+    "tool_calls": {},
+    "total_tool_calls": null,
+    "total_steps": null,
+    "errors_encountered": 0,
+    "output_chars": 6780,
+    "transcript_chars": null
+  },
+  "timing": {
+    "executor_duration_seconds": 84.6,
+    "grader_duration_seconds": null,
+    "total_duration_seconds": 84.6
+  },
+  "claims": [
+    {
+      "claim": "The feature has 5 functional layers (not 3 or 4)",
+      "type": "factual",
+      "verified": true,
+      "evidence": "Output lists exactly 5 layers: Data Source, Data Processing, Storage / Access, Presentation / Visualization, Delivery / Access Control."
+    },
+    {
+      "claim": "Each layer has 4–5 options",
+      "type": "factual",
+      "verified": true,
+      "evidence": "Each layer has exactly 5 options, verified by counting options X.1 through X.5 in all 5 layers."
+    },
+    {
+      "claim": "Smallest slice can be shipped in 1 day (2–4 hours)",
+      "type": "quality",
+      "verified": true,
+      "evidence": "Slice 1 uses manual SQL queries + Slack/email delivery with no new code deployed. 'Build time estimate: 2–4 hours (1h to write the queries, 1h to validate with real data, 1h to format and send)'. This is plausible given the chosen options."
+    },
+    {
+      "claim": "The output proposes 3 follow-up slices",
+      "type": "factual",
+      "verified": true,
+      "evidence": "Slices 2, 3, and 4 are defined with distinct improvements (automated delivery, linkable web dashboard, secure + interactive dashboard)."
+    },
+    {
+      "claim": "Smallest slice uses real data (not hardcoded sample data)",
+      "type": "quality",
+      "verified": true,
+      "evidence": "Layer 1 choice is 1.2 (manual export from existing system), not 1.1 (hardcoded sample data). Rationale states: 'Real data, zero new infrastructure.'"
+    }
+  ],
+  "user_notes_summary": {
+    "uncertainties": [],
+    "needs_review": [],
+    "workarounds": []
+  },
+  "eval_feedback": {
+    "suggestions": [
+      {
+        "assertion": "The smallest vertical slice delivers exactly ONE metric (not all three) to validate the concept before building more",
+        "reason": "This is a meaningful and discriminating assertion — the without-skill run fails it correctly because the model defaulted to delivering all three metrics in Slice 1. However, it is worth asking whether the eval prompt makes the one-metric constraint explicit enough, or whether it is an implicit best practice being tested. If it is meant to be a skill-induced behavior, the assertion is well placed. If it is a general software practice any LLM should apply, the prompt may need to make the constraint explicit."
+      },
+      {
+        "reason": "No assertion checks whether each follow-up slice improves exactly one layer rather than jumping multiple levels simultaneously. Slices 2–4 in the output each upgrade several layers at once (e.g., Slice 4 upgrades layers 4, 5, and 3 together). An assertion like 'each follow-up slice improves no more than two layers' would test incremental discipline."
+      },
+      {
+        "reason": "No assertion checks that the quality gradient within a layer is monotonically increasing in capability/cost — a model could list 5 options in arbitrary order and still pass expectation 2. Adding a check that option X.1 is demonstrably simpler/cheaper than X.5 would make the assertion more discriminating."
+      }
+    ],
+    "overall": "The assertions are well-targeted. Expectation 3 (one metric only) correctly catches the most meaningful gap in the without-skill output. The eval could be strengthened by adding a check on per-slice layer discipline and the ordering of the quality gradient."
+  }
+}

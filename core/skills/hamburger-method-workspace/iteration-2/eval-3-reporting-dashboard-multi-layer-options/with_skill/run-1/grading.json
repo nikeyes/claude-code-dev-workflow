@@ -1,0 +1,115 @@
+{
+  "expectations": [
+    {
+      "text": "Identifies layers that cover data pipeline AND presentation concerns — not just 'show metrics'",
+      "passed": true,
+      "evidence": "Output defines 6 layers: Data Source (layer 1), Data Processing/Aggregation (layer 2), Output Format (layer 3), Delivery Mechanism (layer 4), Refresh/Timeliness (layer 5), Access & Security (layer 6). Layers 1, 2, and 5 cover the data pipeline; layers 3 and 4 cover presentation. This goes well beyond a simple 'show metrics' framing."
+    },
+    {
+      "text": "Generates at least 4 distinct options per layer with explicit quality gradient",
+      "passed": true,
+      "evidence": "Every layer has exactly 5 options (e.g., Layer 1: 1.1 hardcoded CSV → 1.5 federated data platform; Layer 2: 2.1 manual spreadsheet formulas → 2.5 ML-enriched analytics). Each layer follows a clear quality gradient from manual/simple to enterprise-grade. The self-check confirms '5 options each' with 'manual → scripted → automated → scalable → enterprise' gradient."
+    },
+    {
+      "text": "The smallest vertical slice delivers exactly ONE metric (not all three) to validate the concept before building more",
+      "passed": true,
+      "evidence": "The output initially selects all three metrics, then explicitly self-corrects: 'Wait — actually, per skill rule: If the user requested multiple outputs or metrics, the first slice must pick EXACTLY ONE.' It then revises to monthly revenue only in the 'Revised Slice 1'. The final Slice 1 in Step 5 delivers only monthly revenue aggregation."
+    },
+    {
+      "text": "Interactivity (drill-down, filters, custom date ranges) is deferred to a follow-up slice — NOT in the first slice",
+      "passed": true,
+      "evidence": "Slices 1-3 have no interactivity. Slice 4 ('CEO self-service dashboard') explicitly adds 'Date range filters, interactivity, company auth' and references 'Metabase or Superset with drill-down by product category, region'. Drill-down and filters are clearly deferred to Slice 4."
+    },
+    {
+      "text": "The smallest slice explicitly identifies who will use it (e.g., the CEO or one internal user) and what decision it enables",
+      "passed": true,
+      "evidence": "Slice 1 is labeled 'Revenue pulse' and states the value as 'CEO sees revenue trend immediately' and answers the specific question 'Is our revenue growing?' The summary table confirms: Slice 1 key decision enabled = 'Is revenue growing?' for the CEO. The revised slice narrative also states 'This slice can be deployed today. It answers: Is revenue growing, flat, or declining month over month? — which is the decision the CEO needs to make.'"
+    },
+    {
+      "text": "Uses the numbered option system (1.1, 1.2, 1.3... for layer 1; 2.1, 2.2... for layer 2) to label options",
+      "passed": true,
+      "evidence": "All six layers use the numbered system consistently: Layer 1 uses 1.1-1.5, Layer 2 uses 2.1-2.5, Layer 3 uses 3.1-3.5, Layer 4 uses 4.1-4.5, Layer 5 uses 5.1-5.5, Layer 6 uses 6.1-6.5. The system is also referenced in slice descriptions (e.g., '1.2 Single DB query on orders table', '2.2 SQL: monthly revenue aggregation')."
+    }
+  ],
+  "summary": {
+    "passed": 6,
+    "failed": 0,
+    "total": 6,
+    "pass_rate": 1.0
+  },
+  "execution_metrics": {
+    "tool_calls": {},
+    "total_tool_calls": null,
+    "total_steps": null,
+    "errors_encountered": 0,
+    "output_chars": 5643,
+    "transcript_chars": null
+  },
+  "timing": {
+    "executor_duration_seconds": 73.6,
+    "grader_duration_seconds": null,
+    "total_duration_seconds": 73.6,
+    "total_tokens": 19169,
+    "duration_ms": 73633
+  },
+  "claims": [
+    {
+      "claim": "3-6 clear functional layers identified (6 layers)",
+      "type": "factual",
+      "verified": true,
+      "evidence": "Output lists exactly 6 layers in Step 1: Data Source, Data Processing, Output Format, Delivery Mechanism, Refresh/Timeliness, Access & Security."
+    },
+    {
+      "claim": "At least 4-5 options per layer generated (5 options each)",
+      "type": "factual",
+      "verified": true,
+      "evidence": "Counted 5 options per layer across all 6 layers (30 options total)."
+    },
+    {
+      "claim": "Smallest slice picks EXACTLY ONE metric (monthly revenue) per skill rule",
+      "type": "quality",
+      "verified": true,
+      "evidence": "The revised Slice 1 SQL is: `SELECT month, SUM(amount) FROM orders GROUP BY month ORDER BY month DESC LIMIT 12` — a single revenue metric only."
+    },
+    {
+      "claim": "Smallest slice delivers value to a named user (CEO) and answers a specific question",
+      "type": "quality",
+      "verified": true,
+      "evidence": "The CEO is named throughout as the target user and Slice 1 answers the explicit question: 'Is revenue growing, flat, or declining month over month?'"
+    },
+    {
+      "claim": "Smallest slice deployable in < 1 day with no new infrastructure",
+      "type": "quality",
+      "verified": true,
+      "evidence": "Slice 1 is estimated at 2-4 hours, uses an existing DB query, plain text email, manual analyst delivery — no new infrastructure required."
+    },
+    {
+      "claim": "3 follow-up slices proposed showing clear incremental improvement",
+      "type": "factual",
+      "verified": true,
+      "evidence": "Slices 2, 3, and 4 are fully defined with distinct value additions: top products (Slice 2), customer acquisition + shared link (Slice 3), full interactive dashboard with auth (Slice 4)."
+    }
+  ],
+  "user_notes_summary": {
+    "uncertainties": [],
+    "needs_review": [],
+    "workarounds": [
+      "Output initially violated the single-metric rule by selecting all three metrics, then self-corrected mid-output with an explicit note. This demonstrates awareness of the rule but also that it was not applied on the first pass."
+    ]
+  },
+  "eval_feedback": {
+    "suggestions": [
+      {
+        "assertion": "The smallest vertical slice delivers exactly ONE metric (not all three) to validate the concept before building more",
+        "reason": "The output initially picked all three metrics and only corrected itself after citing the rule inline. This means an output that violates the rule but then adds a corrective paragraph would still pass the assertion. Consider tightening the assertion to require that the FIRST attempt at the smallest slice picks exactly one metric — not a correction after the fact. Or verify that the final slice definition (not just a note) contains only one metric."
+      },
+      {
+        "reason": "No assertion checks that the 4-5 options per layer form a genuine quality gradient (not just different alternatives at the same complexity level). The current assertion only checks count and the word 'explicit quality gradient' — but a grader must verify this qualitatively. An assertion like 'Option 1 in each layer can be done without any engineering and option 4+ requires infrastructure or automation' would be more discriminating."
+      },
+      {
+        "reason": "No assertion verifies that follow-up slices each add exactly ONE new dimension (one layer upgrade) rather than jumping multiple layers at once. Slice 3 in this output upgrades both Output Format (3.1→3.3) and Delivery (4.1→4.3) and Timeliness (5.1→5.2) and Access (6.1→6.2) simultaneously — which may be a valid design decision, but it goes unchecked by any assertion."
+      }
+    ],
+    "overall": "The assertions cover the core hamburger method properties well and this run passes all of them. The main gap is that assertion 3 (single metric) could be gamed by outputting all metrics then adding a corrective note — consider requiring the final slice definition to contain exactly one metric without relying on self-correction prose."
+  }
+}

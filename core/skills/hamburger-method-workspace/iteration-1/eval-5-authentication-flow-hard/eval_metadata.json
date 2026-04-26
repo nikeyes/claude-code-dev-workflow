@@ -1,0 +1,14 @@
+{
+  "eval_id": 5,
+  "eval_name": "authentication-flow-hard",
+  "prompt": "/hamburger-method Implement user authentication with SSO, MFA, social login (Google and GitHub), and session management for our SaaS application",
+  "assertions": [
+    {"id": "applies-layers-not-just-splitting", "text": "Does NOT just split into separate stories — applies layered options to each authentication concern"},
+    {"id": "identifies-auth-layers", "text": "Identifies functional authentication layers: identity verification, credential storage, session management, MFA, social providers"},
+    {"id": "four-options-per-layer", "text": "Generates at least 4 options per layer with explicit quality gradient"},
+    {"id": "smallest-slice-no-sso-no-mfa", "text": "The smallest vertical slice is username/password only — SSO, MFA, and social login are explicitly deferred to follow-up slices"},
+    {"id": "sso-deferred", "text": "SSO integration is identified as a high-complexity option and deferred beyond the first 2 slices"},
+    {"id": "smallest-slice-production-deployable", "text": "The smallest slice is production-deployable and provides real value (users can actually log in), not just a prototype"},
+    {"id": "at-least-four-followup-slices", "text": "Proposes at least 4 follow-up slices showing the incremental path from basic auth to full SSO+MFA"}
+  ]
+}

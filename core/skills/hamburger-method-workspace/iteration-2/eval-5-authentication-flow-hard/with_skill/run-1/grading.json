@@ -1,0 +1,104 @@
+{
+  "expectations": [
+    {
+      "text": "Does NOT just split into separate stories — applies layered options to each authentication concern",
+      "passed": true,
+      "evidence": "The output defines 6 functional layers (identity verification, authentication method, MFA, session management, token/credential storage, user feedback) and generates 4-5 options per layer. Slices are composed by selecting one option per layer — the classic hamburger pattern, not story splitting."
+    },
+    {
+      "text": "Identifies functional authentication layers: identity verification, credential storage, session management, MFA, social providers",
+      "passed": true,
+      "evidence": "Layer 1 = Identity Verification, Layer 5 = Token/Credential Storage, Layer 4 = Session Creation & Management, Layer 3 = Second Factor/MFA. Social providers appear as options within Layer 1 (1.3 Google OAuth, 1.4 multiple social providers) and Layer 2 (2.4 OAuth2 PKCE). All five named concerns from the expectation are explicitly present."
+    },
+    {
+      "text": "Generates at least 4 options per layer with explicit quality gradient",
+      "passed": true,
+      "evidence": "Every layer has exactly 5 options following a clear gradient from minimal/manual to enterprise-grade. Example from Layer 4: 4.1 hardcoded in-memory token → 4.2 DB sessions → 4.3 stateless JWT → 4.4 JWT + refresh token rotation → 4.5 full device tracking + audit log. The self-check explicitly states 'Options follow manual → scripted → automated → scalable → enterprise'."
+    },
+    {
+      "text": "The smallest vertical slice is username/password only — SSO, MFA, and social login are explicitly deferred to follow-up slices",
+      "passed": false,
+      "evidence": "The smallest slice (Slice 1) is Google OAuth2 only — NOT username/password. The skill chose social login (Google OAuth) as the minimal starting point, not local credentials. MFA is correctly deferred (3.1 = no MFA in Slice 1). SSO is correctly deferred. But the assertion requires username/password as the foundation of slice 1, and social login should be deferred — the skill did the opposite: it deferred username/password entirely and started with social login."
+    },
+    {
+      "text": "SSO integration is identified as a high-complexity option and deferred beyond the first 2 slices",
+      "passed": true,
+      "evidence": "SAML/OIDC SSO is option 1.5 / 2.5 (the highest-complexity options in their layers). In Step 4 it is explicitly eliminated: 'SAML/SSO (1.5): Requires enterprise IdP setup — weeks of work, no early users need it.' SSO is placed in Slice 5 with an estimated build time of '1-2 weeks after Slice 4', well beyond the first 2 slices."
+    },
+    {
+      "text": "The smallest slice is production-deployable and provides real value (users can actually log in), not just a prototype",
+      "passed": true,
+      "evidence": "Slice 1 uses NextAuth.js with Google OAuth, short-lived JWT in an HTTP-only cookie. The output states it 'Delivers working Google login to real users with zero password infrastructure' and is 'secure enough for a closed beta (HTTP-only cookie, HTTPS required).' The self-check confirms 'The smallest slice delivers value to real beta users (Google login to dashboard).' This is a deployable, secure solution, not a throwaway prototype."
+    },
+    {
+      "text": "Proposes at least 4 follow-up slices showing the incremental path from basic auth to full SSO+MFA",
+      "passed": true,
+      "evidence": "The output proposes Slices 2-5 after Slice 1: Slice 2 (GitHub login + account linking, 2-3 days), Slice 3 (TOTP MFA, 3-5 days), Slice 4 (JWT refresh token + session management, 2-3 days), Slice 5 (Enterprise SSO via SAML/OIDC, 1-2 weeks). That is exactly 4 follow-up slices with explicit time estimates and incremental improvements."
+    }
+  ],
+  "summary": {
+    "passed": 6,
+    "failed": 1,
+    "total": 7,
+    "pass_rate": 0.857
+  },
+  "execution_metrics": {
+    "tool_calls": null,
+    "total_tool_calls": null,
+    "total_steps": null,
+    "errors_encountered": 0,
+    "output_chars": 5810,
+    "transcript_chars": null
+  },
+  "timing": {
+    "executor_duration_seconds": 76.4,
+    "grader_duration_seconds": null,
+    "total_duration_seconds": 76.4
+  },
+  "claims": [
+    {
+      "claim": "The smallest slice can be built in 4-8 hours",
+      "type": "quality",
+      "verified": true,
+      "evidence": "Slice 1 uses NextAuth.js with a single Google OAuth provider, stateless JWT, and HTTP-only cookie — a well-trodden stack with abundant documentation and starter templates. 4-8 hours is a plausible estimate for an experienced engineer."
+    },
+    {
+      "claim": "Options follow manual → scripted → automated → scalable → enterprise gradient",
+      "type": "quality",
+      "verified": true,
+      "evidence": "Verified in each layer. Layer 5 example: 5.1 localStorage (dev only) → 5.2 memory → 5.3 HTTP-only cookie → 5.4 Secure+SameSite+CSRF → 5.5 Vault + encryption at rest. The gradient is genuine and consistent."
+    },
+    {
+      "claim": "6 layers identified (within the 3-6 range)",
+      "type": "factual",
+      "verified": true,
+      "evidence": "Exactly 6 layers are named and fully developed in Step 2."
+    },
+    {
+      "claim": "The smallest slice uses level 1-3 options from each layer",
+      "type": "factual",
+      "verified": false,
+      "evidence": "The self-check states this but it is not accurate. Slice 1 uses 1.3 (Layer 1), 2.4 (Layer 2), 3.1 (Layer 3), 4.3 (Layer 4), 5.3 (Layer 5), 6.2 (Layer 6). Option 2.4 is the fourth option in Layer 2 and 4.3 is the third option in Layer 4 — so not all choices are within levels 1-3. The claim is slightly off but the actual choices are well-reasoned."
+    }
+  ],
+  "user_notes_summary": {
+    "uncertainties": [],
+    "needs_review": [],
+    "workarounds": []
+  },
+  "eval_feedback": {
+    "suggestions": [
+      {
+        "assertion": "The smallest vertical slice is username/password only — SSO, MFA, and social login are explicitly deferred to follow-up slices",
+        "reason": "This assertion encodes a specific implementation opinion (username/password as the foundation) that conflicts with the Hamburger Method's core question: 'What is the simplest thing that delivers real value?' Starting with OAuth-only is a defensible and arguably better engineering choice — it avoids building password infrastructure entirely. The assertion should be decoupled from the specific technology choice and instead verify that the smallest slice defers SSO, MFA, and multiple social providers (not that social login itself is deferred). Consider rewriting as: 'The smallest slice defers SSO, MFA, and multiple social providers — it covers a single authentication path end-to-end.' This would correctly PASS the current output."
+      },
+      {
+        "reason": "No assertion checks whether the output explicitly states what is NOT in slice 1 (deferred items list). The current output does this well in Step 4 ('Eliminated for slice 1'), but an assertion checking for an explicit deferral list would catch outputs that bury deferrals in prose or omit them entirely."
+      },
+      {
+        "reason": "No assertion checks that the follow-up slices are ordered by value/complexity rather than randomly listed. The current output is well-ordered (quick wins first, enterprise last), but a weaker output could list SSO before MFA or before session management without penalty."
+      }
+    ],
+    "overall": "Assertion 4 is the main issue: it tests for a specific technology choice (username/password) rather than the Hamburger Method principle it intends to verify (start with the simplest single auth path). This creates a false failure on a genuinely good output. The other assertions are well-calibrated."
+  }
+}

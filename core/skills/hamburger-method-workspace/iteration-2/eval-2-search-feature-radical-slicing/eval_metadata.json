@@ -1,0 +1,12 @@
+{
+  "eval_id": 2,
+  "eval_name": "search-feature-radical-slicing",
+  "prompt": "/hamburger-method Add a search feature to our e-commerce site so users can find products",
+  "assertions": [
+    {"id": "identifies-search-layers", "text": "Identifies layers appropriate to search: input capture, query execution, result rendering, ranking, and tracking — or equivalent functional decomposition"},
+    {"id": "four-options-per-layer", "text": "Generates at least 4 distinct options per layer following the quality gradient"},
+    {"id": "no-elasticsearch-in-slice-1", "text": "The smallest vertical slice does NOT require a search engine (Elasticsearch, Solr) — starts with simple string matching or a filtered list"},
+    {"id": "ship-by-tomorrow-question", "text": "Explicitly applies the 'ship by tomorrow' question to force radical slicing to the simplest possible option"},
+    {"id": "smallest-slice-deployable", "text": "The smallest slice is deployable and provides real user value, even if limited (e.g., basic text filter on product name)"}
+  ]
+}

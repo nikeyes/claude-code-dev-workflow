@@ -1,0 +1,106 @@
+{
+  "expectations": [
+    {
+      "text": "Identifies functional layers (detect event, identify recipients, format message, deliver, track) NOT horizontal technical layers (frontend, backend, database)",
+      "passed": true,
+      "evidence": "Step 1 defines 5 functional layers: 'Detect price change', 'Identify watching users', 'Format the notification', 'Deliver the notification', 'Track delivery'. None of these are horizontal technical layers. They map precisely to the expected functional flow."
+    },
+    {
+      "text": "Generates at least 4 distinct options for EACH layer — not just 'simple vs complex'",
+      "passed": true,
+      "evidence": "Step 2 generates exactly 5 options per layer for all 5 layers (1.1-1.5, 2.1-2.5, 3.1-3.5, 4.1-4.5, 5.1-5.5). Each option is meaningfully distinct (e.g., Layer 4: manual email, Gmail API script, SMTP/SendGrid, queued with retries, multi-channel)."
+    },
+    {
+      "text": "Options within each layer follow a quality gradient from manual/hardcoded to automated/scalable",
+      "passed": true,
+      "evidence": "Every layer progresses from manual/hardcoded at level 1 to automated/scalable at level 5. For example, Layer 1 goes from 'Manual check: someone visits the product page' (1.1) to 'ML-based anomaly detection' (1.5). Layer 4 goes from 'Manual email sent from your personal inbox' (4.1) to 'Multi-channel delivery: email + push notification + SMS' (4.5)."
+    },
+    {
+      "text": "The proposed smallest vertical slice uses level-1 or level-2 options (manual/scripted) — NOT level-4 or level-5 options",
+      "passed": true,
+      "evidence": "Slice 1 ('Ship by tomorrow') selects: 1.1 (manual check), 2.1 (hardcoded test user), 3.1 (plain text string), 4.1 (personal email), 5.1 (no tracking). All are level-1 options. Zero level-4 or level-5 options appear in the smallest slice."
+    },
+    {
+      "text": "The smallest slice is end-to-end: covers all layers, even if at the lowest quality level",
+      "passed": true,
+      "evidence": "Slice 1 table explicitly covers all 5 layers: Detect price change (1.1), Identify users (2.1), Format message (3.1), Deliver (4.1), Track (5.1 — 'None'). Every layer is represented, completing the full functional path."
+    },
+    {
+      "text": "Proposes at least 2 follow-up slices that improve one or two layers incrementally",
+      "passed": true,
+      "evidence": "Three follow-up slices are proposed. Slice 2 upgrades Layers 1, 2, and 4 (cron job, watchlist query, Gmail API script). Slice 3 upgrades Layers 3 and 4 (template with link, SMTP service) and adds Layer 5 tracking. Slice 4 upgrades Layers 2, 3, and 4 further. Each slice makes targeted, incremental improvements."
+    }
+  ],
+  "summary": {
+    "passed": 6,
+    "failed": 0,
+    "total": 6,
+    "pass_rate": 1.0
+  },
+  "execution_metrics": {
+    "output_chars": 7610,
+    "transcript_chars": null
+  },
+  "timing": {
+    "executor_duration_seconds": null,
+    "total_duration_seconds": 56.7
+  },
+  "claims": [
+    {
+      "claim": "Identified 3-6 clear functional layers (5 layers)",
+      "type": "factual",
+      "verified": true,
+      "evidence": "Output Step 1 lists exactly 5 functional layers."
+    },
+    {
+      "claim": "Generated 4-5 options per layer following quality gradient",
+      "type": "factual",
+      "verified": true,
+      "evidence": "Step 2 shows 5 options per layer for all 5 layers, each with a clear progression from manual to automated."
+    },
+    {
+      "claim": "Smallest vertical slice uses only level-1 options",
+      "type": "factual",
+      "verified": true,
+      "evidence": "The self-check confirms this and the Slice 1 table shows all options at x.1 level."
+    },
+    {
+      "claim": "Smallest slice delivers value to at least one real user",
+      "type": "quality",
+      "verified": true,
+      "evidence": "Output states: 'One real user (internal) receives a notification about a real price drop.' This is a minimal but genuine end-to-end delivery."
+    },
+    {
+      "claim": "Smallest slice can be deployed in under 1 day",
+      "type": "quality",
+      "verified": true,
+      "evidence": "Effort is stated as '1-2 hours', which is plausible given the slice requires no code or infrastructure."
+    },
+    {
+      "claim": "Proposed 3 follow-up slices with clear incremental improvement",
+      "type": "factual",
+      "verified": true,
+      "evidence": "Slices 2, 3, and 4 are all present with explicit tables showing which layers change and what value is delivered."
+    }
+  ],
+  "user_notes_summary": {
+    "uncertainties": [],
+    "needs_review": [],
+    "workarounds": []
+  },
+  "eval_feedback": {
+    "suggestions": [
+      {
+        "reason": "Expectation 6 asks for 'at least 2 follow-up slices that improve one or two layers incrementally', but Slice 2 upgrades 3 layers and Slice 4 upgrades 3 layers simultaneously. The assertion passes, but a stronger version would require each follow-up slice to change no more than 2 layers — that is the actual intent of incremental slicing and a model could satisfy the current wording by proposing large multi-layer jumps."
+      },
+      {
+        "reason": "No assertion checks whether the output is grounded in the problem domain given in the prompt (price drop notifications). A generic hamburger-method run on a completely different domain would also pass all 6 assertions. Consider adding an expectation like 'Layer names and options are specific to the notification domain, not generic placeholders'."
+      },
+      {
+        "assertion": "The smallest slice is end-to-end: covers all layers, even if at the lowest quality level",
+        "reason": "5.1 is 'No tracking at all', which technically covers the track layer at the lowest level, but a pedantic reading could argue a non-action doesn't 'cover' a layer. The assertion passes and the output is correct, but the wording could be tightened to explicitly allow 'No-op' as a valid level-1 choice for a layer."
+      }
+    ],
+    "overall": "Evals are well-targeted and discriminating. The main gap is that assertions do not constrain slice size in follow-up iterations, and there is no domain-grounding check."
+  }
+}

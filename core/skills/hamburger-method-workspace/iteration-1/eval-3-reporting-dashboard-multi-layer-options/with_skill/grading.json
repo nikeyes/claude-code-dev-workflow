@@ -1,0 +1,100 @@
+{
+  "expectations": [
+    {
+      "text": "Identifies layers that cover data pipeline AND presentation concerns — not just 'show metrics'",
+      "passed": true,
+      "evidence": "The output identifies 5 layers: Data Sourcing, Data Processing, Visualization, Access & Delivery, and Freshness & Update Cadence. Layers 1, 2, and 5 cover data pipeline concerns (sourcing, aggregation, freshness); layers 3 and 4 cover presentation concerns (how metrics are shown and how the CEO accesses them). This is clearly broader than 'show metrics'."
+    },
+    {
+      "text": "Generates at least 4 distinct options per layer with explicit quality gradient",
+      "passed": true,
+      "evidence": "Each of the 5 layers has exactly 5 options (e.g., Layer 1: 1.1 manual CSV export → 1.5 real-time CDC pipeline; Layer 3: 3.1 plain text Slack message → 3.5 custom interactive web dashboard). All layers follow an explicit gradient from manual/low-tech to automated/enterprise-grade."
+    },
+    {
+      "text": "The smallest vertical slice delivers exactly ONE metric (not all three) to validate the concept before building more",
+      "passed": false,
+      "evidence": "Slice 1 explicitly delivers all three metrics: 'Monthly revenue (current month vs. prior month), Top 5 products by revenue, New customers acquired this month vs. prior month.' The expectation requires exactly one metric in the first slice to validate the concept; this output skips that narrowing and delivers all three at once."
+    },
+    {
+      "text": "Interactivity (drill-down, filters, custom date ranges) is deferred to a follow-up slice — NOT in the first slice",
+      "passed": true,
+      "evidence": "Slice 1 uses plain text in Slack/email (option 3.1) with no interactive elements. Filters, drill-down, and date ranges first appear in Slice 4: 'Upgrade Layer 3 and Layer 2 to let the CEO answer follow-up questions independently... BI tool with date range filter, product category filter, MoM trend line (3.4 → 3.5)'."
+    },
+    {
+      "text": "The smallest slice explicitly identifies who will use it (e.g., the CEO or one internal user) and what decision it enables",
+      "passed": false,
+      "evidence": "The slice names the user ('The CEO gets the three numbers every Monday without asking') but does not explicitly state what specific decision is enabled. It says 'That alone enables decision-making' — a generic claim. No concrete decision is identified (e.g., 'decides whether to reorder top product', 'decides whether to increase marketing budget'). The user is clear; the decision is not."
+    },
+    {
+      "text": "Uses the numbered option system (1.1, 1.2, 1.3... for layer 1; 2.1, 2.2... for layer 2) to label options",
+      "passed": true,
+      "evidence": "The output consistently uses the required numbering system throughout all 5 layers: Layer 1 uses 1.1–1.5, Layer 2 uses 2.1–2.5, Layer 3 uses 3.1–3.5, Layer 4 uses 4.1–4.5, and Layer 5 uses 5.1–5.5. The numbering is also referenced in the slice composition table."
+    }
+  ],
+  "summary": {
+    "passed": 4,
+    "failed": 2,
+    "total": 6,
+    "pass_rate": 0.67
+  },
+  "execution_metrics": {
+    "tool_calls": {},
+    "total_tool_calls": null,
+    "total_steps": null,
+    "errors_encountered": 0,
+    "output_chars": 5648,
+    "transcript_chars": null
+  },
+  "timing": {
+    "executor_duration_seconds": 68.3,
+    "grader_duration_seconds": null,
+    "total_duration_seconds": 68.3
+  },
+  "claims": [
+    {
+      "claim": "Smallest slice can be built in 1-2 hours",
+      "type": "quality",
+      "verified": true,
+      "evidence": "Slice 1 requires only writing a SQL query and manually sharing results. The estimate '1-2 hours' for writing the SQL query is reasonable for this scope."
+    },
+    {
+      "claim": "Self-check passes all 7 criteria including 'Smallest slice delivers real value to the CEO'",
+      "type": "quality",
+      "verified": false,
+      "evidence": "The self-check claims 'Smallest vertical slice uses level 1-2 options from each layer' — however Layer 3 uses option 3.1 (level 1) and Layer 5 uses 5.2 (level 2), which is consistent. But the self-check does not catch the failure to narrow to a single metric, so the checklist gives false confidence about slice quality."
+    },
+    {
+      "claim": "5 layers identified (not just frontend/backend/database)",
+      "type": "factual",
+      "verified": true,
+      "evidence": "Output contains 5 distinct layers: Data Sourcing, Data Processing, Visualization, Access & Delivery, Freshness & Update Cadence — all functionally distinct and none are the generic 'frontend/backend/database' split."
+    },
+    {
+      "claim": "3 follow-up slices are proposed",
+      "type": "factual",
+      "verified": true,
+      "evidence": "Slices 2, 3, and 4 are explicitly described with effort estimates and incremental layer upgrades."
+    }
+  ],
+  "user_notes_summary": {
+    "uncertainties": [],
+    "needs_review": [],
+    "workarounds": []
+  },
+  "eval_feedback": {
+    "suggestions": [
+      {
+        "assertion": "The smallest vertical slice delivers exactly ONE metric (not all three) to validate the concept before building more",
+        "reason": "This assertion is correct and discriminating — it caught a real gap. The output rationalizes delivering all three metrics as 'the CEO gets three KPIs' without questioning whether one metric alone would validate the concept. Consider adding a follow-up assertion: 'The output explains WHY one metric was chosen over the others for the first slice' to further strengthen the discriminating power."
+      },
+      {
+        "assertion": "The smallest slice explicitly identifies who will use it and what decision it enables",
+        "reason": "The user (CEO) is named but the decision is not. This assertion would benefit from being split into two: (a) 'identifies who will use it', and (b) 'identifies the specific decision it enables (e.g., whether to invest in top product line, whether marketing spend is working)'. As written, passing the user-identification part can mask a weak decision rationale, as seen here."
+      },
+      {
+        "reason": "No assertion checks whether the slice composition table references option numbers (e.g., 1.2, 2.3) back to the options defined in Step 2. The output does this correctly, but an eval that verifies this linkage would catch runs where the slice is described in prose without tracing back to the layered options — which would indicate the skill is not being followed."
+      }
+    ],
+    "overall": "The evals are well-targeted for this skill. Two assertions effectively caught real gaps (single-metric slice and explicit decision identification). The suggestion to split expectation 5 into two parts would make grading less ambiguous."
+  }
+}

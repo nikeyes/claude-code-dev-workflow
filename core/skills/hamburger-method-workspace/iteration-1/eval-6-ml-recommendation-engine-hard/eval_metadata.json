@@ -1,0 +1,14 @@
+{
+  "eval_id": 6,
+  "eval_name": "ml-recommendation-engine-hard",
+  "prompt": "/hamburger-method Build a product recommendation engine that uses machine learning to suggest relevant items to users based on their browsing and purchase history",
+  "assertions": [
+    {"id": "ml-not-in-first-slice", "text": "The smallest vertical slice does NOT use machine learning — uses hardcoded rules, popularity ranking, or manual curation instead"},
+    {"id": "ml-as-quality-gradient", "text": "Machine learning appears as a level-4 or level-5 option within the algorithm/model layer — not as the starting point"},
+    {"id": "identifies-recommendation-layers", "text": "Identifies layers appropriate to recommendations: data collection, algorithm, candidate selection, ranking, presentation"},
+    {"id": "four-options-per-layer", "text": "Generates at least 4 options per layer with explicit quality gradient"},
+    {"id": "validates-business-value-first", "text": "Explicitly asks whether the business value (increased sales/engagement) can be validated with a simple rule-based approach before investing in ML infrastructure"},
+    {"id": "smallest-slice-shippable-today", "text": "The smallest slice can realistically be shipped within 1-2 days — not weeks — and produces visible recommendations to users"},
+    {"id": "data-collection-separated", "text": "Data collection is identified as a separate layer/concern — NOT bundled into 'we need ML data first'"}
+  ]
+}

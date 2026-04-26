@@ -1,0 +1,119 @@
+{
+  "skill_name": "hamburger-method",
+  "evals": [
+    {
+      "id": 1,
+      "name": "notification-system-five-layers",
+      "difficulty": "easy",
+      "prompt": "/hamburger-method We need to notify users when a product they're watching drops in price",
+      "expected_output": "Identifies 3-6 functional layers (not technical layers like frontend/backend/DB). Generates at least 4-5 options per layer following a manual→scripted→automated→scalable→enterprise quality gradient. Proposes a smallest vertical slice using level-1 or level-2 options from each layer. The smallest slice delivers end-to-end value and can be built in hours, not days. Proposes 2-3 follow-up slices.",
+      "assertions": [
+        {"id": "functional-layers-not-technical", "text": "Identifies functional layers (detect event, identify recipients, format message, deliver, track) NOT horizontal technical layers (frontend, backend, database)", "type": "capability"},
+        {"id": "four-options-per-layer", "text": "Generates at least 4 distinct options for EACH layer — not just 'simple vs complex'", "type": "capability"},
+        {"id": "quality-gradient", "text": "Options within each layer follow a quality gradient from manual/hardcoded to automated/scalable", "type": "capability"},
+        {"id": "smallest-slice-level-1-2", "text": "The proposed smallest vertical slice uses level-1 or level-2 options (manual/scripted) — NOT level-4 or level-5 options", "type": "behavior"},
+        {"id": "smallest-slice-end-to-end", "text": "The smallest slice is end-to-end: covers all layers, even if at the lowest quality level", "type": "capability"},
+        {"id": "two-followup-slices", "text": "Proposes at least 2 follow-up slices that improve one or two layers incrementally", "type": "capability"}
+      ]
+    },
+    {
+      "id": 2,
+      "name": "search-feature-radical-slicing",
+      "difficulty": "easy",
+      "prompt": "/hamburger-method Add a search feature to our e-commerce site so users can find products",
+      "expected_output": "Identifies layers for a search feature (input capture, query execution, result display, ranking/relevance, tracking). Forces radical slicing: smallest slice is a simple text filter on existing product list, not a full-text search engine. Options per layer go from hardcoded list to ML-powered ranking.",
+      "assertions": [
+        {"id": "identifies-search-layers", "text": "Identifies layers appropriate to search: input capture, query execution, result rendering, ranking, and tracking — or equivalent functional decomposition", "type": "capability"},
+        {"id": "four-options-per-layer", "text": "Generates at least 4 distinct options per layer following the quality gradient", "type": "capability"},
+        {"id": "no-elasticsearch-in-slice-1", "text": "The smallest vertical slice does NOT require a search engine (Elasticsearch, Solr) — starts with simple string matching or a filtered list", "type": "behavior"},
+        {"id": "ship-by-tomorrow-question", "text": "Explicitly applies the 'ship by tomorrow' question to force radical slicing to the simplest possible option", "type": "capability"},
+        {"id": "smallest-slice-deployable", "text": "The smallest slice is deployable and provides real user value, even if limited (e.g., basic text filter on product name)", "type": "capability"}
+      ]
+    },
+    {
+      "id": 3,
+      "name": "reporting-dashboard-multi-layer-options",
+      "difficulty": "medium",
+      "prompt": "/hamburger-method Build a sales dashboard that shows monthly revenue, top products, and customer acquisition trends so our CEO can make decisions",
+      "expected_output": "Identifies 4-6 layers (data source, aggregation/computation, presentation/visualization, access/delivery, drill-down/interactivity). Generates 4-5 options per layer. Smallest slice delivers ONE useful metric to ONE user (the CEO) using the simplest possible stack. Defers interactivity and drill-down to later slices.",
+      "assertions": [
+        {"id": "identifies-dashboard-layers", "text": "Identifies layers that cover data pipeline AND presentation concerns — not just 'show metrics'", "type": "capability"},
+        {"id": "four-options-per-layer", "text": "Generates at least 4 distinct options per layer with explicit quality gradient", "type": "capability"},
+        {"id": "smallest-slice-one-metric", "text": "The smallest vertical slice delivers exactly ONE metric (not all three) to validate the concept before building more", "type": "capability"},
+        {"id": "defers-interactivity", "text": "Interactivity (drill-down, filters, custom date ranges) is deferred to a follow-up slice — NOT in the first slice", "type": "behavior"},
+        {"id": "specifies-target-user", "text": "The smallest slice explicitly identifies who will use it (e.g., the CEO or one internal user) and what decision it enables", "type": "capability"},
+        {"id": "numbered-option-system", "text": "Uses the numbered option system (1.1, 1.2, 1.3... for layer 1; 2.1, 2.2... for layer 2) to label options", "type": "behavior"}
+      ]
+    },
+    {
+      "id": 4,
+      "name": "resist-infrastructure-first-instinct",
+      "difficulty": "medium",
+      "prompt": "/hamburger-method Implement a real-time chat feature between customers and support agents",
+      "expected_output": "Detects that 'real-time' triggers over-engineering instinct. Forces options that start without WebSockets/Kafka/Redis. Smallest slice is polling or even manual (support agent checks email). Proposes WebSockets only in a later slice. Challenges the assumption that 'real-time' must be the first slice.",
+      "assertions": [
+        {"id": "identifies-chat-layers", "text": "Identifies functional layers for chat: message input, message delivery/routing, message display, history/persistence, presence/status", "type": "capability"},
+        {"id": "four-options-per-layer", "text": "Generates at least 4 options per layer with quality gradient", "type": "capability"},
+        {"id": "no-websocket-in-slice-1", "text": "The smallest vertical slice does NOT use WebSockets, Kafka, or Redis — uses polling, email, or manual checking instead", "type": "behavior"},
+        {"id": "challenges-realtime-assumption", "text": "Explicitly challenges whether 'real-time' is needed for the first slice — asks 'can we validate the core value without real-time infrastructure?'", "type": "capability"},
+        {"id": "manual-crutch-option", "text": "Includes at least one 'manual/crutch' option per layer — e.g., support agent checks an email inbox instead of a realtime dashboard", "type": "capability"},
+        {"id": "smallest-slice-validates-core-value", "text": "The smallest slice is designed to validate the core user value (customer gets help) before investing in real-time infrastructure", "type": "capability"}
+      ]
+    },
+    {
+      "id": 5,
+      "name": "authentication-flow-hard",
+      "difficulty": "hard",
+      "prompt": "/hamburger-method Implement user authentication with SSO, MFA, social login (Google and GitHub), and session management for our SaaS application",
+      "expected_output": "Detects multiple 'and' signals but does NOT just say 'split it' (that's story-splitting territory). Instead applies hamburger layers to the authentication domain. Identifies layers: identity verification, credential storage, session management, MFA enforcement, social provider integration. Smallest slice is username/password only with no MFA, no social login. SSO and MFA are later slices. Generates 4-5 options per layer.",
+      "assertions": [
+        {"id": "applies-layers-not-just-splitting", "text": "Does NOT just split into separate stories — applies layered options to each authentication concern", "type": "behavior"},
+        {"id": "identifies-auth-layers", "text": "Identifies functional authentication layers: identity verification, credential storage, session management, MFA, social providers", "type": "capability"},
+        {"id": "four-options-per-layer", "text": "Generates at least 4 options per layer with explicit quality gradient", "type": "capability"},
+        {"id": "smallest-slice-no-sso-no-mfa", "text": "The smallest vertical slice covers exactly ONE authentication method end-to-end — SSO, MFA, and multiple providers are explicitly deferred to follow-up slices (starting with OAuth-only or password-only are both valid)", "type": "behavior"},
+        {"id": "sso-deferred", "text": "SSO integration is identified as a high-complexity option and deferred beyond the first 2 slices", "type": "capability"},
+        {"id": "smallest-slice-production-deployable", "text": "The smallest slice is production-deployable and provides real value (users can actually log in), not just a prototype", "type": "capability"},
+        {"id": "at-least-four-followup-slices", "text": "Proposes at least 4 follow-up slices showing the incremental path from basic auth to full SSO+MFA", "type": "capability"}
+      ]
+    },
+    {
+      "id": 6,
+      "name": "ml-recommendation-engine-hard",
+      "difficulty": "hard",
+      "prompt": "/hamburger-method Build a product recommendation engine that uses machine learning to suggest relevant items to users based on their browsing and purchase history",
+      "expected_output": "Detects that 'machine learning' and 'browsing and purchase history' are high-complexity signals. Applies hamburger method to show that ML is NOT required in the first slice. Layers: data collection, model/algorithm, candidate generation, ranking/filtering, presentation. Smallest slice uses hardcoded rules or simple popularity-based recommendations. ML is explicitly a level-4 or level-5 option. Forces the question: 'can we validate that recommendations increase sales without ML first?'",
+      "assertions": [
+        {"id": "ml-not-in-first-slice", "text": "The smallest vertical slice does NOT use machine learning — uses hardcoded rules, popularity ranking, or manual curation instead", "type": "behavior"},
+        {"id": "ml-as-quality-gradient", "text": "Machine learning appears as a level-4 or level-5 option within the algorithm/model layer — not as the starting point", "type": "capability"},
+        {"id": "identifies-recommendation-layers", "text": "Identifies layers appropriate to recommendations: data collection, algorithm, candidate selection, ranking, presentation", "type": "capability"},
+        {"id": "four-options-per-layer", "text": "Generates at least 4 options per layer with explicit quality gradient", "type": "capability"},
+        {"id": "validates-business-value-first", "text": "Explicitly asks whether the business value (increased sales/engagement) can be validated with a simple rule-based approach before investing in ML infrastructure", "type": "capability"},
+        {"id": "smallest-slice-shippable-today", "text": "The smallest slice can realistically be shipped within 1-2 days — not weeks — and produces visible recommendations to users", "type": "capability"},
+        {"id": "data-collection-separated", "text": "Data collection is identified as a separate layer/concern — NOT bundled into 'we need ML data first'", "type": "capability"}
+      ]
+    },
+    {
+      "id": 7,
+      "name": "already-small-no-hamburger-needed",
+      "difficulty": "easy",
+      "prompt": "/hamburger-method Add a 'copy to clipboard' button to the API key display on the settings page",
+      "expected_output": "Recognizes this feature is already small (< 1 day). Does NOT apply hamburger layers — there is nothing to slice. Does NOT generate 4-5 implementation options per layer for something trivial. Explicitly confirms this is appropriately sized and can be implemented directly.",
+      "assertions": [
+        {"id": "recognizes-trivial-feature", "text": "Identifies the feature as small (a few hours at most) and does not require hamburger method decomposition", "type": "capability"},
+        {"id": "does-not-generate-layers", "text": "Does NOT produce a multi-layer table with 4-5 options per layer — avoids over-engineering a trivial UI interaction", "type": "behavior"},
+        {"id": "confirms-implement-directly", "text": "Explicitly recommends implementing it directly without the hamburger method process", "type": "capability"},
+        {"id": "no-unnecessary-structure", "text": "Does NOT add 'slices', 'layers', or incremental rollout plans to a feature that is already a single-session implementation", "type": "behavior"}
+      ]
+    }
+  ],
+  "grading_guide": {
+    "capability_assertions": "The output explicitly demonstrates the described reasoning or produces the stated content. Evidence must be present in the response, not inferred from context.",
+    "behavior_assertions": "The output does or avoids the described action. Binary: did it happen or not.",
+    "layer_quality": "To count as a pass on functional-layer assertions, layers must represent business/functional steps (detect → notify → deliver) NOT technical tiers (frontend → backend → DB). Naming a layer 'Backend' or 'Database' is a fail.",
+    "options_quality": "To count as a pass on 'four-options-per-layer' assertions, each option must be concretely named (e.g., '1.1: hardcoded list', '1.2: keyword filter') — vague descriptions like 'simple version' or 'advanced version' do not count.",
+    "slice_quality": "The smallest vertical slice must be end-to-end (covers all layers) and use only level-1/2 options. A slice that skips layers or requires new infrastructure (queues, ML models, WebSockets) in the first iteration is a fail.",
+    "false_positive_calibration": "Eval 7 is the false-positive check. A pass requires the skill to NOT apply the hamburger method AND to explicitly confirm the feature is small enough to implement directly. Producing layers for a trivial feature is a fail.",
+    "skill_vs_model_delta": "The key question for skill justification: does the skill force the model to generate ALL layers AND ALL options (not just describe the concept), and does it reliably prevent the over-engineering instinct for the 'hard' cases (evals 4, 5, 6)? If the base model produces equivalent output without the skill, the skill adds no value.",
+    "statistical_requirements": "With min_runs=3, report mean, stddev, min, max per metric. A delta is only meaningful if confidence intervals do not overlap."
+  }
+}

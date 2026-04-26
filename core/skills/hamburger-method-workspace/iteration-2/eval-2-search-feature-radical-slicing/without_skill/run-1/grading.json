@@ -1,0 +1,112 @@
+{
+  "expectations": [
+    {
+      "text": "Identifies layers appropriate to search: input capture, query execution, result rendering, ranking, and tracking — or equivalent functional decomposition",
+      "passed": true,
+      "evidence": "The output defines 6 layers: UI/Entry Point (input capture), Results Presentation (result rendering), API/Communication, Search Logic/Matching (query execution and ranking in option D), Data Access, Data Storage/Index. Tracking/analytics is absent, but the expectation accepts 'equivalent functional decomposition' and the 6-layer decomposition is thorough and functionally appropriate for a search feature."
+    },
+    {
+      "text": "Generates at least 4 distinct options per layer following the quality gradient",
+      "passed": true,
+      "evidence": "Every layer has exactly 5 options (A–E) with explicitly labeled complexity from 'Minimal' through 'Very High'. For example, Layer 4 (Search Logic) goes from 'SQL LIKE' (Minimal) to 'Semantic/vector search' (Very High). All 6 layers meet the minimum of 4 distinct options."
+    },
+    {
+      "text": "The smallest vertical slice does NOT require a search engine (Elasticsearch, Solr) — starts with simple string matching or a filtered list",
+      "passed": true,
+      "evidence": "The chosen slice for Search Logic is 'Option A — SQL LIKE \\'%query%\\' on the name column — exact substring match'. The rationale explicitly states 'No new dependencies'. Elasticsearch/Solr appear only as high-complexity options (D/E) and are not selected for the minimum slice."
+    },
+    {
+      "text": "Explicitly applies the 'ship by tomorrow' question to force radical slicing to the simplest possible option",
+      "passed": false,
+      "evidence": "No instance of 'ship by tomorrow', 'could we ship this tomorrow', or any equivalent forcing question appears in the output. Step 3 directly selects minimal options without invoking that framing. The rationale for each choice is technical simplicity ('Zero JavaScript', 'No new dependencies') but the explicit temporal forcing question is absent."
+    },
+    {
+      "text": "The smallest slice is deployable and provides real user value, even if limited (e.g., basic text filter on product name)",
+      "passed": true,
+      "evidence": "The output states: 'It is shippable to production and genuinely useful (users can find products by name).' The user story is concrete: 'As a shopper, I can type a word into a search box and press Enter to see a list of products whose names contain that word.' The slice touches all 6 layers end-to-end and requires no new infrastructure."
+    }
+  ],
+  "summary": {
+    "passed": 4,
+    "failed": 1,
+    "total": 5,
+    "pass_rate": 0.80
+  },
+  "execution_metrics": {
+    "tool_calls": {},
+    "total_tool_calls": null,
+    "total_steps": null,
+    "errors_encountered": 0,
+    "output_chars": 6731,
+    "transcript_chars": null
+  },
+  "timing": {
+    "executor_duration_seconds": 71.7,
+    "grader_duration_seconds": null,
+    "total_duration_seconds": 71.7
+  },
+  "claims": [
+    {
+      "claim": "The output decomposes search into 6 distinct layers",
+      "type": "factual",
+      "verified": true,
+      "evidence": "Counted 6 layers in the Layer Stack table: UI/Entry Point, Results Presentation, API/Communication, Search Logic/Matching, Data Access, Data Storage/Index."
+    },
+    {
+      "claim": "Each layer has 5 implementation options (A–E)",
+      "type": "factual",
+      "verified": true,
+      "evidence": "Each of the 6 layer sections contains exactly 5 rows (A through E) in its options table."
+    },
+    {
+      "claim": "The smallest slice requires no new database tables, indexes, or external services",
+      "type": "quality",
+      "verified": true,
+      "evidence": "Explicitly stated under 'What it explicitly does NOT include': 'Any new database tables, indexes, or external services'. Data Storage option A is 'Existing products table with no changes'."
+    },
+    {
+      "claim": "The enhancement path lists 10 incremental slices that each touch specific layers",
+      "type": "factual",
+      "verified": true,
+      "evidence": "Step 4 contains a table with 10 numbered enhancements, each annotated with which layers are touched (e.g., Slice 2 touches 'Layer 2 only', Slice 7 touches 'Layers 4 + 6')."
+    },
+    {
+      "claim": "The 'ship by tomorrow' forcing question is applied to justify radical slicing",
+      "type": "process",
+      "verified": false,
+      "evidence": "The phrase 'ship by tomorrow' or any temporal forcing question does not appear anywhere in the output. The selection rationale is purely technical, not deadline-driven."
+    },
+    {
+      "claim": "Ranking is addressed as a layer or option",
+      "type": "factual",
+      "verified": true,
+      "evidence": "Ranking appears in Layer 4 (Search Logic) option D: 'Dedicated search engine (Elasticsearch, OpenSearch, Typesense, Meilisearch) with ranking, stemming, and synonyms'. However, ranking is not a standalone layer — it is embedded as a feature of the high-complexity search logic option."
+    },
+    {
+      "claim": "Tracking/analytics is addressed",
+      "type": "factual",
+      "verified": false,
+      "evidence": "No layer, option, or mention of search analytics, query tracking, click tracking, or user behavior measurement appears in the output. This is a gap in the functional decomposition."
+    }
+  ],
+  "user_notes_summary": {
+    "uncertainties": [],
+    "needs_review": [],
+    "workarounds": []
+  },
+  "eval_feedback": {
+    "suggestions": [
+      {
+        "assertion": "Identifies layers appropriate to search: input capture, query execution, result rendering, ranking, and tracking — or equivalent functional decomposition",
+        "reason": "The 'or equivalent functional decomposition' escape hatch makes this assertion easy to pass regardless of what layers are produced. Tracking is absent from the output but the assertion still passes. Consider tightening this: either require all named layers explicitly, or drop the named list and assert 'at least 5 functionally distinct layers with names that map to recognizable search concerns'. As written, any reasonable layer decomposition will pass."
+      },
+      {
+        "reason": "No assertion checks whether the enhancement path is present and coherent. The output includes a well-structured 10-step incremental path (Step 4) that is arguably the most useful artifact for a delivery team — yet no expectation validates it."
+      },
+      {
+        "reason": "The tracking gap (no analytics/query tracking layer) is a meaningful quality issue that no expectation catches. Search analytics (what users search for, zero-result queries, click-through rates) is a standard search feature concern and its absence in the decomposition is worth flagging."
+      }
+    ],
+    "overall": "The evals are mostly solid. The main weaknesses are: (1) the 'or equivalent' clause in expectation 1 makes it trivially satisfiable, (2) no assertion validates the incremental enhancement path which is a key output of the Hamburger Method, and (3) the tracking gap goes undetected."
+  }
+}

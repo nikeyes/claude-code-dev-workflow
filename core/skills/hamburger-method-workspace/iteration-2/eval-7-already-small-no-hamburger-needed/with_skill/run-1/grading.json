@@ -1,0 +1,85 @@
+{
+  "expectations": [
+    {
+      "text": "Identifies the feature as small (a few hours at most) and does not require hamburger method decomposition",
+      "passed": true,
+      "evidence": "Output explicitly states: 'This is a straightforward front-end task estimable at 1–3 hours, well under the 1-day threshold.' The self-check section also confirms: 'Feature is large (3+ days) — FAIL: this is ~1–3 hours'. The skill correctly identifies the feature as small and concludes Hamburger Method is not applicable."
+    },
+    {
+      "text": "Does NOT produce a multi-layer table with 4-5 options per layer — avoids over-engineering a trivial UI interaction",
+      "passed": true,
+      "evidence": "The output contains no table, no layer breakdown, and no options matrix whatsoever. The output.md is 41 lines total and consists entirely of an assessment, a direct recommendation, and a self-check. There is no Hamburger Method decomposition structure."
+    },
+    {
+      "text": "Explicitly recommends implementing it directly without the hamburger method process",
+      "passed": true,
+      "evidence": "The 'Recommendation' section states: 'Implement directly without slicing.' The conclusion reinforces: 'Use the Hamburger Method only for features that genuinely require layered decomposition. This task does not.' The recommendation section even provides concrete implementation guidance rather than a decomposition plan."
+    },
+    {
+      "text": "Does NOT add 'slices', 'layers', or incremental rollout plans to a feature that is already a single-session implementation",
+      "passed": true,
+      "evidence": "The output explicitly states: 'No incremental delivery is needed — the feature is either present or not, and the full version is buildable in a single session.' No slices, layers, or rollout phases appear anywhere in the output."
+    }
+  ],
+  "summary": {
+    "passed": 4,
+    "failed": 0,
+    "total": 4,
+    "pass_rate": 1.0
+  },
+  "execution_metrics": {
+    "output_chars": 1587,
+    "transcript_chars": null,
+    "notes": "No metrics.json present in outputs_dir. output.md is 41 lines / ~1587 characters. Only one output file produced."
+  },
+  "timing": {
+    "executor_duration_seconds": 31.3,
+    "grader_duration_seconds": null,
+    "total_duration_seconds": 31.3,
+    "total_tokens": 17183,
+    "duration_ms": 31292
+  },
+  "claims": [
+    {
+      "claim": "The skill's criteria state it should not be used for features smaller than 1 day",
+      "type": "factual",
+      "verified": true,
+      "evidence": "Output quotes the skill: 'Do NOT use when: Feature is already small (< 1 day work)'. This is consistent with the hamburger-method skill's documented criteria."
+    },
+    {
+      "claim": "Implementing a copy-to-clipboard button takes 1–3 hours",
+      "type": "factual",
+      "verified": true,
+      "evidence": "Reasonable estimate for a trivial UI interaction: render a button, wire the Clipboard API, show a transient confirmation. The three steps listed are standard and achievable well within a single session."
+    },
+    {
+      "claim": "The Clipboard API fallback is needed for environments where it is unavailable",
+      "type": "quality",
+      "verified": true,
+      "evidence": "The recommendation appropriately mentions fallback to document.execCommand('copy') or a manual-copy tooltip. This is a genuine edge case (older browsers, non-HTTPS contexts)."
+    },
+    {
+      "claim": "Applying the Hamburger Method to this task would produce artificial layers",
+      "type": "quality",
+      "verified": true,
+      "evidence": "Output states: 'Applying the Hamburger Method would produce artificial layers and options for something that has no meaningful decomposition.' Given the three-step implementation described, this assessment is correct — there are no independent vertical slices to deliver."
+    }
+  ],
+  "user_notes_summary": {
+    "uncertainties": [],
+    "needs_review": [],
+    "workarounds": [],
+    "notes": "No user_notes.md found in outputs_dir."
+  },
+  "eval_feedback": {
+    "suggestions": [
+      {
+        "reason": "All four assertions test the same core outcome — 'the skill correctly declined to apply itself' — from slightly different angles. They are not independent signals: if any one passes, the others almost certainly do too. Consider replacing two or three of them with a single assertion that checks the quality of the direct recommendation itself (e.g., 'The recommendation includes concrete implementation steps rather than decomposition phases'), which would only pass if the skill produced genuinely useful output instead of just a refusal."
+      },
+      {
+        "reason": "No assertion checks whether the skill provides useful implementation guidance when declining. A skill could PASS all four assertions by simply outputting 'This feature is too small, do it yourself.' The current output does better than that — it provides a concrete three-step implementation guide plus a fallback strategy — but nothing in the evals would catch a bare refusal."
+      }
+    ],
+    "overall": "The four assertions are valid and the skill passes all of them cleanly. The eval suite is coherent but somewhat redundant: assertions 1, 3, and 4 overlap heavily. The bigger gap is that nothing tests output quality when the skill correctly declines — a useful 'already small' response should still give actionable implementation direction, not just a refusal."
+  }
+}

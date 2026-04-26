@@ -1,0 +1,11 @@
+{
+  "eval_id": 7,
+  "eval_name": "already-small-no-hamburger-needed",
+  "prompt": "/hamburger-method Add a 'copy to clipboard' button to the API key display on the settings page",
+  "assertions": [
+    {"id": "recognizes-trivial-feature", "text": "Identifies the feature as small (a few hours at most) and does not require hamburger method decomposition"},
+    {"id": "does-not-generate-layers", "text": "Does NOT produce a multi-layer table with 4-5 options per layer — avoids over-engineering a trivial UI interaction"},
+    {"id": "confirms-implement-directly", "text": "Explicitly recommends implementing it directly without the hamburger method process"},
+    {"id": "no-unnecessary-structure", "text": "Does NOT add 'slices', 'layers', or incremental rollout plans to a feature that is already a single-session implementation"}
+  ]
+}

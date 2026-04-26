@@ -1,0 +1,84 @@
+{
+  "expectations": [
+    {
+      "text": "Identifies the feature as small (a few hours at most) and does not require hamburger method decomposition",
+      "passed": true,
+      "evidence": "Output states 'Effort estimate: 1–2 hours' for the minimal slice and concludes 'This feature does not benefit meaningfully from hamburger slicing. It should be implemented directly as a single, small task.' The feature is recognized as trivial in scope."
+    },
+    {
+      "text": "Does NOT produce a multi-layer table with 4-5 options per layer — avoids over-engineering a trivial UI interaction",
+      "passed": false,
+      "evidence": "The output produces exactly 6 layers (UI Component, Interaction/UX, Clipboard API, State/Logic, Accessibility, Testing), each with a table of 5 options (A through E) with trade-offs. This is a full hamburger decomposition applied to a feature the model itself later acknowledges is trivially small. The model did exactly what this expectation says it should not do."
+    },
+    {
+      "text": "Explicitly recommends implementing it directly without the hamburger method process",
+      "passed": true,
+      "evidence": "Under 'Observation: Is the Hamburger Method Necessary Here?' the output states: 'This feature does not benefit meaningfully from hamburger slicing. It should be implemented directly as a single, small task. The Hamburger Method would add more overhead than value here.' Also the summary says 'deeper hamburger slicing is not needed — ship the whole thing in one iteration.'"
+    },
+    {
+      "text": "Does NOT add 'slices', 'layers', or incremental rollout plans to a feature that is already a single-session implementation",
+      "passed": false,
+      "evidence": "The output defines 6 layers in a full layer-identification table and then composes 3 explicit vertical slices (Slice 1 Minimal, Slice 2 Polished, Slice 3 Hardened) with effort estimates and incremental rollout plans. The word 'slice' appears 25+ times and 'layer' appears throughout. The entire document is structured as a multi-slice incremental rollout for what the model itself acknowledges is a trivial feature."
+    }
+  ],
+  "summary": {
+    "passed": 2,
+    "failed": 2,
+    "total": 4,
+    "pass_rate": 0.5
+  },
+  "execution_metrics": {
+    "tool_calls": {},
+    "total_tool_calls": 0,
+    "total_steps": 1,
+    "errors_encountered": 0,
+    "output_chars": 7106,
+    "transcript_chars": 7106
+  },
+  "timing": {
+    "executor_duration_seconds": 75.1,
+    "grader_duration_seconds": null,
+    "total_duration_seconds": 75.1
+  },
+  "claims": [
+    {
+      "claim": "The full hamburger decomposition reveals the smallest slice is essentially the entire feature",
+      "type": "quality",
+      "verified": true,
+      "evidence": "Slice 1 (1–2 hours) already delivers full core value; slices 2 and 3 are polish. The model's self-observation is accurate."
+    },
+    {
+      "claim": "The model recognizes the hamburger method is not valuable for this feature",
+      "type": "process",
+      "verified": true,
+      "evidence": "Explicit statement: 'This feature does not benefit meaningfully from hamburger slicing.' However, this recognition comes only at Step 4 after completing the entire decomposition exercise — the model went through the full process before concluding it was unnecessary."
+    },
+    {
+      "claim": "The output avoids over-engineering by keeping the analysis proportionate",
+      "type": "quality",
+      "verified": false,
+      "evidence": "The output is 218 lines and includes 6 full option tables (5 options each with trade-offs), 3 vertical slices, full implementation code, and a summary table. This is substantial over-engineering for a 1–2 hour feature. The self-aware disclaimer at the end does not reduce the actual over-engineering in the output."
+    }
+  ],
+  "user_notes_summary": {
+    "uncertainties": [],
+    "needs_review": [],
+    "workarounds": []
+  },
+  "eval_feedback": {
+    "suggestions": [
+      {
+        "assertion": "Identifies the feature as small (a few hours at most) and does not require hamburger method decomposition",
+        "reason": "This passes even though the model ran the full hamburger decomposition anyway and only noted it was unnecessary at the very end. A stronger assertion would be: 'The model declines to run the hamburger decomposition process at all, instead stating up front that the feature is too small.' The current assertion conflates recognizing smallness with appropriately responding to it."
+      },
+      {
+        "assertion": "Explicitly recommends implementing it directly without the hamburger method process",
+        "reason": "This also passes despite the model having produced the full multi-layer, multi-slice output. The recommendation appears at the end as a footnote after completing the entire exercise. A discriminating assertion would check that this recommendation appears BEFORE or INSTEAD OF the decomposition, not after it. As written, the assertion would pass for any output that says 'just implement it directly' anywhere, even if buried in 200 lines of unnecessary layering."
+      },
+      {
+        "reason": "No assertion checks the output LENGTH or structure holistically. An ideal response to this eval fixture should be short (e.g., 1–3 paragraphs) explaining why hamburger is not needed and what to do instead. The output is 218 lines. An assertion like 'The response is concise and does not structure itself as a hamburger decomposition document' would catch the core failure mode here."
+      }
+    ],
+    "overall": "The two passing assertions are weak — they can be satisfied by an output that still does the wrong thing (runs the full hamburger process, generates multi-layer tables and slices) and only adds a disclaimer at the end. The core failure is that without the skill to guide appropriate judgment, the model defaults to full hamburger execution regardless of feature size. The eval captures that partially (2 FAILs) but the 2 PASSes give false credit to an output that is fundamentally over-engineered for the scenario."
+  }
+}

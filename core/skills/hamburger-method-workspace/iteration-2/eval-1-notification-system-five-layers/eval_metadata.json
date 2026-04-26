@@ -1,0 +1,13 @@
+{
+  "eval_id": 1,
+  "eval_name": "notification-system-five-layers",
+  "prompt": "/hamburger-method We need to notify users when a product they're watching drops in price",
+  "assertions": [
+    {"id": "functional-layers-not-technical", "text": "Identifies functional layers (detect event, identify recipients, format message, deliver, track) NOT horizontal technical layers (frontend, backend, database)"},
+    {"id": "four-options-per-layer", "text": "Generates at least 4 distinct options for EACH layer — not just 'simple vs complex'"},
+    {"id": "quality-gradient", "text": "Options within each layer follow a quality gradient from manual/hardcoded to automated/scalable"},
+    {"id": "smallest-slice-level-1-2", "text": "The proposed smallest vertical slice uses level-1 or level-2 options (manual/scripted) — NOT level-4 or level-5 options"},
+    {"id": "smallest-slice-end-to-end", "text": "The smallest slice is end-to-end: covers all layers, even if at the lowest quality level"},
+    {"id": "two-followup-slices", "text": "Proposes at least 2 follow-up slices that improve one or two layers incrementally"}
+  ]
+}

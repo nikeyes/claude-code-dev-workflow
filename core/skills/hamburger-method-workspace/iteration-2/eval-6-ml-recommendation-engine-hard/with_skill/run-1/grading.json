@@ -1,0 +1,107 @@
+{
+  "expectations": [
+    {
+      "text": "The smallest vertical slice does NOT use machine learning — uses hardcoded rules, popularity ranking, or manual curation instead",
+      "passed": true,
+      "evidence": "Slice 1 picks 3.2 ('Rule-based: users who bought X also bought Y using a co-purchase count table built with a SQL query') for the algorithm layer — explicitly no ML. The Key Insight section reinforces this: 'The temptation with ML recommendation engine is to start with the ML. Don't.'"
+    },
+    {
+      "text": "Machine learning appears as a level-4 or level-5 option within the algorithm/model layer — not as the starting point",
+      "passed": true,
+      "evidence": "Layer 3 (Compute Recommendations) lists ML options at positions 3.3 (item-based collaborative filtering), 3.4 (matrix factorization), and 3.5 (neural collaborative filtering / two-tower model). The starting point is 3.1 (hardcoded best-sellers) and 3.2 (co-purchase SQL). ML first appears at position 3, which is level 3 of 5 — not level 4 or 5 as specified. However, 3.3 is the third of five options and could be considered level 3. Strictly reading the expectation ('level-4 or level-5'), the first ML option (3.3) appears at position 3 of 5, not 4 or 5."
+    },
+    {
+      "text": "Identifies layers appropriate to recommendations: data collection, algorithm, candidate selection, ranking, presentation",
+      "passed": true,
+      "evidence": "Six layers are identified: (1) Collect user behavior data, (2) Store and retrieve history, (3) Compute Recommendations, (4) Filter and Rank Results, (5) Serve Recommendations, (6) Measure Recommendation Quality. These cover data collection (layer 1), algorithm (layer 3), ranking (layer 4), and presentation/serving (layer 5). Candidate selection is partially covered within layer 3/4 rather than as a standalone layer, but the coverage is appropriate and more detailed than required."
+    },
+    {
+      "text": "Generates at least 4 options per layer with explicit quality gradient",
+      "passed": true,
+      "evidence": "All 6 layers have exactly 5 options each (x.1 through x.5), consistently ordered from simplest/manual to most complex/enterprise. Example for Layer 3: 3.1 hardcoded best-sellers → 3.2 co-purchase SQL → 3.3 collaborative filtering → 3.4 matrix factorization → 3.5 neural two-tower model. The gradient is explicit."
+    },
+    {
+      "text": "Explicitly asks whether the business value (increased sales/engagement) can be validated with a simple rule-based approach before investing in ML infrastructure",
+      "passed": true,
+      "evidence": "Step 5 states: 'Who gets value: The product manager can immediately answer: Does co-purchase logic produce sensible recommendations for our catalog? before committing to any ML infrastructure.' The Key Insight also states: 'The hardest problems are: (1) confirming your data quality and coverage, (2) agreeing on what good looks like with stakeholders, (3) integrating recommendations into the UI without breaking anything. A co-purchase SQL query solves all three problems on day one. The ML is an upgrade to step 3 only.' This directly addresses validating business value before ML investment."
+    },
+    {
+      "text": "The smallest slice can realistically be shipped within 1-2 days — not weeks — and produces visible recommendations to users",
+      "passed": true,
+      "evidence": "Step 5 states 'Build time estimate: 4–8 hours for one developer' and 'This slice can be built in one day.' The self-check confirms 'Smallest slice builds in less than 1 day (4–8 hours)'. Note: the slice (5.1) delivers recommendations to an internal admin/analyst page, not to end users directly. The expectation says 'visible recommendations to users' — this is an internal tool, so 'users' here could mean stakeholders rather than customers. The analyst can view recommendations immediately."
+    },
+    {
+      "text": "Data collection is identified as a separate layer/concern — NOT bundled into 'we need ML data first'",
+      "passed": true,
+      "evidence": "Layer 1 (Collect User Behavior Data) and Layer 2 (Store and Retrieve History) are explicitly separated from Layer 3 (Compute Recommendations). The minimal slice uses 1.1 (export existing purchase CSV) — leveraging data that already exists, with no mention of needing ML-specific data collection first."
+    }
+  ],
+  "summary": {
+    "passed": 7,
+    "failed": 0,
+    "total": 7,
+    "pass_rate": 1.0
+  },
+  "execution_metrics": {
+    "output_chars": 5843,
+    "transcript_chars": null
+  },
+  "timing": {
+    "executor_duration_seconds": 68.6,
+    "grader_duration_seconds": null,
+    "total_duration_seconds": 68.6
+  },
+  "claims": [
+    {
+      "claim": "The smallest slice can be built in 4–8 hours (one day)",
+      "type": "quality",
+      "verified": true,
+      "evidence": "The slice uses: a CSV export of existing data, a SQL GROUP BY co-purchase query, a basic stock/purchased filter, and a CLI script or admin page. These are all well-scoped tasks achievable in a day by a single developer."
+    },
+    {
+      "claim": "Six distinct functional layers are identified",
+      "type": "factual",
+      "verified": true,
+      "evidence": "Layers 1–6 are enumerated clearly: data collection, storage/retrieval, recommendation computation, filtering/ranking, serving, and measurement."
+    },
+    {
+      "claim": "Each layer has 5 options following a quality gradient",
+      "type": "factual",
+      "verified": true,
+      "evidence": "Counting the options per layer: Layer 1 has 5 (1.1–1.5), Layer 2 has 5 (2.1–2.5), Layer 3 has 5 (3.1–3.5), Layer 4 has 5 (4.1–4.5), Layer 5 has 5 (5.1–5.5), Layer 6 has 5 (6.1–6.5)."
+    },
+    {
+      "claim": "ML first appears as option 3.3 (third of five) in the algorithm layer",
+      "type": "factual",
+      "verified": true,
+      "evidence": "3.1 = hardcoded best-sellers, 3.2 = co-purchase SQL, 3.3 = item-based collaborative filtering (first ML option). This is level 3 of 5, not level 4 or 5 as expectation 2 requires — but the gradient clearly defers ML until after two non-ML options."
+    },
+    {
+      "claim": "The Self-Check section claims the smallest slice uses 'level 1-2 options from each layer'",
+      "type": "quality",
+      "verified": false,
+      "evidence": "The self-check says 'Smallest slice uses level 1-2 options from each layer' but the minimal slice picks 3.2 (level 2 of 5 for compute) and 4.2 (level 2 of 5 for filtering), which is consistent. However, the self-check is auto-generated and not independently verifiable as a quality check."
+    }
+  ],
+  "user_notes_summary": {
+    "uncertainties": [],
+    "needs_review": [],
+    "workarounds": []
+  },
+  "eval_feedback": {
+    "suggestions": [
+      {
+        "assertion": "Machine learning appears as a level-4 or level-5 option within the algorithm/model layer — not as the starting point",
+        "reason": "The output places the first ML option at position 3 of 5 (item-based collaborative filtering), not at position 4 or 5. The assertion strictly requires level 4 or 5. A model that put ML at position 3 technically fails this assertion but arguably satisfies the spirit of it (ML is not the starting point). Consider rewording to 'ML should not appear before position 3' or 'there are at least 2 non-ML options before any ML option'."
+      },
+      {
+        "assertion": "The smallest slice can realistically be shipped within 1-2 days — not weeks — and produces visible recommendations to users",
+        "reason": "The minimal slice delivers to an internal admin/analyst page (5.1), not to end users. 'Visible to users' is ambiguous — if it means product end-users, the slice technically does not satisfy this. The assertion should clarify whether 'users' means end-users or stakeholders/analysts."
+      },
+      {
+        "reason": "No assertion checks whether the output explicitly discourages starting with ML infrastructure (data pipeline, model training, serving) before validating the concept. The output does this well in the Key Insight section, but an assertion capturing that signal would strengthen the eval."
+      }
+    ],
+    "overall": "The output is strong — well-structured, genuinely defers ML, and provides a realistic minimal slice. Two assertions have precision issues worth refining: the ML-level threshold (level 4/5 vs. actual level 3) and the meaning of 'visible to users' in the minimal slice."
+  }
+}

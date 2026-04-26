@@ -1,0 +1,106 @@
+{
+  "expectations": [
+    {
+      "text": "Does NOT just split into separate stories — applies layered options to each authentication concern",
+      "passed": true,
+      "evidence": "The output explicitly applies the Hamburger Method, identifying 6 horizontal layers (Data, Domain/Business Logic, External Integrations, API/Transport, Security/Cross-Cutting, Frontend/UI) and generating 5 options per layer. It does not simply enumerate stories. Step 3 composes a vertical slice by choosing one option per layer."
+    },
+    {
+      "text": "Identifies functional authentication layers: identity verification, credential storage, session management, MFA, social providers",
+      "passed": false,
+      "evidence": "The output identifies architectural/technical layers (Data, Domain Logic, External Integrations, API, Security, Frontend) rather than functional authentication concern layers. Identity verification, credential storage, session management, MFA, and social providers appear as sub-topics within layers or as excluded scope items — not as top-level layers. The structure is architectural, not concern-oriented as the expectation requires."
+    },
+    {
+      "text": "Generates at least 4 options per layer with explicit quality gradient",
+      "passed": true,
+      "evidence": "Every layer has 5 options (A through E). Each set of options shows an explicit quality/complexity gradient: e.g., Layer 1 goes from 'single users table with JSON columns' (simplest) to 'append-only event log' (most complex); Layer 6 goes from 'server-rendered HTML forms' (simplest) to 'progressive enhancement' (most complex). The gradient is explicit and documented across all 6 layers."
+    },
+    {
+      "text": "The smallest vertical slice is username/password only — SSO, MFA, and social login are explicitly deferred to follow-up slices",
+      "passed": true,
+      "evidence": "Slice 1 scope section states: 'Slice 1 Scope (what is explicitly excluded): Google OAuth, GitHub OAuth, SSO (SAML / OIDC), MFA (TOTP, SMS, hardware key)'. The slice is defined as 'Email + Password login that returns a session token and works end-to-end'."
+    },
+    {
+      "text": "SSO integration is identified as a high-complexity option and deferred beyond the first 2 slices",
+      "passed": true,
+      "evidence": "SSO via OIDC appears as Slice 7 and SSO via SAML 2.0 as Slice 8, well beyond the first 2 slices. In Layer 3 options, Option E notes SAML as 'non-trivial XML/crypto handling'. SSO is excluded from Slice 1 scope explicitly and placed at slices 7-8 in the roadmap."
+    },
+    {
+      "text": "The smallest slice is production-deployable and provides real value (users can actually log in), not just a prototype",
+      "passed": true,
+      "evidence": "The output states: 'Gives the team a working, deployable login feature from day one' and describes complete end-to-end functionality including: user registration endpoint, login with bcrypt-hashed passwords, session management via HttpOnly cookies, protected route middleware, logout, audit logging, and rate limiting. The rationale section explicitly says 'validates the core session contract' and 'working, deployable login feature'. The chosen options (normalized schema, service layer, opaque session tokens) are production-grade choices, not prototype shortcuts."
+    },
+    {
+      "text": "Proposes at least 4 follow-up slices showing the incremental path from basic auth to full SSO+MFA",
+      "passed": true,
+      "evidence": "The roadmap table in Step 4 lists 9 follow-up slices (Slices 2-10): Slice 2 (Google OAuth), Slice 3 (GitHub OAuth), Slice 4 (TOTP MFA), Slice 5 (SMS MFA), Slice 6 (Refresh token rotation), Slice 7 (SSO via OIDC), Slice 8 (SSO via SAML 2.0), Slice 9 (WebAuthn), Slice 10 (Admin session UI). Each lists what it builds on, showing a clear incremental path to full SSO+MFA."
+    }
+  ],
+  "summary": {
+    "passed": 6,
+    "failed": 1,
+    "total": 7,
+    "pass_rate": 0.857
+  },
+  "execution_metrics": {
+    "output_chars": 8203,
+    "transcript_chars": 0
+  },
+  "timing": {
+    "executor_duration_seconds": 84.4,
+    "grader_duration_seconds": null,
+    "total_duration_seconds": 84.4
+  },
+  "claims": [
+    {
+      "claim": "The feature is decomposed into horizontal layers",
+      "type": "process",
+      "verified": true,
+      "evidence": "6 layers are identified and documented in a table with clear responsibilities in Step 1"
+    },
+    {
+      "claim": "Every layer has exactly 5 options",
+      "type": "factual",
+      "verified": true,
+      "evidence": "Counted: Layer 1: 5 options, Layer 2: 5 options, Layer 3: 5 options, Layer 4: 5 options, Layer 5: 5 options, Layer 6: 5 options"
+    },
+    {
+      "claim": "The smallest slice can be delivered in 1-2 days",
+      "type": "quality",
+      "verified": false,
+      "evidence": "The summary claims '1–2 days' and Step 3 preamble says '1–3 days by one developer', but the scope includes user registration, login, protected route middleware, logout, audit logging, and rate limiting — this is a reasonable estimate but cannot be objectively verified"
+    },
+    {
+      "claim": "The slice 1 chosen options at each layer use the simplest viable option",
+      "type": "quality",
+      "verified": true,
+      "evidence": "Layer choices: Data=Option B (normalized schema, not the simplest A but justified as foundation), Domain=Option B (service layer), External=None, API=Option C simplified, Security=Option A (bcrypt), Frontend=Option A (server-rendered). The rationale column explains each choice. Most choices lean toward minimal options."
+    },
+    {
+      "claim": "All future slices layer on top without changing the foundation",
+      "type": "quality",
+      "verified": true,
+      "evidence": "The roadmap shows each slice 'Builds On' the previous ones (e.g., Slice 2 builds on Slice 1, Slice 7 builds on Slices 2-3). No slice requires rearchitecting prior work."
+    }
+  ],
+  "user_notes_summary": {
+    "uncertainties": [],
+    "needs_review": [],
+    "workarounds": []
+  },
+  "eval_feedback": {
+    "suggestions": [
+      {
+        "assertion": "Identifies functional authentication layers: identity verification, credential storage, session management, MFA, social providers",
+        "reason": "This expectation is ambiguous: the Hamburger Method can legitimately apply to either architectural layers (Data/API/UI) or functional concern layers. The output uses architectural layers, which is a valid and arguably more useful application of the method. The assertion should clarify whether it expects concern-oriented layers specifically, or whether architectural layers with concern-related options also satisfy the intent. As written it fails, but a competent execution using architectural decomposition is arguably more correct for this method."
+      },
+      {
+        "reason": "No assertion checks whether the options within each layer have an *explicit* quality gradient description (e.g., labeled as 'minimal', 'intermediate', 'production-grade'). The current expectation 3 passes because the gradient is implied by descriptions, but a stronger assertion would require explicit labeling or a quality axis to be stated."
+      },
+      {
+        "reason": "No assertion checks whether the slice 1 composition rationale explains why each layer option was chosen over the alternatives. The output does provide a rationale column in the table, which is a high-quality outcome worth asserting."
+      }
+    ],
+    "overall": "The eval is generally well-designed. The main gap is expectation 2, which uses a functional layer taxonomy (identity verification, credential storage, etc.) that conflicts with the Hamburger Method's typical architectural decomposition. This creates a false failure for an otherwise high-quality output."
+  }
+}

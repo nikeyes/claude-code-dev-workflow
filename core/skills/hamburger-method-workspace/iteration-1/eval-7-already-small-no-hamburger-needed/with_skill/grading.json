@@ -1,0 +1,76 @@
+{
+  "expectations": [
+    {
+      "text": "Identifies the feature as small (a few hours at most) and does not require hamburger method decomposition",
+      "passed": true,
+      "evidence": "Output explicitly states: 'This feature is already small — well under 1 day of work' and 'Estimated effort: 1–3 hours, including writing and testing.' The skill decision section is titled 'Hamburger Method Not Applicable'."
+    },
+    {
+      "text": "Does NOT produce a multi-layer table with 4-5 options per layer — avoids over-engineering a trivial UI interaction",
+      "passed": true,
+      "evidence": "The output contains no table, no layer breakdown, and no options list. The entire output is a short explanation of why the feature is trivial and a direct implementation guide."
+    },
+    {
+      "text": "Explicitly recommends implementing it directly without the hamburger method process",
+      "passed": true,
+      "evidence": "Output states: 'Do not apply the hamburger method. Implement this directly.' and 'That's the complete implementation. It does not need layered analysis or incremental delivery planning.'"
+    },
+    {
+      "text": "Does NOT add 'slices', 'layers', or incremental rollout plans to a feature that is already a single-session implementation",
+      "passed": true,
+      "evidence": "No slices, layers, or rollout plan appear in the output. The 5-step guide is a flat implementation checklist (locate component, add button, attach handler, show confirmation, handle fallback), not an incremental delivery plan."
+    }
+  ],
+  "summary": {
+    "passed": 4,
+    "failed": 0,
+    "total": 4,
+    "pass_rate": 1.0
+  },
+  "execution_metrics": {
+    "output_chars": 1742,
+    "transcript_chars": null
+  },
+  "timing": {
+    "executor_duration_seconds": 30.5,
+    "grader_duration_seconds": null,
+    "total_duration_seconds": 30.5
+  },
+  "claims": [
+    {
+      "claim": "The Clipboard API is native to all modern browsers (no new dependencies needed)",
+      "type": "factual",
+      "verified": true,
+      "evidence": "This is accurate — the Web Clipboard API (navigator.clipboard) is available in all modern browsers without additional dependencies."
+    },
+    {
+      "claim": "The feature touches zero backend changes and zero new infrastructure",
+      "type": "quality",
+      "verified": true,
+      "evidence": "A copy-to-clipboard button on an already-displayed API key requires only frontend changes (a button element and a click handler), consistent with this claim."
+    },
+    {
+      "claim": "The skill explicitly states 'Do NOT use when: Feature is already small (< 1 day work)'",
+      "type": "process",
+      "verified": false,
+      "evidence": "The output quotes this as coming from the skill itself. Cannot verify against the SKILL.md without reading it, but the claim is plausible given the skill's intended behavior."
+    }
+  ],
+  "user_notes_summary": {
+    "uncertainties": [],
+    "needs_review": [],
+    "workarounds": []
+  },
+  "eval_feedback": {
+    "suggestions": [
+      {
+        "reason": "All four expectations are negative (what the output should NOT do) or recognition-only checks. None assert the quality of the alternative guidance given. A skill that just outputs 'this is too small, do it yourself' with no actionable content would pass all four. Consider adding an assertion like: 'Provides at least a minimal implementation outline or pointer to an appropriate alternative skill' — which this output does well (it references small-safe-steps and bugmagnet) but no assertion validates it."
+      },
+      {
+        "assertion": "Explicitly recommends implementing it directly without the hamburger method process",
+        "reason": "This assertion would also pass if the skill said only 'skip the hamburger method' with no further guidance. The distinction between a useful redirect and a terse dismissal is not tested. Pairing it with an assertion about actionable next steps would make it more discriminating."
+      }
+    ],
+    "overall": "The output is genuinely good — it correctly declines to apply the hamburger method, gives a clear rationale, offers a flat implementation guide, and points to better-suited skills. All expectations pass with substance. The eval gap is that the assertions don't capture the quality of the redirect; a minimal or unhelpful refusal would also pass."
+  }
+}

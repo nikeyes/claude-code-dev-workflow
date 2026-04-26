@@ -1,0 +1,103 @@
+{
+  "expectations": [
+    {
+      "text": "The smallest vertical slice does NOT use machine learning \u2014 uses hardcoded rules, popularity ranking, or manual curation instead",
+      "passed": true,
+      "evidence": "Slice 1 ('Bestsellers as recommendations') uses 'SQL query: top 10 most purchased products in the last 30 days' (option 3.1) and returns the same top-10 bestseller list to all users. No ML model is involved anywhere in the slice."
+    },
+    {
+      "text": "Machine learning appears as a level-4 or level-5 option within the algorithm/model layer \u2014 not as the starting point",
+      "passed": true,
+      "evidence": "Layer 2 (Build user-item representation): ML appears at 2.4 ('Train a collaborative filtering model') and 2.5 ('Train a deep learning model'). Layer 3 (Generate recommendations): ML appears at 3.5 ('Real-time ML inference with a trained model served via a prediction API'). Both layers start from hardcoded/manual options and ML is reserved for levels 4 and 5."
+    },
+    {
+      "text": "Identifies layers appropriate to recommendations: data collection, algorithm, candidate selection, ranking, presentation",
+      "passed": true,
+      "evidence": "Six layers are identified: L1 'Collect user behavior data' (data collection), L2 'Build user-item representation' (algorithm/model input), L3 'Generate recommendations' (candidate selection + ranking combined), L4 'Serve recommendations', L5 'Present recommendations to the user' (presentation), L6 'Measure recommendation quality'. Data collection, algorithm, and presentation are explicitly present; candidate selection and ranking are handled within L3."
+    },
+    {
+      "text": "Generates at least 4 options per layer with explicit quality gradient",
+      "passed": true,
+      "evidence": "Every layer has exactly 5 options (x.1 through x.5) with an explicit manual-to-enterprise gradient. For example Layer 3 goes from '3.1: Return a hardcoded list of best-selling products' to '3.5: Real-time ML inference with a trained model served via a prediction API'."
+    },
+    {
+      "text": "Explicitly asks whether the business value (increased sales/engagement) can be validated with a simple rule-based approach before investing in ML infrastructure",
+      "passed": false,
+      "evidence": "The output never poses this as an explicit question or framing. The Step 3 prompt is 'If you had to ship something by tomorrow, what would you build?' and the 'Why this works' section mentions 'Delivers measurable business value (bestsellers convert)' but this is a statement justifying the slice choice, not a challenge to the team about whether ML infrastructure is warranted. The evaluation question \u2014 can business value be validated with rules before committing to ML \u2014 is never surfaced."
+    },
+    {
+      "text": "The smallest slice can realistically be shipped within 1-2 days \u2014 not weeks \u2014 and produces visible recommendations to users",
+      "passed": true,
+      "evidence": "Slice 1 is labeled 'ship in 1 day', requires no new infrastructure, uses the existing orders table and an existing 'You might also like' section in the UI, and renders 'a basic product card grid' (option 5.2) visible to real users."
+    },
+    {
+      "text": "Data collection is identified as a separate layer/concern \u2014 NOT bundled into 'we need ML data first'",
+      "passed": true,
+      "evidence": "Layer 1 ('Collect user behavior data') is a standalone layer with 5 independent options ranging from a static CSV to a full behavioral data platform. The smallest slice uses option 1.2 ('Log page views and purchases to a simple database table via existing server-side events') \u2014 explicitly decoupled from any ML data requirement."
+    }
+  ],
+  "summary": {
+    "passed": 6,
+    "failed": 1,
+    "total": 7,
+    "pass_rate": 0.86
+  },
+  "execution_metrics": {
+    "output_chars": 9311,
+    "transcript_chars": null
+  },
+  "timing": {
+    "executor_duration_seconds": 65.9,
+    "grader_duration_seconds": null,
+    "total_duration_seconds": 65.9
+  },
+  "claims": [
+    {
+      "claim": "6 clear functional layers were identified",
+      "type": "factual",
+      "verified": true,
+      "evidence": "Output lists exactly 6 numbered layers in Step 1 and Step 2."
+    },
+    {
+      "claim": "5 options per layer following manual \u2192 scripted \u2192 automated \u2192 scalable \u2192 enterprise gradient",
+      "type": "factual",
+      "verified": true,
+      "evidence": "Every layer (L1\u2013L6) has options x.1 through x.5, each advancing along the complexity spectrum."
+    },
+    {
+      "claim": "Smallest slice requires no new infrastructure",
+      "type": "quality",
+      "verified": true,
+      "evidence": "Slice 1 uses an existing purchases table, an existing 'You might also like' UI section, and a cron job or manual script \u2014 all described as existing resources."
+    },
+    {
+      "claim": "The recommendations table acts as a stable contract so future iterations can replace the data source without touching the UI",
+      "type": "quality",
+      "verified": true,
+      "evidence": "Explicitly stated in the 'Why this works' section and confirmed by the Slice 2\u20134 progression which upgrades backend layers while keeping layer 5 (presentation) the same."
+    },
+    {
+      "claim": "Proposed 3 follow-up slices showing incremental, layer-by-layer improvement",
+      "type": "factual",
+      "verified": true,
+      "evidence": "Slices 2, 3, and 4 are defined in Step 6 with explicit layer upgrades, durations, and outcomes."
+    }
+  ],
+  "user_notes_summary": {
+    "uncertainties": [],
+    "needs_review": [],
+    "workarounds": []
+  },
+  "eval_feedback": {
+    "suggestions": [
+      {
+        "assertion": "Explicitly asks whether the business value (increased sales/engagement) can be validated with a simple rule-based approach before investing in ML infrastructure",
+        "reason": "This expectation checks for an explicit, forward-looking challenge/question to the reader \u2014 not just implicit validation via slice design. The output does demonstrate the principle through its slice choices, so a model that designs a good non-ML first slice but never asks the question would pass the other assertions but fail this one correctly. Consider whether the intent is to require the model to surface this as a deliberate checkpoint (e.g., 'Before investing in ML, consider whether bestsellers alone can move the sales metric'), or just to demonstrate it through slice structure. If the latter, the assertion should be reworded to check for the design decision, not the explicit question."
+      },
+      {
+        "reason": "No assertion checks whether the progression to ML is staged and justified \u2014 the output provides 4 slices with clear ML appearing only in Slice 4. An assertion like 'ML infrastructure is introduced no earlier than the 3rd or 4th slice, after rule-based approaches have been validated' would strengthen coverage of the core hamburger-method property."
+      }
+    ],
+    "overall": "The eval suite is well-targeted for an ML-heavy feature request. The one failed assertion (explicit business-value validation question) reflects a genuine gap in the output \u2014 the model designed the right approach but never surfaced the framing as a deliberate question to stakeholders. The other assertions are discriminating and substantive."
+  }
+}

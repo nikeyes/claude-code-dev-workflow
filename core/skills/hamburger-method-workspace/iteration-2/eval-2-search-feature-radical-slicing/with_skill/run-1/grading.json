@@ -1,0 +1,106 @@
+{
+  "expectations": [
+    {
+      "text": "Identifies layers appropriate to search: input capture, query execution, result rendering, ranking, and tracking — or equivalent functional decomposition",
+      "passed": true,
+      "evidence": "Output defines 5 layers: (1) Accept search input, (2) Find matching products, (3) Rank/filter results, (4) Display results, (5) Handle no results. This covers input capture, query execution, ranking, and result rendering. 'Handle no results' replaces 'tracking' but the expectation permits 'equivalent functional decomposition'. The decomposition is coherent and captures all critical search flows. Note: analytics/tracking is absent — see eval_feedback."
+    },
+    {
+      "text": "Generates at least 4 distinct options per layer following the quality gradient",
+      "passed": true,
+      "evidence": "All 5 layers have exactly 5 options each (1.1–1.5, 2.1–2.5, 3.1–3.5, 4.1–4.5, 5.1–5.5). Each set progresses from a minimal/manual option to an enterprise/ML option. For example, Layer 2 goes: hardcoded fixture → SQL LIKE on name → SQL full-text → Elasticsearch/Typesense → ML semantic search. The gradient is clearly applied in every layer."
+    },
+    {
+      "text": "The smallest vertical slice does NOT require a search engine (Elasticsearch, Solr) — starts with simple string matching or a filtered list",
+      "passed": true,
+      "evidence": "The smallest slice (Step 3 table and Step 5) picks option 2.2: SQL `LIKE '%query%'` on product name column only. Step 4 explicitly eliminates 'Full-text / search engine (2.3–2.5): requires schema changes or new services'. No Elasticsearch, Solr, or any external search engine is used."
+    },
+    {
+      "text": "Explicitly applies the 'ship by tomorrow' question to force radical slicing to the simplest possible option",
+      "passed": true,
+      "evidence": "Step 3 is titled 'Force Radical Slicing' and opens with a blockquote: \"If you had to ship something by tomorrow, what would you build?\" — the exact framing required. The section then selects the lowest viable option from each layer in response to this question."
+    },
+    {
+      "text": "The smallest slice is deployable and provides real user value, even if limited (e.g., basic text filter on product name)",
+      "passed": true,
+      "evidence": "Step 5 (Smallest Vertical Slice) states: 'A real user can type a query and see matching products. That is the entire value proposition validated.' Build time is estimated at 2–4 hours. Infrastructure needed: 'None — reuses existing DB and server-side rendering.' The slice is explicitly product-name text filtering via SQL LIKE — directly matching the example in the expectation."
+    }
+  ],
+  "summary": {
+    "passed": 5,
+    "failed": 0,
+    "total": 5,
+    "pass_rate": 1.0
+  },
+  "execution_metrics": {
+    "output_chars": 6021,
+    "transcript_chars": null,
+    "note": "No metrics.json found in outputs_dir. output.md is 6021 bytes."
+  },
+  "timing": {
+    "executor_duration_seconds": 56.0,
+    "grader_duration_seconds": null,
+    "total_duration_seconds": 56.0,
+    "total_tokens": 18390,
+    "duration_ms": 55996
+  },
+  "claims": [
+    {
+      "claim": "5 functional layers were identified",
+      "type": "factual",
+      "verified": true,
+      "evidence": "Output clearly lists 5 layers in Step 1 and develops each one through Steps 2–6."
+    },
+    {
+      "claim": "At least 4–5 options generated per layer",
+      "type": "factual",
+      "verified": true,
+      "evidence": "Each layer has exactly 5 options (1.1–1.5 through 5.1–5.5), confirmed by direct count in the output."
+    },
+    {
+      "claim": "Smallest slice can be built in 2–4 hours",
+      "type": "quality",
+      "verified": true,
+      "evidence": "The slice is genuinely minimal: plain HTML form, a single SQL LIKE query, a plain HTML list output, and a static message on empty results. 2–4 hours is a credible estimate for this scope."
+    },
+    {
+      "claim": "Smallest slice requires no new infrastructure",
+      "type": "factual",
+      "verified": true,
+      "evidence": "Slice 1 explicitly states: 'Infrastructure needed: None — reuses existing DB and server-side rendering.' The selected options (1.1, 2.2, 3.1, 4.1, 5.2) confirm this — all reuse existing server rendering and database."
+    },
+    {
+      "claim": "3 follow-up slices are proposed with incremental improvements",
+      "type": "factual",
+      "verified": true,
+      "evidence": "Step 6 defines Slice 2, Slice 3, and Slice 4 with specific layer upgrades (e.g., 2.2 → 2.3, 4.1 → 4.2) and delivery cadence (next sprint, sprint after, backlog)."
+    },
+    {
+      "claim": "Self-check confirms all checklist items pass",
+      "type": "quality",
+      "verified": true,
+      "evidence": "All 8 self-check items are marked [x]. Each is backed by actual content in the output — the claims are accurate, not aspirational."
+    }
+  ],
+  "user_notes_summary": {
+    "uncertainties": [],
+    "needs_review": [],
+    "workarounds": [],
+    "note": "No user_notes.md found in outputs_dir."
+  },
+  "eval_feedback": {
+    "suggestions": [
+      {
+        "assertion": "Identifies layers appropriate to search: input capture, query execution, result rendering, ranking, and tracking — or equivalent functional decomposition",
+        "reason": "The phrase 'or equivalent functional decomposition' makes this assertion very easy to pass — almost any reasonable layer breakdown satisfies it. In this run, 'tracking/analytics' was replaced by 'handle no results', which is a legitimate UX concern but is not analytics tracking at all. If tracking usage data is a genuine business requirement for search features, an assertion that explicitly checks for it (or explicitly allows its omission with justification) would be more discriminating."
+      },
+      {
+        "reason": "No assertion checks whether the follow-up slices are coherent and incremental — i.e., each slice upgrades exactly some layers while leaving others stable. The output does this well (explicit layer-version notations like 2.2 → 2.3), but nothing in the eval would catch a run that proposes follow-up slices that are vague or start over from scratch."
+      },
+      {
+        "reason": "No assertion checks the quality gradient direction. A run could generate 4 options per layer that are all at the same complexity level (four variants of Elasticsearch, say) and still pass expectation 2. An assertion like 'the lowest option in each layer requires no new infrastructure or external services' would make expectation 2 more discriminating."
+      }
+    ],
+    "overall": "The eval suite is well-targeted for this scenario. Expectations 3, 4, and 5 are the most discriminating — they directly test the core value of the Hamburger Method (radical slicing without over-engineering). Expectation 1 is the weakest because of the 'or equivalent' escape hatch. Consider tightening it or splitting it into must-have and nice-to-have layers."
+  }
+}

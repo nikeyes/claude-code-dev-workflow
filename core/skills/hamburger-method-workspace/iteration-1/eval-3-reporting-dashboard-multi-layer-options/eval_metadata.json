@@ -1,0 +1,13 @@
+{
+  "eval_id": 3,
+  "eval_name": "reporting-dashboard-multi-layer-options",
+  "prompt": "/hamburger-method Build a sales dashboard that shows monthly revenue, top products, and customer acquisition trends so our CEO can make decisions",
+  "assertions": [
+    {"id": "identifies-dashboard-layers", "text": "Identifies layers that cover data pipeline AND presentation concerns — not just 'show metrics'"},
+    {"id": "four-options-per-layer", "text": "Generates at least 4 distinct options per layer with explicit quality gradient"},
+    {"id": "smallest-slice-one-metric", "text": "The smallest vertical slice delivers exactly ONE metric (not all three) to validate the concept before building more"},
+    {"id": "defers-interactivity", "text": "Interactivity (drill-down, filters, custom date ranges) is deferred to a follow-up slice — NOT in the first slice"},
+    {"id": "specifies-target-user", "text": "The smallest slice explicitly identifies who will use it (e.g., the CEO or one internal user) and what decision it enables"},
+    {"id": "numbered-option-system", "text": "Uses the numbered option system (1.1, 1.2, 1.3... for layer 1; 2.1, 2.2... for layer 2) to label options"}
+  ]
+}

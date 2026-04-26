@@ -1,0 +1,731 @@
+{
+  "metadata": {
+    "skill_name": "hamburger-method",
+    "skill_path": "<path/to/skill>",
+    "executor_model": "<model-name>",
+    "analyzer_model": "<model-name>",
+    "timestamp": "2026-04-26T11:41:23Z",
+    "evals_run": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "runs_per_configuration": 3
+  },
+  "runs": [
+    {
+      "eval_id": 1,
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 6,
+        "failed": 0,
+        "total": 6,
+        "time_seconds": 59.0,
+        "tokens": 7554,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "Identifies functional layers (detect event, identify recipients, format message, deliver, track) NOT horizontal technical layers (frontend, backend, database)",
+          "passed": true,
+          "evidence": "Step 1 identifies exactly 5 functional layers: 'Detect price change', 'Identify watching users', 'Format the notification', 'Deliver the notification', 'Track delivery'. No horizontal technical layers (frontend/backend/database) appear anywhere in the output."
+        },
+        {
+          "text": "Generates at least 4 distinct options for EACH layer \u2014 not just 'simple vs complex'",
+          "passed": true,
+          "evidence": "Each of the 5 layers has exactly 5 distinct options (1.1\u20131.5, 2.1\u20132.5, 3.1\u20133.5, 4.1\u20134.5, 5.1\u20135.5), all clearly differentiated by mechanism \u2014 e.g., Layer 4 goes from 'manual email from personal Gmail' to 'scripted via Gmail API' to 'SMTP service' to 'queue with retries' to 'multi-channel with fallbacks'."
+        },
+        {
+          "text": "Options within each layer follow a quality gradient from manual/hardcoded to automated/scalable",
+          "passed": true,
+          "evidence": "Every layer starts at a fully manual option (developer action, hardcoded value, plain text, personal Gmail, no tracking) and progresses through scripted, automated, event-driven, and enterprise-grade tiers. The Self-Check section explicitly confirms: 'Options follow a quality gradient (manual \u2192 scripted \u2192 automated \u2192 scalable \u2192 enterprise)'."
+        },
+        {
+          "text": "The proposed smallest vertical slice uses level-1 or level-2 options (manual/scripted) \u2014 NOT level-4 or level-5 options",
+          "passed": true,
+          "evidence": "Slice 1 ('Prove It Works') uses only level-1 options across all layers: 1.1 (manual check), 2.1 (hardcoded user), 3.1 (plain text), 4.1 (personal Gmail), 5.1 (no tracking). No level-4 or level-5 options appear in this slice."
+        },
+        {
+          "text": "The smallest slice is end-to-end: covers all layers, even if at the lowest quality level",
+          "passed": true,
+          "evidence": "Slice 1 contains an entry for all 5 layers. Layer 5 (tracking) is covered explicitly with option 5.1 ('No tracking at all') \u2014 a deliberate, stated choice rather than an omission. All 5 layers are present in the slice table."
+        },
+        {
+          "text": "Proposes at least 2 follow-up slices that improve one or two layers incrementally",
+          "passed": true,
+          "evidence": "Three follow-up slices are proposed. Slice 2 upgrades layers 1, 3, 4, and 5 while keeping layer 2 at 2.1. Slice 3 upgrades layers 2 and 5 while keeping others stable. Slice 4 upgrades layers 1, 2, 3, and 4. Each slice explicitly marks which layers change with '\u2190 upgrade' annotations."
+        }
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": 2,
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 5,
+        "failed": 0,
+        "total": 5,
+        "time_seconds": 50.0,
+        "tokens": 5175,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "Identifies layers appropriate to search: input capture, query execution, result rendering, ranking, and tracking \u2014 or equivalent functional decomposition",
+          "passed": true,
+          "evidence": "Output identifies 5 layers: (1) Accept search input, (2) Match products, (3) Rank/filter results, (4) Display results, (5) Handle no-results/errors. These map directly to the expected decomposition: input capture \u2192 Accept search input, query execution \u2192 Match products, result rendering \u2192 Display results, ranking \u2192 Rank/filter results. 'Tracking' is not present but 'Handle no-results/errors' is a reasonable domain-appropriate substitute. The expectation explicitly allows 'equivalent functional decomposition', which this satisfies."
+        },
+        {
+          "text": "Generates at least 4 distinct options per layer following the quality gradient",
+          "passed": true,
+          "evidence": "Every layer has exactly 5 options following a clear quality gradient from minimal to enterprise-grade. Layer 1: plain HTML form POST \u2192 autocomplete with keyboard navigation. Layer 2: hardcoded list with includes() \u2192 AI/semantic search. Layer 3: no ranking \u2192 personalized ranking. Layer 4: plain unordered list \u2192 rich faceted results. Layer 5: show nothing \u2192 fuzzy matching / 'did you mean?'. All options are distinct and form a coherent progression."
+        },
+        {
+          "text": "The smallest vertical slice does NOT require a search engine (Elasticsearch, Solr) \u2014 starts with simple string matching or a filtered list",
+          "passed": true,
+          "evidence": "The smallest slice selects option 2.2 ('Query the existing products table with WHERE name LIKE \\'%query%\\'') for the matching layer. Elasticsearch and Solr do not appear until option 2.4. The self-check explicitly states: 'No slice requires Redis, Kafka, Elasticsearch, or new infrastructure until Slice 5'. The output also confirms the smallest slice uses 'existing DB, no new services'."
+        },
+        {
+          "text": "Explicitly applies the 'ship by tomorrow' question to force radical slicing to the simplest possible option",
+          "passed": true,
+          "evidence": "A dedicated section titled 'Radical Slicing: Ship by Tomorrow' contains the verbatim framing question: '\"If you had to ship something by tomorrow, what would you build?\"' \u2014 followed by a table selecting the lowest-complexity option from each layer with explicit rationale for each choice (e.g., 'Zero JS, zero new infrastructure', 'Uses existing DB, no new services')."
+        },
+        {
+          "text": "The smallest slice is deployable and provides real user value, even if limited (e.g., basic text filter on product name)",
+          "passed": true,
+          "evidence": "The output states: 'A user types a word in a text box, submits the form, and sees a list of products whose names contain that word \u2014 or a \"no products found\" message. No JavaScript, no new infrastructure, no indexing service. Can be built and deployed in a few hours.' Deployment risk is described as 'Near zero. It\\'s a new page/route, doesn\\'t touch existing product pages. Fully reversible.' The slice filters on product name, providing real search value to users."
+        }
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": 3,
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.67,
+        "passed": 4,
+        "failed": 2,
+        "total": 6,
+        "time_seconds": 68.3,
+        "tokens": 5648,
+        "tool_calls": null,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "Identifies layers that cover data pipeline AND presentation concerns \u2014 not just 'show metrics'",
+          "passed": true,
+          "evidence": "The output identifies 5 layers: Data Sourcing, Data Processing, Visualization, Access & Delivery, and Freshness & Update Cadence. Layers 1, 2, and 5 cover data pipeline concerns (sourcing, aggregation, freshness); layers 3 and 4 cover presentation concerns (how metrics are shown and how the CEO accesses them). This is clearly broader than 'show metrics'."
+        },
+        {
+          "text": "Generates at least 4 distinct options per layer with explicit quality gradient",
+          "passed": true,
+          "evidence": "Each of the 5 layers has exactly 5 options (e.g., Layer 1: 1.1 manual CSV export \u2192 1.5 real-time CDC pipeline; Layer 3: 3.1 plain text Slack message \u2192 3.5 custom interactive web dashboard). All layers follow an explicit gradient from manual/low-tech to automated/enterprise-grade."
+        },
+        {
+          "text": "The smallest vertical slice delivers exactly ONE metric (not all three) to validate the concept before building more",
+          "passed": false,
+          "evidence": "Slice 1 explicitly delivers all three metrics: 'Monthly revenue (current month vs. prior month), Top 5 products by revenue, New customers acquired this month vs. prior month.' The expectation requires exactly one metric in the first slice to validate the concept; this output skips that narrowing and delivers all three at once."
+        },
+        {
+          "text": "Interactivity (drill-down, filters, custom date ranges) is deferred to a follow-up slice \u2014 NOT in the first slice",
+          "passed": true,
+          "evidence": "Slice 1 uses plain text in Slack/email (option 3.1) with no interactive elements. Filters, drill-down, and date ranges first appear in Slice 4: 'Upgrade Layer 3 and Layer 2 to let the CEO answer follow-up questions independently... BI tool with date range filter, product category filter, MoM trend line (3.4 \u2192 3.5)'."
+        },
+        {
+          "text": "The smallest slice explicitly identifies who will use it (e.g., the CEO or one internal user) and what decision it enables",
+          "passed": false,
+          "evidence": "The slice names the user ('The CEO gets the three numbers every Monday without asking') but does not explicitly state what specific decision is enabled. It says 'That alone enables decision-making' \u2014 a generic claim. No concrete decision is identified (e.g., 'decides whether to reorder top product', 'decides whether to increase marketing budget'). The user is clear; the decision is not."
+        },
+        {
+          "text": "Uses the numbered option system (1.1, 1.2, 1.3... for layer 1; 2.1, 2.2... for layer 2) to label options",
+          "passed": true,
+          "evidence": "The output consistently uses the required numbering system throughout all 5 layers: Layer 1 uses 1.1\u20131.5, Layer 2 uses 2.1\u20132.5, Layer 3 uses 3.1\u20133.5, Layer 4 uses 4.1\u20134.5, and Layer 5 uses 5.1\u20135.5. The numbering is also referenced in the slice composition table."
+        }
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": 4,
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.83,
+        "passed": 5,
+        "failed": 1,
+        "total": 6,
+        "time_seconds": 68.4,
+        "tokens": 5810,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "Identifies functional layers for chat: message input, message delivery/routing, message display, history/persistence, presence/status",
+          "passed": false,
+          "evidence": "The output identifies 5 layers: Initiate a conversation, Route to an agent, Exchange messages, Display message history, Close/resolve the conversation. Message input is folded into 'Exchange messages', delivery/routing maps to Layers 2 and 3, message display and history/persistence are covered by Layers 3 and 4. However, 'presence/status' (online/offline indicators, typing indicators, read receipts) is never treated as a functional layer \u2014 it appears only as an omitted detail ('Typing indicators') in the smallest slice summary. The expectation specifically calls out presence/status as a required layer, and the output does not include it."
+        },
+        {
+          "text": "Generates at least 4 options per layer with quality gradient",
+          "passed": true,
+          "evidence": "Every layer generates exactly 5 options (1.1\u20131.5, 2.1\u20132.5, 3.1\u20133.5, 4.1\u20134.5, 5.1\u20135.5). Each layer follows a clear quality gradient from manual/no-tech (e.g., 3.1: shared Google Doc) through increasingly sophisticated automation to enterprise-scale (e.g., 3.5: WebSocket with typing indicators and read receipts). The self-check at the end explicitly confirms 'Options follow quality gradient (manual \u2192 scripted \u2192 automated \u2192 scalable \u2192 enterprise)'."
+        },
+        {
+          "text": "The smallest vertical slice does NOT use WebSockets, Kafka, or Redis \u2014 uses polling, email, or manual checking instead",
+          "passed": true,
+          "evidence": "Slice 1 explicitly selects option 3.3 ('Messages stored in DB, AJAX polling every 3s') for the Exchange layer. Step 3 states: 'No infrastructure. No WebSockets. No Redis. No queues.' Step 4 lists 'Anything requiring WebSockets, Redis, Kafka, or message brokers' as eliminated for the first slice. The self-check also confirms: 'Smallest slice does NOT require new infrastructure (no Redis, no WebSockets, no Kafka)'."
+        },
+        {
+          "text": "Explicitly challenges whether 'real-time' is needed for the first slice \u2014 asks 'can we validate the core value without real-time infrastructure?'",
+          "passed": true,
+          "evidence": "The Key Insight section directly addresses this: 'The instinct with \"real-time chat\" is to reach for WebSockets, Redis pub/sub, and message queues immediately. The Hamburger Method reveals that 3-second AJAX polling is indistinguishable from \"real-time\" for most support conversations \u2014 and it requires zero new infrastructure.' Step 3 also states: 'No infrastructure. No WebSockets. No Redis. No queues. Just something a real customer can use and that teaches you whether this flow has value.' While the exact phrasing 'can we validate the core value without real-time infrastructure?' is not used, the challenge is explicit and substantive."
+        },
+        {
+          "text": "Includes at least one 'manual/crutch' option per layer \u2014 e.g., support agent checks an email inbox instead of a realtime dashboard",
+          "passed": true,
+          "evidence": "Layer 1: option 1.1 \u2014 'Customer sends an email to a support address; support agent opens a reply thread manually'. Layer 2: option 2.1 \u2014 'A single hardcoded agent (you / a teammate) receives all chats via email notification or Slack ping'. Layer 3: option 3.1 \u2014 'Both parties exchange messages by editing a shared Google Doc or Notion page (manual, no tech required)'. Layer 4: option 4.1 \u2014 'No persistent history; messages exist only in the shared doc or live session'. Layer 5: option 5.1 \u2014 'Agent closes the browser tab; no record kept'. Every layer has at least one genuinely manual/crutch option."
+        },
+        {
+          "text": "The smallest slice is designed to validate the core user value (customer gets help) before investing in real-time infrastructure",
+          "passed": true,
+          "evidence": "The 'Why this is enough to ship and learn from' section explicitly frames Slice 1 as a learning vehicle: 'You learn if customers actually want chat vs. email', 'You learn if agents can handle the volume', 'You learn what's missing'. The Key Insight section adds: 'The WebSocket investment becomes justified only after you've validated that customers use chat at all and agents can handle the volume. Ship the polling version first; upgrade to WebSockets when you have evidence it's a bottleneck.' The core user value \u2014 customer gets help from a support agent \u2014 is fully deliverable with Slice 1."
+        }
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": 5,
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 7,
+        "failed": 0,
+        "total": 7,
+        "time_seconds": 60.3,
+        "tokens": 5387,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "Does NOT just split into separate stories \u2014 applies layered options to each authentication concern",
+          "passed": true,
+          "evidence": "The output explicitly structures work as 5 layers (Credential Collection, Identity Verification, MFA Challenge, Session Creation, Session Lifecycle Management), each with 5 options forming a quality gradient. It does not merely list separate stories; it composes slices by selecting one option per layer. The 'Follow-up Slices' section shows incremental advancement through layer options, not story decomposition."
+        },
+        {
+          "text": "Identifies functional authentication layers: identity verification, credential storage, session management, MFA, social providers",
+          "passed": true,
+          "evidence": "Layer 1 (Credential Collection) covers social providers and credential storage, Layer 2 (Identity Verification) explicitly named, Layer 3 (MFA Challenge) explicitly named, Layer 4 (Session Creation) and Layer 5 (Session Lifecycle Management) together cover session management. All five expected concerns are represented."
+        },
+        {
+          "text": "Generates at least 4 options per layer with explicit quality gradient",
+          "passed": true,
+          "evidence": "Every layer has exactly 5 options (1.1\u20131.5, 2.1\u20132.5, 3.1\u20133.5, 4.1\u20134.5, 5.1\u20135.5), each progressing from simplest/manual to enterprise/distributed. Self-check confirms '5 options per layer following manual \u2192 scripted \u2192 automated \u2192 scalable \u2192 enterprise gradient'."
+        },
+        {
+          "text": "The smallest vertical slice is username/password only \u2014 SSO, MFA, and social login are explicitly deferred to follow-up slices",
+          "passed": true,
+          "evidence": "The Smallest Vertical Slice table selects option 1.1 (Username + password form only), option 2.1 (local bcrypt), option 3.1 (No MFA), and in-memory sessions. The text explicitly states: 'This slice does NOT include: social login, MFA, SSO, or session revocation \u2014 all intentionally deferred.'"
+        },
+        {
+          "text": "SSO integration is identified as a high-complexity option and deferred beyond the first 2 slices",
+          "passed": true,
+          "evidence": "SSO (SAML) first appears at option 1.4 and 2.3 in the layer gradients (the 4th of 5 options, implying high complexity). In the follow-up slices, SSO appears only in Slice 5 ('Add enterprise SSO (SAML) \u2014 3-5 days'), which is the last slice, well beyond the first two slices."
+        },
+        {
+          "text": "The smallest slice is production-deployable and provides real value (users can actually log in), not just a prototype",
+          "passed": true,
+          "evidence": "The output states: 'A real user can register, log in, and log out', 'Can be deployed on a single server in hours', 'Validates the session middleware, route guards, and DB wiring are correct', and 'No external dependencies'. The self-check also confirms 'Smallest slice delivers value to at least one real user (can register + login + logout)' and 'Smallest slice deployable in less than 1 day'."
+        },
+        {
+          "text": "Proposes at least 4 follow-up slices showing the incremental path from basic auth to full SSO+MFA",
+          "passed": true,
+          "evidence": "The output proposes exactly 4 follow-up slices: Slice 2 (Google social login), Slice 3 (GitHub social login + session durability), Slice 4 (TOTP-based MFA + JWT), Slice 5 (Enterprise SSO/SAML). Together they form a clear incremental path from basic username/password to full SSO+MFA."
+        }
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": 6,
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.857,
+        "passed": 6,
+        "failed": 1,
+        "total": 7,
+        "time_seconds": 73.9,
+        "tokens": 7012,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "The smallest vertical slice does NOT use machine learning \u2014 uses hardcoded rules, popularity ranking, or manual curation instead",
+          "passed": true,
+          "evidence": "Slice 1 (Step 5) uses: 1.2 Batch query on existing DB tables, 2.2 SQL frequency count (GROUP BY), 3.1 Global bestsellers list (same for everyone), 4.2 Precomputed DB table via nightly cron, 5.2 Manual spot-check. The output explicitly states: 'This slice can be deployed in 1\u20132 days with no new infrastructure and no ML code.'"
+        },
+        {
+          "text": "Machine learning appears as a level-4 or level-5 option within the algorithm/model layer \u2014 not as the starting point",
+          "passed": true,
+          "evidence": "In Layer 3 (Generate Recommendations), ML appears at the highest levels: 3.4 is 'matrix factorization' and 3.5 is 'Two-tower deep learning model'. In Layer 2 (Build profiles), 2.4 is 'Embeddings with a pre-trained model' and 2.5 is 'Full ML pipeline with feature store'. ML is positioned as the last/highest-complexity option in both relevant layers."
+        },
+        {
+          "text": "Identifies layers appropriate to recommendations: data collection, algorithm, candidate selection, ranking, presentation",
+          "passed": true,
+          "evidence": "Five layers identified: (1) Collect User Behavior Signals, (2) Build User/Item Profiles, (3) Generate Recommendations, (4) Serve Recommendations, (5) Evaluate & Improve. Data collection = Layer 1. Algorithm/candidate generation = Layer 3. Presentation/serving = Layer 4. The layers cover the expected concerns, though candidate selection and ranking are combined into Layer 3 rather than separated. The layer decomposition is appropriate and domain-specific."
+        },
+        {
+          "text": "Generates at least 4 options per layer with explicit quality gradient",
+          "passed": true,
+          "evidence": "Every layer has exactly 5 options (1\u20135) with a clear low-to-high quality progression. For example, Layer 3: 3.1 Static bestsellers list \u2192 3.2 Rule-based filtering \u2192 3.3 Item-item CF \u2192 3.4 User-user CF/matrix factorization \u2192 3.5 Two-tower deep learning. The self-check confirms: 'Generated 5 options per layer following the quality gradient (manual \u2192 scripted \u2192 automated \u2192 scalable \u2192 enterprise)'."
+        },
+        {
+          "text": "Explicitly asks whether the business value (increased sales/engagement) can be validated with a simple rule-based approach before investing in ML infrastructure",
+          "passed": false,
+          "evidence": "The output asserts the principle rather than framing it as a question to the stakeholder. It states: 'The team learns whether users actually click on recommendations before investing in ML' and 'The trap to avoid: Building Slice 4 first. Most teams that do this spend 6 weeks on ML infrastructure and then discover users don't click on recommendations because the UI placement was wrong.' While the underlying insight is present, there is no explicit question directed at the user/stakeholder asking them to confirm whether a simple rule-based approach can validate the business value before investing in ML infrastructure."
+        },
+        {
+          "text": "The smallest slice can realistically be shipped within 1-2 days \u2014 not weeks \u2014 and produces visible recommendations to users",
+          "passed": true,
+          "evidence": "Step 3 states: 'This slice can be deployed in 1\u20132 days with no new infrastructure and no ML code.' Slice 1 in Step 5 confirms: build time is '1\u20132 days' and it 'delivers real value: users see Recommended for you sections instead of nothing.' The summary table also lists Slice 1 build time as '1\u20132 days' with value 'Recommended for you section appears; validates UI/UX'."
+        },
+        {
+          "text": "Data collection is identified as a separate layer/concern \u2014 NOT bundled into 'we need ML data first'",
+          "passed": true,
+          "evidence": "Layer 1 is dedicated entirely to 'Collect User Behavior Signals' with its own 5 options ranging from manual DB export (1.1) to a real-time clickstream platform (1.5). The lowest option (1.2 Batch query on existing data) is explicitly chosen for Slice 1, demonstrating that data collection is decoupled from ML and starts from existing DB tables with no new data pipeline required."
+        }
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": 7,
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 4,
+        "failed": 0,
+        "total": 4,
+        "time_seconds": 30.5,
+        "tokens": 1742,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "Identifies the feature as small (a few hours at most) and does not require hamburger method decomposition",
+          "passed": true,
+          "evidence": "Output explicitly states: 'This feature is already small \u2014 well under 1 day of work' and 'Estimated effort: 1\u20133 hours, including writing and testing.' The skill decision section is titled 'Hamburger Method Not Applicable'."
+        },
+        {
+          "text": "Does NOT produce a multi-layer table with 4-5 options per layer \u2014 avoids over-engineering a trivial UI interaction",
+          "passed": true,
+          "evidence": "The output contains no table, no layer breakdown, and no options list. The entire output is a short explanation of why the feature is trivial and a direct implementation guide."
+        },
+        {
+          "text": "Explicitly recommends implementing it directly without the hamburger method process",
+          "passed": true,
+          "evidence": "Output states: 'Do not apply the hamburger method. Implement this directly.' and 'That's the complete implementation. It does not need layered analysis or incremental delivery planning.'"
+        },
+        {
+          "text": "Does NOT add 'slices', 'layers', or incremental rollout plans to a feature that is already a single-session implementation",
+          "passed": true,
+          "evidence": "No slices, layers, or rollout plan appear in the output. The 5-step guide is a flat implementation checklist (locate component, add button, attach handler, show confirmation, handle fallback), not an incremental delivery plan."
+        }
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": 1,
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.67,
+        "passed": 4,
+        "failed": 2,
+        "total": 6,
+        "time_seconds": 71.4,
+        "tokens": 5821,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "Identifies functional layers (detect event, identify recipients, format message, deliver, track) NOT horizontal technical layers (frontend, backend, database)",
+          "passed": false,
+          "evidence": "The output decomposes the feature into: Data/Persistence, Price Detection/Business Logic, Notification Delivery, User Interface/Configuration, and Scheduling/Infrastructure. These are horizontal technical layers (data tier, logic tier, delivery tier, UI tier, infra tier) rather than the functional pipeline stages the expectation demands (detect event \u2192 identify recipients \u2192 format message \u2192 deliver \u2192 track). For example, 'identify recipients' and 'format message' are absent as first-class layers; instead the output bundles concerns into technical silos. 'User Interface/Configuration' is a classic horizontal layer, not a functional step in the notification pipeline."
+        },
+        {
+          "text": "Generates at least 4 distinct options for EACH layer \u2014 not just 'simple vs complex'",
+          "passed": true,
+          "evidence": "Every layer contains exactly 5 options with distinct names and mechanisms: Layer 1 has in-memory map, single table, table+price_history, Redis cache, event-sourced ledger. Layer 2 has direct comparison, percentage threshold, absolute threshold, debounce/cooldown, ML anomaly detection. Layer 3 has in-app record, email, browser push, mobile push, multi-channel routing. Layer 4 has API-only, Watch button, Watch+threshold input, Watch list management page, preferences center. Layer 5 has manual script, cron job, background job queue, event-driven trigger, serverless function. All options are meaningfully distinct, not just variations of 'simple vs complex'."
+        },
+        {
+          "text": "Options within each layer follow a quality gradient from manual/hardcoded to automated/scalable",
+          "passed": true,
+          "evidence": "Each layer's options are ordered from simplest/most manual to most sophisticated/scalable. Examples: Layer 5 goes from 'Manual trigger (script/cURL)' \u2192 'Cron job' \u2192 'Background job queue' \u2192 'Event-driven trigger' \u2192 'Serverless scheduled function'. Layer 1 goes from 'In-memory map' \u2192 'Single DB table' \u2192 'Table + price_history' \u2192 'Redis cache' \u2192 'Event-sourced ledger'. The gradient is consistent across all five layers."
+        },
+        {
+          "text": "The proposed smallest vertical slice uses level-1 or level-2 options (manual/scripted) \u2014 NOT level-4 or level-5 options",
+          "passed": true,
+          "evidence": "The slice table shows: Data=option 2 (Single database table), Price Detection=option 1 (Direct comparison: current_price < last_known_price), Notification Delivery=option 2 (Email via existing transactional email service), UI=option 2 (Single 'Watch this product' button), Scheduling=option 1 (Manual trigger / cron). All selections are from the first two tiers; no level-4 or level-5 option was chosen."
+        },
+        {
+          "text": "The smallest slice is end-to-end: covers all layers, even if at the lowest quality level",
+          "passed": true,
+          "evidence": "The slice explicitly chooses one option for each of the five layers (Data/Persistence, Price Detection/Business Logic, Notification Delivery, User Interface/Configuration, Scheduling/Infrastructure) and describes how they work together: a user clicks Watch \u2192 a DB row is inserted \u2192 a script compares prices \u2192 an email is sent. The acceptance criteria section validates all five layers are exercisable together."
+        },
+        {
+          "text": "Proposes at least 2 follow-up slices that improve one or two layers incrementally",
+          "passed": false,
+          "evidence": "The output ends with a summary paragraph that says 'Subsequent iterations add sophistication layer by layer, each validated against real usage before investing in the next level of complexity' but does not define any concrete follow-up slices. No second or third slice is named, described, or composed with a layer selection table. The document has no Step 4 or follow-up slice section at all."
+        }
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": 2,
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.8,
+        "passed": 4,
+        "failed": 1,
+        "total": 5,
+        "time_seconds": 71.7,
+        "tokens": 6731,
+        "tool_calls": null,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "Identifies layers appropriate to search: input capture, query execution, result rendering, ranking, and tracking \u2014 or equivalent functional decomposition",
+          "passed": true,
+          "evidence": "The output defines 6 layers: UI/Entry Point (input capture), Results Presentation (result rendering), API/Communication, Search Logic/Matching (query execution and ranking in option D), Data Access, Data Storage/Index. Tracking/analytics is absent, but the expectation accepts 'equivalent functional decomposition' and the 6-layer decomposition is thorough and functionally appropriate for a search feature."
+        },
+        {
+          "text": "Generates at least 4 distinct options per layer following the quality gradient",
+          "passed": true,
+          "evidence": "Every layer has exactly 5 options (A\u2013E) with explicitly labeled complexity from 'Minimal' through 'Very High'. For example, Layer 4 (Search Logic) goes from 'SQL LIKE' (Minimal) to 'Semantic/vector search' (Very High). All 6 layers meet the minimum of 4 distinct options."
+        },
+        {
+          "text": "The smallest vertical slice does NOT require a search engine (Elasticsearch, Solr) \u2014 starts with simple string matching or a filtered list",
+          "passed": true,
+          "evidence": "The chosen slice for Search Logic is 'Option A \u2014 SQL LIKE \\'%query%\\' on the name column \u2014 exact substring match'. The rationale explicitly states 'No new dependencies'. Elasticsearch/Solr appear only as high-complexity options (D/E) and are not selected for the minimum slice."
+        },
+        {
+          "text": "Explicitly applies the 'ship by tomorrow' question to force radical slicing to the simplest possible option",
+          "passed": false,
+          "evidence": "No instance of 'ship by tomorrow', 'could we ship this tomorrow', or any equivalent forcing question appears in the output. Step 3 directly selects minimal options without invoking that framing. The rationale for each choice is technical simplicity ('Zero JavaScript', 'No new dependencies') but the explicit temporal forcing question is absent."
+        },
+        {
+          "text": "The smallest slice is deployable and provides real user value, even if limited (e.g., basic text filter on product name)",
+          "passed": true,
+          "evidence": "The output states: 'It is shippable to production and genuinely useful (users can find products by name).' The user story is concrete: 'As a shopper, I can type a word into a search box and press Enter to see a list of products whose names contain that word.' The slice touches all 6 layers end-to-end and requires no new infrastructure."
+        }
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": 3,
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.83,
+        "passed": 5,
+        "failed": 1,
+        "total": 6,
+        "time_seconds": 84.6,
+        "tokens": 6780,
+        "tool_calls": null,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "Identifies layers that cover data pipeline AND presentation concerns \u2014 not just 'show metrics'",
+          "passed": true,
+          "evidence": "Output identifies 5 layers: (1) Data Source, (2) Data Processing, (3) Storage / Access, (4) Presentation / Visualization, (5) Delivery / Access Control. Layers 1\u20133 explicitly cover the data pipeline (raw data ingestion, aggregation, storage), and layers 4\u20135 cover presentation and delivery. The output states: 'These layers cover the end-to-end journey from raw data to CEO decision.'"
+        },
+        {
+          "text": "Generates at least 4 distinct options per layer with explicit quality gradient",
+          "passed": true,
+          "evidence": "Every layer contains exactly 5 options numbered X.1\u2013X.5, each with a clearly escalating quality gradient. Example for Layer 1: 1.1 hardcoded sample data \u2192 1.2 manual export \u2192 1.3 scheduled pull \u2192 1.4 ETL \u2192 1.5 real-time streaming. The self-check confirms: 'Options follow a quality gradient (manual \u2192 scripted \u2192 automated \u2192 scalable \u2192 enterprise)'. All 5 layers follow this pattern."
+        },
+        {
+          "text": "The smallest vertical slice delivers exactly ONE metric (not all three) to validate the concept before building more",
+          "passed": false,
+          "evidence": "Slice 1 delivers all three metrics at once: 'CEO sees this month's revenue vs. last month / CEO sees top 5 products by revenue this month / CEO sees new customer count trend (last 3 months)'. There is no attempt to scope down to a single metric as a concept validator. The output treats all three KPIs as equally necessary for Slice 1."
+        },
+        {
+          "text": "Interactivity (drill-down, filters, custom date ranges) is deferred to a follow-up slice \u2014 NOT in the first slice",
+          "passed": true,
+          "evidence": "Slice 1 uses option 4.1 (plain text email/Slack), which has no interactivity. The 'What it does NOT include' list for Slice 1 explicitly excludes filters. Option 4.4 (interactive dashboard with filters) is deferred to Slice 4: 'Improve Layer 5 and Layer 4: add authentication and basic date filtering.'"
+        },
+        {
+          "text": "The smallest slice explicitly identifies who will use it (e.g., the CEO or one internal user) and what decision it enables",
+          "passed": true,
+          "evidence": "Slice 1 names the CEO as the user multiple times and states the decision enabled: 'CEO can make a real decision TODAY'. It also lists specific informational outputs: revenue vs. last month, top 5 products, new customer count trend. The feature description also anchors the stakeholder: 'so our CEO can make decisions'."
+        },
+        {
+          "text": "Uses the numbered option system (1.1, 1.2, 1.3... for layer 1; 2.1, 2.2... for layer 2) to label options",
+          "passed": true,
+          "evidence": "All options use the specified numbering convention throughout. Layer 1 options are labeled 1.1 through 1.5, Layer 2 options 2.1 through 2.5, and so on through Layer 5 (5.1\u20135.5). The Slice composition table also references these labels explicitly (e.g., '1.2 \u2014 Manual export from existing system')."
+        }
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": 4,
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.83,
+        "passed": 5,
+        "failed": 1,
+        "total": 6,
+        "time_seconds": 79.3,
+        "tokens": 5832,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "Identifies functional layers for chat: message input, message delivery/routing, message display, history/persistence, presence/status",
+          "passed": false,
+          "evidence": "The output identifies 5 functional layers: Message Input, Message Routing/Delivery, Agent Response, Message Display, and Conversation History/Persistence. Four of the five expected layers are present. However, 'presence/status' is not identified as a layer \u2014 it is mentioned only as something the smallest slice does NOT need ('Presence/status indicators'). An 'Agent Response' layer is included instead. The expectation lists presence/status as one of the required layers, which is absent."
+        },
+        {
+          "text": "Generates at least 4 options per layer with quality gradient",
+          "passed": true,
+          "evidence": "Every layer has exactly 5 options (1.1\u20131.5, 2.1\u20132.5, 3.1\u20133.5, 4.1\u20134.5, 5.1\u20135.5), each following a clear quality gradient from manual/no-infra (e.g., static HTML form submitted by email) to enterprise-level (e.g., fully integrated chat with typing indicators, rich text, CRM integration). All 5 layers meet the 4-option minimum."
+        },
+        {
+          "text": "The smallest vertical slice does NOT use WebSockets, Kafka, or Redis \u2014 uses polling, email, or manual checking instead",
+          "passed": true,
+          "evidence": "Slice 1 explicitly states it does NOT need 'WebSockets', 'Redis, Kafka, or any message broker', or 'A real-time connection layer'. The slice uses: web form POST to DB (1.2), email to shared inbox (2.1), agent replies by email with manual DB entry (3.1), customer receives reply via email (4.1), and single DB table (5.2). All are email/manual-based, not real-time infrastructure."
+        },
+        {
+          "text": "Explicitly challenges whether 'real-time' is needed for the first slice \u2014 asks 'can we validate the core value without real-time infrastructure?'",
+          "passed": true,
+          "evidence": "The output opens with a dedicated section 'A Critical Question Before We Start' that states: 'Real-time is an implementation detail, not a user need' and 'Ask yourself: Can we validate that customers actually want to communicate with support agents via chat \u2014 before investing in real-time infrastructure?' The Self-Check also confirms: '[x] Explicitly challenged whether \"real-time\" is needed for Slice 1'."
+        },
+        {
+          "text": "Includes at least one 'manual/crutch' option per layer \u2014 e.g., support agent checks an email inbox instead of a realtime dashboard",
+          "passed": true,
+          "evidence": "Each layer includes a manual/crutch option: Layer 1 has 1.1 (static HTML form submitted by email, no JS, no database); Layer 2 has 2.1 (agent checks shared email inbox manually); Layer 3 has 3.1 (agent replies by email, reply manually copy-pasted into DB by a human operator); Layer 4 has 4.1 (customer receives reply via email to their inbox) and 4.2 (customer manually refreshes a page); Layer 5 has 5.1 (no persistence \u2014 conversation exists only in email threads)."
+        },
+        {
+          "text": "The smallest slice is designed to validate the core user value (customer gets help) before investing in real-time infrastructure",
+          "passed": true,
+          "evidence": "The output explicitly frames Slice 1 around validation: 'This slice answers the most important question: Do customers actually use this channel to get support?' and 'Validating the core interaction (customer asks, agent answers, customer gets help) before investing in real-time delivery is the correct sequencing.' Follow-up slices also confirm real-time infrastructure is deferred until after validation: 'Near-Real-Time Experience (Begin real-time investment only after validation)'."
+        }
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": 5,
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.857,
+        "passed": 6,
+        "failed": 1,
+        "total": 7,
+        "time_seconds": 84.4,
+        "tokens": 8203,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "Does NOT just split into separate stories \u2014 applies layered options to each authentication concern",
+          "passed": true,
+          "evidence": "The output explicitly applies the Hamburger Method, identifying 6 horizontal layers (Data, Domain/Business Logic, External Integrations, API/Transport, Security/Cross-Cutting, Frontend/UI) and generating 5 options per layer. It does not simply enumerate stories. Step 3 composes a vertical slice by choosing one option per layer."
+        },
+        {
+          "text": "Identifies functional authentication layers: identity verification, credential storage, session management, MFA, social providers",
+          "passed": false,
+          "evidence": "The output identifies architectural/technical layers (Data, Domain Logic, External Integrations, API, Security, Frontend) rather than functional authentication concern layers. Identity verification, credential storage, session management, MFA, and social providers appear as sub-topics within layers or as excluded scope items \u2014 not as top-level layers. The structure is architectural, not concern-oriented as the expectation requires."
+        },
+        {
+          "text": "Generates at least 4 options per layer with explicit quality gradient",
+          "passed": true,
+          "evidence": "Every layer has 5 options (A through E). Each set of options shows an explicit quality/complexity gradient: e.g., Layer 1 goes from 'single users table with JSON columns' (simplest) to 'append-only event log' (most complex); Layer 6 goes from 'server-rendered HTML forms' (simplest) to 'progressive enhancement' (most complex). The gradient is explicit and documented across all 6 layers."
+        },
+        {
+          "text": "The smallest vertical slice is username/password only \u2014 SSO, MFA, and social login are explicitly deferred to follow-up slices",
+          "passed": true,
+          "evidence": "Slice 1 scope section states: 'Slice 1 Scope (what is explicitly excluded): Google OAuth, GitHub OAuth, SSO (SAML / OIDC), MFA (TOTP, SMS, hardware key)'. The slice is defined as 'Email + Password login that returns a session token and works end-to-end'."
+        },
+        {
+          "text": "SSO integration is identified as a high-complexity option and deferred beyond the first 2 slices",
+          "passed": true,
+          "evidence": "SSO via OIDC appears as Slice 7 and SSO via SAML 2.0 as Slice 8, well beyond the first 2 slices. In Layer 3 options, Option E notes SAML as 'non-trivial XML/crypto handling'. SSO is excluded from Slice 1 scope explicitly and placed at slices 7-8 in the roadmap."
+        },
+        {
+          "text": "The smallest slice is production-deployable and provides real value (users can actually log in), not just a prototype",
+          "passed": true,
+          "evidence": "The output states: 'Gives the team a working, deployable login feature from day one' and describes complete end-to-end functionality including: user registration endpoint, login with bcrypt-hashed passwords, session management via HttpOnly cookies, protected route middleware, logout, audit logging, and rate limiting. The rationale section explicitly says 'validates the core session contract' and 'working, deployable login feature'. The chosen options (normalized schema, service layer, opaque session tokens) are production-grade choices, not prototype shortcuts."
+        },
+        {
+          "text": "Proposes at least 4 follow-up slices showing the incremental path from basic auth to full SSO+MFA",
+          "passed": true,
+          "evidence": "The roadmap table in Step 4 lists 9 follow-up slices (Slices 2-10): Slice 2 (Google OAuth), Slice 3 (GitHub OAuth), Slice 4 (TOTP MFA), Slice 5 (SMS MFA), Slice 6 (Refresh token rotation), Slice 7 (SSO via OIDC), Slice 8 (SSO via SAML 2.0), Slice 9 (WebAuthn), Slice 10 (Admin session UI). Each lists what it builds on, showing a clear incremental path to full SSO+MFA."
+        }
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": 6,
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.86,
+        "passed": 6,
+        "failed": 1,
+        "total": 7,
+        "time_seconds": 65.9,
+        "tokens": 9311,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "The smallest vertical slice does NOT use machine learning \u2014 uses hardcoded rules, popularity ranking, or manual curation instead",
+          "passed": true,
+          "evidence": "Slice 1 ('Bestsellers as recommendations') uses 'SQL query: top 10 most purchased products in the last 30 days' (option 3.1) and returns the same top-10 bestseller list to all users. No ML model is involved anywhere in the slice."
+        },
+        {
+          "text": "Machine learning appears as a level-4 or level-5 option within the algorithm/model layer \u2014 not as the starting point",
+          "passed": true,
+          "evidence": "Layer 2 (Build user-item representation): ML appears at 2.4 ('Train a collaborative filtering model') and 2.5 ('Train a deep learning model'). Layer 3 (Generate recommendations): ML appears at 3.5 ('Real-time ML inference with a trained model served via a prediction API'). Both layers start from hardcoded/manual options and ML is reserved for levels 4 and 5."
+        },
+        {
+          "text": "Identifies layers appropriate to recommendations: data collection, algorithm, candidate selection, ranking, presentation",
+          "passed": true,
+          "evidence": "Six layers are identified: L1 'Collect user behavior data' (data collection), L2 'Build user-item representation' (algorithm/model input), L3 'Generate recommendations' (candidate selection + ranking combined), L4 'Serve recommendations', L5 'Present recommendations to the user' (presentation), L6 'Measure recommendation quality'. Data collection, algorithm, and presentation are explicitly present; candidate selection and ranking are handled within L3."
+        },
+        {
+          "text": "Generates at least 4 options per layer with explicit quality gradient",
+          "passed": true,
+          "evidence": "Every layer has exactly 5 options (x.1 through x.5) with an explicit manual-to-enterprise gradient. For example Layer 3 goes from '3.1: Return a hardcoded list of best-selling products' to '3.5: Real-time ML inference with a trained model served via a prediction API'."
+        },
+        {
+          "text": "Explicitly asks whether the business value (increased sales/engagement) can be validated with a simple rule-based approach before investing in ML infrastructure",
+          "passed": false,
+          "evidence": "The output never poses this as an explicit question or framing. The Step 3 prompt is 'If you had to ship something by tomorrow, what would you build?' and the 'Why this works' section mentions 'Delivers measurable business value (bestsellers convert)' but this is a statement justifying the slice choice, not a challenge to the team about whether ML infrastructure is warranted. The evaluation question \u2014 can business value be validated with rules before committing to ML \u2014 is never surfaced."
+        },
+        {
+          "text": "The smallest slice can realistically be shipped within 1-2 days \u2014 not weeks \u2014 and produces visible recommendations to users",
+          "passed": true,
+          "evidence": "Slice 1 is labeled 'ship in 1 day', requires no new infrastructure, uses the existing orders table and an existing 'You might also like' section in the UI, and renders 'a basic product card grid' (option 5.2) visible to real users."
+        },
+        {
+          "text": "Data collection is identified as a separate layer/concern \u2014 NOT bundled into 'we need ML data first'",
+          "passed": true,
+          "evidence": "Layer 1 ('Collect user behavior data') is a standalone layer with 5 independent options ranging from a static CSV to a full behavioral data platform. The smallest slice uses option 1.2 ('Log page views and purchases to a simple database table via existing server-side events') \u2014 explicitly decoupled from any ML data requirement."
+        }
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": 7,
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.5,
+        "passed": 2,
+        "failed": 2,
+        "total": 4,
+        "time_seconds": 75.1,
+        "tokens": 7106,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "Identifies the feature as small (a few hours at most) and does not require hamburger method decomposition",
+          "passed": true,
+          "evidence": "Output states 'Effort estimate: 1\u20132 hours' for the minimal slice and concludes 'This feature does not benefit meaningfully from hamburger slicing. It should be implemented directly as a single, small task.' The feature is recognized as trivial in scope."
+        },
+        {
+          "text": "Does NOT produce a multi-layer table with 4-5 options per layer \u2014 avoids over-engineering a trivial UI interaction",
+          "passed": false,
+          "evidence": "The output produces exactly 6 layers (UI Component, Interaction/UX, Clipboard API, State/Logic, Accessibility, Testing), each with a table of 5 options (A through E) with trade-offs. This is a full hamburger decomposition applied to a feature the model itself later acknowledges is trivially small. The model did exactly what this expectation says it should not do."
+        },
+        {
+          "text": "Explicitly recommends implementing it directly without the hamburger method process",
+          "passed": true,
+          "evidence": "Under 'Observation: Is the Hamburger Method Necessary Here?' the output states: 'This feature does not benefit meaningfully from hamburger slicing. It should be implemented directly as a single, small task. The Hamburger Method would add more overhead than value here.' Also the summary says 'deeper hamburger slicing is not needed \u2014 ship the whole thing in one iteration.'"
+        },
+        {
+          "text": "Does NOT add 'slices', 'layers', or incremental rollout plans to a feature that is already a single-session implementation",
+          "passed": false,
+          "evidence": "The output defines 6 layers in a full layer-identification table and then composes 3 explicit vertical slices (Slice 1 Minimal, Slice 2 Polished, Slice 3 Hardened) with effort estimates and incremental rollout plans. The word 'slice' appears 25+ times and 'layer' appears throughout. The entire document is structured as a multi-slice incremental rollout for what the model itself acknowledges is a trivial feature."
+        }
+      ],
+      "notes": []
+    }
+  ],
+  "run_summary": {
+    "with_skill": {
+      "pass_rate": {
+        "mean": 0.9081,
+        "stddev": 0.1286,
+        "min": 0.67,
+        "max": 1.0
+      },
+      "time_seconds": {
+        "mean": 58.6286,
+        "stddev": 14.6676,
+        "min": 30.5,
+        "max": 73.9
+      },
+      "tokens": {
+        "mean": 5475.4286,
+        "stddev": 1864.573,
+        "min": 1742,
+        "max": 7554
+      }
+    },
+    "without_skill": {
+      "pass_rate": {
+        "mean": 0.7639,
+        "stddev": 0.1332,
+        "min": 0.5,
+        "max": 0.86
+      },
+      "time_seconds": {
+        "mean": 76.0571,
+        "stddev": 7.0458,
+        "min": 65.9,
+        "max": 84.6
+      },
+      "tokens": {
+        "mean": 7112.0,
+        "stddev": 1264.0137,
+        "min": 5821,
+        "max": 9311
+      }
+    },
+    "delta": {
+      "pass_rate": "+0.14",
+      "time_seconds": "-17.4",
+      "tokens": "-1637"
+    }
+  },
+  "notes": []
+}

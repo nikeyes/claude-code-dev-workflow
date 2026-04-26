@@ -1,0 +1,13 @@
+{
+  "eval_id": 4,
+  "eval_name": "resist-infrastructure-first-instinct",
+  "prompt": "/hamburger-method Implement a real-time chat feature between customers and support agents",
+  "assertions": [
+    {"id": "identifies-chat-layers", "text": "Identifies functional layers for chat: message input, message delivery/routing, message display, history/persistence, presence/status"},
+    {"id": "four-options-per-layer", "text": "Generates at least 4 options per layer with quality gradient"},
+    {"id": "no-websocket-in-slice-1", "text": "The smallest vertical slice does NOT use WebSockets, Kafka, or Redis — uses polling, email, or manual checking instead"},
+    {"id": "challenges-realtime-assumption", "text": "Explicitly challenges whether 'real-time' is needed for the first slice — asks 'can we validate the core value without real-time infrastructure?'"},
+    {"id": "manual-crutch-option", "text": "Includes at least one 'manual/crutch' option per layer — e.g., support agent checks an email inbox instead of a realtime dashboard"},
+    {"id": "smallest-slice-validates-core-value", "text": "The smallest slice is designed to validate the core user value (customer gets help) before investing in real-time infrastructure"}
+  ]
+}

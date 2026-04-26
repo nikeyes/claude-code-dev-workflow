@@ -1,0 +1,106 @@
+{
+  "expectations": [
+    {
+      "text": "Does NOT just split into separate stories — applies layered options to each authentication concern",
+      "passed": true,
+      "evidence": "The output explicitly structures work as 5 layers (Credential Collection, Identity Verification, MFA Challenge, Session Creation, Session Lifecycle Management), each with 5 options forming a quality gradient. It does not merely list separate stories; it composes slices by selecting one option per layer. The 'Follow-up Slices' section shows incremental advancement through layer options, not story decomposition."
+    },
+    {
+      "text": "Identifies functional authentication layers: identity verification, credential storage, session management, MFA, social providers",
+      "passed": true,
+      "evidence": "Layer 1 (Credential Collection) covers social providers and credential storage, Layer 2 (Identity Verification) explicitly named, Layer 3 (MFA Challenge) explicitly named, Layer 4 (Session Creation) and Layer 5 (Session Lifecycle Management) together cover session management. All five expected concerns are represented."
+    },
+    {
+      "text": "Generates at least 4 options per layer with explicit quality gradient",
+      "passed": true,
+      "evidence": "Every layer has exactly 5 options (1.1–1.5, 2.1–2.5, 3.1–3.5, 4.1–4.5, 5.1–5.5), each progressing from simplest/manual to enterprise/distributed. Self-check confirms '5 options per layer following manual → scripted → automated → scalable → enterprise gradient'."
+    },
+    {
+      "text": "The smallest vertical slice is username/password only — SSO, MFA, and social login are explicitly deferred to follow-up slices",
+      "passed": true,
+      "evidence": "The Smallest Vertical Slice table selects option 1.1 (Username + password form only), option 2.1 (local bcrypt), option 3.1 (No MFA), and in-memory sessions. The text explicitly states: 'This slice does NOT include: social login, MFA, SSO, or session revocation — all intentionally deferred.'"
+    },
+    {
+      "text": "SSO integration is identified as a high-complexity option and deferred beyond the first 2 slices",
+      "passed": true,
+      "evidence": "SSO (SAML) first appears at option 1.4 and 2.3 in the layer gradients (the 4th of 5 options, implying high complexity). In the follow-up slices, SSO appears only in Slice 5 ('Add enterprise SSO (SAML) — 3-5 days'), which is the last slice, well beyond the first two slices."
+    },
+    {
+      "text": "The smallest slice is production-deployable and provides real value (users can actually log in), not just a prototype",
+      "passed": true,
+      "evidence": "The output states: 'A real user can register, log in, and log out', 'Can be deployed on a single server in hours', 'Validates the session middleware, route guards, and DB wiring are correct', and 'No external dependencies'. The self-check also confirms 'Smallest slice delivers value to at least one real user (can register + login + logout)' and 'Smallest slice deployable in less than 1 day'."
+    },
+    {
+      "text": "Proposes at least 4 follow-up slices showing the incremental path from basic auth to full SSO+MFA",
+      "passed": true,
+      "evidence": "The output proposes exactly 4 follow-up slices: Slice 2 (Google social login), Slice 3 (GitHub social login + session durability), Slice 4 (TOTP-based MFA + JWT), Slice 5 (Enterprise SSO/SAML). Together they form a clear incremental path from basic username/password to full SSO+MFA."
+    }
+  ],
+  "summary": {
+    "passed": 7,
+    "failed": 0,
+    "total": 7,
+    "pass_rate": 1.0
+  },
+  "execution_metrics": {
+    "output_chars": 5387,
+    "transcript_chars": 0
+  },
+  "timing": {
+    "executor_duration_seconds": 60.3,
+    "grader_duration_seconds": null,
+    "total_duration_seconds": 60.3
+  },
+  "claims": [
+    {
+      "claim": "Identified 5 clear functional layers (not just frontend/backend/DB)",
+      "type": "quality",
+      "verified": true,
+      "evidence": "All 5 layers are functional/behavioral (credential collection, identity verification, MFA challenge, session creation, session lifecycle) rather than architectural tiers."
+    },
+    {
+      "claim": "Generated 5 options per layer",
+      "type": "factual",
+      "verified": true,
+      "evidence": "Counted 5 numbered options for each of the 5 layers (options x.1 through x.5 for layers 1–5)."
+    },
+    {
+      "claim": "Smallest slice delivers value to at least one real user",
+      "type": "quality",
+      "verified": true,
+      "evidence": "Slice 1 uses bcrypt password check against a real DB table and provides register/login/logout — this is real functionality, not a mock or stub."
+    },
+    {
+      "claim": "Smallest slice deployable in less than 1 day",
+      "type": "quality",
+      "verified": true,
+      "evidence": "Output states 'Can be deployed on a single server in hours' with no external dependencies (no Redis, no OAuth, no MFA)."
+    },
+    {
+      "claim": "4 follow-up slices form a complete incremental path",
+      "type": "quality",
+      "verified": true,
+      "evidence": "Slices 2–5 incrementally add Google login, GitHub login, TOTP MFA, and enterprise SAML SSO respectively, each building on the prior slice."
+    }
+  ],
+  "user_notes_summary": {
+    "uncertainties": [],
+    "needs_review": [],
+    "workarounds": []
+  },
+  "eval_feedback": {
+    "suggestions": [
+      {
+        "assertion": "Identifies functional authentication layers: identity verification, credential storage, session management, MFA, social providers",
+        "reason": "The assertion lists 'credential storage' as an expected layer, but the output names it 'Credential Collection'. These are subtly different concerns (collecting credentials vs. storing them). The output's Layer 1 is about how the user provides proof of identity (form, OAuth, SAML), not about how credentials are stored (which overlaps with Layer 2). The assertion would benefit from clearer terminology to avoid ambiguity in borderline cases."
+      },
+      {
+        "reason": "No assertion checks whether the quality gradient within each layer is monotonically increasing in complexity — a response could list 5 options in random complexity order and still pass expectation 3. Adding an assertion like 'each layer's options form a recognizable progression from trivial to enterprise-scale' would make the eval more discriminating."
+      },
+      {
+        "reason": "No assertion checks that follow-up slices are individually deployable (not just cumulative). A response could propose follow-up slices that each require all previous slices, making them dependent rather than incremental. The current assertion only checks count and direction, not deployability of each slice."
+      }
+    ],
+    "overall": "The eval is well-designed and covers the key behaviors of the Hamburger Method for this complex scenario. The main gaps are around gradient quality verification within layers and per-slice deployability of follow-ups."
+  }
+}

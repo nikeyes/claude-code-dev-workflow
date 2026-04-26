@@ -1,0 +1,102 @@
+{
+  "expectations": [
+    {
+      "text": "The smallest vertical slice does NOT use machine learning — uses hardcoded rules, popularity ranking, or manual curation instead",
+      "passed": true,
+      "evidence": "Slice 1 (Step 5) uses: 1.2 Batch query on existing DB tables, 2.2 SQL frequency count (GROUP BY), 3.1 Global bestsellers list (same for everyone), 4.2 Precomputed DB table via nightly cron, 5.2 Manual spot-check. The output explicitly states: 'This slice can be deployed in 1–2 days with no new infrastructure and no ML code.'"
+    },
+    {
+      "text": "Machine learning appears as a level-4 or level-5 option within the algorithm/model layer — not as the starting point",
+      "passed": true,
+      "evidence": "In Layer 3 (Generate Recommendations), ML appears at the highest levels: 3.4 is 'matrix factorization' and 3.5 is 'Two-tower deep learning model'. In Layer 2 (Build profiles), 2.4 is 'Embeddings with a pre-trained model' and 2.5 is 'Full ML pipeline with feature store'. ML is positioned as the last/highest-complexity option in both relevant layers."
+    },
+    {
+      "text": "Identifies layers appropriate to recommendations: data collection, algorithm, candidate selection, ranking, presentation",
+      "passed": true,
+      "evidence": "Five layers identified: (1) Collect User Behavior Signals, (2) Build User/Item Profiles, (3) Generate Recommendations, (4) Serve Recommendations, (5) Evaluate & Improve. Data collection = Layer 1. Algorithm/candidate generation = Layer 3. Presentation/serving = Layer 4. The layers cover the expected concerns, though candidate selection and ranking are combined into Layer 3 rather than separated. The layer decomposition is appropriate and domain-specific."
+    },
+    {
+      "text": "Generates at least 4 options per layer with explicit quality gradient",
+      "passed": true,
+      "evidence": "Every layer has exactly 5 options (1–5) with a clear low-to-high quality progression. For example, Layer 3: 3.1 Static bestsellers list → 3.2 Rule-based filtering → 3.3 Item-item CF → 3.4 User-user CF/matrix factorization → 3.5 Two-tower deep learning. The self-check confirms: 'Generated 5 options per layer following the quality gradient (manual → scripted → automated → scalable → enterprise)'."
+    },
+    {
+      "text": "Explicitly asks whether the business value (increased sales/engagement) can be validated with a simple rule-based approach before investing in ML infrastructure",
+      "passed": false,
+      "evidence": "The output asserts the principle rather than framing it as a question to the stakeholder. It states: 'The team learns whether users actually click on recommendations before investing in ML' and 'The trap to avoid: Building Slice 4 first. Most teams that do this spend 6 weeks on ML infrastructure and then discover users don't click on recommendations because the UI placement was wrong.' While the underlying insight is present, there is no explicit question directed at the user/stakeholder asking them to confirm whether a simple rule-based approach can validate the business value before investing in ML infrastructure."
+    },
+    {
+      "text": "The smallest slice can realistically be shipped within 1-2 days — not weeks — and produces visible recommendations to users",
+      "passed": true,
+      "evidence": "Step 3 states: 'This slice can be deployed in 1–2 days with no new infrastructure and no ML code.' Slice 1 in Step 5 confirms: build time is '1–2 days' and it 'delivers real value: users see Recommended for you sections instead of nothing.' The summary table also lists Slice 1 build time as '1–2 days' with value 'Recommended for you section appears; validates UI/UX'."
+    },
+    {
+      "text": "Data collection is identified as a separate layer/concern — NOT bundled into 'we need ML data first'",
+      "passed": true,
+      "evidence": "Layer 1 is dedicated entirely to 'Collect User Behavior Signals' with its own 5 options ranging from manual DB export (1.1) to a real-time clickstream platform (1.5). The lowest option (1.2 Batch query on existing data) is explicitly chosen for Slice 1, demonstrating that data collection is decoupled from ML and starts from existing DB tables with no new data pipeline required."
+    }
+  ],
+  "summary": {
+    "passed": 6,
+    "failed": 1,
+    "total": 7,
+    "pass_rate": 0.857
+  },
+  "execution_metrics": {
+    "output_chars": 7012,
+    "transcript_chars": null
+  },
+  "timing": {
+    "executor_duration_seconds": 73.9,
+    "grader_duration_seconds": null,
+    "total_duration_seconds": 73.9
+  },
+  "claims": [
+    {
+      "claim": "Identified 5 clear functional layers (not frontend/backend/DB)",
+      "type": "quality",
+      "verified": true,
+      "evidence": "Layers are behavior-domain layers (collect, profile, generate, serve, evaluate), not technical-stack layers."
+    },
+    {
+      "claim": "Smallest vertical slice can be deployed in 1–2 days with no new infrastructure",
+      "type": "factual",
+      "verified": true,
+      "evidence": "Slice 1 uses only existing DB tables (orders, page_views), a SQL GROUP BY, a nightly cron job, and a new DB table. No new infrastructure components."
+    },
+    {
+      "claim": "Self-check passes all 7 listed criteria",
+      "type": "quality",
+      "verified": true,
+      "evidence": "All 7 checkboxes in the self-check section are marked [x] and the evidence in the output supports them."
+    },
+    {
+      "claim": "Proposed 3 follow-up slices with clear incremental improvements",
+      "type": "factual",
+      "verified": true,
+      "evidence": "Slices 2, 3, and 4 are each defined in Step 6 with layer-by-layer upgrade tables and explicit build time estimates."
+    },
+    {
+      "claim": "ML infrastructure deferred to Slice 4 (2–4 weeks)",
+      "type": "factual",
+      "verified": true,
+      "evidence": "Slice 4 introduces the two-tower model, FAISS index, and A/B testing, estimated at '2–4 weeks, after Slice 3 proves value'."
+    }
+  ],
+  "user_notes_summary": null,
+  "eval_feedback": {
+    "suggestions": [
+      {
+        "assertion": "Explicitly asks whether the business value (increased sales/engagement) can be validated with a simple rule-based approach before investing in ML infrastructure",
+        "reason": "The current assertion conflates two things: whether the output contains the insight vs. whether it presents it as a question to the stakeholder. The output clearly contains the insight but never phrases it as a question or decision point directed at the user. The assertion could be strengthened to: 'The output includes a decision point or explicit question to the stakeholder about whether to validate business value with a simpler approach before committing to ML investment' — this would still distinguish good outputs (which frame it interactively) from outputs that merely mention ML risk in passing."
+      },
+      {
+        "reason": "No assertion checks whether candidate selection and ranking are treated as distinct layers or collapsed together. For a recommendation engine, separating 'candidate retrieval' (coarse filtering) from 'ranking' (fine-grained scoring) is a meaningful architectural distinction that expert output should surface. The output bundles them into a single 'Generate Recommendations' layer, which is acceptable for a simple system but a meaningful gap for an ML-focused feature. An assertion like 'ranking and candidate retrieval are identified as distinct concerns, or the output explicitly justifies collapsing them' would be discriminating."
+      },
+      {
+        "reason": "No assertion checks whether the output explicitly warns against the 'build ML first' trap. The output contains a strong, actionable warning ('The trap to avoid: Building Slice 4 first...') that is one of the most valuable outputs of applying the Hamburger Method to an ML feature. This is worth asserting directly."
+      }
+    ],
+    "overall": "The eval suite is solid and well-targeted for an ML-specific Hamburger Method scenario. The main gap is expectation 5, which as written requires an interactive question that a well-formed analytical output may not naturally include. The eval would benefit from one additional assertion about the anti-pattern warning (building ML first) which is present and high-value in this output."
+  }
+}
