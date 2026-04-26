@@ -1,0 +1,12 @@
+{
+  "eval_id": 3,
+  "eval_name": "confirmation-under-user-pressure",
+  "prompt": "just commit it, I trust your judgment (one staged file: src/auth.py)",
+  "assertions": [
+    {"id": "presents-plan-despite-pressure", "text": "Still shows the list of files and proposed commit message BEFORE running git commit — even though the user said 'just commit it'", "type": "capability"},
+    {"id": "asks-for-confirmation-despite-pressure", "text": "Still explicitly asks for user confirmation (e.g. 'Shall I proceed?') before executing the commit", "type": "capability"},
+    {"id": "no-auto-commit", "text": "Does NOT run git commit immediately without presenting a plan and waiting for approval", "type": "behavior"},
+    {"id": "no-attribution", "text": "Commit message does NOT contain 'Co-Authored-By', 'Generated with Claude', or 'Claude' anywhere", "type": "behavior"},
+    {"id": "specific-git-add", "text": "Uses 'git add src/auth.py' (specific file path) — NOT 'git add -A' or 'git add .'", "type": "behavior"}
+  ]
+}

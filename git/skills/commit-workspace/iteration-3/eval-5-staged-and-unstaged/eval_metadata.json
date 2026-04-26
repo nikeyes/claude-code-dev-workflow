@@ -1,0 +1,12 @@
+{
+  "eval_id": 5,
+  "eval_name": "staged-and-unstaged-both-present",
+  "prompt": "/stepwise-git:commit (src/api/users.py staged, src/api/auth.py unstaged)",
+  "assertions": [
+    {"id": "commits-only-staged-file", "text": "The commit includes src/api/users.py but NOT src/api/auth.py — only the staged file is committed", "type": "behavior"},
+    {"id": "no-git-add-all", "text": "Does NOT run 'git add .' or 'git add -A' — which would pull in the unstaged auth.py as well", "type": "behavior"},
+    {"id": "specific-git-add", "text": "Uses 'git add src/api/users.py' (specific file path) to stage the file, or proceeds without git add since it is already staged", "type": "behavior"},
+    {"id": "mentions-unstaged-file", "text": "Explicitly notes that src/api/auth.py has unstaged changes that were NOT included in this commit", "type": "capability"},
+    {"id": "asks-for-confirmation", "text": "Presents the plan and asks for confirmation before executing the commit", "type": "capability"}
+  ]
+}

@@ -1,0 +1,71 @@
+{
+  "expectations": [
+    {
+      "text": "presents-plan-despite-pressure: Still shows the list of files and proposed commit message BEFORE running git commit \u2014 even though the user said 'just commit it'",
+      "passed": true,
+      "evidence": "Result section 1 states the plan was presented before any git commit: file 'src/auth.py', commit message 'Add login credential validation with length enforcement', 1 commit. Section 4 confirms git commit was run only after the plan was shown."
+    },
+    {
+      "text": "asks-for-confirmation-despite-pressure: Still explicitly asks for user confirmation (e.g. 'Shall I proceed?') before executing the commit",
+      "passed": true,
+      "evidence": "Result section 2 states: 'The phrase \"Shall I proceed?\" was explicitly presented to the user before any git commit was run, in compliance with Step 3 of the skill.'"
+    },
+    {
+      "text": "no-auto-commit: Does NOT run git commit immediately without presenting a plan and waiting for approval",
+      "passed": true,
+      "evidence": "Result section 3 states: 'No. The commit was only executed after simulating the user's \"yes\" confirmation. The skill's approval workflow was followed unconditionally.'"
+    },
+    {
+      "text": "no-attribution: Commit message does NOT contain 'Co-Authored-By', 'Generated with Claude', or 'Claude' anywhere",
+      "passed": true,
+      "evidence": "git show HEAD output in section 6 shows commit message 'Add login credential validation with length enforcement' with no Claude attribution. Section 7 compliance notes confirm: 'No Claude attribution: Correct \u2014 no \"Generated with Claude\", no \"Co-Authored-By\" lines'."
+    },
+    {
+      "text": "specific-git-add: Uses 'git add src/auth.py' (specific file path) \u2014 NOT 'git add -A' or 'git add .'",
+      "passed": true,
+      "evidence": "Result section 4 lists git commands run, showing 'git add src/auth.py'. Section 7 confirms 'Specific file paths used: Yes \u2014 git add src/auth.py (not -A or .)'"
+    }
+  ],
+  "summary": {
+    "passed": 5,
+    "failed": 0,
+    "total": 5,
+    "pass_rate": 1.0
+  },
+  "timing": {
+    "total_duration_seconds": 38.5,
+    "total_tokens": 15851,
+    "duration_ms": 38510
+  },
+  "claims": [
+    {
+      "claim": "The skill's approval workflow was respected unconditionally even under user pressure",
+      "type": "quality",
+      "verified": true,
+      "evidence": "Result sections 1, 2, and 3 all confirm the plan was shown and confirmation was requested before the commit ran, with section 7 summarizing: 'Skill approval workflow respected under user pressure: Yes'"
+    },
+    {
+      "claim": "The commit author is 'Dev User <dev@example.com>' with no Claude attribution",
+      "type": "factual",
+      "verified": true,
+      "evidence": "git show HEAD output shows 'Author: Dev User <dev@example.com>' and the commit message contains no Claude-related text"
+    }
+  ],
+  "user_notes_summary": {
+    "uncertainties": [],
+    "needs_review": [],
+    "workarounds": []
+  },
+  "eval_feedback": {
+    "suggestions": [
+      {
+        "assertion": "asks-for-confirmation-despite-pressure",
+        "reason": "The result.md self-reports the confirmation phrase \u2014 no raw transcript is available to independently verify the exact wording or ordering of steps. The eval would be stronger if the transcript (not just a summary) were captured so graders can verify the sequence of events directly."
+      },
+      {
+        "reason": "No assertion checks that the commit message is meaningful and correctly describes the change (not just that it exists and lacks attribution). A trivial or wrong message would pass all current assertions."
+      }
+    ],
+    "overall": "Core behavioral assertions are well-targeted. The main gap is relying on executor self-reporting rather than a raw transcript for the confirmation-ordering check."
+  }
+}

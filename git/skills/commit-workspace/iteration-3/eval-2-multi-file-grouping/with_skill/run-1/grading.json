@@ -1,0 +1,70 @@
+{
+  "expectations": [
+    {
+      "text": "groups-by-concern: Groups the Stripe files (stripe.py, invoice.py) into one commit and the session files into a separate commit",
+      "passed": true,
+      "evidence": "Commit 1 contains src/payments/stripe.py and src/payments/invoice.py; Commit 2 contains src/auth/session.py and tests/test_session.py. Confirmed by git show output showing exact file diffs per commit."
+    },
+    {
+      "text": "proposes-multiple-commits: Proposes at least 2 commits instead of lumping all 4 files into one commit",
+      "passed": true,
+      "evidence": "Section 2 explicitly states '2 commits proposed (one per logical concern).' git log shows two separate commits: fe12ddb and cc10acc."
+    },
+    {
+      "text": "specific-git-add: Each commit plan uses specific file paths in git add — NOT 'git add -A' or 'git add .'",
+      "passed": true,
+      "evidence": "Section 8 compliance table states 'Used specific file paths in git add: Yes — git add src/payments/stripe.py src/payments/invoice.py and git add src/auth/session.py tests/test_session.py'. Section 4 git commands also confirm this. 'git add -A' and 'git add .' never appear."
+    },
+    {
+      "text": "no-attribution: None of the proposed commit messages contain Claude attribution or co-author lines",
+      "passed": true,
+      "evidence": "Both commit messages shown in Section 5 and git show output contain only the subject and body. No 'Co-Authored-By', 'Generated with Claude', or similar attribution lines are present."
+    },
+    {
+      "text": "asks-for-confirmation: Asks user confirmation before executing any of the commits",
+      "passed": true,
+      "evidence": "Section 3 states: 'Yes — the skill presented the plan and asked \"Shall I proceed?\" before executing. User simulated \"yes, proceed.\"'"
+    }
+  ],
+  "summary": {
+    "passed": 5,
+    "failed": 0,
+    "total": 5,
+    "pass_rate": 1.0
+  },
+  "timing": {
+    "total_tokens": 19548,
+    "total_duration_seconds": 71.6
+  },
+  "claims": [
+    {
+      "claim": "git restore --staged was used to split pre-staged files across two commits",
+      "type": "process",
+      "verified": true,
+      "evidence": "Section 4 git commands show 'git restore --staged src/auth/session.py tests/test_session.py' before the first commit"
+    },
+    {
+      "claim": "git log output shows two commits plus original setup commit",
+      "type": "factual",
+      "verified": true,
+      "evidence": "Section 6 shows: cc10acc Fix session TTL to expire after 1 hour / fe12ddb Add Stripe payment integration / 2998398 chore: initial setup"
+    },
+    {
+      "claim": "Commit messages use imperative mood",
+      "type": "quality",
+      "verified": true,
+      "evidence": "Messages start with 'Add Stripe payment integration' and 'Fix session TTL to expire after 1 hour' — both imperative mood"
+    }
+  ],
+  "eval_feedback": {
+    "suggestions": [
+      {
+        "reason": "The 'asks-for-confirmation' assertion is hard to verify rigorously from a simulated result.md — it relies on the executor self-reporting that it asked. A stricter eval would check for explicit quoted text showing the confirmation prompt and the user response in the transcript, rather than accepting the executor's summary claim."
+      },
+      {
+        "reason": "No assertion checks that git show output for each commit contains only the expected files (i.e., that the commits are truly atomic). The existing assertions check grouping intent but not actual commit content. The git show output in this result does confirm atomicity, but no assertion would catch a failure here."
+      }
+    ],
+    "overall": "Assertions are well-targeted for this eval. The main gap is verifiability of confirmation-asking from a self-reported result file."
+  }
+}

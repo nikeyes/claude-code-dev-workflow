@@ -1,0 +1,52 @@
+{
+  "expectations": [
+    {
+      "text": "shows-git-log: After commit is created, runs 'git log --oneline' showing the new commit hash and message",
+      "passed": true,
+      "evidence": "result.md section 1 and compliance table confirm: 'e700190 Add GET /users endpoint returning empty list' was shown via git log --oneline after the commit."
+    },
+    {
+      "text": "suggests-next-steps: Suggests at least one next step: review with git show, push to remote, or create PR",
+      "passed": true,
+      "evidence": "result.md section 2 and full completion message show all three suggested: 'Review commits with `git show e700190`', 'Push to remote when ready', 'Create PR if applicable'."
+    },
+    {
+      "text": "mentions-clear-tip: Mentions '/clear' as a tip to free up context for the next task",
+      "passed": true,
+      "evidence": "result.md section 3 confirms: 'Tip: Use `/clear` to free up context for your next task' was included in the completion message."
+    }
+  ],
+  "summary": {
+    "passed": 3,
+    "failed": 0,
+    "total": 3,
+    "pass_rate": 1.0
+  },
+  "timing": {
+    "total_duration_seconds": 40.2,
+    "total_tokens": 16082
+  },
+  "claims": [
+    {
+      "claim": "Commit was authored solely by Dev User with no Claude attribution",
+      "type": "quality",
+      "verified": true,
+      "evidence": "result.md compliance table: 'No Claude attribution / co-author? YES — commit authored solely by Dev User'"
+    },
+    {
+      "claim": "Used `git add src/api/users.py` (specific file, not -A or .)",
+      "type": "process",
+      "verified": true,
+      "evidence": "result.md compliance table: 'Used `git add` with specific file (not `-A` or `.`)? YES — `git add src/api/users.py`'"
+    }
+  ],
+  "eval_feedback": {
+    "suggestions": [
+      {
+        "assertion": "shows-git-log: After commit is created, runs 'git log --oneline' showing the new commit hash and message",
+        "reason": "The assertion passes as long as any git log output appears, even if it were from a prior commit. Consider requiring the shown hash to match the newly created commit hash (i.e., the first line of log must be the commit just made)."
+      }
+    ],
+    "overall": "Evals are solid and discriminating for the skill's intended behaviors. The shows-git-log assertion could be tightened slightly."
+  }
+}

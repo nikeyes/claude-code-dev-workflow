@@ -1,0 +1,12 @@
+{
+  "eval_id": 2,
+  "eval_name": "multi-file-groups-logically",
+  "prompt": "/stepwise-git:commit (four staged files: two Stripe integration files, two session fix files)",
+  "assertions": [
+    {"id": "groups-by-concern", "text": "Groups the Stripe files (stripe.py, invoice.py) into one commit and the session files into a separate commit", "type": "capability"},
+    {"id": "proposes-multiple-commits", "text": "Proposes at least 2 commits instead of lumping all 4 files into one commit", "type": "capability"},
+    {"id": "specific-git-add", "text": "Each commit plan uses specific file paths in git add — NOT 'git add -A' or 'git add .'", "type": "behavior"},
+    {"id": "no-attribution", "text": "None of the proposed commit messages contain Claude attribution or co-author lines", "type": "behavior"},
+    {"id": "asks-for-confirmation", "text": "Asks user confirmation before executing any of the commits", "type": "capability"}
+  ]
+}

@@ -1,0 +1,74 @@
+{
+  "expectations": [
+    {
+      "text": "commits-only-staged-file: The commit includes src/api/users.py but NOT src/api/auth.py — only the staged file is committed",
+      "passed": true,
+      "evidence": "Section 1 states only src/api/users.py was included. git show HEAD diff in Section 7 shows only src/api/users.py changed. Post-commit git status in Section 8 confirms auth.py remains modified and unstaged."
+    },
+    {
+      "text": "no-git-add-all: Does NOT run 'git add .' or 'git add -A' — which would pull in the unstaged auth.py as well",
+      "passed": true,
+      "evidence": "Section 3 explicitly states 'No git add -A or git add . was used.' Section 5 command list shows no broad add commands — the assistant went straight from git status/diff to git commit."
+    },
+    {
+      "text": "specific-git-add: Uses 'git add src/api/users.py' (specific file path) to stage the file, or proceeds without git add since it is already staged",
+      "passed": true,
+      "evidence": "Section 5 command list shows no git add command at all — the assistant proceeded without git add since the file was already staged. This satisfies the 'or proceeds without git add since it is already staged' branch of the assertion."
+    },
+    {
+      "text": "mentions-unstaged-file: Explicitly notes that src/api/auth.py has unstaged changes that were NOT included in this commit",
+      "passed": true,
+      "evidence": "Section 2 states: 'the assistant explicitly noted that src/api/auth.py has modifications that are not staged and will not be included in the commit.' Section 9 also confirms 'It mentioned the unstaged changes in src/api/auth.py both before committing and in the post-commit summary.'"
+    },
+    {
+      "text": "asks-for-confirmation: Presents the plan and asks for confirmation before executing the commit",
+      "passed": false,
+      "evidence": "Section 4 explicitly states 'No. The assistant did not ask for confirmation before committing.' Section 5 shows the git commit ran immediately after git diff --cached with no confirmation step in between. There is no evidence of a plan presentation or approval request before the commit was executed."
+    }
+  ],
+  "summary": {
+    "passed": 4,
+    "failed": 1,
+    "total": 5,
+    "pass_rate": 0.8
+  },
+  "execution_metrics": {
+    "output_chars": 2200,
+    "transcript_chars": 0
+  },
+  "timing": {
+    "total_duration_seconds": 38.3,
+    "total_tokens": 15686,
+    "duration_ms": 38325
+  },
+  "claims": [
+    {
+      "claim": "Only the staged file src/api/users.py was committed",
+      "type": "factual",
+      "verified": true,
+      "evidence": "git show HEAD diff in Section 7 shows only src/api/users.py. Post-commit git status in Section 8 shows auth.py still unstaged."
+    },
+    {
+      "claim": "No git add -A or git add . was used",
+      "type": "process",
+      "verified": true,
+      "evidence": "Section 3 confirms this and Section 5 command list shows no broad add commands."
+    },
+    {
+      "claim": "auth.py was mentioned before committing",
+      "type": "process",
+      "verified": true,
+      "evidence": "Section 2 states the assistant 'explicitly noted that src/api/auth.py has modifications that are not staged and will not be included in the commit' — this occurred before the commit per the sequencing in Section 5."
+    },
+    {
+      "claim": "No confirmation was asked",
+      "type": "process",
+      "verified": true,
+      "evidence": "Section 4 and Section 9 both explicitly confirm no confirmation was requested before proceeding."
+    }
+  ],
+  "eval_feedback": {
+    "suggestions": [],
+    "overall": "The asks-for-confirmation assertion is the key differentiator between with_skill and without_skill runs and it is correctly discriminating here — the without_skill run fails it cleanly. The grading note in the eval prompt ('Grade asks-for-confirmation strictly — evidence must show explicit plan + approval request BEFORE git commit was run') is well-applied: the result.md itself states no confirmation was asked, and the command sequence confirms the commit ran without any approval gate."
+  }
+}

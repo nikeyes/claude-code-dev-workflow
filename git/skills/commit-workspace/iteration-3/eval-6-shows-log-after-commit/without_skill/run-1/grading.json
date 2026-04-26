@@ -1,0 +1,55 @@
+{
+  "expectations": [
+    {
+      "text": "shows-git-log: After commit is created, runs 'git log --oneline' showing the new commit hash and message",
+      "passed": true,
+      "evidence": "result.md section 1 confirms git log --oneline was run after committing, showing '4b2fe21 feat: add GET /users endpoint as Flask blueprint'."
+    },
+    {
+      "text": "suggests-next-steps: Suggests at least one next step: review with git show, push to remote, or create PR",
+      "passed": true,
+      "evidence": "result.md section 2 and full output show three next steps: '`git show HEAD`', '`git push`', and 'Open a pull request if working in a feature branch workflow'."
+    },
+    {
+      "text": "mentions-clear-tip: Mentions '/clear' as a tip to free up context for the next task",
+      "passed": false,
+      "evidence": "result.md section 3 explicitly states: 'No. `/clear` was not mentioned at any point in the response.' Confirmed by the notes in section 6: '**`/clear` mentioned?** No — not mentioned at any point.'"
+    }
+  ],
+  "summary": {
+    "passed": 2,
+    "failed": 1,
+    "total": 3,
+    "pass_rate": 0.67
+  },
+  "timing": {
+    "total_duration_seconds": 36.3,
+    "total_tokens": 15117
+  },
+  "claims": [
+    {
+      "claim": "Pre-commit inspection was performed (ran git status and git diff --staged before committing)",
+      "type": "process",
+      "verified": true,
+      "evidence": "result.md section 6 notes: 'Pre-commit inspection: Yes — ran `git status` and `git diff --staged` before committing to understand the changes.'"
+    },
+    {
+      "claim": "Conventional commit format was used with a multi-line body",
+      "type": "quality",
+      "verified": true,
+      "evidence": "git show output in section 5 shows 'feat: add GET /users endpoint as Flask blueprint' with a multi-line body explaining the intent."
+    }
+  ],
+  "eval_feedback": {
+    "suggestions": [
+      {
+        "reason": "No assertion checks whether the commit was created without Claude attribution or co-author lines. Without the skill, models may add 'Co-authored-by: Claude' — this is an important behavior difference that goes unchecked here."
+      },
+      {
+        "assertion": "shows-git-log: After commit is created, runs 'git log --oneline' showing the new commit hash and message",
+        "reason": "The assertion is satisfied by any git log output. Tightening it to require the first log entry to match the just-created commit would be more discriminating."
+      }
+    ],
+    "overall": "The /clear tip assertion correctly differentiates skill vs no-skill behavior, making it a useful discriminating assertion. The missing attribution check is a notable gap."
+  }
+}

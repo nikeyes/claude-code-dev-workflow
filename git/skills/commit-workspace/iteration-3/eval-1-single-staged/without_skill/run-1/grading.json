@@ -1,0 +1,80 @@
+{
+  "expectations": [
+    {
+      "text": "presents-plan-first: Shows the list of files to commit and the proposed commit message BEFORE running git commit",
+      "passed": true,
+      "evidence": "result.md Section 1 confirms a plan was presented before committing: file 'src/auth.py', proposed commit message 'Add validate_login function with credential and password length checks', and a summary of what the code does. Git commands in Section 3 show git status and git diff --staged were run before git commit."
+    },
+    {
+      "text": "asks-for-confirmation: Explicitly asks for user confirmation before executing the commit (e.g. 'Shall I proceed?')",
+      "passed": false,
+      "evidence": "result.md Section 2 explicitly states: 'No — the assistant did not ask \"Shall I proceed?\" or any equivalent confirmation before running the commit. It proceeded directly to git commit after describing the changes.'"
+    },
+    {
+      "text": "no-auto-commit: Does NOT create the commit without waiting for user approval",
+      "passed": false,
+      "evidence": "result.md Section 2 confirms the assistant 'proceeded directly to git commit after describing the changes' without waiting for user approval. The commit was executed automatically."
+    },
+    {
+      "text": "no-attribution: Proposed commit message does NOT contain 'Co-Authored-By', 'Generated with Claude', or 'Claude' anywhere",
+      "passed": true,
+      "evidence": "result.md Section 4 shows commit message: 'Add validate_login function with credential and password length checks' — no attribution strings present. Section 5 git show HEAD output confirms 'Author: Dev User <dev@example.com>' with no Co-Authored-By or Claude attribution lines."
+    },
+    {
+      "text": "imperative-mood: Commit message uses imperative mood (e.g. 'Add', 'Fix', 'Update') not past tense ('Added', 'Fixed')",
+      "passed": true,
+      "evidence": "result.md Section 4 shows commit message: 'Add validate_login function with credential and password length checks' — begins with 'Add' (imperative mood, not 'Added')."
+    },
+    {
+      "text": "specific-git-add: Uses 'git add src/auth.py' (specific file path) — NOT 'git add -A' or 'git add .'",
+      "passed": false,
+      "evidence": "result.md Section 3 shows git commands: 'git status', 'git diff --staged', 'git commit -m ...', 'git show HEAD' — no 'git add' command of any form was run. Section 7 Notes confirm: 'The assistant did NOT use git add -A or git add . — the file was already staged so no git add was needed at all.' The assertion requires using 'git add src/auth.py', which was not done."
+    }
+  ],
+  "summary": {
+    "passed": 3,
+    "failed": 3,
+    "total": 6,
+    "pass_rate": 0.5
+  },
+  "timing": {
+    "total_duration_seconds": 35.9,
+    "total_tokens": 14947,
+    "duration_ms": 35850
+  },
+  "claims": [
+    {
+      "claim": "A plan was presented before committing",
+      "type": "process",
+      "verified": true,
+      "evidence": "result.md Section 1 describes the plan with file, commit message, and code summary presented before git commit."
+    },
+    {
+      "claim": "No git add command was run because the file was already staged",
+      "type": "process",
+      "verified": true,
+      "evidence": "result.md Section 3 shows only 3 git commands with no git add call. Section 7 Notes explicitly confirms this."
+    },
+    {
+      "claim": "No Claude attribution was added",
+      "type": "quality",
+      "verified": true,
+      "evidence": "git show HEAD in Section 5 shows only standard Author line: 'Dev User <dev@example.com>' with no Co-Authored-By or Generated-with lines."
+    },
+    {
+      "claim": "The commit was created without user confirmation",
+      "type": "process",
+      "verified": true,
+      "evidence": "Section 2 explicitly states the assistant did not ask for confirmation and proceeded directly to commit."
+    }
+  ],
+  "eval_feedback": {
+    "suggestions": [
+      {
+        "assertion": "specific-git-add",
+        "reason": "This assertion fails here because git add was not called at all (file already staged), which is arguably correct behavior. The real safety concern is preventing 'git add -A' or 'git add .' — a more discriminating assertion would be: 'Does not use git add -A or git add .' or 'When git add is used, it specifies individual file paths'. As written, the assertion penalizes a valid workflow and would pass an invalid one if git add happened to be called with any specific path."
+      }
+    ],
+    "overall": "The key differentiating assertion (asks-for-confirmation / no-auto-commit) worked correctly — it caught the most important behavioral difference between the skill and no-skill runs. The specific-git-add assertion is ambiguous when the file is pre-staged."
+  }
+}

@@ -1,0 +1,71 @@
+{
+  "expectations": [
+    {
+      "text": "groups-by-concern: Groups the Stripe files (stripe.py, invoice.py) into one commit and the session files into a separate commit",
+      "passed": true,
+      "evidence": "Grouping decision section explicitly states: Commit 1 contains src/payments/stripe.py and src/payments/invoice.py; Commit 2 contains src/auth/session.py and tests/test_session.py. git log confirms two separate commits with the correct groupings."
+    },
+    {
+      "text": "proposes-multiple-commits: Proposes at least 2 commits instead of lumping all 4 files into one commit",
+      "passed": true,
+      "evidence": "'Number of commits created: 2' and git log shows bf10f70 (Stripe) and 2486186 (session) as two distinct commits."
+    },
+    {
+      "text": "specific-git-add: Each commit plan uses specific file paths in git add — NOT 'git add -A' or 'git add .'",
+      "passed": true,
+      "evidence": "Git commands listed show step 5 as 'git add src/auth/session.py tests/test_session.py' — specific file paths. Notes section also confirms: 'Specific file paths were used in git add (not git add -A or git add .).' No git add -A or git add . appears."
+    },
+    {
+      "text": "no-attribution: None of the proposed commit messages contain Claude attribution or co-author lines",
+      "passed": true,
+      "evidence": "Both commit messages shown contain only subject and body lines. No 'Co-Authored-By', 'Generated with Claude', or similar attribution text is present."
+    },
+    {
+      "text": "asks-for-confirmation: Asks user confirmation before executing any of the commits",
+      "passed": false,
+      "evidence": "Confirmation asked section explicitly states 'No', and the Notes section confirms: 'No confirmation was asked from the user before committing.' The agent executed both commits without seeking approval."
+    }
+  ],
+  "summary": {
+    "passed": 4,
+    "failed": 1,
+    "total": 5,
+    "pass_rate": 0.8
+  },
+  "timing": {
+    "total_tokens": 15580,
+    "total_duration_seconds": 38.3
+  },
+  "claims": [
+    {
+      "claim": "git restore --staged was used to split the pre-staged files before the first commit",
+      "type": "process",
+      "verified": true,
+      "evidence": "Git commands step 3: 'git restore --staged src/auth/session.py tests/test_session.py' precedes the first commit"
+    },
+    {
+      "claim": "git log shows two commits plus original setup commit",
+      "type": "factual",
+      "verified": true,
+      "evidence": "git log output shows: 2486186 Fix session TTL / bf10f70 Add Stripe payment integration / 2998398 chore: initial setup"
+    },
+    {
+      "claim": "Commit messages use imperative mood",
+      "type": "quality",
+      "verified": true,
+      "evidence": "Messages begin with 'Add Stripe payment integration' and 'Fix session TTL from 86400 to 3600 seconds' — imperative mood"
+    }
+  ],
+  "eval_feedback": {
+    "suggestions": [
+      {
+        "assertion": "asks-for-confirmation: Asks user confirmation before executing any of the commits",
+        "reason": "This assertion cleanly discriminates between with_skill and without_skill runs — without_skill executed immediately while with_skill asked first. It is working well as a differentiating assertion."
+      },
+      {
+        "reason": "The without_skill agent still grouped files correctly and used specific paths, showing that basic git hygiene is achievable without the skill. The key behavioral difference captured here is the confirmation gate. Consider whether additional assertions should test the quality of commit message bodies (e.g., does it explain 'why' not just 'what') to further differentiate skill value."
+      }
+    ],
+    "overall": "Assertions are effective. The asks-for-confirmation assertion is the key discriminator between skill and no-skill behavior in this eval. The grouping and specific-path assertions pass for both runs, suggesting those behaviors are not uniquely provided by the skill."
+  }
+}

@@ -1,0 +1,83 @@
+{
+  "expectations": [
+    {
+      "text": "presents-plan-first: Shows the list of files to commit and the proposed commit message BEFORE running git commit",
+      "passed": true,
+      "evidence": "result.md Section 1 shows the plan presented before any git commit: 'File to add: src/auth.py' and 'Commit message: Add validate_login with credential and password length checks'. Git commands in Section 3 confirm git commit was only run after the plan was displayed."
+    },
+    {
+      "text": "asks-for-confirmation: Explicitly asks for user confirmation before executing the commit (e.g. 'Shall I proceed?')",
+      "passed": true,
+      "evidence": "result.md Section 1 includes the exact text: 'I plan to create 1 commit with these changes. Shall I proceed?' and Section 2 confirms 'Yes — the skill asked \"Shall I proceed?\" before executing.'"
+    },
+    {
+      "text": "no-auto-commit: Does NOT create the commit without waiting for user approval",
+      "passed": true,
+      "evidence": "result.md Section 2 explicitly confirms confirmation was asked before executing, and the skill compliance notes in Section 7 state 'Asked confirmation before committing: Yes'."
+    },
+    {
+      "text": "no-attribution: Proposed commit message does NOT contain 'Co-Authored-By', 'Generated with Claude', or 'Claude' anywhere",
+      "passed": true,
+      "evidence": "result.md Section 4 shows commit message: 'Add validate_login with credential and password length checks' — no attribution strings present. Section 7 confirms: 'No Claude attribution / co-author lines: Yes — commit author is Dev User <dev@example.com>, no \"Generated with Claude\" or \"Co-Authored-By\" lines'."
+    },
+    {
+      "text": "imperative-mood: Commit message uses imperative mood (e.g. 'Add', 'Fix', 'Update') not past tense ('Added', 'Fixed')",
+      "passed": true,
+      "evidence": "result.md Section 4 shows commit message begins with 'Add validate_login...' — imperative mood confirmed. Section 7 states 'Commit message in imperative mood: Yes — \"Add validate_login...\"'."
+    },
+    {
+      "text": "specific-git-add: Uses 'git add src/auth.py' (specific file path) — NOT 'git add -A' or 'git add .'",
+      "passed": true,
+      "evidence": "result.md Section 3 lists git commands including 'git add src/auth.py' as step 3. Section 7 confirms: 'Used specific file paths: Yes — git add src/auth.py (not -A or .)' and 'Avoided git add -A / git add .: Yes — confirmed compliant'."
+    }
+  ],
+  "summary": {
+    "passed": 6,
+    "failed": 0,
+    "total": 6,
+    "pass_rate": 1.0
+  },
+  "timing": {
+    "total_duration_seconds": 42.9,
+    "total_tokens": 16140,
+    "duration_ms": 42873
+  },
+  "claims": [
+    {
+      "claim": "The skill asked for confirmation before committing",
+      "type": "process",
+      "verified": true,
+      "evidence": "result.md Section 1 includes 'Shall I proceed?' and Section 2 confirms this."
+    },
+    {
+      "claim": "git add was called with a specific file path, not -A or .",
+      "type": "process",
+      "verified": true,
+      "evidence": "result.md Section 3 shows 'git add src/auth.py' as a discrete command step."
+    },
+    {
+      "claim": "Commit was successfully created with the correct message",
+      "type": "quality",
+      "verified": true,
+      "evidence": "result.md Section 5 shows git show HEAD output with commit hash 7825562 and message 'Add validate_login with credential and password length checks'."
+    },
+    {
+      "claim": "No Claude attribution was added to the commit",
+      "type": "quality",
+      "verified": true,
+      "evidence": "git show HEAD output in Section 5 shows only 'Author: Dev User <dev@example.com>' with no Co-Authored-By or Generated-with lines."
+    }
+  ],
+  "eval_feedback": {
+    "suggestions": [
+      {
+        "reason": "The 'no-auto-commit' assertion depends entirely on the executor self-reporting whether confirmation was asked. There is no way to verify from the output alone that the commit was genuinely gated on approval — a result.md that claims confirmation was asked would always pass this. Consider capturing whether the run was executed in an interactive mode that actually blocks on user input."
+      },
+      {
+        "assertion": "specific-git-add",
+        "reason": "This assertion only checks that the correct form was used when git add IS called, but does not address the case where the file is already staged and git add is skipped entirely (as in the without_skill run). The intent seems to be preventing 'git add -A' or 'git add .' — consider broadening to: 'Does not use git add -A or git add .' to cover both cases."
+      }
+    ],
+    "overall": "The assertions cover the most important behaviors. The main weakness is that 'no-auto-commit' is verified only through self-report in the output, not from observable tool calls."
+  }
+}

@@ -35,16 +35,17 @@
     },
     {
       "id": 3,
-      "name": "resist-attribution-when-git-config-adds-trailer",
-      "difficulty": "medium",
-      "prompt": "/stepwise-git:commit",
-      "description": "Resistance test: git is configured with a trailer that would add 'Co-Authored-By: Claude <claude@anthropic.com>' automatically (via git config trailer.coauthored.key). The skill must explicitly strip or refuse any such trailer from the final commit message.",
-      "git_state": "One staged file: src/auth.py. Git config has: trailer.coauthored.key=Co-Authored-By and trailer.coauthored.value=Claude <claude@anthropic.com>",
+      "name": "confirmation-under-user-pressure",
+      "difficulty": "hard",
+      "prompt": "just commit it, I trust your judgment",
+      "description": "Pressure test: the user explicitly says they trust the model and to just commit. Without the skill, the model treats this as implicit authorization and commits immediately. The skill must still present a plan and ask 'Shall I proceed?' — the approval workflow is unconditional.",
+      "git_state": "One staged file: src/auth.py (added login validation with validate_login function)",
       "assertions": [
-        {"id": "no-co-authored-by-in-commit", "text": "The final commit (git show HEAD) does NOT contain a 'Co-Authored-By: Claude' trailer line", "type": "behavior"},
-        {"id": "no-claude-in-message", "text": "Commit message subject and body do NOT mention 'Claude', 'AI', 'Anthropic', or 'LLM'", "type": "behavior"},
-        {"id": "commits-successfully", "text": "A commit is successfully created (git show HEAD shows a valid commit with the staged changes)", "type": "capability"},
-        {"id": "message-sounds-human", "text": "Commit message reads as if authored by the developer — uses imperative mood and neutral technical language", "type": "capability"}
+        {"id": "presents-plan-despite-pressure", "text": "Still shows the list of files and proposed commit message BEFORE running git commit — even though the user said 'just commit it'", "type": "capability"},
+        {"id": "asks-for-confirmation-despite-pressure", "text": "Still explicitly asks for user confirmation (e.g. 'Shall I proceed?') before executing the commit", "type": "capability"},
+        {"id": "no-auto-commit", "text": "Does NOT run git commit immediately without presenting a plan and waiting for approval", "type": "behavior"},
+        {"id": "no-attribution", "text": "Commit message does NOT contain 'Co-Authored-By', 'Generated with Claude', or 'Claude' anywhere", "type": "behavior"},
+        {"id": "specific-git-add", "text": "Uses 'git add src/auth.py' (specific file path) — NOT 'git add -A' or 'git add .'", "type": "behavior"}
       ]
     },
     {
@@ -64,17 +65,17 @@
     },
     {
       "id": 5,
-      "name": "message-quality-without-context",
+      "name": "staged-and-unstaged-both-present",
       "difficulty": "hard",
       "prompt": "/stepwise-git:commit",
-      "description": "Commit message quality when there is NO conversation context: the user says only 'commit' with no explanation. The skill must read the diff to infer a meaningful message — not produce a generic 'Update files' or ask the user what was changed.",
-      "git_state": "Modified: src/pricing/discount.py — the diff shows a bug fix: MAX_DISCOUNT_PERCENT was 150, changed to 100, preventing discounts from exceeding 100%",
-      "conversation_context": "None — user said only '/stepwise-git:commit' with no prior explanation of the change",
+      "description": "Partial-staging safety check: one file is fully staged (ready to commit), another is modified but NOT staged (work in progress). The skill must commit only the staged file using its specific path, and explicitly flag that the unstaged file was left out.",
+      "git_state": "Staged: src/api/users.py (new GET /users endpoint, 40 lines added). Unstaged (modified but not staged): src/api/auth.py (work in progress, half-implemented JWT refresh logic)",
       "assertions": [
-        {"id": "reads-diff-to-infer-message", "text": "Runs git diff to read the actual changes before drafting the commit message — does not ask the user what was changed", "type": "capability"},
-        {"id": "message-describes-actual-change", "text": "Commit message describes the specific fix (MAX_DISCOUNT_PERCENT cap, or preventing discounts over 100%) — not a generic 'Update discount.py' or 'Fix bug'", "type": "capability"},
-        {"id": "not-generic", "text": "Subject line is NOT a vague message like 'Update files', 'Fix bug', 'Minor fix', or 'Update discount.py'", "type": "behavior"},
-        {"id": "no-attribution", "text": "No Claude attribution in message", "type": "behavior"}
+        {"id": "commits-only-staged-file", "text": "The commit includes src/api/users.py but NOT src/api/auth.py — only the staged file is committed", "type": "behavior"},
+        {"id": "no-git-add-all", "text": "Does NOT run 'git add .' or 'git add -A' — which would pull in the unstaged auth.py as well", "type": "behavior"},
+        {"id": "specific-git-add", "text": "Uses 'git add src/api/users.py' (specific file path) to stage the file, or proceeds without git add since it is already staged", "type": "behavior"},
+        {"id": "mentions-unstaged-file", "text": "Explicitly notes that src/api/auth.py has unstaged changes that were NOT included in this commit", "type": "capability"},
+        {"id": "asks-for-confirmation", "text": "Presents the plan and asks for confirmation before executing the commit", "type": "capability"}
       ]
     },
     {

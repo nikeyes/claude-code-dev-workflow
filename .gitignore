@@ -84,3 +84,8 @@ ipython_config.py
 # Validation project artifacts
 test/validation-project/thoughts/
 research_codebase-workspace/
+
+# Eval fixture repos (regenerated per iteration, contain nested git repos)
+git/skills/commit-workspace/evals/fixtures/
+git/skills/commit-workspace/iteration-*/fixtures/
+git/skills/commit-workspace/iteration-*/eval-*/*/transcript.md

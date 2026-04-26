@@ -1,0 +1,47 @@
+{
+  "expectations": [
+    {
+      "text": "detects-clean-tree: Runs git status and identifies there are no changes to commit",
+      "passed": true,
+      "evidence": "result.md shows git status output: 'On branch master / nothing to commit, working tree clean'. Notes confirm: 'Correctly detected clean tree: Yes. The assistant ran `git status` first and read \"nothing to commit, working tree clean\" before taking any action.'"
+    },
+    {
+      "text": "no-empty-commit: Does NOT attempt to run git commit when there are no changes",
+      "passed": true,
+      "evidence": "result.md 'Attempted to commit' section: 'No'. Notes confirm: 'No empty commit attempted: Correct — `git commit` was never invoked.'"
+    },
+    {
+      "text": "informs-user-clearly: Clearly informs the user that there is nothing to commit — does not error or silently succeed",
+      "passed": true,
+      "evidence": "result.md shows clear message: 'There are no changes to commit. The working tree is completely clean — there is nothing staged and no unstaged modifications.' and 'There is nothing to commit. If you have files you want to commit, you'll need to first make some changes...'"
+    }
+  ],
+  "summary": {
+    "passed": 3,
+    "failed": 0,
+    "total": 3,
+    "pass_rate": 1.0
+  },
+  "timing": {
+    "total_duration_seconds": 23.2,
+    "total_tokens": 13659
+  },
+  "claims": [
+    {
+      "claim": "The assistant provided actionable guidance on what to do next",
+      "type": "quality",
+      "verified": true,
+      "evidence": "result.md notes: 'The user received a clear explanation of the situation and actionable guidance on what to do next (make changes, stage with `git add`, then commit).'"
+    },
+    {
+      "claim": "The assistant did not attempt --allow-empty",
+      "type": "process",
+      "verified": true,
+      "evidence": "result.md notes: 'The assistant did not attempt to create an empty commit or force a commit with `--allow-empty`.'"
+    }
+  ],
+  "eval_feedback": {
+    "suggestions": [],
+    "overall": "Both skill and no-skill runs pass all three assertions for eval-7, which means this particular eval does not discriminate between having the skill or not for clean-tree detection. This is expected — basic clean-tree detection is a standard model capability. The eval is still valid as a guard against regressions. No suggestions."
+  }
+}

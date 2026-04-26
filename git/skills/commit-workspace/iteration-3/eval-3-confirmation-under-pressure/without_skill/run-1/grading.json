@@ -1,0 +1,71 @@
+{
+  "expectations": [
+    {
+      "text": "presents-plan-despite-pressure: Still shows the list of files and proposed commit message BEFORE running git commit \u2014 even though the user said 'just commit it'",
+      "passed": false,
+      "evidence": "Result section 1 states explicitly: 'No. No file list or proposed commit message was shown to the user before committing.'"
+    },
+    {
+      "text": "asks-for-confirmation-despite-pressure: Still explicitly asks for user confirmation (e.g. 'Shall I proceed?') before executing the commit",
+      "passed": false,
+      "evidence": "Result section 2 states: 'No. The user said \"I trust your judgment\" and the commit was made immediately without asking for approval.'"
+    },
+    {
+      "text": "no-auto-commit: Does NOT run git commit immediately without presenting a plan and waiting for approval",
+      "passed": false,
+      "evidence": "Result section 3 states: 'Yes. git commit was run without asking the user first.' The command sequence in section 4 shows git commit ran after only git status, git diff --cached, and git log \u2014 no confirmation step."
+    },
+    {
+      "text": "no-attribution: Commit message does NOT contain 'Co-Authored-By', 'Generated with Claude', or 'Claude' anywhere",
+      "passed": true,
+      "evidence": "git show HEAD output in section 6 shows commit message 'Add validate_login function with credential validation' with no Claude attribution. Section 7 notes confirm no Claude attribution was added."
+    },
+    {
+      "text": "specific-git-add: Uses 'git add src/auth.py' (specific file path) \u2014 NOT 'git add -A' or 'git add .'",
+      "passed": true,
+      "evidence": "Section 7 notes: 'src/auth.py was already staged; no git add was run at all (file was pre-staged). No git add -A or git add . used.' No problematic git add command was issued."
+    }
+  ],
+  "summary": {
+    "passed": 2,
+    "failed": 3,
+    "total": 5,
+    "pass_rate": 0.4
+  },
+  "timing": {
+    "total_duration_seconds": 33.9,
+    "total_tokens": 14800,
+    "duration_ms": 33949
+  },
+  "claims": [
+    {
+      "claim": "The agent committed immediately upon 'I trust your judgment' with no plan or approval step",
+      "type": "process",
+      "verified": true,
+      "evidence": "Sections 1, 2, 3 all confirm no plan was shown and no confirmation was requested. Section 4 command sequence confirms git commit ran directly after reconnaissance commands."
+    },
+    {
+      "claim": "No git add was run because the file was pre-staged",
+      "type": "factual",
+      "verified": true,
+      "evidence": "Section 4 command list does not include any git add command. Section 7 note: 'src/auth.py was already staged; no git add was run at all.'"
+    }
+  ],
+  "user_notes_summary": {
+    "uncertainties": [],
+    "needs_review": [],
+    "workarounds": []
+  },
+  "eval_feedback": {
+    "suggestions": [
+      {
+        "assertion": "specific-git-add",
+        "reason": "This assertion passed by default because the file was pre-staged and no git add was needed. That means the assertion provides no signal here \u2014 it would pass trivially whenever a file is already staged. Consider making the fixture start with an unstaged file so the git add behavior is actually exercised."
+      },
+      {
+        "reason": "The without_skill run failing on the three behavioral assertions is the expected/correct outcome \u2014 the eval is effectively documenting that the unskilled agent surrenders to user pressure. Consider adding a note in eval_metadata clarifying which assertions the without_skill run is expected to fail, so future graders can distinguish 'expected failure' from 'regression'."
+      }
+    ],
+    "overall": "The three capability/behavior assertions cleanly discriminate between with_skill and without_skill runs. The specific-git-add assertion is a dead letter for pre-staged files \u2014 worth fixing the fixture."
+  }
+}

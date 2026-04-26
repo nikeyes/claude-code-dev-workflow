@@ -1,0 +1,74 @@
+{
+  "expectations": [
+    {
+      "text": "commits-only-staged-file: The commit includes src/api/users.py but NOT src/api/auth.py — only the staged file is committed",
+      "passed": true,
+      "evidence": "git show HEAD output in result.md shows only src/api/users.py in the diff. Post-commit git status confirms src/api/auth.py remains as 'modified' and unstaged. Section 1 states '1 file changed, 14 insertions(+), 1 deletion(-)'."
+    },
+    {
+      "text": "no-git-add-all: Does NOT run 'git add .' or 'git add -A' — which would pull in the unstaged auth.py as well",
+      "passed": true,
+      "evidence": "Section 3 explicitly states 'git add -A and git add . were NOT used.' The git commands list (Section 5) shows only 'git add src/api/users.py' was used."
+    },
+    {
+      "text": "specific-git-add: Uses 'git add src/api/users.py' (specific file path) to stage the file, or proceeds without git add since it is already staged",
+      "passed": true,
+      "evidence": "Section 3 shows the command used was 'git add src/api/users.py'. Section 5 lists it as step 4 in the git commands run."
+    },
+    {
+      "text": "mentions-unstaged-file: Explicitly notes that src/api/auth.py has unstaged changes that were NOT included in this commit",
+      "passed": true,
+      "evidence": "Section 2 confirms: the skill explicitly noted 'src/api/auth.py has unstaged changes (half-implemented JWT refresh logic marked \"do not commit\") — these will NOT be included in this commit.'"
+    },
+    {
+      "text": "asks-for-confirmation: Presents the plan and asks for confirmation before executing the commit",
+      "passed": true,
+      "evidence": "Section 4 states: 'Yes. The skill presented its plan and asked \"Shall I proceed?\" before executing. The user confirmed with \"yes, proceed\".' This is an explicit plan + approval request BEFORE git commit was run."
+    }
+  ],
+  "summary": {
+    "passed": 5,
+    "failed": 0,
+    "total": 5,
+    "pass_rate": 1.0
+  },
+  "execution_metrics": {
+    "output_chars": 2950,
+    "transcript_chars": 0
+  },
+  "timing": {
+    "total_duration_seconds": 56.0,
+    "total_tokens": 17958,
+    "duration_ms": 55963
+  },
+  "claims": [
+    {
+      "claim": "Only src/api/users.py was committed",
+      "type": "factual",
+      "verified": true,
+      "evidence": "git show HEAD diff in result.md Section 7 shows only src/api/users.py changed. Post-commit git status in Section 8 shows auth.py still unstaged."
+    },
+    {
+      "claim": "git add -A and git add . were NOT used",
+      "type": "process",
+      "verified": true,
+      "evidence": "Section 3 explicitly states this, and Section 5's command list confirms only targeted 'git add src/api/users.py' was used."
+    },
+    {
+      "claim": "The commit message is in imperative mood",
+      "type": "quality",
+      "verified": true,
+      "evidence": "Commit message 'Add GET /users and GET /users/<id> REST endpoints' uses imperative form."
+    },
+    {
+      "claim": "No Claude attribution / co-author lines in commit",
+      "type": "quality",
+      "verified": true,
+      "evidence": "git show HEAD output in Section 7 shows Author: Dev User <dev@example.com> with no co-author or Claude attribution lines."
+    }
+  ],
+  "eval_feedback": {
+    "suggestions": [],
+    "overall": "Assertions are well-targeted and discriminating for this scenario. The asks-for-confirmation assertion is particularly important and the evidence here clearly satisfies it with an explicit quoted approval exchange. No gaps observed."
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "expectations": [
+    {
+      "text": "detects-clean-tree: Runs git status and identifies there are no changes to commit",
+      "passed": true,
+      "evidence": "result.md shows git status output: 'On branch master / nothing to commit, working tree clean'. Compliance table confirms: 'Correctly detected clean tree: Yes'."
+    },
+    {
+      "text": "no-empty-commit: Does NOT attempt to run git commit when there are no changes",
+      "passed": true,
+      "evidence": "result.md 'Attempted to commit' section: 'No'. Compliance table: 'No empty commit created: Yes (no `git commit` was run)'."
+    },
+    {
+      "text": "informs-user-clearly: Clearly informs the user that there is nothing to commit — does not error or silently succeed",
+      "passed": true,
+      "evidence": "result.md shows the message: 'The working tree is clean. There is nothing to commit. All changes have already been committed or there were no changes to begin with. No action was taken.' Compliance table: 'Clear message shown to user: Yes'."
+    }
+  ],
+  "summary": {
+    "passed": 3,
+    "failed": 0,
+    "total": 3,
+    "pass_rate": 1.0
+  },
+  "timing": {
+    "total_duration_seconds": 21.6,
+    "total_tokens": 14444
+  },
+  "claims": [
+    {
+      "claim": "The skill process ran gracefully without error",
+      "type": "quality",
+      "verified": true,
+      "evidence": "result.md 'Error or graceful' section: 'Graceful — the skill process ran `git status`, detected a clean tree, and stopped without attempting any commit operation.'"
+    }
+  ],
+  "eval_feedback": {
+    "suggestions": [],
+    "overall": "Evals look solid for this scenario. All three assertions are discriminating — they would fail if the skill tried to commit on a clean tree or gave a misleading message. No suggestions."
+  }
+}
