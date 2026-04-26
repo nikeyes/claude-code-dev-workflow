@@ -1,0 +1,33 @@
+{
+  "expectations": [
+    {
+      "text": "Explicitly identifies that 'manage' hides multiple CRUD operations (create, read/list, edit, delete)",
+      "passed": true,
+      "evidence": "Output explicitly flags 'RED FLAG DETECTED: manage' and states it 'hides multiple CRUD operations', listing list/view, create/add, edit/update, and delete/remove as the hidden operations."
+    },
+    {
+      "text": "Proposes at least 4 separate stories, one per CRUD operation — without grouping multiple operations in a single story",
+      "passed": true,
+      "evidence": "Output proposes 5 splits: Split 1 (view), Split 2 (add), Split 3 (edit), Split 4 (remove), Split 5 (search/filter). Each targets a single operation with no grouping of multiple CRUD actions."
+    },
+    {
+      "text": "Recommends starting with viewing/listing products as the simplest story with immediate value",
+      "passed": true,
+      "evidence": "Output states 'Recommended first story: Admin can view the product catalog (list all products)' with explicit reasoning: immediate value, read-only safety, establishes foundation for other stories."
+    },
+    {
+      "text": "None of the proposed stories use the verb 'manage' — each has a concrete verb (view, create, edit, delete)",
+      "passed": true,
+      "evidence": "All proposed splits use concrete verbs: 'view' (Split 1), 'add' (Split 2), 'edit' (Split 3), 'remove' (Split 4), 'search and filter' (Split 5). The word 'manage' does not appear in any story title."
+    }
+  ],
+  "summary": {
+    "passed": 4,
+    "failed": 0,
+    "total": 4,
+    "pass_rate": 1.0
+  },
+  "timing": {
+    "executor_duration_seconds": 37.9
+  }
+}

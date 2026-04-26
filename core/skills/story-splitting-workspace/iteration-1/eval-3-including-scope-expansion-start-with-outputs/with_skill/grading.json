@@ -1,0 +1,38 @@
+{
+  "expectations": [
+    {
+      "text": "Explicitly identifies 'including' as a scope indicator that bundles multiple outputs into one story",
+      "passed": true,
+      "evidence": "Line 14-18: labels 'INCLUDING (Scope Indicator)' as 'a direct signal of feature bundling' that 'introduces three separate outputs bundled into one story: revenue breakdown, expense categories, year-over-year comparison charts'"
+    },
+    {
+      "text": "Applies the 'Start with Outputs' technique (#1) — names it explicitly or clearly describes dividing by which output is delivered first",
+      "passed": true,
+      "evidence": "Line 66-67: 'Step 3: Apply \"Start with outputs\" + \"Simplify outputs\"'. Also listed in TECHNIQUES APPLIED (line 169): 'Start with outputs -> Delivered simplest output (total number) first'. The splitting process explicitly sequences outputs from simplest to most complex."
+    },
+    {
+      "text": "The first story does NOT include charts — delivers a simpler output first (text summary, basic table)",
+      "passed": true,
+      "evidence": "Story 1 (lines 86-93) is 'Generate a basic monthly report showing total revenue for a given month' with 'No breakdown, no charts, no expense data'. Charts only appear in Story 5 (lines 118-123)."
+    },
+    {
+      "text": "Each split story delivers independent value — the first story is useful without requiring the subsequent ones",
+      "passed": true,
+      "evidence": "Story 1 is marked 'Deployable alone: YES' with explicit value statement: 'Stakeholders can verify the report exists and numbers are correct'. Line 138-139: 'Shipping Story 1 alone is production-worthy and useful. The rest are enhancements.'"
+    },
+    {
+      "text": "Proposes at least 3 distinct stories, each incrementally adding one or two outputs",
+      "passed": true,
+      "evidence": "5 distinct stories proposed (lines 86-123): Story 1 (total revenue), Story 2 (revenue breakdown), Story 3 (expense categories), Story 4 (year-over-year text/table), Story 5 (year-over-year charts). Each adds exactly one incremental output."
+    }
+  ],
+  "summary": {
+    "passed": 5,
+    "failed": 0,
+    "total": 5,
+    "pass_rate": 1.0
+  },
+  "timing": {
+    "executor_duration_seconds": 55.9
+  }
+}

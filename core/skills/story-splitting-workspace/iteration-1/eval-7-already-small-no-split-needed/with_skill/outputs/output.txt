@@ -1,0 +1,42 @@
+Story: "As a user, I can reset my password by requesting a reset email"
+
+--- Red Flag Scan ---
+
+Scanning for all 6 red flag categories:
+
+1. Coordinating conjunctions ("and", "or", "but", "yet"): NONE FOUND
+2. Action-related connectors ("manage", "handle", "support", "process", "administer"): NONE FOUND
+3. Sequence connectors ("before", "after", "then", "while", "when"): NONE FOUND
+4. Scope indicators ("including", "as-well-as", "also", "additionally", "plus"): NONE FOUND
+5. Option indicators ("either/or", "whether", "optionally", "alternatively"): NONE FOUND
+6. Exception indicators ("except", "unless", "however", "although"): NONE FOUND
+
+--- Verdict: No Splitting Needed ---
+
+This story is already small and focused. No red flags were detected.
+
+The story describes exactly one user action (request a reset email) with one clear outcome (a reset email is sent). It is a single, vertical slice of functionality that:
+
+- Has a single actor: the user
+- Has a single trigger: requesting a reset
+- Has a single output: a reset email is sent
+- Delivers independent, testable value on its own
+- Is completable in well under 1 day
+
+--- Why This Story Does Not Need Splitting ---
+
+"Reset my password by requesting a reset email" is already the minimal slice. Compare it to what a larger, unsplit version of this feature might look like:
+
+  BAD (too big): "As a user, I can reset my password by requesting a reset email or SMS code, and I can also unlock my account if it is locked, with an option to resend the code"
+
+  GOOD (this story): "As a user, I can reset my password by requesting a reset email"
+
+The story under analysis is already at the level of the "smallest slice to ship first." It would be counterproductive to split it further — doing so would produce horizontal slices (e.g., "send the email" vs. "update the password") that do not deliver independent user value.
+
+--- Recommendation ---
+
+Do NOT split this story. Proceed directly to implementation.
+
+If the story feels large during implementation, consider applying the hamburger-method to identify layered delivery options (e.g., basic email delivery first, then add expiry tokens, then add rate limiting). But from a story perspective, this is the right size.
+
+Next skill in the workflow: small-safe-steps — to break this story into 1-3 hour implementation increments with zero downtime.

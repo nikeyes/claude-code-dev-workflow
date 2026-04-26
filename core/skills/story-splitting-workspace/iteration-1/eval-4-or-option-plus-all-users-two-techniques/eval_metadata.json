@@ -1,0 +1,12 @@
+{
+  "eval_id": 4,
+  "eval_name": "or-option-plus-all-users-two-techniques",
+  "prompt": "All users need to be able to export their data to CSV or PDF",
+  "assertions": [
+    {"id": "detects-or-option", "text": "Identifies 'or' as an option indicator — CSV and PDF are two separate format stories", "type": "capability"},
+    {"id": "detects-all-users-breadth", "text": "Identifies 'all users' as an overly broad scope and proposes starting with a specific segment (e.g. admins)", "type": "capability"},
+    {"id": "applies-two-techniques", "text": "Applies BOTH techniques: Narrow Customer Segment AND Simplify Outputs — not just one of the two", "type": "capability"},
+    {"id": "csv-before-pdf", "text": "Proposes CSV before PDF — the first story does not include PDF", "type": "behavior"},
+    {"id": "narrow-segment-first", "text": "The first story targets a narrow segment (admins, power users) rather than 'all users'", "type": "capability"}
+  ]
+}

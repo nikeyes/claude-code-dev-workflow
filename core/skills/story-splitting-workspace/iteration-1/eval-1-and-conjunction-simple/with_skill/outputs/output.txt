@@ -1,0 +1,121 @@
+Story: "As a user, I can register and log in to the application"
+
+---
+
+RED FLAGS DETECTED:
+
+- "and" (coordinating conjunction — multiple independent features bundled together)
+
+This story is doing 2 different things. Registration and login are completely separate workflows with different data flows, validation rules, and user journeys. Let's split it.
+
+---
+
+ANALYSIS
+
+The word "and" is the key red flag here. Registration (creating an account) and login (authenticating an existing account) are independent features:
+
+- Registration: form with name/email/password, validation, account creation, welcome email, etc.
+- Login: form with email/password, credential verification, session creation, redirect, etc.
+
+Neither depends on the other being built first from a user-value perspective — login could be built first (if accounts exist via other means), or registration first. They share some UI elements (forms, validation patterns) but are separate workflows.
+
+Recommended technique: Split by conjunction ("and")
+
+---
+
+PROPOSED SPLITS
+
+1. "As a user, I can register for the application"
+   - User fills in registration form (email + password minimum)
+   - Account is created
+   - User receives confirmation or is redirected
+   - Time estimate: 2-4 hours
+   - Value: New users can create accounts
+
+2. "As a user, I can log in to the application"
+   - User enters email + password
+   - Credentials are verified
+   - Session is created, user is redirected to home
+   - Time estimate: 2-3 hours
+   - Value: Existing users can authenticate
+
+3. "As a user, I can log out of the application" (implied but missing — add it)
+   - Session is destroyed
+   - User is redirected to login page
+   - Time estimate: 1 hour
+   - Value: Users can safely end their session
+
+---
+
+IF FURTHER SPLITTING IS NEEDED (apply Extract Basic Utility First)
+
+Registration can be split further:
+
+1a. "As a user, I can register with email and password (no email verification)"
+    - Bare minimum: store credentials, redirect to app
+    - Time: 1-2 hours
+
+1b. "As a user, I receive a verification email after registering"
+    - Email confirmation flow
+    - Time: 2-3 hours
+
+1c. "As a user, I can register with Google (OAuth)"
+    - Only if social login is needed
+    - Time: 3-5 hours (only after basic registration works)
+
+Login can be split further:
+
+2a. "As a user, I can log in with email and password"
+    - Core credential check + session
+    - Time: 1-2 hours
+
+2b. "As a user, I am redirected to the page I was trying to access after logging in"
+    - Post-login redirect logic
+    - Time: 1 hour
+
+2c. "As a user, I can log in with Google (OAuth)"
+    - Only after basic login works
+    - Time: 3-5 hours
+
+---
+
+SMALLEST SLICE TO SHIP FIRST
+
+"As a user, I can register with email and password (no email verification)"
+
+- Takes 1-2 hours
+- Delivers immediate value: a user can create an account
+- Testable end-to-end in production
+- No email infrastructure needed yet
+- Login story can be built immediately after (or in parallel)
+
+---
+
+RECOMMENDED DELIVERY ORDER
+
+Day 1: Story 1a — Register with email + password (no verification)
+Day 1: Story 2a — Log in with email + password
+Day 2: Story 3  — Log out
+Day 2: Story 1b — Email verification after registration (if required)
+Later: Story 1c / 2c — OAuth / social login (only with proven demand)
+
+---
+
+TECHNIQUES APPLIED
+
+- Split by "and" -> Separated registration from login into independent stories
+- Extract basic utility first -> Stripped email verification from registration (add later)
+- Identified implied missing story -> Logout is needed for a complete auth flow
+
+---
+
+SELF-CHECK
+
+[x] Scanned story for all 6 red flag categories — found "and"
+[x] Flagged story as too big
+[x] Identified splitting technique: Split by conjunction
+[x] Proposed 3-5 concrete split stories (proposed 3 core + optional deeper splits)
+[x] Each split story is independently valuable
+[x] Each split story takes less than 2-3 days
+[x] Specified the smallest story to ship first (register without email verification)
+[x] Applied multiple techniques where relevant (Extract Basic Utility for deeper splits)

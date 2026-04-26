@@ -1,0 +1,38 @@
+{
+  "expectations": [
+    {
+      "text": "Identifies 'or' as an option indicator — CSV and PDF are two separate format stories",
+      "passed": true,
+      "evidence": "The output explicitly states \"'CSV or PDF' is two independent output formats — they require different libraries, different rendering logic, and different user value\" and notes \"the story has at least two 'or' splits\". CSV and PDF are placed in separate stories (Stories 1-2 for CSV, Story 3 for PDF)."
+    },
+    {
+      "text": "Identifies 'all users' as an overly broad scope and proposes starting with a specific segment (e.g. admins)",
+      "passed": true,
+      "evidence": "The output explicitly calls out \"'All users' hides role differences\" and explains different user types (free, premium, admin, guest) have different data access, volumes, and entitlements. Story 4 specifically targets admins: \"As an admin, I can export any user's data to CSV\"."
+    },
+    {
+      "text": "Applies BOTH techniques: Narrow Customer Segment AND Simplify Outputs — not just one of the two",
+      "passed": true,
+      "evidence": "Both techniques are applied: (1) Narrow Customer Segment — stories target 'regular user' and 'admin' separately rather than 'all users'; (2) Simplify Outputs — CSV and PDF are split into separate stories (Stories 1-2 for CSV, Story 3 for PDF). The split is explicitly described as 'along two axes: format first, then user type / data scope'."
+    },
+    {
+      "text": "Proposes CSV before PDF — the first story does not include PDF",
+      "passed": true,
+      "evidence": "Story 1 is 'As a regular user, I can export my own profile data to CSV', Story 2 is 'As a regular user, I can export my transaction/activity history to CSV', and only Story 3 introduces PDF. The summary table confirms PDF first appears at priority 3."
+    },
+    {
+      "text": "The first story targets a narrow segment (admins, power users) rather than 'all users'",
+      "passed": true,
+      "evidence": "Story 1 targets 'a regular user' (not 'all users'): \"As a regular user, I can export my own profile data to CSV\". The recommendation explicitly says \"Start with Story 1\" which is scoped to a single user type accessing only their own data."
+    }
+  ],
+  "summary": {
+    "passed": 5,
+    "failed": 0,
+    "total": 5,
+    "pass_rate": 1.0
+  },
+  "timing": {
+    "executor_duration_seconds": 37.7
+  }
+}

@@ -1,0 +1,647 @@
+{
+  "metadata": {
+    "skill_name": "story-splitting",
+    "skill_path": "/Users/jorge.castro/mordor/personal/stepwise-dev/core/skills/story-splitting",
+    "executor_model": "claude-sonnet-4-6",
+    "analyzer_model": "claude-sonnet-4-6",
+    "timestamp": "2026-04-26T10:44:52Z",
+    "evals_run": [
+      "eval-1-and-conjunction-simple",
+      "eval-2-manage-verb-hides-crud",
+      "eval-3-including-scope-expansion-start-with-outputs",
+      "eval-4-or-option-plus-all-users-two-techniques",
+      "eval-5-sequence-then-workflow-steps",
+      "eval-6-realtime-automated-multiple-red-flags",
+      "eval-7-already-small-no-split-needed"
+    ],
+    "runs_per_configuration": 1
+  },
+  "runs": [
+    {
+      "eval_id": 1,
+      "eval_name": "eval-1-and-conjunction-simple",
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 4,
+        "failed": 0,
+        "total": 4,
+        "time_seconds": 40.6,
+        "tokens": 19716,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "Explicitly identifies 'and' as a coordinating conjunction indicating the story is too big",
+          "passed": true,
+          "evidence": "Line 7 under RED FLAGS DETECTED: '\"and\" (coordinating conjunction \u2014 multiple independent features bundled together)'. Also reinforced in ANALYSIS: 'The word \"and\" is the key red flag here.'"
+        },
+        {
+          "text": "Proposes exactly 2 stories: one for registration and one for login, independently deployable",
+          "passed": true,
+          "evidence": "Story 1 'As a user, I can register for the application' and Story 2 'As a user, I can log in to the application' are both proposed as independent deployable slices. A third story (logout) is also suggested as implied/missing, but registration and login are clearly two distinct independent stories with no horizontal splits."
+        },
+        {
+          "text": "Specifies which story to deliver first and justifies the choice",
+          "passed": true,
+          "evidence": "The 'SMALLEST SLICE TO SHIP FIRST' section (lines 82-90) explicitly names Story 1a ('As a user, I can register with email and password (no email verification)') as the first story, with justification: 1-2 hours, delivers immediate value, testable end-to-end, no email infrastructure needed, login can follow immediately after."
+        },
+        {
+          "text": "Does NOT propose horizontal splits (DB layer, API layer, UI layer) \u2014 splits are vertical slices with user value",
+          "passed": true,
+          "evidence": "All proposed splits are vertical user-value slices expressed as 'As a user, I can...' stories (register, log in, log out, email verification, OAuth). No horizontal/technical-layer splits (DB, API, UI) appear anywhere in the output."
+        }
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": 1,
+      "eval_name": "eval-1-and-conjunction-simple",
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.75,
+        "passed": 3,
+        "failed": 1,
+        "total": 4,
+        "time_seconds": 31.8,
+        "tokens": 13782,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "Explicitly identifies 'and' as a coordinating conjunction indicating the story is too big",
+          "passed": true,
+          "evidence": "Output states: 'The word \"and\" in the story title is the clearest signal: it names two distinct user goals that trigger different flows, touch different code paths, and deliver independent value.'"
+        },
+        {
+          "text": "Proposes exactly 2 stories: one for registration and one for login, independently deployable",
+          "passed": true,
+          "evidence": "Story 1: 'As a new user, I can register an account...' and Story 2: 'As a registered user, I can log in with my email and password...' are the primary proposed split. Optional further splits are clearly labeled conditional ('if needed') and do not replace the core 2-story proposal. The analysis explicitly states each delivers 'independent, testable, demonstrable value'."
+        },
+        {
+          "text": "Specifies which story to deliver first and justifies the choice",
+          "passed": false,
+          "evidence": "The output does not recommend a delivery order. It only presents both options neutrally: 'You might want to ship account creation first (e.g., to seed users) before enabling login, or vice versa.' No explicit first-story recommendation or justification is given."
+        },
+        {
+          "text": "Does NOT propose horizontal splits (DB layer, API layer, UI layer) \u2014 splits are vertical slices with user value",
+          "passed": true,
+          "evidence": "All proposed stories are expressed as user-facing vertical slices with acceptance criteria focused on observable user behavior (e.g., 'I can submit an email address and password', 'I see an error if the email is already registered'). No technical layer splits appear anywhere in the output."
+        }
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": 2,
+      "eval_name": "eval-2-manage-verb-hides-crud",
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 4,
+        "failed": 0,
+        "total": 4,
+        "time_seconds": 37.9,
+        "tokens": 19392,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "Explicitly identifies that 'manage' hides multiple CRUD operations (create, read/list, edit, delete)",
+          "passed": true,
+          "evidence": "Output explicitly flags 'RED FLAG DETECTED: manage' and states it 'hides multiple CRUD operations', listing list/view, create/add, edit/update, and delete/remove as the hidden operations."
+        },
+        {
+          "text": "Proposes at least 4 separate stories, one per CRUD operation \u2014 without grouping multiple operations in a single story",
+          "passed": true,
+          "evidence": "Output proposes 5 splits: Split 1 (view), Split 2 (add), Split 3 (edit), Split 4 (remove), Split 5 (search/filter). Each targets a single operation with no grouping of multiple CRUD actions."
+        },
+        {
+          "text": "Recommends starting with viewing/listing products as the simplest story with immediate value",
+          "passed": true,
+          "evidence": "Output states 'Recommended first story: Admin can view the product catalog (list all products)' with explicit reasoning: immediate value, read-only safety, establishes foundation for other stories."
+        },
+        {
+          "text": "None of the proposed stories use the verb 'manage' \u2014 each has a concrete verb (view, create, edit, delete)",
+          "passed": true,
+          "evidence": "All proposed splits use concrete verbs: 'view' (Split 1), 'add' (Split 2), 'edit' (Split 3), 'remove' (Split 4), 'search and filter' (Split 5). The word 'manage' does not appear in any story title."
+        }
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": 2,
+      "eval_name": "eval-2-manage-verb-hides-crud",
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 4,
+        "failed": 0,
+        "total": 4,
+        "time_seconds": 31.7,
+        "tokens": 13727,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "Explicitly identifies that 'manage' hides multiple CRUD operations (create, read/list, edit, delete)",
+          "passed": true,
+          "evidence": "The output states: 'The word \"manage\" is the key problem. It hides at least four distinct operations: creating a product, reading/listing products, updating a product, and deleting a product.'"
+        },
+        {
+          "text": "Proposes at least 4 separate stories, one per CRUD operation \u2014 without grouping multiple operations in a single story",
+          "passed": true,
+          "evidence": "The output proposes exactly 4 separate stories under 'PROPOSED SPLIT': (1) add a new product, (2) view the list of products, (3) edit an existing product, (4) remove a product \u2014 each covering exactly one CRUD operation."
+        },
+        {
+          "text": "Recommends starting with viewing/listing products as the simplest story with immediate value",
+          "passed": true,
+          "evidence": "The suggested delivery order is '2 (view list) -> 1 (add) -> 3 (edit) -> 4 (delete)' with the rationale: 'Starting with the read operation is low-risk and delivers immediate value (admins can see what exists).'"
+        },
+        {
+          "text": "None of the proposed stories use the verb 'manage' \u2014 each has a concrete verb (view, create, edit, delete)",
+          "passed": true,
+          "evidence": "The four proposed story titles use the concrete verbs 'add', 'view', 'edit', and 'remove' respectively. The word 'manage' does not appear in any of the proposed story titles."
+        }
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": 3,
+      "eval_name": "eval-3-including-scope-expansion-start-with-outputs",
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 5,
+        "failed": 0,
+        "total": 5,
+        "time_seconds": 55.9,
+        "tokens": 20479,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "Explicitly identifies 'including' as a scope indicator that bundles multiple outputs into one story",
+          "passed": true,
+          "evidence": "Line 14-18: labels 'INCLUDING (Scope Indicator)' as 'a direct signal of feature bundling' that 'introduces three separate outputs bundled into one story: revenue breakdown, expense categories, year-over-year comparison charts'"
+        },
+        {
+          "text": "Applies the 'Start with Outputs' technique (#1) \u2014 names it explicitly or clearly describes dividing by which output is delivered first",
+          "passed": true,
+          "evidence": "Line 66-67: 'Step 3: Apply \"Start with outputs\" + \"Simplify outputs\"'. Also listed in TECHNIQUES APPLIED (line 169): 'Start with outputs -> Delivered simplest output (total number) first'. The splitting process explicitly sequences outputs from simplest to most complex."
+        },
+        {
+          "text": "The first story does NOT include charts \u2014 delivers a simpler output first (text summary, basic table)",
+          "passed": true,
+          "evidence": "Story 1 (lines 86-93) is 'Generate a basic monthly report showing total revenue for a given month' with 'No breakdown, no charts, no expense data'. Charts only appear in Story 5 (lines 118-123)."
+        },
+        {
+          "text": "Each split story delivers independent value \u2014 the first story is useful without requiring the subsequent ones",
+          "passed": true,
+          "evidence": "Story 1 is marked 'Deployable alone: YES' with explicit value statement: 'Stakeholders can verify the report exists and numbers are correct'. Line 138-139: 'Shipping Story 1 alone is production-worthy and useful. The rest are enhancements.'"
+        },
+        {
+          "text": "Proposes at least 3 distinct stories, each incrementally adding one or two outputs",
+          "passed": true,
+          "evidence": "5 distinct stories proposed (lines 86-123): Story 1 (total revenue), Story 2 (revenue breakdown), Story 3 (expense categories), Story 4 (year-over-year text/table), Story 5 (year-over-year charts). Each adds exactly one incremental output."
+        }
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": 3,
+      "eval_name": "eval-3-including-scope-expansion-start-with-outputs",
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.8,
+        "passed": 4,
+        "failed": 1,
+        "total": 5,
+        "time_seconds": 33.5,
+        "tokens": 13908,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "Explicitly identifies 'including' as a scope indicator that bundles multiple outputs into one story",
+          "passed": true,
+          "evidence": "Line 11: 'The word \"including\" is the key signal here. It introduces a list of three distinct deliverables, each with its own data requirements, business logic, and UI complexity'"
+        },
+        {
+          "text": "Applies the 'Start with Outputs' technique (#1) \u2014 names it explicitly or clearly describes dividing by which output is delivered first",
+          "passed": false,
+          "evidence": "The output divides stories by output type (revenue table, expense table, YoY comparison, then charts) implying a start-with-outputs approach, but never names the technique explicitly as 'Start with Outputs' or references technique #1. The split is output-oriented but the technique is not identified by name."
+        },
+        {
+          "text": "The first story does NOT include charts \u2014 delivers a simpler output first (text summary, basic table)",
+          "passed": true,
+          "evidence": "Story 1 acceptance criteria explicitly states: 'No charts required; a table is sufficient'. Charts are deferred entirely to Story 4."
+        },
+        {
+          "text": "Each split story delivers independent value \u2014 the first story is useful without requiring the subsequent ones",
+          "passed": true,
+          "evidence": "Story 1 delivers revenue breakdown as a standalone table. The sequencing section states: 'Each story is independently releasable and delivers visible value to the finance user without requiring the others to be complete first.' Story 1 and 2 are also noted as parallelizable."
+        },
+        {
+          "text": "Proposes at least 3 distinct stories, each incrementally adding one or two outputs",
+          "passed": true,
+          "evidence": "Four distinct stories are proposed: Story 1 (revenue breakdown table), Story 2 (expense categories table), Story 3 (YoY comparison with table + optional charts), Story 4 (charts layer). Each adds one incremental output."
+        }
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": 4,
+      "eval_name": "eval-4-or-option-plus-all-users-two-techniques",
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 5,
+        "failed": 0,
+        "total": 5,
+        "time_seconds": 53.2,
+        "tokens": 20276,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "Identifies 'or' as an option indicator \u2014 CSV and PDF are two separate format stories",
+          "passed": true,
+          "evidence": "Output explicitly flags 'or' as a Category 5 Option Indicator: 'export their data to CSV or PDF \u2014 Signals two alternative output formats that should be separate stories'. Techniques Applied section confirms: 'Split by \"or\" (Category 5 Option Indicator) -> Separated CSV and PDF into distinct stories'."
+        },
+        {
+          "text": "Identifies 'all users' as an overly broad scope and proposes starting with a specific segment (e.g. admins)",
+          "passed": true,
+          "evidence": "Output flags 'all users' as a Scope Indicator (Category 4): 'Too broad a customer segment to deliver in one story \u2014 Hides different user types with different needs and UX tolerances'. Proposes starting with admins: 'Start with admins, then power users, then all users'."
+        },
+        {
+          "text": "Applies BOTH techniques: Narrow Customer Segment AND Simplify Outputs \u2014 not just one of the two",
+          "passed": true,
+          "evidence": "Both techniques are explicitly applied. Step 1 applies Technique #2 (Narrow the Customer Segment) and Step 2 applies Technique #5 (Simplify Outputs). The TECHNIQUES APPLIED section confirms: 'Split by \"or\" (Category 5 Option Indicator)' and 'Narrow the Customer Segment (Technique #2)'."
+        },
+        {
+          "text": "Proposes CSV before PDF \u2014 the first story does not include PDF",
+          "passed": true,
+          "evidence": "Split 1 is 'Admins can export their data to CSV' and Split 2 is 'Power users can export their data to CSV'. PDF only appears in Split 4 ('Admins can export their data to PDF') and Split 5. The recommended first sprint is Split 1 (Admin + CSV), with PDF deferred until demand is confirmed."
+        },
+        {
+          "text": "The first story targets a narrow segment (admins, power users) rather than 'all users'",
+          "passed": true,
+          "evidence": "Split 1 explicitly targets 'Admins': 'Admins can export their data to CSV \u2014 Why admins first: They tolerate rough UX and can validate the feature'. The SMALLEST SLICE section confirms: 'Admins can export their data to CSV'."
+        }
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": 4,
+      "eval_name": "eval-4-or-option-plus-all-users-two-techniques",
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 5,
+        "failed": 0,
+        "total": 5,
+        "time_seconds": 37.7,
+        "tokens": 14069,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "Identifies 'or' as an option indicator \u2014 CSV and PDF are two separate format stories",
+          "passed": true,
+          "evidence": "The output explicitly states \"'CSV or PDF' is two independent output formats \u2014 they require different libraries, different rendering logic, and different user value\" and notes \"the story has at least two 'or' splits\". CSV and PDF are placed in separate stories (Stories 1-2 for CSV, Story 3 for PDF)."
+        },
+        {
+          "text": "Identifies 'all users' as an overly broad scope and proposes starting with a specific segment (e.g. admins)",
+          "passed": true,
+          "evidence": "The output explicitly calls out \"'All users' hides role differences\" and explains different user types (free, premium, admin, guest) have different data access, volumes, and entitlements. Story 4 specifically targets admins: \"As an admin, I can export any user's data to CSV\"."
+        },
+        {
+          "text": "Applies BOTH techniques: Narrow Customer Segment AND Simplify Outputs \u2014 not just one of the two",
+          "passed": true,
+          "evidence": "Both techniques are applied: (1) Narrow Customer Segment \u2014 stories target 'regular user' and 'admin' separately rather than 'all users'; (2) Simplify Outputs \u2014 CSV and PDF are split into separate stories (Stories 1-2 for CSV, Story 3 for PDF). The split is explicitly described as 'along two axes: format first, then user type / data scope'."
+        },
+        {
+          "text": "Proposes CSV before PDF \u2014 the first story does not include PDF",
+          "passed": true,
+          "evidence": "Story 1 is 'As a regular user, I can export my own profile data to CSV', Story 2 is 'As a regular user, I can export my transaction/activity history to CSV', and only Story 3 introduces PDF. The summary table confirms PDF first appears at priority 3."
+        },
+        {
+          "text": "The first story targets a narrow segment (admins, power users) rather than 'all users'",
+          "passed": true,
+          "evidence": "Story 1 targets 'a regular user' (not 'all users'): \"As a regular user, I can export my own profile data to CSV\". The recommendation explicitly says \"Start with Story 1\" which is scoped to a single user type accessing only their own data."
+        }
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": 5,
+      "eval_name": "eval-5-sequence-then-workflow-steps",
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.5,
+        "passed": 2,
+        "failed": 2,
+        "total": 4,
+        "time_seconds": 51.1,
+        "tokens": 20009,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "Identifies 'then' as a sequence connector and 'and' as a conjunction \u2014 both signal bundled concerns",
+          "passed": true,
+          "evidence": "RED FLAGS DETECTED section explicitly calls out 'and' (appears twice) as 'multiple features bundled together' and 'then' as 'sequence connector signaling separate workflow steps'. Both are listed in the splitting technique selection as primary red flags."
+        },
+        {
+          "text": "Proposes splitting by workflow step: validation, payment, inventory, email as separable concerns",
+          "passed": true,
+          "evidence": "PROPOSED SPLITS section delivers exactly four workflow-step stories: Story 2 (cart validation), Story 3 (payment processing), Story 4 (inventory update), Story 5 (confirmation email). Each is described as independently deployable with its own scope, value, and estimate."
+        },
+        {
+          "text": "Identifies payment as the central value step and recommends delivering it first, even with simplified inventory/email handling",
+          "passed": false,
+          "evidence": "The output recommends Story 1 (basic order submission with no payment) as the first delivery, followed by cart validation. Payment (Story 3) is deferred to Sprint 2. The rationale explicitly favours 'no money moves, no external dependencies' as the reason to go first. Payment is not identified as the central value step."
+        },
+        {
+          "text": "Considers a 'put on crutches' option: e.g. manual emails before automating the send step",
+          "passed": false,
+          "evidence": "The output never mentions a manual/crutch interim option. Email is deferred to Sprint 3 as a fully automated story (Story 5) without any suggestion of handling it manually first. No 'crutches' pattern is applied anywhere in the analysis."
+        }
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": 5,
+      "eval_name": "eval-5-sequence-then-workflow-steps",
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.25,
+        "passed": 1,
+        "failed": 3,
+        "total": 4,
+        "time_seconds": 27.7,
+        "tokens": 13741,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "Identifies 'then' as a sequence connector and 'and' as a conjunction \u2014 both signal bundled concerns",
+          "passed": false,
+          "evidence": "The output explicitly calls out 'and' as a split signal ('the word \"and\" appears three times in a single story. Each \"and\" is a potential split point'), but never identifies 'then' or 'and then' as a sequence connector. Only one of the two required linguistic signals is named."
+        },
+        {
+          "text": "Proposes splitting by workflow step: validation, payment, inventory, email as separable concerns",
+          "passed": true,
+          "evidence": "The output splits the story into exactly four workflow-step stories: Story 1 (cart validation), Story 2 (payment processing), Story 3 (inventory update), Story 4 (confirmation email), each described as a distinct domain concern with independent testability."
+        },
+        {
+          "text": "Identifies payment as the central value step and recommends delivering it first, even with simplified inventory/email handling",
+          "passed": false,
+          "evidence": "Payment is called 'the most complex and risky step' and 'the core business transaction', confirming it as central value. However, the recommended delivery order places cart validation first and payment second, not first. No simplified or stub handling of inventory/email is suggested as a way to ship payment sooner."
+        },
+        {
+          "text": "Considers a 'put on crutches' option: e.g. manual emails before automating the send step",
+          "passed": false,
+          "evidence": "The output contains no mention of crutches, manual workarounds, temporary stubs, or any strategy of deferring automation with a manual fallback. Each story is treated as a full automated implementation from the start."
+        }
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": 6,
+      "eval_name": "eval-6-realtime-automated-multiple-red-flags",
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 6,
+        "failed": 0,
+        "total": 6,
+        "time_seconds": 65.8,
+        "tokens": 20872,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "Identifies 'real-time' and 'automatically' as over-engineering signals requiring Dummy-to-Dynamic or Put-on-Crutches",
+          "passed": true,
+          "evidence": "RED FLAG #1 explicitly flags 'real-time' with 'Apply #4 (Dummy to Dynamic) + #9 (Put it on Crutches)'. RED FLAG #2 flags 'automatically' with 'Apply #1 (Start with Outputs) + Split by action'. The techniques summary confirms: \"'real-time' flag \u2192 Technique #9 (Crutches first)\" and \"'automatically' flag \u2192 Technique #4 (Dummy to Dynamic)\"."
+        },
+        {
+          "text": "Identifies that 3 channels (email, SMS, in-app) behind 'and' are separate stories",
+          "passed": true,
+          "evidence": "RED FLAG #3 explicitly calls out '\"email, SMS, and in-app messages\" = three independent delivery channels' and Step 2 applies 'Split by Channel' producing Story D (email only), Story E (SMS only), Story F (in-app only). Final splits deliver Stories 1, 2, 3 as one channel each."
+        },
+        {
+          "text": "Defers 'based on notification preferences' as a later story \u2014 the first story uses hardcoded or default behavior",
+          "passed": true,
+          "evidence": "RED FLAG #5 identifies 'based on their notification preferences' as a hidden feature. Story 1 is explicitly described as 'No automation, no event detection, no preferences'. Preferences are deferred to Phase 3 (Stories 7-8, Week 3-4). Story 1 uses hardcoded delivery."
+        },
+        {
+          "text": "Applies Put-on-Crutches (#9): proposes a manual or simplified notification mechanism before building the real automated real-time system",
+          "passed": true,
+          "evidence": "Phase 1 is explicitly labeled 'Prove it works manually (Crutches first)'. Story 1 is 'Developer can send a hardcoded email notification by running a script \u2014 No automation, no event detection, no preferences'. Techniques summary: \"'real-time' flag \u2192 Technique #9 (Crutches first): manual script before automation\"."
+        },
+        {
+          "text": "The first story delivers value via a single channel (e.g. email only), not all three simultaneously",
+          "passed": true,
+          "evidence": "Story 1 is 'Developer can send a hardcoded email notification by running a script' \u2014 email only. SMS is Story 2, in-app is Story 3. Each channel is a separate story in Phase 1."
+        },
+        {
+          "text": "Proposes at least 5 distinct stories covering the progression from manual/simple to automated/real-time",
+          "passed": true,
+          "evidence": "9 distinct stories proposed: Stories 1-3 (manual scripts per channel), Stories 4-6 (event-triggered automation per channel), Stories 7-8 (user preferences backend + UI), Story 9 (real-time in-app via WebSocket). Clearly covers the full progression from manual to automated to real-time."
+        }
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": 6,
+      "eval_name": "eval-6-realtime-automated-multiple-red-flags",
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.67,
+        "passed": 4,
+        "failed": 2,
+        "total": 6,
+        "time_seconds": 40.9,
+        "tokens": 14111,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "Identifies 'real-time' and 'automatically' as over-engineering signals requiring Dummy-to-Dynamic or Put-on-Crutches",
+          "passed": false,
+          "evidence": "The output mentions that \"'Automatically' and 'real-time' add cross-cutting quality constraints that are often better validated incrementally rather than all at once\" and notes them as signals. However, it never names the specific techniques 'Dummy-to-Dynamic' or 'Put-on-Crutches', which the assertion requires."
+        },
+        {
+          "text": "Identifies that 3 channels (email, SMS, in-app) behind 'and' are separate stories",
+          "passed": true,
+          "evidence": "The output explicitly states: \"The word 'and' appears between three delivery channels, which is the clearest signal that the story contains parallel tracks that can be delivered independently.\" Stories 2, 4, and 5 each cover a single channel independently."
+        },
+        {
+          "text": "Defers 'based on notification preferences' as a later story \u2014 the first story uses hardcoded or default behavior",
+          "passed": false,
+          "evidence": "The output makes the notification preference model Story 1 (the very first story), rather than deferring it. All subsequent stories depend on Story 1's preferences. The first notification-sending story (Story 2) already filters by preferences from Story 1. No story uses hardcoded or default behavior as a crutch."
+        },
+        {
+          "text": "Applies Put-on-Crutches (#9): proposes a manual or simplified notification mechanism before building the real automated real-time system",
+          "passed": true,
+          "evidence": "Story 2 deliberately uses polling instead of real-time push ('no real-time push yet (polling is acceptable)'), and Story 3 is the upgrade to real-time. This is the Put-on-Crutches pattern in practice \u2014 a simplified mechanism first \u2014 even though the pattern is not named explicitly."
+        },
+        {
+          "text": "The first story delivers value via a single channel (e.g. email only), not all three simultaneously",
+          "passed": true,
+          "evidence": "Story 2 is the first story that actually delivers notifications to users, and it delivers via in-app only. Stories 4 and 5 add email and SMS independently afterward. No story delivers all three channels simultaneously."
+        },
+        {
+          "text": "Proposes at least 5 distinct stories covering the progression from manual/simple to automated/real-time",
+          "passed": true,
+          "evidence": "The output proposes exactly 5 distinct stories: (1) notification preference model, (2) in-app notifications with polling, (3) real-time in-app via WebSocket/SSE, (4) email notifications, (5) SMS notifications. These cover a clear progression from simple baseline to automated real-time delivery."
+        }
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": 7,
+      "eval_name": "eval-7-already-small-no-split-needed",
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 4,
+        "failed": 0,
+        "total": 4,
+        "time_seconds": 31.3,
+        "tokens": 19302,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "Does NOT identify red flags \u2014 there are no 'and', 'or', 'manage', 'including', 'before/after' in this story",
+          "passed": true,
+          "evidence": "The output scans all 6 red flag categories and reports 'NONE FOUND' for each one. Verdict section states 'No red flags were detected.'"
+        },
+        {
+          "text": "Does NOT recommend splitting this story into smaller stories \u2014 accepts it as appropriately sized",
+          "passed": true,
+          "evidence": "Verdict is 'No Splitting Needed' and recommendation explicitly states 'Do NOT split this story. Proceed directly to implementation.'"
+        },
+        {
+          "text": "Explicitly confirms the story is small enough to proceed as-is (approximately 1 day or less)",
+          "passed": true,
+          "evidence": "Output states 'Is completable in well under 1 day' as one of the story's characteristics, and confirms it is 'the right size'."
+        },
+        {
+          "text": "Does NOT add phases, learning steps, or unnecessary sub-tasks to a story that does not need them",
+          "passed": true,
+          "evidence": "No phases or sub-tasks are introduced. The output only adds lightweight pointers to next workflow skills (hamburger-method, small-safe-steps) as optional next steps, not decompositions of the story itself."
+        }
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": 7,
+      "eval_name": "eval-7-already-small-no-split-needed",
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 4,
+        "failed": 0,
+        "total": 4,
+        "time_seconds": 23.9,
+        "tokens": 13469,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "Does NOT identify red flags \u2014 there are no 'and', 'or', 'manage', 'including', 'before/after' in this story",
+          "passed": true,
+          "evidence": "The output explicitly states under point 4: 'No red-flag words. The story contains no \"and\", \"or\", \"manage\", \"handle\", or \"including\" that would suggest hidden scope.'"
+        },
+        {
+          "text": "Does NOT recommend splitting this story into smaller stories \u2014 accepts it as appropriately sized",
+          "passed": true,
+          "evidence": "The verdict section clearly states: 'Do not split. Implement as written.' No splitting recommendations are made."
+        },
+        {
+          "text": "Explicitly confirms the story is small enough to proceed as-is (approximately 1 day or less)",
+          "passed": true,
+          "evidence": "The output opens with 'This story is already small enough. No splitting is needed.' and further states 'small enough to deliver together in a day or two' under point 3."
+        },
+        {
+          "text": "Does NOT add phases, learning steps, or unnecessary sub-tasks to a story that does not need them",
+          "passed": true,
+          "evidence": "The output provides analytical reasoning (5 numbered points) but does not introduce phases, learning steps, or sub-tasks. The conclusion is simply 'Do not split. Implement as written.'"
+        }
+      ],
+      "notes": []
+    }
+  ],
+  "run_summary": {
+    "with_skill": {
+      "pass_rate": {
+        "mean": 0.929,
+        "stddev": 0.189,
+        "min": 0.5,
+        "max": 1.0
+      },
+      "time_seconds": {
+        "mean": 47.971,
+        "stddev": 11.913,
+        "min": 31.3,
+        "max": 65.8
+      },
+      "tokens": {
+        "mean": 20006.571,
+        "stddev": 577.827,
+        "min": 19302,
+        "max": 20872
+      }
+    },
+    "without_skill": {
+      "pass_rate": {
+        "mean": 0.781,
+        "stddev": 0.271,
+        "min": 0.25,
+        "max": 1.0
+      },
+      "time_seconds": {
+        "mean": 32.457,
+        "stddev": 5.726,
+        "min": 23.9,
+        "max": 40.9
+      },
+      "tokens": {
+        "mean": 13829.571,
+        "stddev": 221.103,
+        "min": 13469,
+        "max": 14111
+      }
+    },
+    "delta": {
+      "pass_rate": "+0.15",
+      "time_seconds": "+15.5",
+      "tokens": "+6177"
+    }
+  },
+  "notes": [
+    "Eval-5 (sequence/then) scores 50% with skill vs 25% without \u2014 assertions on 'payment as core value' and 'put on crutches for email' expose a gap in the skill guidance",
+    "Evals 2, 4, 7 show 0pp delta \u2014 baseline model already handles these patterns well (manage\u2192CRUD, or/all-users, small stories)",
+    "Eval-6 shows largest delta (+33pp) \u2014 skill forces correct deferral of preferences and naming of crutches technique",
+    "Eval-7 (false positive) passes 100% in both configs \u2014 the skill correctly avoids splitting small stories",
+    "High stddev on with_skill (18.9%) driven by eval-5 failure; without that outlier, skill consistency is strong"
+  ]
+}

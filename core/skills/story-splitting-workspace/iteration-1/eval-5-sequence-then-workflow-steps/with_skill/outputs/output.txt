@@ -1,0 +1,167 @@
+STORY SPLITTING ANALYSIS
+========================
+
+Original story:
+"When a user submits an order, the system should validate the cart, process the payment, update inventory, and then send a confirmation email"
+
+---
+
+RED FLAGS DETECTED
+==================
+
+This story contains multiple linguistic red flags that signal it is far too big:
+
+1. "and" (appears twice) - multiple features bundled together
+   - "...process the payment, update inventory, AND then send a confirmation email"
+   - "...validate the cart, process the payment, update inventory, AND then..."
+
+2. "then" - sequence connector signaling separate workflow steps
+   - "update inventory, and THEN send a confirmation email"
+
+3. Implicit sequence connectors throughout: the entire story describes a chain of
+   sequential steps (validate -> process -> update -> send), each of which is a
+   distinct system concern.
+
+This story is doing at least 4 different things. Let's split it.
+
+---
+
+SPLITTING TECHNIQUE SELECTED
+==============================
+
+Primary red flags: "and" + "then" (multiple sequence connectors)
+
+From the decision tree:
+- "and" -> Split by conjunction (multiple independent features)
+- "before/after/then" -> Split by workflow step ("Process payment THEN send receipt" -> 2 stories)
+
+Additional technique: Extract basic utility first (deliver bare minimum end-to-end
+before adding each step)
+
+---
+
+STEP-BY-STEP SPLITTING
+========================
+
+Step 1: Split by "then" and sequence (workflow steps bundled)
+
+The story chains 4 distinct system responsibilities:
+  (a) Validate the cart
+  (b) Process the payment
+  (c) Update inventory
+  (d) Send a confirmation email
+
+Each step can fail independently, has its own logic, its own rollback behaviour,
+and its own value to deliver. They should not be shipped as a single story.
+
+Step 2: Extract basic utility first
+
+Before adding all four steps, what is the minimum that delivers value? A user
+submitting an order and seeing it recorded - even if inventory and email come later.
+
+Step 3: Split by "and" (multiple independent concerns)
+
+Cart validation, payment processing, inventory management, and transactional email
+are each independently deployable pieces of functionality.
+
+---
+
+PROPOSED SPLITS
+================
+
+Story 1: "User can submit an order and receive a basic order confirmation (no payment)"
+  - What it delivers: The submit button works; an order record is created; the user
+    sees a success screen with an order number.
+  - Payment, inventory update, and email are out of scope.
+  - Time estimate: 2-4 hours
+  - Value: Unblocks the end-to-end flow skeleton; stakeholders can validate the
+    happy path UI immediately.
+
+Story 2: "System validates the cart before the user can submit an order"
+  - What it delivers: Cart validation logic (items in stock, prices correct, cart
+    not empty). User sees a clear error message if validation fails.
+  - Payment and downstream steps are out of scope.
+  - Time estimate: 3-5 hours
+  - Value: Prevents bad orders from entering the system; surfaces UX for error states.
+
+Story 3: "System processes payment when an order is submitted"
+  - What it delivers: Integration with the payment gateway; order is only confirmed
+    if payment succeeds; failed payments return a clear error to the user.
+  - Inventory update and email are out of scope (order record is still created).
+  - Time estimate: 4-8 hours (payment gateway integration)
+  - Value: Revenue flow is live; orders are tied to real payments.
+
+Story 4: "System updates inventory when an order is confirmed"
+  - What it delivers: After a successful order, available stock is decremented for
+    each purchased item.
+  - Time estimate: 2-4 hours
+  - Value: Prevents overselling; inventory data is accurate.
+
+Story 5: "System sends a confirmation email after an order is placed"
+  - What it delivers: Transactional email with order summary sent to the customer's
+    email address after a successful order.
+  - Time estimate: 2-4 hours (email service integration)
+  - Value: Customer has a record of the purchase; reduces support queries.
+
+---
+
+SMALLEST SLICE TO SHIP FIRST
+==============================
+
+Story 1: "User can submit an order and receive a basic order confirmation (no payment)"
+
+Why first?
+- Validates the end-to-end flow (UI -> backend -> database) without touching
+  external integrations (payment gateway, email provider).
+- Stakeholders can see and test the order submission experience immediately.
+- All subsequent stories build on top of this foundation.
+- Lowest risk - no money moves, no external dependencies.
+- Estimated 2-4 hours.
+
+---
+
+RECOMMENDED DELIVERY ORDER
+============================
+
+Sprint 1 (foundation):
+  1. Submit order -> basic confirmation (Story 1) - skeleton of the flow
+  2. Cart validation (Story 2) - guards the entry point
+
+Sprint 2 (money flows):
+  3. Payment processing (Story 3) - orders are now real transactions
+
+Sprint 3 (operations & communication):
+  4. Inventory update (Story 4) - stock accuracy
+  5. Confirmation email (Story 5) - customer communication
+
+Each story can be deployed independently. Stories 4 and 5 can be developed in
+parallel once Story 3 is live, since they both react to a confirmed order event.
+
+---
+
+SELF-CHECK
+===========
+
+[x] Scanned for all 6 red flag categories
+[x] Flagged the story as too big (red flags: "and" x2, "then", implicit sequence)
+[x] Identified splitting techniques: Split by workflow step + Extract basic utility
+[x] Proposed 5 concrete split stories (not vague suggestions)
+[x] Each split story is independently valuable and deployable
+[x] Each split story is estimated at under 1 day of work
+[x] Specified the smallest story to ship first (Story 1: basic submit + confirmation)
+[x] Applied multiple techniques (split by sequence, extract basic utility)
+
+---
+
+KEY PRINCIPLE
+==============
+
+Risk grows faster than the size of the change.
+
+The original story bundles four external integration points (cart data, payment
+gateway, inventory system, email provider) into one delivery. If anything fails -
+a flaky payment API, an email template bug, an inventory race condition - the
+entire story is blocked. By splitting, each integration is isolated: failures are
+contained, rollbacks are surgical, and value ships continuously.
+
+Always push for the smallest, safest, most valuable slice possible.

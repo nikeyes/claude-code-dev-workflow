@@ -1,0 +1,207 @@
+STORY SPLITTING ANALYSIS
+========================
+
+Original Story:
+"Generate a monthly financial report including revenue breakdown, expense categories, and year-over-year comparison charts"
+
+---
+
+RED FLAGS DETECTED
+==================
+
+Scanning for linguistic indicators...
+
+1. "INCLUDING" (Scope Indicator) - The word "including" is a direct signal of feature bundling.
+   It introduces three separate outputs bundled into one story:
+   - revenue breakdown
+   - expense categories
+   - year-over-year comparison charts
+
+2. "AND" (Coordinating Conjunction) - Appears between "expense categories" and "year-over-year comparison charts",
+   meaning at least two independent outputs are being requested simultaneously.
+
+3. COMPLEX OUTPUT (Reports + Charts) - Multiple output types are bundled together:
+   - Tabular data (revenue breakdown)
+   - Tabular data (expense categories)
+   - Visual output (charts with year-over-year comparison)
+
+VERDICT: This story is TOO BIG. It bundles at least 3 distinct deliverables into a single story.
+
+---
+
+DECISION TREE APPLICATION
+===========================
+
+Red flags mapped to recommended techniques:
+
+| Red Flag         | Problem                          | Recommended Technique                     |
+|------------------|----------------------------------|-------------------------------------------|
+| "including"      | Feature bundling / scope expansion | #3 Extract basic utility first            |
+| "and"            | Multiple independent outputs     | Split by conjunction                      |
+| Complex output   | Too many outputs at once         | #1 Start with outputs (incrementally)     |
+| Charts           | Visual output = richer, riskier  | #5 Simplify outputs (text before charts)  |
+
+Multiple red flags detected => apply techniques sequentially.
+
+---
+
+SPLITTING PROCESS
+=================
+
+Step 1: Split by "including" (remove bundled outputs)
+
+"Generate a monthly financial report including [X, Y, and Z]" means we're shipping
+three outputs at once. Each output should be its own story.
+
+The three outputs are:
+  A. Revenue breakdown
+  B. Expense categories
+  C. Year-over-year comparison charts
+
+Step 2: Split by "and" (further separate independent items)
+
+Even if we separate charts from the rest, "revenue breakdown" and "expense categories"
+are two distinct data views. Neither requires the other to deliver value.
+
+Step 3: Apply "Start with outputs" + "Simplify outputs"
+
+Charts are the most complex output (require data aggregation, visualization library,
+rendering). Text/tabular summaries come first. Charts come later only when base data
+is validated.
+
+Step 4: Extract basic utility first
+
+Before generating any breakdown, we should validate that a basic report shell exists:
+- Does a report page/document exist?
+- Does it show a time period (month/year)?
+- Does it show at least one number?
+
+That's the walking skeleton. Add breakdowns on top.
+
+---
+
+PROPOSED SPLITS
+===============
+
+Story 1: "Generate a basic monthly report showing total revenue for a given month"
+  - Why first? Proves the report shell works end-to-end
+  - Output: Single number (total revenue for the selected month)
+  - No breakdown, no charts, no expense data
+  - Time: 2-4 hours
+  - Value: Stakeholders can verify the report exists and numbers are correct
+  - Deployable alone: YES
+
+Story 2: "Add revenue breakdown by category/product line to the monthly report"
+  - Builds on Story 1's report shell
+  - Output: Table or list showing revenue per category
+  - No charts yet, no expense data
+  - Time: 3-5 hours
+  - Value: Finance team can see where revenue comes from
+  - Deployable alone: YES (Story 1 ships first, Story 2 enriches it)
+
+Story 3: "Add expense categories summary to the monthly report"
+  - Builds on Story 1's report shell
+  - Output: Table or list showing expenses per category
+  - Independent from Story 2 (revenue breakdown)
+  - Time: 3-5 hours
+  - Value: Finance team can see where money is being spent
+  - Deployable alone: YES
+
+Story 4: "Add year-over-year comparison as a text/table summary"
+  - Compare current month vs same month last year (numbers only, no charts yet)
+  - Output: Simple table: "Revenue this month vs same month last year: +12%"
+  - No chart rendering required
+  - Time: 3-4 hours
+  - Value: Leadership can see trend direction without charts
+  - Deployable alone: YES
+
+Story 5: "Add year-over-year comparison charts to the monthly report"
+  - Builds on Story 4's data (chart is just a visual wrapper)
+  - Output: Bar chart or line chart showing month vs prior year
+  - Time: 4-6 hours
+  - Value: Visual representation for presentations/dashboards
+  - Deployable alone: YES (only after Story 4 validates the data)
+
+---
+
+SMALLEST SLICE TO SHIP FIRST
+==============================
+
+Story 1: "Generate a basic monthly report showing total revenue for a given month"
+
+Why this is the right first slice:
+- Takes 2-4 hours
+- Delivers immediate, verifiable value (total revenue number)
+- Proves the data pipeline works end-to-end
+- Stakeholders can validate correctness before adding complexity
+- Everything else builds on top of this foundation
+- If the total revenue number is wrong, we find out NOW - not after building 5 stories
+
+Shipping Story 1 alone is production-worthy and useful. The rest are enhancements.
+
+---
+
+RECOMMENDED DELIVERY ORDER
+============================
+
+Sprint / Week 1:
+  - Story 1: Basic monthly report with total revenue   [2-4h]
+  - Story 3: Expense categories summary               [3-5h]
+
+Sprint / Week 2:
+  - Story 2: Revenue breakdown by category            [3-5h]
+  - Story 4: Year-over-year comparison (text/table)   [3-4h]
+
+Sprint / Week 3 (only if needed):
+  - Story 5: Year-over-year comparison charts         [4-6h]
+
+Total estimated time: 15-24 hours spread across 3 sprints.
+Original bundled story would have been estimated as 1-2 weeks of work, likely
+delivered all at once with higher integration risk.
+
+---
+
+TECHNIQUES APPLIED
+===================
+
+- Split by "including"   -> Removed 3 bundled outputs into 3 separate stories
+- Split by "and"         -> Separated revenue breakdown from expense categories
+- Start with outputs     -> Delivered simplest output (total number) first
+- Simplify outputs       -> Text/table year-over-year before charts
+- Extract basic utility  -> Report shell (Story 1) before any breakdown
+
+---
+
+COACHING NOTES
+===============
+
+Challenge questions to ask the team:
+
+- "If you had to ship something by end of day tomorrow, what would it be?"
+  -> Answer: Story 1 (total revenue number). That's your first story.
+
+- "What's the worst that could happen if we ship just the revenue total first?"
+  -> Almost nothing. Finance can start validating data quality immediately.
+
+- "Do we actually need charts, or would a table be enough for now?"
+  -> Ask stakeholders. Charts add complexity (visualization library, rendering,
+     responsive design). A table might meet 90% of the need.
+
+- "Can we avoid doing the year-over-year comparison entirely until someone asks for it?"
+  -> Yes. Ship Stories 1-3 first. Add Story 4 and 5 only when there is proven demand.
+
+---
+
+SELF-CHECK
+===========
+
+[x] Scanned the story for all 6 red flag categories
+[x] Flagged the story as too big when red flags were present (3 red flags found)
+[x] Identified splitting techniques using the decision tree
+[x] Proposed 5 concrete split stories (not vague suggestions)
+[x] Each split story is independently valuable (can be deployed alone)
+[x] Each split story takes less than 2-3 days to complete
+[x] Specified the smallest story to ship first (Story 1: total revenue)
+[x] Applied multiple techniques since the story had multiple red flags
+
+All checks pass.

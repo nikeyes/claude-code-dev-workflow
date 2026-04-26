@@ -1,0 +1,21 @@
+Story: "As a user, I can reset my password by requesting a reset email"
+
+ANALYSIS
+
+This story is already small enough. No splitting is needed.
+
+Here is why:
+
+1. Single, clear user action. The user does one thing: they request a password reset email. The story does not bundle in "and then I receive the email", "and then I click the link", "and then I enter a new password". It stops at the request. That is a deliberate and appropriate boundary.
+
+2. One observable outcome. The result is that a reset email is sent. A developer knows when this is done: the system accepts an email address and dispatches a reset message. There is no ambiguity about the endpoint.
+
+3. Fits in a short iteration. Backend work (endpoint, token generation, email dispatch) and frontend work (a simple form with an email field and a submit button) are both small enough to deliver together in a day or two.
+
+4. No red-flag words. The story contains no "and", "or", "manage", "handle", or "including" that would suggest hidden scope. It describes one flow.
+
+5. Natural slice of a larger feature. Password reset is a multi-step flow (request -> email -> link -> new password form -> confirmation). This story covers exactly one step in that flow, which is the right level of granularity for a story. The other steps would be separate stories if they are not already done.
+
+VERDICT
+
+Do not split. Implement as written. If the rest of the password reset flow (clicking the link, entering a new password, confirmation) has not been captured yet, those would be separate stories, but they do not need to be part of this one.

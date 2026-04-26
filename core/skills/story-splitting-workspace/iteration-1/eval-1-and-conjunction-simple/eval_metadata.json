@@ -1,0 +1,11 @@
+{
+  "eval_id": 1,
+  "eval_name": "and-conjunction-simple",
+  "prompt": "As a user, I can register and log in to the application",
+  "assertions": [
+    {"id": "detects-and-red-flag", "text": "Explicitly identifies 'and' as a coordinating conjunction indicating the story is too big", "type": "capability"},
+    {"id": "two-independent-stories", "text": "Proposes exactly 2 stories: one for registration and one for login, independently deployable", "type": "capability"},
+    {"id": "specifies-first-story", "text": "Specifies which story to deliver first and justifies the choice", "type": "capability"},
+    {"id": "no-horizontal-splits", "text": "Does NOT propose horizontal splits (DB layer, API layer, UI layer) — splits are vertical slices with user value", "type": "behavior"}
+  ]
+}

@@ -1,0 +1,43 @@
+{
+  "expectations": [
+    {
+      "text": "Identifies 'real-time' and 'automatically' as over-engineering signals requiring Dummy-to-Dynamic or Put-on-Crutches",
+      "passed": true,
+      "evidence": "RED FLAG #1 explicitly flags 'real-time' with 'Apply #4 (Dummy to Dynamic) + #9 (Put it on Crutches)'. RED FLAG #2 flags 'automatically' with 'Apply #1 (Start with Outputs) + Split by action'. The techniques summary confirms: \"'real-time' flag → Technique #9 (Crutches first)\" and \"'automatically' flag → Technique #4 (Dummy to Dynamic)\"."
+    },
+    {
+      "text": "Identifies that 3 channels (email, SMS, in-app) behind 'and' are separate stories",
+      "passed": true,
+      "evidence": "RED FLAG #3 explicitly calls out '\"email, SMS, and in-app messages\" = three independent delivery channels' and Step 2 applies 'Split by Channel' producing Story D (email only), Story E (SMS only), Story F (in-app only). Final splits deliver Stories 1, 2, 3 as one channel each."
+    },
+    {
+      "text": "Defers 'based on notification preferences' as a later story — the first story uses hardcoded or default behavior",
+      "passed": true,
+      "evidence": "RED FLAG #5 identifies 'based on their notification preferences' as a hidden feature. Story 1 is explicitly described as 'No automation, no event detection, no preferences'. Preferences are deferred to Phase 3 (Stories 7-8, Week 3-4). Story 1 uses hardcoded delivery."
+    },
+    {
+      "text": "Applies Put-on-Crutches (#9): proposes a manual or simplified notification mechanism before building the real automated real-time system",
+      "passed": true,
+      "evidence": "Phase 1 is explicitly labeled 'Prove it works manually (Crutches first)'. Story 1 is 'Developer can send a hardcoded email notification by running a script — No automation, no event detection, no preferences'. Techniques summary: \"'real-time' flag → Technique #9 (Crutches first): manual script before automation\"."
+    },
+    {
+      "text": "The first story delivers value via a single channel (e.g. email only), not all three simultaneously",
+      "passed": true,
+      "evidence": "Story 1 is 'Developer can send a hardcoded email notification by running a script' — email only. SMS is Story 2, in-app is Story 3. Each channel is a separate story in Phase 1."
+    },
+    {
+      "text": "Proposes at least 5 distinct stories covering the progression from manual/simple to automated/real-time",
+      "passed": true,
+      "evidence": "9 distinct stories proposed: Stories 1-3 (manual scripts per channel), Stories 4-6 (event-triggered automation per channel), Stories 7-8 (user preferences backend + UI), Story 9 (real-time in-app via WebSocket). Clearly covers the full progression from manual to automated to real-time."
+    }
+  ],
+  "summary": {
+    "passed": 6,
+    "failed": 0,
+    "total": 6,
+    "pass_rate": 1.0
+  },
+  "timing": {
+    "executor_duration_seconds": 65.8
+  }
+}

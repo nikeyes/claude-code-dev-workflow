@@ -1,0 +1,43 @@
+{
+  "expectations": [
+    {
+      "text": "Identifies 'real-time' and 'automatically' as over-engineering signals requiring Dummy-to-Dynamic or Put-on-Crutches",
+      "passed": false,
+      "evidence": "The output mentions that \"'Automatically' and 'real-time' add cross-cutting quality constraints that are often better validated incrementally rather than all at once\" and notes them as signals. However, it never names the specific techniques 'Dummy-to-Dynamic' or 'Put-on-Crutches', which the assertion requires."
+    },
+    {
+      "text": "Identifies that 3 channels (email, SMS, in-app) behind 'and' are separate stories",
+      "passed": true,
+      "evidence": "The output explicitly states: \"The word 'and' appears between three delivery channels, which is the clearest signal that the story contains parallel tracks that can be delivered independently.\" Stories 2, 4, and 5 each cover a single channel independently."
+    },
+    {
+      "text": "Defers 'based on notification preferences' as a later story — the first story uses hardcoded or default behavior",
+      "passed": false,
+      "evidence": "The output makes the notification preference model Story 1 (the very first story), rather than deferring it. All subsequent stories depend on Story 1's preferences. The first notification-sending story (Story 2) already filters by preferences from Story 1. No story uses hardcoded or default behavior as a crutch."
+    },
+    {
+      "text": "Applies Put-on-Crutches (#9): proposes a manual or simplified notification mechanism before building the real automated real-time system",
+      "passed": true,
+      "evidence": "Story 2 deliberately uses polling instead of real-time push ('no real-time push yet (polling is acceptable)'), and Story 3 is the upgrade to real-time. This is the Put-on-Crutches pattern in practice — a simplified mechanism first — even though the pattern is not named explicitly."
+    },
+    {
+      "text": "The first story delivers value via a single channel (e.g. email only), not all three simultaneously",
+      "passed": true,
+      "evidence": "Story 2 is the first story that actually delivers notifications to users, and it delivers via in-app only. Stories 4 and 5 add email and SMS independently afterward. No story delivers all three channels simultaneously."
+    },
+    {
+      "text": "Proposes at least 5 distinct stories covering the progression from manual/simple to automated/real-time",
+      "passed": true,
+      "evidence": "The output proposes exactly 5 distinct stories: (1) notification preference model, (2) in-app notifications with polling, (3) real-time in-app via WebSocket/SSE, (4) email notifications, (5) SMS notifications. These cover a clear progression from simple baseline to automated real-time delivery."
+    }
+  ],
+  "summary": {
+    "passed": 4,
+    "failed": 2,
+    "total": 6,
+    "pass_rate": 0.67
+  },
+  "timing": {
+    "executor_duration_seconds": 40.9
+  }
+}

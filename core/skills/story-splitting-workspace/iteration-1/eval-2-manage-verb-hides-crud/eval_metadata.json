@@ -1,0 +1,11 @@
+{
+  "eval_id": 2,
+  "eval_name": "manage-verb-hides-crud",
+  "prompt": "Admin can manage products in the catalog",
+  "assertions": [
+    {"id": "detects-manage-hides-crud", "text": "Explicitly identifies that 'manage' hides multiple CRUD operations (create, read/list, edit, delete)", "type": "capability"},
+    {"id": "separates-crud-operations", "text": "Proposes at least 4 separate stories, one per CRUD operation — without grouping multiple operations in a single story", "type": "capability"},
+    {"id": "view-first", "text": "Recommends starting with viewing/listing products as the simplest story with immediate value", "type": "capability"},
+    {"id": "no-manage-in-splits", "text": "None of the proposed stories use the verb 'manage' — each has a concrete verb (view, create, edit, delete)", "type": "behavior"}
+  ]
+}

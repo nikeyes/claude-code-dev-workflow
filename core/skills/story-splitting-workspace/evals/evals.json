@@ -1,0 +1,108 @@
+{
+  "skill_name": "story-splitting",
+  "evals": [
+    {
+      "id": 1,
+      "name": "and-conjunction-simple",
+      "difficulty": "easy",
+      "prompt": "/story-splitting As a user, I can register and log in to the application",
+      "expected_output": "Detects 'and' as a coordinating conjunction red flag indicating story is too big. Proposes exactly 2 independent vertical stories (register, login). Each deployable independently. Specifies which to deliver first.",
+      "assertions": [
+        {"id": "detects-and-red-flag", "text": "Explicitly identifies 'and' as a coordinating conjunction indicating the story is too big", "type": "capability"},
+        {"id": "two-independent-stories", "text": "Proposes exactly 2 stories: one for registration and one for login, independently deployable", "type": "capability"},
+        {"id": "specifies-first-story", "text": "Specifies which story to deliver first and justifies the choice", "type": "capability"},
+        {"id": "no-horizontal-splits", "text": "Does NOT propose horizontal splits (DB layer, API layer, UI layer) — splits are vertical slices with user value", "type": "behavior"}
+      ]
+    },
+    {
+      "id": 2,
+      "name": "manage-verb-hides-crud",
+      "difficulty": "easy",
+      "prompt": "/story-splitting Admin can manage products in the catalog",
+      "expected_output": "Detects 'manage' as an action-related connector hiding multiple CRUD operations. Proposes at least 4 separate stories (view/list, create, edit, delete). Recommends 'list products' as the first story. No split uses the verb 'manage'.",
+      "assertions": [
+        {"id": "detects-manage-hides-crud", "text": "Explicitly identifies that 'manage' hides multiple CRUD operations (create, read/list, edit, delete)", "type": "capability"},
+        {"id": "separates-crud-operations", "text": "Proposes at least 4 separate stories, one per CRUD operation — without grouping multiple operations in a single story", "type": "capability"},
+        {"id": "view-first", "text": "Recommends starting with viewing/listing products as the simplest story with immediate value", "type": "capability"},
+        {"id": "no-manage-in-splits", "text": "None of the proposed stories use the verb 'manage' — each has a concrete verb (view, create, edit, delete)", "type": "behavior"}
+      ]
+    },
+    {
+      "id": 3,
+      "name": "including-scope-expansion-start-with-outputs",
+      "difficulty": "medium",
+      "prompt": "/story-splitting Generate a monthly financial report including revenue breakdown, expense categories, and year-over-year comparison charts",
+      "expected_output": "Detects 'including' as a scope indicator and 'and' as a conjunction. Applies 'Start with Outputs' technique (#1). First story does NOT include charts. Each story adds one incremental output and is independently useful.",
+      "assertions": [
+        {"id": "detects-including-red-flag", "text": "Explicitly identifies 'including' as a scope indicator that bundles multiple outputs into one story", "type": "capability"},
+        {"id": "applies-start-with-outputs", "text": "Applies the 'Start with Outputs' technique (#1) — names it explicitly or clearly describes dividing by which output is delivered first", "type": "capability"},
+        {"id": "charts-deferred", "text": "The first story does NOT include charts — delivers a simpler output first (text summary, basic table)", "type": "behavior"},
+        {"id": "incremental-independent-value", "text": "Each split story delivers independent value — the first story is useful without requiring the subsequent ones", "type": "capability"},
+        {"id": "at-least-3-splits", "text": "Proposes at least 3 distinct stories, each incrementally adding one or two outputs", "type": "capability"}
+      ]
+    },
+    {
+      "id": 4,
+      "name": "or-option-plus-all-users-two-techniques",
+      "difficulty": "medium",
+      "prompt": "/story-splitting All users need to be able to export their data to CSV or PDF",
+      "expected_output": "Detects 'or' (option indicator) AND 'all users' (overly broad scope). Applies TWO techniques: Narrow Customer Segment (#2) and Simplify Outputs (#5). First story uses a narrow segment and CSV format, not PDF. PDF is not delivered until CSV is validated.",
+      "assertions": [
+        {"id": "detects-or-option", "text": "Identifies 'or' as an option indicator — CSV and PDF are two separate format stories", "type": "capability"},
+        {"id": "detects-all-users-breadth", "text": "Identifies 'all users' as an overly broad scope and proposes starting with a specific segment (e.g. admins)", "type": "capability"},
+        {"id": "applies-two-techniques", "text": "Applies BOTH techniques: Narrow Customer Segment AND Simplify Outputs — not just one of the two", "type": "capability"},
+        {"id": "csv-before-pdf", "text": "Proposes CSV before PDF — the first story does not include PDF", "type": "behavior"},
+        {"id": "narrow-segment-first", "text": "The first story targets a narrow segment (admins, power users) rather than 'all users'", "type": "capability"}
+      ]
+    },
+    {
+      "id": 5,
+      "name": "sequence-then-workflow-steps",
+      "difficulty": "medium",
+      "prompt": "/story-splitting When a user submits an order, the system should validate the cart, process the payment, update inventory, and then send a confirmation email",
+      "expected_output": "Detects 'then' (sequence connector) and 'and' (multiple concerns). Splits by workflow step. Identifies payment as the core value step. Considers 'put on crutches' option (e.g. manual emails first). Clarifies which splits have technical dependencies vs. which are independent.",
+      "assertions": [
+        {"id": "detects-then-and", "text": "Identifies 'then' as a sequence connector and 'and' as a conjunction — both signal bundled concerns", "type": "capability"},
+        {"id": "splits-by-workflow-step", "text": "Proposes splitting by workflow step: validation, payment, inventory, email as separable concerns", "type": "capability"},
+        {"id": "payment-as-core-value", "text": "Identifies payment as the central value step and recommends delivering it first, even with simplified inventory/email handling", "type": "capability"},
+        {"id": "considers-crutches", "text": "Considers a 'put on crutches' option: e.g. manual emails before automating the send step", "type": "capability"}
+      ]
+    },
+    {
+      "id": 6,
+      "name": "realtime-automated-multiple-red-flags",
+      "difficulty": "hard",
+      "prompt": "/story-splitting Build a real-time notification system that automatically pushes alerts to users via email, SMS, and in-app messages based on their notification preferences",
+      "expected_output": "Detects 'real-time', 'automatically', 'and' (3 channels), and 'based on preferences' as red flags. Applies Dummy-to-Dynamic (#4) and Put on Crutches (#9). Proposes manual → scripted → automated route. Splits by channel. Preferences deferred as a later enhancement. Minimum 5 stories.",
+      "assertions": [
+        {"id": "detects-realtime-automated", "text": "Identifies 'real-time' and 'automatically' as over-engineering signals requiring Dummy-to-Dynamic or Put-on-Crutches", "type": "capability"},
+        {"id": "detects-three-channels", "text": "Identifies that 3 channels (email, SMS, in-app) behind 'and' are separate stories", "type": "capability"},
+        {"id": "preferences-deferred", "text": "Defers 'based on notification preferences' as a later story — the first story uses hardcoded or default behavior", "type": "behavior"},
+        {"id": "applies-crutches-pattern", "text": "Applies Put-on-Crutches (#9): proposes a manual or simplified notification mechanism before building the real automated real-time system", "type": "capability"},
+        {"id": "single-channel-first", "text": "The first story delivers value via a single channel (e.g. email only), not all three simultaneously", "type": "capability"},
+        {"id": "at-least-5-splits", "text": "Proposes at least 5 distinct stories covering the progression from manual/simple to automated/real-time", "type": "capability"}
+      ]
+    },
+    {
+      "id": 7,
+      "name": "already-small-no-split-needed",
+      "difficulty": "easy",
+      "prompt": "/story-splitting As a user, I can reset my password by requesting a reset email",
+      "expected_output": "Recognizes this story is small and focused, with no red flags. Does NOT mark it as too big. Does NOT propose splitting it. Explicitly confirms it is appropriately sized.",
+      "assertions": [
+        {"id": "no-red-flags-detected", "text": "Does NOT identify red flags — there are no 'and', 'or', 'manage', 'including', 'before/after' in this story", "type": "capability"},
+        {"id": "does-not-split", "text": "Does NOT recommend splitting this story into smaller stories — accepts it as appropriately sized", "type": "behavior"},
+        {"id": "confirms-appropriate-size", "text": "Explicitly confirms the story is small enough to proceed as-is (approximately 1 day or less)", "type": "capability"},
+        {"id": "no-unnecessary-structure", "text": "Does NOT add phases, learning steps, or unnecessary sub-tasks to a story that does not need them", "type": "behavior"}
+      ]
+    }
+  ],
+  "grading_guide": {
+    "capability_assertions": "The output explicitly demonstrates the described reasoning or produces the stated content. Evidence must be present in the response, not inferred from context.",
+    "behavior_assertions": "The output does or avoids the described action. Binary: did it happen or not.",
+    "red_flag_detection": "To count as a pass, the skill must name the specific red flag category (coordinating conjunction, action connector, scope indicator, etc.) — vaguely saying 'this story is too big' without naming the red flag does not count.",
+    "technique_attribution": "Diagnostic bonus (not mandatory): if the skill names the specific heuristic (#1 Start with Outputs, #4 Dummy to Dynamic, #9 Put on Crutches), it confirms the skill is guiding the analysis rather than the model improvising.",
+    "false_positive_calibration": "Eval 7 is the false-positive check. A pass requires the skill NOT to split the story AND to explicitly confirm it is well-sized. Marking it as 'borderline' or 'could be split' is a fail.",
+    "statistical_requirements": "With min_runs=3, report mean, stddev, min, max per metric. A delta is only meaningful if confidence intervals do not overlap."
+  }
+}

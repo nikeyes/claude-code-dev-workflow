@@ -1,0 +1,11 @@
+{
+  "eval_id": 5,
+  "eval_name": "sequence-then-workflow-steps",
+  "prompt": "When a user submits an order, the system should validate the cart, process the payment, update inventory, and then send a confirmation email",
+  "assertions": [
+    {"id": "detects-then-and", "text": "Identifies 'then' as a sequence connector and 'and' as a conjunction — both signal bundled concerns", "type": "capability"},
+    {"id": "splits-by-workflow-step", "text": "Proposes splitting by workflow step: validation, payment, inventory, email as separable concerns", "type": "capability"},
+    {"id": "payment-as-core-value", "text": "Identifies payment as the central value step and recommends delivering it first, even with simplified inventory/email handling", "type": "capability"},
+    {"id": "considers-crutches", "text": "Considers a 'put on crutches' option: e.g. manual emails before automating the send step", "type": "capability"}
+  ]
+}

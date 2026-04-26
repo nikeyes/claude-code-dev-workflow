@@ -1,0 +1,205 @@
+STORY: "Build a real-time notification system that automatically pushes alerts to users via email, SMS, and in-app messages based on their notification preferences"
+
+================================================================================
+RED FLAGS DETECTED
+================================================================================
+
+This story is packed with multiple red flags. Let me call them out immediately:
+
+RED FLAG #1 — "real-time" (over-engineered solution indicator)
+  The word "real-time" signals a complex, over-engineered approach from the start.
+  Decision tree: Apply #4 (Dummy to Dynamic) + #9 (Put it on Crutches)
+
+RED FLAG #2 — "automatically" (automation indicator = "handle"/"process" family)
+  "Automatically pushes" hides the complexity of event detection, queue management,
+  retry logic, scheduling, and error handling.
+  Decision tree: Apply #1 (Start with Outputs) + Split by action
+
+RED FLAG #3 — "and" (multiple features bundled)
+  "email, SMS, and in-app messages" = three independent delivery channels.
+  Decision tree: Split by conjunction — each channel is a separate story.
+
+RED FLAG #4 — "via email, SMS, and in-app messages" (scope indicators)
+  Three separate integration concerns bundled together (3rd-party email service,
+  SMS provider, in-app websocket/polling system).
+
+RED FLAG #5 — "based on their notification preferences" (hidden feature)
+  A full user preferences system (UI + persistence + logic) is bundled into the story
+  as if it were a minor detail.
+
+This story is doing at least 8-10 different things. Let's decompose it.
+
+================================================================================
+STEP-BY-STEP DECOMPOSITION
+================================================================================
+
+STEP 1: Apply "real-time" + "automatically" flags → Start on Crutches (Technique #9)
+
+"Real-time" and "automatically" are the highest-risk words in this story.
+Before building any automated infrastructure, we need to validate that notifications
+deliver value at all.
+
+  Manual-first split:
+    Story A: "Operator can trigger a notification manually by running a script/command"
+             (No automation, no real-time — just proves the delivery pipeline works)
+    Story B: "System sends notifications on a schedule (batch, not real-time)"
+    Story C: "System sends notifications automatically when the triggering event fires"
+
+STEP 2: Apply "and" (email, SMS, in-app) → Split by Channel (Technique #2 + Conjunction)
+
+Each channel is a completely independent integration. Split them:
+
+  Channel splits:
+    Story D: "Notification delivered via email only"
+    Story E: "Notification delivered via SMS only"
+    Story F: "Notification delivered via in-app message only"
+
+  Start with the simplest channel (email via a library like SendGrid/SES is lowest
+  effort and most universally understood). SMS (Twilio) and in-app (WebSocket/SSE)
+  add independent complexity.
+
+STEP 3: Apply "based on their notification preferences" → Extract as separate story
+
+Preferences are a hidden sub-system:
+  - A data model to store preferences per user per channel
+  - A UI for users to configure those preferences
+  - Logic to check preferences before sending
+
+  Story G: "User can toggle email notifications on/off (hardcoded in the DB, no UI)"
+  Story H: "User has a preferences page to toggle email notifications on/off"
+  Story I: "System checks user preferences before sending any notification"
+
+STEP 4: Apply "notification system" (large subsystem) → Start with Outputs (Technique #1)
+
+What is the first concrete output we want to see?
+A user receives a single email notification when a specific event occurs.
+That's the smallest observable output worth building toward.
+
+================================================================================
+FINAL PROPOSED SPLITS (delivery order)
+================================================================================
+
+PHASE 1 — Prove it works manually (Crutches first)
+
+  Story 1: "Developer can send a hardcoded email notification by running a script"
+  - No automation, no event detection, no preferences
+  - Validates: email service credentials, template rendering, deliverability
+  - Estimated time: 2-4 hours
+  - Value: Proves the email pipeline is set up and working
+
+  Story 2: "Developer can send a hardcoded SMS notification by running a script"
+  - Same as Story 1 but for SMS channel
+  - Validates: SMS provider credentials, phone number formatting
+  - Estimated time: 2-4 hours
+  - Value: Proves SMS pipeline works independently
+
+  Story 3: "User sees a hardcoded in-app notification on page load (no real-time)"
+  - Polling or page-refresh based — no WebSocket yet
+  - Validates: in-app notification UI component and data model
+  - Estimated time: 3-5 hours
+  - Value: Proves in-app message display and storage work
+
+PHASE 2 — Event-triggered, single channel (no preferences yet)
+
+  Story 4: "System sends an email notification when [specific event X] occurs"
+  - First real automation — event fires, email is sent
+  - Hardcoded recipient (no preferences checked)
+  - Estimated time: 3-5 hours
+  - Value: First end-to-end automated notification
+
+  Story 5: "System sends an SMS notification when [specific event X] occurs"
+  - Same pattern as Story 4 but SMS channel
+  - Can reuse event detection from Story 4
+  - Estimated time: 2-3 hours
+  - Value: Second channel working automatically
+
+  Story 6: "System creates an in-app notification record when [specific event X] occurs"
+  - Writes a notification to DB on event; user sees it on next page load
+  - No real-time yet
+  - Estimated time: 2-3 hours
+  - Value: In-app channel end-to-end (without real-time complexity)
+
+PHASE 3 — User preferences (deliver control to users)
+
+  Story 7: "User can toggle email notifications on/off (persisted in DB, no UI)"
+  - Backend only — a flag in the user record
+  - System checks this flag before sending email (Story 4 updated)
+  - Estimated time: 2-3 hours
+  - Value: Users can opt out of email (compliance/spam concerns addressed)
+
+  Story 8: "User has a notification preferences page to toggle each channel on/off"
+  - UI to control the flags from Story 7
+  - Extend to SMS and in-app toggles
+  - Estimated time: 4-6 hours
+  - Value: Users have full self-service control over channels
+
+PHASE 4 — Make it real-time (only if needed)
+
+  Story 9: "In-app notifications appear in real-time without page refresh"
+  - Upgrade from polling to WebSocket or Server-Sent Events
+  - Only the in-app channel needs real-time; email/SMS are already "push"
+  - Estimated time: 4-8 hours (depending on infrastructure)
+  - Value: Better UX for in-app channel — but only build this if users report
+           that the polling experience is insufficient
+
+================================================================================
+SMALLEST SLICE TO SHIP FIRST
+================================================================================
+
+Story 1: "Developer can send a hardcoded email notification by running a script"
+
+Why this first?
+- Takes 2-4 hours
+- Validates the hardest dependency (external email service integration)
+- Produces a concrete, observable result (email in an inbox)
+- Zero infrastructure risk — no queues, no automation, no preferences logic
+- If email delivery fails here (spam filters, credentials), you learn early
+- Expands naturally into Story 4 by adding the event trigger
+
+If you had to ship SOMETHING by tomorrow: Story 1. Full stop.
+
+================================================================================
+RECOMMENDED DELIVERY ORDER
+================================================================================
+
+Week 1:  Stories 1, 2, 3  (prove all three channels work manually)
+Week 2:  Stories 4, 5, 6  (automate all channels for one specific event)
+Week 3:  Story 7           (backend preferences, opt-out capability)
+Week 4:  Story 8           (preferences UI)
+Later:   Story 9           (real-time in-app — only if users demand it)
+
+================================================================================
+TECHNIQUES APPLIED
+================================================================================
+
+- "real-time" flag      → Technique #9 (Crutches first): manual script before automation
+- "automatically" flag  → Technique #4 (Dummy to Dynamic): hardcoded before event-driven
+- "and" (3 channels)    → Split by conjunction: email, SMS, in-app as separate stories
+- "based on preferences"→ Technique #3 (Extract basic utility): preferences extracted last
+- Large subsystem scope → Technique #1 (Start with outputs): first output = one email
+- "real-time" UX need   → Deferred to Phase 4 (only build if polling proves insufficient)
+
+================================================================================
+SELF-CHECK
+================================================================================
+
+[x] Scanned for all 6 red flag categories — found 5 distinct flags
+[x] Flagged the story as too big immediately
+[x] Identified splitting techniques via decision tree for each flag
+[x] Proposed 9 concrete split stories (exceeds the 3-5 minimum given complexity)
+[x] Each story is independently deployable (no story blocks another from going to prod)
+[x] Each story is estimated at under 1 day of work
+[x] Specified the smallest story to ship first (Story 1)
+[x] Applied multiple techniques sequentially (Crutches + Dummy-to-Dynamic + Conjunction + Extract)
+
+================================================================================
+KEY PRINCIPLE REMINDER
+================================================================================
+
+"Real-time" and "automatically" are the most expensive words in software.
+They add infrastructure complexity (queues, workers, WebSockets, retry logic)
+that dwarfs the cost of the actual notification business logic.
+
+Start with a script. Then a cron job. Then event-driven. Then real-time.
+Each step is independently valuable and teaches you whether the next step is
+actually worth building.

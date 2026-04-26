@@ -1,0 +1,101 @@
+USER STORY ANALYSIS
+===================
+
+Story: "Generate a monthly financial report including revenue breakdown, expense categories, and year-over-year comparison charts"
+
+VERDICT: This story is too big. Split it.
+
+WHY IT IS TOO BIG
+-----------------
+
+The word "including" is the key signal here. It introduces a list of three
+distinct deliverables, each with its own data requirements, business logic,
+and UI complexity:
+
+1. Revenue breakdown - requires fetching and aggregating revenue data by
+   source, product, or business unit for a given month.
+
+2. Expense categories - requires fetching and aggregating expense data
+   grouped by category for the same period.
+
+3. Year-over-year comparison charts - requires fetching data for the prior
+   year's equivalent period, computing deltas, and rendering charts.
+
+On top of that, "generate a monthly financial report" bundles together:
+- Data retrieval and aggregation
+- Report formatting/layout
+- Output format (PDF? dashboard? email? download?)
+
+Each of those three sections could fail, be delayed, or need redesign
+independently of the others. Keeping them as one story makes it impossible
+to deliver incrementally and hard to estimate accurately.
+
+A reasonable rule of thumb: if a story requires work across multiple
+backend aggregations AND a visualization layer, it is almost certainly
+too big to complete in a single sprint iteration.
+
+PROPOSED SPLIT
+--------------
+
+Story 1: Display monthly revenue breakdown
+  As a finance user, I want to see this month's revenue broken down by
+  [source/category], so I can understand where income is coming from.
+
+  Acceptance criteria:
+  - Revenue totals are aggregated and displayed for the selected month
+  - Breakdown shows revenue by the agreed dimension (product line, channel, etc.)
+  - No charts required; a table is sufficient
+
+  Why split here: Revenue data has its own data model, queries, and
+  display requirements. It can be delivered and validated independently.
+
+Story 2: Display monthly expense categories
+  As a finance user, I want to see this month's expenses grouped by
+  category, so I can understand where money is being spent.
+
+  Acceptance criteria:
+  - Expenses are aggregated and displayed for the selected month
+  - Grouped by category
+  - No charts required; a table is sufficient
+
+  Why split here: Expense data comes from a different source/model than
+  revenue. Separating it avoids blocking both on a single piece of work.
+
+Story 3: Add year-over-year comparison to the financial report
+  As a finance user, I want to compare this month's revenue and expenses
+  against the same month last year, so I can identify trends.
+
+  Acceptance criteria:
+  - Prior-year data is fetched for the equivalent month
+  - Delta (absolute and percentage) is shown alongside current values
+  - At minimum a table view; charts are a stretch goal for this story
+
+  Why split here: YoY comparison depends on stories 1 and 2 being done
+  first (or at least the data model being stable). It also introduces
+  a new data retrieval concern (historical period queries).
+
+Story 4: Add charts to the financial report
+  As a finance user, I want to see visual charts for revenue, expenses,
+  and year-over-year trends, so I can quickly spot patterns.
+
+  Acceptance criteria:
+  - Charts are rendered for the data already available in the report
+  - At minimum: revenue chart, expense chart, YoY comparison chart
+  - Charts update when the selected month changes
+
+  Why split here: Charts are a presentation layer concern that can be
+  added on top of working tabular data. Delaying charts unblocks earlier
+  delivery of business value and keeps visualization complexity isolated.
+
+SEQUENCING RECOMMENDATION
+--------------------------
+
+The natural order is 1 → 2 → 3 → 4, because:
+- Stories 1 and 2 are independent and can be done in parallel if the
+  team has capacity.
+- Story 3 depends on having stable revenue and expense data (stories 1+2).
+- Story 4 depends on story 3 (needs all data including YoY deltas to
+  render meaningful charts).
+
+Each story is independently releasable and delivers visible value to
+the finance user without requiring the others to be complete first.

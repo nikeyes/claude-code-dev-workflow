@@ -1,0 +1,38 @@
+{
+  "expectations": [
+    {
+      "text": "Identifies 'or' as an option indicator — CSV and PDF are two separate format stories",
+      "passed": true,
+      "evidence": "Output explicitly flags 'or' as a Category 5 Option Indicator: 'export their data to CSV or PDF — Signals two alternative output formats that should be separate stories'. Techniques Applied section confirms: 'Split by \"or\" (Category 5 Option Indicator) -> Separated CSV and PDF into distinct stories'."
+    },
+    {
+      "text": "Identifies 'all users' as an overly broad scope and proposes starting with a specific segment (e.g. admins)",
+      "passed": true,
+      "evidence": "Output flags 'all users' as a Scope Indicator (Category 4): 'Too broad a customer segment to deliver in one story — Hides different user types with different needs and UX tolerances'. Proposes starting with admins: 'Start with admins, then power users, then all users'."
+    },
+    {
+      "text": "Applies BOTH techniques: Narrow Customer Segment AND Simplify Outputs — not just one of the two",
+      "passed": true,
+      "evidence": "Both techniques are explicitly applied. Step 1 applies Technique #2 (Narrow the Customer Segment) and Step 2 applies Technique #5 (Simplify Outputs). The TECHNIQUES APPLIED section confirms: 'Split by \"or\" (Category 5 Option Indicator)' and 'Narrow the Customer Segment (Technique #2)'."
+    },
+    {
+      "text": "Proposes CSV before PDF — the first story does not include PDF",
+      "passed": true,
+      "evidence": "Split 1 is 'Admins can export their data to CSV' and Split 2 is 'Power users can export their data to CSV'. PDF only appears in Split 4 ('Admins can export their data to PDF') and Split 5. The recommended first sprint is Split 1 (Admin + CSV), with PDF deferred until demand is confirmed."
+    },
+    {
+      "text": "The first story targets a narrow segment (admins, power users) rather than 'all users'",
+      "passed": true,
+      "evidence": "Split 1 explicitly targets 'Admins': 'Admins can export their data to CSV — Why admins first: They tolerate rough UX and can validate the feature'. The SMALLEST SLICE section confirms: 'Admins can export their data to CSV'."
+    }
+  ],
+  "summary": {
+    "passed": 5,
+    "failed": 0,
+    "total": 5,
+    "pass_rate": 1.0
+  },
+  "timing": {
+    "executor_duration_seconds": 53.2
+  }
+}

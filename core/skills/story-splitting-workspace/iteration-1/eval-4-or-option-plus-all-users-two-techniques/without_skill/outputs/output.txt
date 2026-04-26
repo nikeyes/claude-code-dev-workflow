@@ -1,0 +1,102 @@
+STORY ANALYSIS
+==============
+
+Original story:
+"All users need to be able to export their data to CSV or PDF"
+
+
+VERDICT: Too big. Split it.
+
+
+WHY IT IS TOO BIG
+-----------------
+
+Three compounding problems make this story hard to deliver as one unit:
+
+1. "All users" hides role differences.
+   Different user types (free, premium, admin, guest) likely have different
+   data access, different volumes, and potentially different entitlements for
+   export features. Treating them as one group forces you to handle all
+   permission logic upfront.
+
+2. "CSV or PDF" is two independent output formats.
+   CSV and PDF are not variations of the same thing — they require different
+   libraries, different rendering logic, and different user value. CSV is
+   raw data for power users who want to process it elsewhere. PDF is a
+   formatted document for sharing or printing. They can and should be
+   delivered separately so you can learn from the first before building
+   the second.
+
+3. "Their data" is vague about scope.
+   What data exactly? User profile? Transaction history? Reports? Activity
+   log? Each dataset likely has its own schema, privacy considerations, and
+   volume characteristics. A single story that covers all of them is
+   effectively several stories bundled together.
+
+Combined, the story has at least two "or" splits and one implicit "all"
+that expands scope. That is a classic sign of a story that will take
+multiple sprints or produce a large, risky pull request.
+
+
+PROPOSED SPLIT
+--------------
+
+Split along two axes: format first, then user type / data scope.
+
+Story 1 (start here):
+"As a regular user, I can export my own profile data to CSV
+so that I can keep a local copy or import it elsewhere."
+
+  - Smallest valuable slice: one format, one dataset, one user type.
+  - No permission complexity — users only see their own data.
+  - Validates the export infrastructure end to end.
+
+Story 2:
+"As a regular user, I can export my transaction/activity history to CSV
+so that I can analyze it in a spreadsheet."
+
+  - Same format, different dataset. Reuses infrastructure from Story 1.
+  - Exposes any volume or pagination concerns early.
+
+Story 3:
+"As a regular user, I can export my data to PDF
+so that I have a formatted document I can share or print."
+
+  - Introduces the second format after CSV is proven.
+  - Scope: same data as Story 1 or 2 (decide which makes more sense for PDF).
+  - PDF rendering complexity is isolated here, not mixed with CSV work.
+
+Story 4 (if there are privileged roles):
+"As an admin, I can export any user's data to CSV
+so that I can fulfill data access requests."
+
+  - Adds permission logic separately, after the basic flow is solid.
+  - Only needed if admins have distinct export requirements.
+
+Story 5 (optional, if bulk export matters):
+"As a user, I can export all my data in a single CSV archive
+so that I can migrate or back up my full account."
+
+  - Addresses the "all data at once" scenario, which likely has different
+    performance and async-delivery concerns (e.g., email link vs. download).
+
+
+SUMMARY TABLE
+-------------
+
+Priority | Story                                      | Format | Scope
+---------|---------------------------------------------|--------|-------------------
+1        | Own profile data export                    | CSV    | Single user, small
+2        | Own history/activity export                | CSV    | Single user, larger
+3        | Own data export (formatted document)       | PDF    | Single user
+4        | Admin export of any user's data            | CSV    | Cross-user, permissioned
+5        | Full account data archive                  | CSV    | Bulk / async
+
+
+RECOMMENDATION
+--------------
+
+Start with Story 1. It delivers real value (users want their data),
+proves the export pipeline, and is small enough to finish in one sprint.
+Stories 2 and 3 follow naturally. Stories 4 and 5 only exist if the
+product actually needs them — do not build them speculatively.

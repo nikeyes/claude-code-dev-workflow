@@ -1,0 +1,164 @@
+STORY: "All users need to be able to export their data to CSV or PDF"
+
+================================================================================
+RED FLAGS DETECTED
+================================================================================
+
+This story contains TWO distinct red flags:
+
+1. "or" (Option Indicator - Category 5)
+   - "export their data to CSV or PDF"
+   - Signals two alternative output formats that should be separate stories
+
+2. "all users" (Scope Indicator - Category 4)
+   - "All users need to be able to..."
+   - Too broad a customer segment to deliver in one story
+   - Hides different user types with different needs and UX tolerances
+
+This story is too big. It is doing multiple things at once: delivering export
+functionality to ALL users AND supporting TWO different output formats.
+
+================================================================================
+DECISION TREE APPLICATION
+================================================================================
+
+Red Flag 1: "or" / "either/or"
+  Likely Problem: Multiple options/alternatives
+  Recommended Technique: #5 (Simplify Outputs) or Split by option
+  Action: Split "CSV or PDF" into two separate format stories
+
+Red Flag 2: "all users" / "everyone"
+  Likely Problem: Too broad scope
+  Recommended Technique: #2 (Narrow Customer Segment)
+  Action: Start with admins, then power users, then all users
+
+Both techniques apply sequentially. We apply them together to get the
+smallest, safest starting slice.
+
+================================================================================
+SPLITTING STRATEGY
+================================================================================
+
+Step 1: Apply Technique #2 (Narrow the Customer Segment)
+----------------------------------------------------------
+Instead of "all users" at once, deliver to narrower segments first:
+- Admins first (they need it most, tolerate rough UX, validate the feature)
+- Power users next (slightly broader audience, still technically comfortable)
+- All users last (full rollout once the feature is proven and polished)
+
+Step 2: Apply Technique #5 (Simplify Outputs) + Split by "or"
+----------------------------------------------------------
+CSV is simpler than PDF:
+- CSV requires no rendering engine, no layout concerns, minimal dependencies
+- PDF requires a rendering library, formatting, pagination, fonts
+Start with CSV to deliver value immediately, add PDF only when there is
+proven demand for it.
+
+================================================================================
+PROPOSED SPLITS
+================================================================================
+
+Split 1: "Admins can export their data to CSV"
+  - Why: Admins need it most urgently (reporting, auditing)
+  - Why CSV first: Simpler format, fewer dependencies, faster to implement
+  - Why admins first: They tolerate rough UX and can validate the feature
+  - Value: Immediate data portability for the user segment that needs it most
+  - Estimated effort: 1-2 days
+  - Ships alone: YES
+
+Split 2: "Power users can export their data to CSV"
+  - Why: Broaden access once admin version is stable and validated
+  - No format change yet, just access control update
+  - Value: More users get data portability
+  - Estimated effort: Half a day (mainly access control change)
+  - Ships alone: YES
+
+Split 3: "All users can export their data to CSV"
+  - Why: Full rollout of CSV export to all user tiers
+  - Only do this after Splits 1 and 2 have proven the feature works at scale
+  - May require UX polish for less technical users
+  - Value: Universal data portability (compliance, trust)
+  - Estimated effort: 1 day (UX polish + final access control)
+  - Ships alone: YES
+
+Split 4: "Admins can export their data to PDF" (only if there is proven demand)
+  - Why: Add PDF only after CSV is live and users explicitly request PDF
+  - PDF requires a rendering library and layout work
+  - Start with admins again to validate the PDF format
+  - Value: Formatted, printable reports for stakeholders
+  - Estimated effort: 2-3 days (PDF library integration + formatting)
+  - Ships alone: YES
+
+Split 5: "All users can export their data to PDF" (deferred until demand confirmed)
+  - Why: Broad rollout of PDF export
+  - Only if there is genuine demand beyond admins
+  - Value: Universal formatted export
+  - Estimated effort: 1 day (broaden access)
+  - Ships alone: YES
+
+================================================================================
+RECOMMENDED DELIVERY ORDER
+================================================================================
+
+Sprint 1: Split 1 (Admin + CSV)
+  - Delivers real value to the highest-need segment
+  - Validates the export pipeline end-to-end
+  - Cheapest to build, easiest to test
+
+Sprint 2: Split 2 (Power Users + CSV)
+  - Builds on validated pipeline
+  - Minimal incremental effort
+
+Sprint 3: Split 3 (All Users + CSV)
+  - UX polish if needed
+  - Full CSV rollout
+
+Later (only if demand is confirmed): Split 4 and Split 5 for PDF
+
+================================================================================
+SMALLEST SLICE TO SHIP FIRST
+================================================================================
+
+"Admins can export their data to CSV"
+
+- Takes 1-2 days
+- Delivers immediate, tangible value
+- Validates the entire export pipeline before scaling
+- Avoids PDF complexity entirely until proven necessary
+- Testable and deployable independently
+
+================================================================================
+TECHNIQUES APPLIED
+================================================================================
+
+- Split by "or" (Category 5 Option Indicator) -> Separated CSV and PDF into
+  distinct stories; start with CSV (simpler output)
+- Narrow the Customer Segment (Technique #2) -> Started with admins instead
+  of all users; expanded progressively
+
+================================================================================
+COACHING NOTES
+================================================================================
+
+Challenge to ask the team:
+- "Do all users actually need PDF, or do only admins need it for reporting?"
+- "What's the worst that could happen if we ship CSV-only first?"
+- "Can we avoid PDF entirely and just let users print from the browser?"
+- "If you had to ship something by tomorrow, what would it be?"
+
+The PDF format is a significant technical investment (rendering engine,
+layout, pagination). Validate that CSV does not satisfy the actual user need
+before committing to PDF work.
+
+================================================================================
+SELF-CHECK
+================================================================================
+
+[x] Scanned story for all 6 red flag categories
+[x] Flagged story as too big when red flags were present
+[x] Identified splitting techniques using the decision tree
+[x] Proposed 3-5 concrete split stories (proposed 5)
+[x] Each split story is independently valuable (can be deployed alone)
+[x] Each split story takes less than 2-3 days to complete
+[x] Specified the smallest story to ship first (Split 1: Admin + CSV)
+[x] Applied multiple techniques (Technique #2 + Technique #5 + Split by "or")

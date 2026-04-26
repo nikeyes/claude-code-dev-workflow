@@ -1,0 +1,33 @@
+{
+  "expectations": [
+    {
+      "text": "Explicitly identifies 'and' as a coordinating conjunction indicating the story is too big",
+      "passed": true,
+      "evidence": "Output states: 'The word \"and\" in the story title is the clearest signal: it names two distinct user goals that trigger different flows, touch different code paths, and deliver independent value.'"
+    },
+    {
+      "text": "Proposes exactly 2 stories: one for registration and one for login, independently deployable",
+      "passed": true,
+      "evidence": "Story 1: 'As a new user, I can register an account...' and Story 2: 'As a registered user, I can log in with my email and password...' are the primary proposed split. Optional further splits are clearly labeled conditional ('if needed') and do not replace the core 2-story proposal. The analysis explicitly states each delivers 'independent, testable, demonstrable value'."
+    },
+    {
+      "text": "Specifies which story to deliver first and justifies the choice",
+      "passed": false,
+      "evidence": "The output does not recommend a delivery order. It only presents both options neutrally: 'You might want to ship account creation first (e.g., to seed users) before enabling login, or vice versa.' No explicit first-story recommendation or justification is given."
+    },
+    {
+      "text": "Does NOT propose horizontal splits (DB layer, API layer, UI layer) — splits are vertical slices with user value",
+      "passed": true,
+      "evidence": "All proposed stories are expressed as user-facing vertical slices with acceptance criteria focused on observable user behavior (e.g., 'I can submit an email address and password', 'I see an error if the email is already registered'). No technical layer splits appear anywhere in the output."
+    }
+  ],
+  "summary": {
+    "passed": 3,
+    "failed": 1,
+    "total": 4,
+    "pass_rate": 0.75
+  },
+  "timing": {
+    "executor_duration_seconds": 31.8
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "expectations": [
+    {
+      "text": "Does NOT identify red flags — there are no 'and', 'or', 'manage', 'including', 'before/after' in this story",
+      "passed": true,
+      "evidence": "The output scans all 6 red flag categories and reports 'NONE FOUND' for each one. Verdict section states 'No red flags were detected.'"
+    },
+    {
+      "text": "Does NOT recommend splitting this story into smaller stories — accepts it as appropriately sized",
+      "passed": true,
+      "evidence": "Verdict is 'No Splitting Needed' and recommendation explicitly states 'Do NOT split this story. Proceed directly to implementation.'"
+    },
+    {
+      "text": "Explicitly confirms the story is small enough to proceed as-is (approximately 1 day or less)",
+      "passed": true,
+      "evidence": "Output states 'Is completable in well under 1 day' as one of the story's characteristics, and confirms it is 'the right size'."
+    },
+    {
+      "text": "Does NOT add phases, learning steps, or unnecessary sub-tasks to a story that does not need them",
+      "passed": true,
+      "evidence": "No phases or sub-tasks are introduced. The output only adds lightweight pointers to next workflow skills (hamburger-method, small-safe-steps) as optional next steps, not decompositions of the story itself."
+    }
+  ],
+  "summary": {
+    "passed": 4,
+    "failed": 0,
+    "total": 4,
+    "pass_rate": 1.0
+  },
+  "timing": {
+    "executor_duration_seconds": 31.3
+  }
+}

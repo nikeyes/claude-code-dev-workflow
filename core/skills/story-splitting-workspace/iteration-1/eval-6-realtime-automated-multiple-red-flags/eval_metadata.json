@@ -1,0 +1,13 @@
+{
+  "eval_id": 6,
+  "eval_name": "realtime-automated-multiple-red-flags",
+  "prompt": "Build a real-time notification system that automatically pushes alerts to users via email, SMS, and in-app messages based on their notification preferences",
+  "assertions": [
+    {"id": "detects-realtime-automated", "text": "Identifies 'real-time' and 'automatically' as over-engineering signals requiring Dummy-to-Dynamic or Put-on-Crutches", "type": "capability"},
+    {"id": "detects-three-channels", "text": "Identifies that 3 channels (email, SMS, in-app) behind 'and' are separate stories", "type": "capability"},
+    {"id": "preferences-deferred", "text": "Defers 'based on notification preferences' as a later story — the first story uses hardcoded or default behavior", "type": "behavior"},
+    {"id": "applies-crutches-pattern", "text": "Applies Put-on-Crutches (#9): proposes a manual or simplified notification mechanism before building the real automated real-time system", "type": "capability"},
+    {"id": "single-channel-first", "text": "The first story delivers value via a single channel (e.g. email only), not all three simultaneously", "type": "capability"},
+    {"id": "at-least-5-splits", "text": "Proposes at least 5 distinct stories covering the progression from manual/simple to automated/real-time", "type": "capability"}
+  ]
+}

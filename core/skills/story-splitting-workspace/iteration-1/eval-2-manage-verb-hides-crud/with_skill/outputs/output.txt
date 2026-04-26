@@ -1,0 +1,96 @@
+STORY: "Admin can manage products in the catalog"
+
+================================================================================
+RED FLAG ANALYSIS
+================================================================================
+
+RED FLAG DETECTED: "manage"
+
+"Manage" is a classic action-related connector that hides multiple CRUD
+operations. According to the decision tree, this requires:
+  - Technique #1 (Start with outputs) + Split by action
+
+"Admin can manage products in the catalog" actually hides at least 5 distinct
+operations:
+  1. List/view products in the catalog
+  2. Create/add a new product
+  3. Edit/update product details
+  4. Delete/remove a product
+  5. (Possibly) Search or filter products
+
+This story is doing 4-5 different things. Let's split it.
+
+================================================================================
+PROPOSED SPLITS
+================================================================================
+
+Split 1: "Admin can view the product catalog (list all products)"
+  - Show a basic list of products with name and price
+  - No editing, no filtering, no pagination required initially
+  - Estimated time: 2-3 hours
+  - Value: Admin can see what products exist
+
+Split 2: "Admin can add a new product to the catalog"
+  - Form with required fields only: name, price, description
+  - Product appears in the catalog list after creation
+  - Estimated time: 3-4 hours
+  - Value: Admin can grow the catalog
+
+Split 3: "Admin can edit an existing product's details"
+  - Edit name, price, description of an existing product
+  - Changes are reflected immediately in the catalog
+  - Estimated time: 3-4 hours
+  - Value: Admin can correct mistakes and update information
+
+Split 4: "Admin can remove a product from the catalog"
+  - Delete a product (with confirmation prompt)
+  - Product no longer appears in the catalog
+  - Estimated time: 2-3 hours
+  - Value: Admin can keep the catalog clean and accurate
+
+Split 5 (optional, deliver later): "Admin can search and filter products in the catalog"
+  - Filter by category, name, or status
+  - Estimated time: 4-5 hours
+  - Value: Admin can find products quickly as the catalog grows
+
+================================================================================
+SMALLEST SLICE TO SHIP FIRST
+================================================================================
+
+Recommended first story: "Admin can view the product catalog (list all products)"
+
+Why this first?
+  - Delivers immediate value: admins can see what's in the catalog
+  - Establishes the data model and list UI used by all other stories
+  - Testable in production without any risk (read-only)
+  - Takes 2-3 hours
+  - All subsequent splits (add, edit, delete) build on this foundation
+
+Delivery order:
+  - Day 1: Split 1 (view/list) + Split 2 (add product)
+  - Day 2: Split 3 (edit product) + Split 4 (delete product)
+  - Later: Split 5 (search/filter) only when catalog grows large enough to need it
+
+================================================================================
+TECHNIQUES APPLIED
+================================================================================
+
+  - Split by "manage" -> Separated the hidden CRUD operations into individual
+    stories: list, create, edit, delete
+  - Start with outputs -> Began with the read/view story before write operations,
+    since viewing is the foundation all other actions depend on
+  - Extract basic utility first -> Split 5 (search/filter) extracted as a
+    separate, later enhancement; not bundled with core CRUD
+
+================================================================================
+NEXT STEPS (if any split still feels large)
+================================================================================
+
+If "Admin can add a new product" still feels too large, apply the
+hamburger-method to identify layers (e.g., start with minimal required fields
+only, add optional fields later, add image upload later, add category
+assignment later).
+
+If the team wants to validate the UI before wiring up the backend, apply
+technique #4 (Dummy to Dynamic): start with a hardcoded list of products,
+then integrate the real data source.

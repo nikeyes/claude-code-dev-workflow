@@ -1,0 +1,61 @@
+STORY ANALYSIS
+==============
+
+Original story:
+"When a user submits an order, the system should validate the cart, process the payment, update inventory, and then send a confirmation email"
+
+VERDICT: This story is too big and should be split.
+
+WHY IT IS TOO BIG
+-----------------
+
+The story describes four distinct system responsibilities chained together:
+1. Cart validation
+2. Payment processing
+3. Inventory update
+4. Confirmation email
+
+Each of these involves different technical concerns, failure modes, and business rules. They likely touch different subsystems or external integrations (e.g., payment gateway, inventory service, email provider). Bundling them into one story makes it hard to estimate, test, demo, or deliver incrementally.
+
+A reliable signal: the word "and" appears three times in a single story. Each "and" is a potential split point.
+
+PROPOSED SPLIT
+--------------
+
+Story 1: Validate the cart before order submission
+"When a user submits an order, the system validates the cart and shows an error if the cart is invalid (empty cart, out-of-stock items, invalid quantities)."
+
+Why: Cart validation is a pure read/check operation. It has clear acceptance criteria and can be built and demonstrated independently. It has no side effects.
+
+---
+
+Story 2: Process payment for a valid order
+"When a user submits a valid order, the system processes the payment and returns a success or failure result."
+
+Why: Payment is the most complex and risky step. It involves an external provider, error handling, retry logic, and security considerations. It deserves its own story and its own focused testing.
+
+---
+
+Story 3: Update inventory after a successful payment
+"When a payment is successfully processed, the system reduces the available inventory for each purchased item."
+
+Why: Inventory management is a separate domain concern. It may involve concurrency issues, reservation logic, or warehouse integrations. Isolating it makes the failure and rollback story explicit.
+
+---
+
+Story 4: Send a confirmation email after order completion
+"When an order is successfully placed and inventory is updated, the system sends a confirmation email to the user."
+
+Why: Email sending is often asynchronous, involves templates, and has its own failure handling (retries, fallback). It is the lowest-risk step and can be deferred without blocking the core purchase flow.
+
+DELIVERY ORDER
+--------------
+
+A recommended sequence that delivers value incrementally:
+
+1. Story 1 (cart validation) - unblocks everything downstream
+2. Story 2 (payment processing) - the core business transaction
+3. Story 3 (inventory update) - keeps stock accurate after a real payment
+4. Story 4 (confirmation email) - completes the user experience
+
+Each story can be developed, tested, and deployed independently. The first three together form a minimal viable order flow; the fourth completes the experience.

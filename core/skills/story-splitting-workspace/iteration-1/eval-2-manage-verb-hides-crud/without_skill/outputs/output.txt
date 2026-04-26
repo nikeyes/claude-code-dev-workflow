@@ -1,0 +1,55 @@
+Story: "Admin can manage products in the catalog"
+
+ANALYSIS
+--------
+
+This story is too big to deliver as a single unit.
+
+The word "manage" is the key problem. It hides at least four distinct operations: creating a product, reading/listing products, updating a product, and deleting a product. Each of these has different UI flows, different validation rules, different risk levels, and different business value. Bundling them under one story makes it impossible to estimate reliably, hard to test thoroughly, and difficult to release incrementally.
+
+There is also a secondary concern: "catalog" is an implicit scope boundary that suggests there may be additional product-related concerns (pricing, stock levels, visibility, categories) that could accidentally creep into scope.
+
+WHY IT IS TOO BIG
+-----------------
+
+1. Multiple distinct user interactions are collapsed into one verb ("manage").
+2. Each CRUD operation has independent business value — an admin can add new products even before delete is built.
+3. Each operation carries different complexity and risk (delete is destructive; create requires validation; list requires pagination or filtering decisions).
+4. A story this broad cannot be done, demonstrated, and accepted in a single short iteration with confidence.
+
+PROPOSED SPLIT
+--------------
+
+Split by operation (CRUD), which gives four independently deliverable stories:
+
+1. Admin can add a new product to the catalog
+   - Fill in name, description, price, and category
+   - Product appears in the catalog after saving
+   - Validation prevents saving incomplete or invalid data
+
+2. Admin can view the list of products in the catalog
+   - See all existing products with key attributes (name, price, status)
+   - Optionally filter or search by name or category
+   - This is often the prerequisite for all other operations and is low-risk to ship first
+
+3. Admin can edit an existing product in the catalog
+   - Change name, description, price, category, or other attributes
+   - Changes are reflected immediately in the catalog
+   - Validation rules match those for creation
+
+4. Admin can remove a product from the catalog
+   - Confirm intent before deletion (destructive action)
+   - Product no longer appears in the catalog after removal
+   - Consider soft-delete vs. hard-delete as a separate decision
+
+SUGGESTED DELIVERY ORDER
+-------------------------
+
+2 (view list) -> 1 (add) -> 3 (edit) -> 4 (delete)
+
+Starting with the read operation is low-risk and delivers immediate value (admins can see what exists). Add comes next because populating the catalog is the core business need. Edit follows once there is data to correct. Delete is last because it is the most dangerous and often the least urgent.
+
+CONCLUSION
+----------
+
+The original story bundles four distinct workflows behind a vague verb. Splitting by CRUD operation produces four small, independently testable, independently releasable stories, each with a clear acceptance condition.

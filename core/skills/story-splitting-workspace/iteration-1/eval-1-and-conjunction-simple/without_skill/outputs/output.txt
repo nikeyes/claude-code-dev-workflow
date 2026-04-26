@@ -1,0 +1,57 @@
+Story: "As a user, I can register and log in to the application"
+
+ANALYSIS
+--------
+
+This story is too big and should be split.
+
+The word "and" in the story title is the clearest signal: it names two distinct user goals that trigger different flows, touch different code paths, and deliver independent value. A user can benefit from registration without login being implemented yet (in a context where sessions are handled elsewhere), and login only makes sense once registration or some form of account creation exists — but from a delivery standpoint they are separate concerns.
+
+WHY IT IS TOO BIG
+-----------------
+
+1. Two separate user actions: Registration creates a new account (writes data, validates uniqueness, may send a confirmation email). Login authenticates an existing account (reads data, verifies credentials, creates a session). These are different happy paths, different error cases, and different UI flows.
+
+2. Different acceptance criteria: Registration needs to handle duplicate email, password strength rules, possibly email verification. Login needs to handle wrong password, account not found, locked accounts, remember-me, etc. Bundling them hides that complexity.
+
+3. Different deployment risk: You might want to ship account creation first (e.g., to seed users) before enabling login, or vice versa. Keeping them together makes that impossible.
+
+4. Estimability: Each alone is already a meaningful chunk of work. Together they are almost certainly more than a single sprint story for any team.
+
+PROPOSED SPLIT
+--------------
+
+Story 1: "As a new user, I can register an account so that I can access the application"
+
+  Acceptance criteria (examples):
+  - I can submit an email address and password to create an account
+  - I see an error if the email is already registered
+  - I see an error if my password does not meet the minimum requirements
+  - After successful registration I receive confirmation that my account was created
+
+Story 2: "As a registered user, I can log in with my email and password so that I can access my account"
+
+  Acceptance criteria (examples):
+  - I can submit my email and password to start a session
+  - I see a clear error if my credentials are incorrect
+  - I am redirected to the application after a successful login
+  - I remain logged in across page refreshes (session persistence)
+
+OPTIONAL FURTHER SPLITS (if needed)
+------------------------------------
+
+If the team considers registration still too large:
+
+  Story 1a: "As a new user, I can submit the registration form and see validation errors"
+  Story 1b: "As a new user, I receive a confirmation email after registering" (email verification flow)
+
+If login scope is large:
+
+  Story 2a: "As a registered user, I can log in and be redirected to the application"
+  Story 2b: "As a registered user, I can recover my password if I forget it"
+  Story 2c: "As a registered user, I am locked out after several failed login attempts" (security hardening)
+
+SUMMARY
+-------
+
+Split the original story into at minimum two stories: one for registration and one for login. Each delivers independent, testable, demonstrable value and can be estimated and prioritised separately.

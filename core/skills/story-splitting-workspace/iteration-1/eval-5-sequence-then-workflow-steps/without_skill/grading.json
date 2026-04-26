@@ -1,0 +1,33 @@
+{
+  "expectations": [
+    {
+      "text": "Identifies 'then' as a sequence connector and 'and' as a conjunction — both signal bundled concerns",
+      "passed": false,
+      "evidence": "The output explicitly calls out 'and' as a split signal ('the word \"and\" appears three times in a single story. Each \"and\" is a potential split point'), but never identifies 'then' or 'and then' as a sequence connector. Only one of the two required linguistic signals is named."
+    },
+    {
+      "text": "Proposes splitting by workflow step: validation, payment, inventory, email as separable concerns",
+      "passed": true,
+      "evidence": "The output splits the story into exactly four workflow-step stories: Story 1 (cart validation), Story 2 (payment processing), Story 3 (inventory update), Story 4 (confirmation email), each described as a distinct domain concern with independent testability."
+    },
+    {
+      "text": "Identifies payment as the central value step and recommends delivering it first, even with simplified inventory/email handling",
+      "passed": false,
+      "evidence": "Payment is called 'the most complex and risky step' and 'the core business transaction', confirming it as central value. However, the recommended delivery order places cart validation first and payment second, not first. No simplified or stub handling of inventory/email is suggested as a way to ship payment sooner."
+    },
+    {
+      "text": "Considers a 'put on crutches' option: e.g. manual emails before automating the send step",
+      "passed": false,
+      "evidence": "The output contains no mention of crutches, manual workarounds, temporary stubs, or any strategy of deferring automation with a manual fallback. Each story is treated as a full automated implementation from the start."
+    }
+  ],
+  "summary": {
+    "passed": 1,
+    "failed": 3,
+    "total": 4,
+    "pass_rate": 0.25
+  },
+  "timing": {
+    "executor_duration_seconds": 27.7
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "eval_id": 3,
+  "eval_name": "including-scope-expansion-start-with-outputs",
+  "prompt": "Generate a monthly financial report including revenue breakdown, expense categories, and year-over-year comparison charts",
+  "assertions": [
+    {"id": "detects-including-red-flag", "text": "Explicitly identifies 'including' as a scope indicator that bundles multiple outputs into one story", "type": "capability"},
+    {"id": "applies-start-with-outputs", "text": "Applies the 'Start with Outputs' technique (#1) — names it explicitly or clearly describes dividing by which output is delivered first", "type": "capability"},
+    {"id": "charts-deferred", "text": "The first story does NOT include charts — delivers a simpler output first (text summary, basic table)", "type": "behavior"},
+    {"id": "incremental-independent-value", "text": "Each split story delivers independent value — the first story is useful without requiring the subsequent ones", "type": "capability"},
+    {"id": "at-least-3-splits", "text": "Proposes at least 3 distinct stories, each incrementally adding one or two outputs", "type": "capability"}
+  ]
+}

@@ -1,0 +1,93 @@
+STORY ANALYSIS
+==============
+
+Original story:
+"Build a real-time notification system that automatically pushes alerts to users via email, SMS, and in-app messages based on their notification preferences"
+
+VERDICT: This story is too big. It should be split.
+
+WHY IT IS TOO BIG
+-----------------
+
+This story bundles at least five distinct concerns into one unit of work:
+
+1. Three separate delivery channels (email, SMS, in-app) - each has its own
+   third-party service, error handling, retry logic, and testing surface.
+
+2. A real-time push mechanism - this implies WebSockets, SSE, or a push
+   notification service, which is a non-trivial infrastructure concern on its own.
+
+3. A notification preference model - storing, reading, and enforcing per-user
+   preferences for each channel is its own data and UI problem.
+
+4. An alert triggering/routing layer - something must decide when an alert fires
+   and which channels to invoke for which user.
+
+The word "and" appears between three delivery channels, which is the clearest
+signal that the story contains parallel tracks that can be delivered independently.
+"Automatically" and "real-time" add cross-cutting quality constraints that are
+often better validated incrementally rather than all at once.
+
+Attempting to build and test all of this in a single iteration would likely result
+in a story that takes several weeks, is hard to demo incrementally, and has many
+integration points that make debugging slow.
+
+
+PROPOSED SPLIT
+--------------
+
+Story 1 - Notification preference model
+  "As a user, I can set my notification preferences (email on/off, SMS on/off,
+  in-app on/off) so the system knows which channels to use when alerting me."
+
+  Scope: data model, API to read/write preferences, basic UI to toggle channels.
+  No actual sending required. Acceptance: preferences are persisted and returned
+  correctly via API.
+
+Story 2 - In-app notifications (synchronous baseline)
+  "As a user, I receive in-app alerts when a relevant event occurs so I can see
+  notifications without leaving the application."
+
+  Scope: notification record creation, in-app feed or badge counter, no real-time
+  push yet (polling is acceptable). Filters by preferences from Story 1.
+  Acceptance: notification appears in the UI after the triggering event.
+
+Story 3 - Real-time delivery for in-app notifications
+  "As a user, in-app alerts appear immediately without me having to refresh the
+  page so I get timely information."
+
+  Scope: upgrade the in-app channel from polling to WebSocket / SSE push.
+  Acceptance: notification appears within 1-2 seconds of the event without a
+  page reload.
+
+Story 4 - Email notifications
+  "As a user, I receive an email alert when a relevant event occurs and my email
+  notifications are enabled so I can be notified even when I am not in the app."
+
+  Scope: integrate email service (e.g. SendGrid/SES), templating, delivery,
+  bounce/error handling. Respects preference from Story 1.
+  Acceptance: email is received within a reasonable time; no email sent when
+  preference is disabled.
+
+Story 5 - SMS notifications
+  "As a user, I receive an SMS alert when a relevant event occurs and my SMS
+  notifications are enabled so I am reachable on my phone."
+
+  Scope: integrate SMS provider (e.g. Twilio), message formatting, opt-out
+  compliance (STOP keyword). Respects preference from Story 1.
+  Acceptance: SMS received when enabled; not sent when disabled; opt-out works.
+
+
+DELIVERY ORDER
+--------------
+
+Recommended sequence: 1 -> 2 -> 4 -> 5 -> 3
+
+- Story 1 unblocks everything else (preferences must exist first).
+- Story 2 delivers the core value (users see alerts) with minimal infrastructure.
+- Stories 4 and 5 add channels independently; either can be skipped or deferred.
+- Story 3 is a quality/performance upgrade that can wait until the baseline is
+  validated with real users; polling in Story 2 is a safe starting point.
+
+Each story in this split is independently deployable, demonstrable to
+stakeholders, and testable in isolation.

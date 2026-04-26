@@ -1,0 +1,38 @@
+{
+  "expectations": [
+    {
+      "text": "Explicitly identifies 'including' as a scope indicator that bundles multiple outputs into one story",
+      "passed": true,
+      "evidence": "Line 11: 'The word \"including\" is the key signal here. It introduces a list of three distinct deliverables, each with its own data requirements, business logic, and UI complexity'"
+    },
+    {
+      "text": "Applies the 'Start with Outputs' technique (#1) — names it explicitly or clearly describes dividing by which output is delivered first",
+      "passed": false,
+      "evidence": "The output divides stories by output type (revenue table, expense table, YoY comparison, then charts) implying a start-with-outputs approach, but never names the technique explicitly as 'Start with Outputs' or references technique #1. The split is output-oriented but the technique is not identified by name."
+    },
+    {
+      "text": "The first story does NOT include charts — delivers a simpler output first (text summary, basic table)",
+      "passed": true,
+      "evidence": "Story 1 acceptance criteria explicitly states: 'No charts required; a table is sufficient'. Charts are deferred entirely to Story 4."
+    },
+    {
+      "text": "Each split story delivers independent value — the first story is useful without requiring the subsequent ones",
+      "passed": true,
+      "evidence": "Story 1 delivers revenue breakdown as a standalone table. The sequencing section states: 'Each story is independently releasable and delivers visible value to the finance user without requiring the others to be complete first.' Story 1 and 2 are also noted as parallelizable."
+    },
+    {
+      "text": "Proposes at least 3 distinct stories, each incrementally adding one or two outputs",
+      "passed": true,
+      "evidence": "Four distinct stories are proposed: Story 1 (revenue breakdown table), Story 2 (expense categories table), Story 3 (YoY comparison with table + optional charts), Story 4 (charts layer). Each adds one incremental output."
+    }
+  ],
+  "summary": {
+    "passed": 4,
+    "failed": 1,
+    "total": 5,
+    "pass_rate": 0.8
+  },
+  "timing": {
+    "executor_duration_seconds": 33.5
+  }
+}

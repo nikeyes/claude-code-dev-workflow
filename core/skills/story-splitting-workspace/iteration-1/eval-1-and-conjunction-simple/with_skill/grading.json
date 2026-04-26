@@ -1,0 +1,33 @@
+{
+  "expectations": [
+    {
+      "text": "Explicitly identifies 'and' as a coordinating conjunction indicating the story is too big",
+      "passed": true,
+      "evidence": "Line 7 under RED FLAGS DETECTED: '\"and\" (coordinating conjunction — multiple independent features bundled together)'. Also reinforced in ANALYSIS: 'The word \"and\" is the key red flag here.'"
+    },
+    {
+      "text": "Proposes exactly 2 stories: one for registration and one for login, independently deployable",
+      "passed": true,
+      "evidence": "Story 1 'As a user, I can register for the application' and Story 2 'As a user, I can log in to the application' are both proposed as independent deployable slices. A third story (logout) is also suggested as implied/missing, but registration and login are clearly two distinct independent stories with no horizontal splits."
+    },
+    {
+      "text": "Specifies which story to deliver first and justifies the choice",
+      "passed": true,
+      "evidence": "The 'SMALLEST SLICE TO SHIP FIRST' section (lines 82-90) explicitly names Story 1a ('As a user, I can register with email and password (no email verification)') as the first story, with justification: 1-2 hours, delivers immediate value, testable end-to-end, no email infrastructure needed, login can follow immediately after."
+    },
+    {
+      "text": "Does NOT propose horizontal splits (DB layer, API layer, UI layer) — splits are vertical slices with user value",
+      "passed": true,
+      "evidence": "All proposed splits are vertical user-value slices expressed as 'As a user, I can...' stories (register, log in, log out, email verification, OAuth). No horizontal/technical-layer splits (DB, API, UI) appear anywhere in the output."
+    }
+  ],
+  "summary": {
+    "passed": 4,
+    "failed": 0,
+    "total": 4,
+    "pass_rate": 1.0
+  },
+  "timing": {
+    "executor_duration_seconds": 40.6
+  }
+}

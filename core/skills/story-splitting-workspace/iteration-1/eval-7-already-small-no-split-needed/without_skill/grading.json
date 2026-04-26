@@ -1,0 +1,33 @@
+{
+  "expectations": [
+    {
+      "text": "Does NOT identify red flags — there are no 'and', 'or', 'manage', 'including', 'before/after' in this story",
+      "passed": true,
+      "evidence": "The output explicitly states under point 4: 'No red-flag words. The story contains no \"and\", \"or\", \"manage\", \"handle\", or \"including\" that would suggest hidden scope.'"
+    },
+    {
+      "text": "Does NOT recommend splitting this story into smaller stories — accepts it as appropriately sized",
+      "passed": true,
+      "evidence": "The verdict section clearly states: 'Do not split. Implement as written.' No splitting recommendations are made."
+    },
+    {
+      "text": "Explicitly confirms the story is small enough to proceed as-is (approximately 1 day or less)",
+      "passed": true,
+      "evidence": "The output opens with 'This story is already small enough. No splitting is needed.' and further states 'small enough to deliver together in a day or two' under point 3."
+    },
+    {
+      "text": "Does NOT add phases, learning steps, or unnecessary sub-tasks to a story that does not need them",
+      "passed": true,
+      "evidence": "The output provides analytical reasoning (5 numbered points) but does not introduce phases, learning steps, or sub-tasks. The conclusion is simply 'Do not split. Implement as written.'"
+    }
+  ],
+  "summary": {
+    "passed": 4,
+    "failed": 0,
+    "total": 4,
+    "pass_rate": 1.0
+  },
+  "timing": {
+    "executor_duration_seconds": 23.9
+  }
+}

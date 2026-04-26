@@ -1,0 +1,33 @@
+{
+  "expectations": [
+    {
+      "text": "Identifies 'then' as a sequence connector and 'and' as a conjunction — both signal bundled concerns",
+      "passed": true,
+      "evidence": "RED FLAGS DETECTED section explicitly calls out 'and' (appears twice) as 'multiple features bundled together' and 'then' as 'sequence connector signaling separate workflow steps'. Both are listed in the splitting technique selection as primary red flags."
+    },
+    {
+      "text": "Proposes splitting by workflow step: validation, payment, inventory, email as separable concerns",
+      "passed": true,
+      "evidence": "PROPOSED SPLITS section delivers exactly four workflow-step stories: Story 2 (cart validation), Story 3 (payment processing), Story 4 (inventory update), Story 5 (confirmation email). Each is described as independently deployable with its own scope, value, and estimate."
+    },
+    {
+      "text": "Identifies payment as the central value step and recommends delivering it first, even with simplified inventory/email handling",
+      "passed": false,
+      "evidence": "The output recommends Story 1 (basic order submission with no payment) as the first delivery, followed by cart validation. Payment (Story 3) is deferred to Sprint 2. The rationale explicitly favours 'no money moves, no external dependencies' as the reason to go first. Payment is not identified as the central value step."
+    },
+    {
+      "text": "Considers a 'put on crutches' option: e.g. manual emails before automating the send step",
+      "passed": false,
+      "evidence": "The output never mentions a manual/crutch interim option. Email is deferred to Sprint 3 as a fully automated story (Story 5) without any suggestion of handling it manually first. No 'crutches' pattern is applied anywhere in the analysis."
+    }
+  ],
+  "summary": {
+    "passed": 2,
+    "failed": 2,
+    "total": 4,
+    "pass_rate": 0.5
+  },
+  "timing": {
+    "executor_duration_seconds": 51.1
+  }
+}
