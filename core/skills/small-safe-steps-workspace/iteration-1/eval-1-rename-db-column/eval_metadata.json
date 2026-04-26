@@ -1,0 +1,14 @@
+{
+  "eval_id": 1,
+  "eval_name": "rename-db-column-expand-contract",
+  "prompt": "/small-safe-steps Rename the 'email' column to 'email_address' in the users table",
+  "assertions": [
+    {"id": "detects-risky-change", "text": "Identifies this as a risky breaking change that cannot be done in one step"},
+    {"id": "expand-contract-phases", "text": "Proposes at least 3 phases following expand-contract: Expand (add new column + dual-write), Migrate (switch reads), Contract (drop old column)"},
+    {"id": "dual-write-in-expand", "text": "Expand phase includes dual-write — writing to BOTH old 'email' and new 'email_address' columns simultaneously"},
+    {"id": "waiting-period-before-drop", "text": "Contract phase explicitly requires verifying zero usage of old column for days/weeks before dropping it — does NOT drop immediately"},
+    {"id": "steps-under-3h", "text": "Each individual step is scoped to 1-3 hours maximum — no step is described as taking a full day or more"},
+    {"id": "no-big-bang", "text": "Does NOT propose renaming the column in a single step (ALTER TABLE RENAME COLUMN as the only step)"},
+    {"id": "reads-project-files", "text": "Reads the fixture project's user_service.py to reference real column names and code before planning"}
+  ]
+}

@@ -1,0 +1,53 @@
+{
+  "expectations": [
+    {
+      "text": "Identifies this needs backfilling of existing rows in the database — not just changing new writes",
+      "passed": false,
+      "evidence": "Step 1 explicitly states 'Existing rows are unaffected. Only new writes change behavior.' The plan never addresses backfilling existing rows that contain plain strings. The migration only changes the application layer for new writes."
+    },
+    {
+      "text": "Expand phase adds a new 'metadata_json' column (or similar) alongside the existing 'metadata' string column",
+      "passed": false,
+      "evidence": "The plan never adds a new column. It keeps the existing 'metadata' TEXT column and only changes the application-layer serialization: 'The database column type stays TEXT.' Step 5 mentions an optional column rename but not adding a parallel column."
+    },
+    {
+      "text": "Backfilling existing rows is a separate step from adding the new column — not bundled together",
+      "passed": false,
+      "evidence": "There is no backfill step anywhere in the plan. The plan has 5 steps: serialize on write, deserialize on read, update tests, default value, and optional schema rename. None addresses backfilling existing rows."
+    },
+    {
+      "text": "Backfill step is time-boxed or batched (not a single bulk UPDATE of all rows at once) to avoid locking the table",
+      "passed": false,
+      "evidence": "No backfill step exists in the plan at all, so there is no time-boxing or batching. The plan states 'Steps 1–4 can be done in a single session with no downtime risk because the database column type (TEXT) does not change' — this ignores the risk from existing rows with non-JSON strings."
+    },
+    {
+      "text": "Dual-write (writing to both columns) remains active throughout the entire migration phase until reads are fully switched",
+      "passed": false,
+      "evidence": "The plan immediately changes writes in Step 1 to JSON-only. There is no dual-write pattern — no parallel column is added, and no mechanism maintains backward compatibility for old-format reads. Step 1 states 'Change log() to accept metadata as a dict... Before the INSERT, call json.dumps(metadata or {})' with no dual-write."
+    },
+    {
+      "text": "Reads the fixture project's event_log.py to understand the actual schema and code before planning",
+      "passed": true,
+      "evidence": "The plan references specific implementation details from event_log.py: method names (log(), get_event(), get_events_by_type(), get_events_by_user()), the exact column declaration ('declared as TEXT'), specific existing tests ('test_log_and_get_event', 'test_log_with_json_string_metadata'), and callers' behavior ('callers already serialize dictionaries into it with json.dumps'). This level of detail requires reading the file."
+    },
+    {
+      "text": "Each individual step is scoped to 1-3 hours maximum",
+      "passed": true,
+      "evidence": "The Execution Order Summary table lists: Step 1 ~15 min, Step 2 ~15 min, Step 3 ~10 min, Step 4 ~10 min, Step 5 ~20 min. All steps are well under the 3-hour maximum."
+    },
+    {
+      "text": "Includes a learning step to understand the current data distribution (e.g., how many rows, what formats exist) before starting any migration",
+      "passed": false,
+      "evidence": "The plan has no learning or discovery step. It jumps directly to Step 1 (serialization change) with no analysis of how many existing rows there are, what formats the metadata column currently contains, or what proportion are plain strings vs JSON strings vs empty."
+    }
+  ],
+  "summary": {
+    "passed": 2,
+    "failed": 6,
+    "total": 8,
+    "pass_rate": 0.25
+  },
+  "timing": {
+    "executor_duration_seconds": 47.2
+  }
+}

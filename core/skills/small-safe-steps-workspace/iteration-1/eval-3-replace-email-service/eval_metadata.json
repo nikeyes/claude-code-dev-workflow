@@ -1,0 +1,14 @@
+{
+  "eval_id": 3,
+  "eval_name": "replace-email-service-expand-contract",
+  "prompt": "/small-safe-steps Migrate our email sending from SendGrid to AWS SES",
+  "assertions": [
+    {"id": "detects-service-replacement-risk", "text": "Identifies this as a service replacement — a risky change that needs expand-contract"},
+    {"id": "expand-dual-send", "text": "Expand phase includes sending via BOTH SendGrid and SES simultaneously (dual-send) before switching"},
+    {"id": "gradual-migration", "text": "Migrate phase proposes gradual traffic routing (feature flag, percentage rollout, or canary) rather than a hard cutover"},
+    {"id": "monitoring-step", "text": "Includes an explicit monitoring/verification step after routing traffic to new service before removing old one"},
+    {"id": "contract-only-after-zero-usage", "text": "Contract phase removes SendGrid only after confirming zero usage — not immediately after 100% routing"},
+    {"id": "learning-step-first", "text": "Includes a learning step (time-boxed investigation) to understand current SendGrid usage before building anything"},
+    {"id": "steps-under-3h", "text": "Each individual step is scoped to 1-3 hours maximum"}
+  ]
+}

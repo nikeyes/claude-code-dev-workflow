@@ -1,0 +1,33 @@
+{
+  "expectations": [
+    {
+      "text": "Recognizes the task is trivial (< 1 hour) and does not require a multi-phase plan",
+      "passed": true,
+      "evidence": "This is a trivial, well-scoped change — a single-character correction in a string literal — but it cannot be applied because the described content is not present in the file."
+    },
+    {
+      "text": "Does NOT apply expand-contract pattern or create multiple phases for a one-line text change",
+      "passed": true,
+      "evidence": "The output contains no phases, no expand-contract pattern, and no migration steps. It is structured as: Task, Findings, Conclusion, and 'What the fix would look like (if applicable)'."
+    },
+    {
+      "text": "Suggests doing the fix directly rather than planning it out as a structured multi-step effort",
+      "passed": true,
+      "evidence": "If an error message with the typo were present, the fix would be a single-character change: [before/after code snippet shown directly]. This is a one-line change with no risk, no tests required beyond verifying the string, and no impact on behavior."
+    },
+    {
+      "text": "Does NOT produce a step plan with phases like 'Phase 1: Identify typo', 'Phase 2: Fix typo', 'Phase 3: Verify fix'",
+      "passed": true,
+      "evidence": "The document has no numbered phases or step-by-step plan structure. It goes directly from findings to conclusion to a direct before/after code example."
+    }
+  ],
+  "summary": {
+    "passed": 4,
+    "failed": 0,
+    "total": 4,
+    "pass_rate": 1.0
+  },
+  "timing": {
+    "executor_duration_seconds": 24.1
+  }
+}

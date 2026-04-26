@@ -1,0 +1,11 @@
+{
+  "eval_id": 7,
+  "eval_name": "trivial-task-no-overengineering",
+  "prompt": "/small-safe-steps Fix the typo in the error message on line 42 of user_service.py where 'recieved' should be 'received'",
+  "assertions": [
+    {"id": "recognizes-trivial", "text": "Recognizes the task is trivial (< 1 hour) and does not require a multi-phase plan"},
+    {"id": "no-expand-contract", "text": "Does NOT apply expand-contract pattern or create multiple phases for a one-line text change"},
+    {"id": "suggests-direct-fix", "text": "Suggests doing the fix directly rather than planning it out as a structured multi-step effort"},
+    {"id": "no-overengineering", "text": "Does NOT produce a step plan with phases like 'Phase 1: Identify typo', 'Phase 2: Fix typo', 'Phase 3: Verify fix'"}
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "eval_id": 2,
+  "eval_name": "add-caching-no-expand-contract",
+  "prompt": "/small-safe-steps Add an in-memory cache to the get_user method so repeated lookups don't hit the database",
+  "assertions": [
+    {"id": "no-unnecessary-expand-contract", "text": "Does NOT apply expand-contract pattern — recognizes this is an additive, non-breaking change"},
+    {"id": "phases-make-sense", "text": "Proposes phases appropriate to the risk: add cache implementation, add tests, deploy — no elaborate dual-write or migration phases"},
+    {"id": "steps-under-3h", "text": "Each individual step is scoped to 1-3 hours maximum"},
+    {"id": "mentions-reversibility", "text": "Notes that adding a cache is reversible (can be removed without data loss) and therefore low-risk"},
+    {"id": "reads-project-files", "text": "Reads user_service.py to understand the actual get_user implementation before planning"}
+  ]
+}

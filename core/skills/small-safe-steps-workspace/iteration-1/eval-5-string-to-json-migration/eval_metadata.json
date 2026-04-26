@@ -1,0 +1,15 @@
+{
+  "eval_id": 5,
+  "eval_name": "string-to-json-data-migration",
+  "prompt": "/small-safe-steps Migrate the event_log.metadata column from storing plain strings to storing structured JSON objects",
+  "assertions": [
+    {"id": "detects-data-migration-risk", "text": "Identifies this needs backfilling of existing rows in the database — not just changing new writes"},
+    {"id": "expand-new-column", "text": "Expand phase adds a new 'metadata_json' column (or similar) alongside the existing 'metadata' string column"},
+    {"id": "backfill-as-separate-step", "text": "Backfilling existing rows is a separate step from adding the new column — not bundled together"},
+    {"id": "backfill-time-boxed", "text": "Backfill step is time-boxed or batched (not a single bulk UPDATE of all rows at once) to avoid locking the table"},
+    {"id": "dual-write-during-migration", "text": "Dual-write (writing to both columns) remains active throughout the entire migration phase until reads are fully switched"},
+    {"id": "reads-project-files", "text": "Reads the fixture project's event_log.py to understand the actual schema and code before planning"},
+    {"id": "steps-under-3h", "text": "Each individual step is scoped to 1-3 hours maximum"},
+    {"id": "learning-before-earning", "text": "Includes a learning step to understand the current data distribution (e.g., how many rows, what formats exist) before starting any migration"}
+  ]
+}

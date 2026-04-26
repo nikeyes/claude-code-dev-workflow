@@ -1,0 +1,43 @@
+{
+  "expectations": [
+    {
+      "text": "Identifies this as a breaking API change that will affect external consumers — even though user says 'it's quick'",
+      "passed": false,
+      "evidence": "The plan treats this as a straightforward rename with no mention of breaking API changes, external consumers, or backward compatibility concerns. Steps go directly to 'Update the serializer / response model' and 'Deploy and verify' with no warning about breaking existing API consumers."
+    },
+    {
+      "text": "Does NOT agree with the user's framing that 'it shouldn't take long' — explains why it needs a careful approach",
+      "passed": false,
+      "evidence": "The plan fully accepts the user's framing. The overview simply states 'Rename the userName field to username in the public REST API response.' with no pushback, no explanation of why a careful approach is needed, and no acknowledgment that this is riskier than the user implied."
+    },
+    {
+      "text": "Expand phase includes returning BOTH 'userName' and 'username' fields simultaneously so existing consumers don't break",
+      "passed": false,
+      "evidence": "There is no expand phase. Step 2 reads: 'Change the field name from userName to username in the response serializer or DTO.' This is an immediate hard rename with no transitional period where both fields coexist."
+    },
+    {
+      "text": "Includes an explicit deprecation period before removing 'userName' — not an immediate removal after adding 'username'",
+      "passed": false,
+      "evidence": "The plan has no deprecation period at all. After Step 2 renames the field, Step 5 is simply 'Deploy and verify'. There is no step or mention of keeping the old field alive for any period of time."
+    },
+    {
+      "text": "Mentions notifying API consumers or adding deprecation headers/warnings before removing the old field",
+      "passed": false,
+      "evidence": "Neither consumer notification nor deprecation headers/warnings appear anywhere in the plan. The only communication-adjacent step is 'Update API documentation' (Step 3), which updates docs to reflect the new field but does not notify existing consumers or add runtime warnings."
+    },
+    {
+      "text": "Each individual step is scoped to 1-3 hours maximum",
+      "passed": true,
+      "evidence": "All five steps are narrow in scope: 'Find all occurrences', 'Update the serializer / response model', 'Update API documentation', 'Update all tests', and 'Deploy and verify'. Each is a focused, well-bounded task that a developer could complete within 1-3 hours."
+    }
+  ],
+  "summary": {
+    "passed": 1,
+    "failed": 5,
+    "total": 6,
+    "pass_rate": 0.17
+  },
+  "timing": {
+    "executor_duration_seconds": 16.6
+  }
+}

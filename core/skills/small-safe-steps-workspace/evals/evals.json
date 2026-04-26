@@ -1,0 +1,123 @@
+{
+  "skill_name": "small-safe-steps",
+  "evals": [
+    {
+      "id": 1,
+      "name": "rename-db-column-expand-contract",
+      "difficulty": "easy",
+      "prompt": "/small-safe-steps Rename the 'email' column to 'email_address' in the users table",
+      "project_dir": "evals/projects/eval-1-rename-db-column",
+      "expected_output": "Should detect this is a risky DB change and apply expand-contract pattern. Must include dual-write phase, migration phase, and cleanup phase with a waiting period before dropping the old column.",
+      "assertions": [
+        {"id": "detects-risky-change", "text": "Identifies this as a risky breaking change that cannot be done in one step", "type": "capability"},
+        {"id": "expand-contract-phases", "text": "Proposes at least 3 phases following expand-contract: Expand (add new column + dual-write), Migrate (switch reads), Contract (drop old column)", "type": "capability"},
+        {"id": "dual-write-in-expand", "text": "Expand phase includes dual-write — writing to BOTH old 'email' and new 'email_address' columns simultaneously", "type": "capability"},
+        {"id": "waiting-period-before-drop", "text": "Contract phase explicitly requires verifying zero usage of old column for days/weeks before dropping it — does NOT drop immediately", "type": "capability"},
+        {"id": "steps-under-3h", "text": "Each individual step is scoped to 1-3 hours maximum — no step is described as taking a full day or more", "type": "capability"},
+        {"id": "no-big-bang", "text": "Does NOT propose renaming the column in a single step (ALTER TABLE RENAME COLUMN as the only step)", "type": "behavior"},
+        {"id": "reads-project-files", "text": "Reads the fixture project's user_service.py to reference real column names and code before planning", "type": "behavior"}
+      ]
+    },
+    {
+      "id": 2,
+      "name": "add-caching-no-expand-contract",
+      "difficulty": "easy",
+      "prompt": "/small-safe-steps Add an in-memory cache to the get_user method so repeated lookups don't hit the database",
+      "project_dir": "evals/projects/eval-1-rename-db-column",
+      "expected_output": "Should NOT apply expand-contract (this is an additive change with no breaking risk). Should break into simple phases: add cache → test → deploy. Each step 1-3h.",
+      "assertions": [
+        {"id": "no-unnecessary-expand-contract", "text": "Does NOT apply expand-contract pattern — recognizes this is an additive, non-breaking change", "type": "behavior"},
+        {"id": "phases-make-sense", "text": "Proposes phases appropriate to the risk: add cache implementation, add tests, deploy — no elaborate dual-write or migration phases", "type": "capability"},
+        {"id": "steps-under-3h", "text": "Each individual step is scoped to 1-3 hours maximum", "type": "capability"},
+        {"id": "mentions-reversibility", "text": "Notes that adding a cache is reversible (can be removed without data loss) and therefore low-risk", "type": "capability"},
+        {"id": "reads-project-files", "text": "Reads user_service.py to understand the actual get_user implementation before planning", "type": "behavior"}
+      ]
+    },
+    {
+      "id": 3,
+      "name": "replace-email-service-expand-contract",
+      "difficulty": "medium",
+      "prompt": "/small-safe-steps Migrate our email sending from SendGrid to AWS SES",
+      "expected_output": "Should apply expand-contract for service replacement. Expand phase adds SES alongside SendGrid. Migrate phase routes traffic gradually. Contract phase removes SendGrid only after zero usage verified.",
+      "assertions": [
+        {"id": "detects-service-replacement-risk", "text": "Identifies this as a service replacement — a risky change that needs expand-contract", "type": "capability"},
+        {"id": "expand-dual-send", "text": "Expand phase includes sending via BOTH SendGrid and SES simultaneously (dual-send) before switching", "type": "capability"},
+        {"id": "gradual-migration", "text": "Migrate phase proposes gradual traffic routing (feature flag, percentage rollout, or canary) rather than a hard cutover", "type": "capability"},
+        {"id": "monitoring-step", "text": "Includes an explicit monitoring/verification step after routing traffic to new service before removing old one", "type": "capability"},
+        {"id": "contract-only-after-zero-usage", "text": "Contract phase removes SendGrid only after confirming zero usage — not immediately after 100% routing", "type": "capability"},
+        {"id": "learning-step-first", "text": "Includes a learning step (time-boxed investigation) to understand current SendGrid usage before building anything", "type": "capability"},
+        {"id": "steps-under-3h", "text": "Each individual step is scoped to 1-3 hours maximum", "type": "capability"}
+      ]
+    },
+    {
+      "id": 4,
+      "name": "resist-pressure-quick-api-rename",
+      "difficulty": "medium",
+      "prompt": "/small-safe-steps Rename the 'userName' field to 'username' in the public REST API response. It's just a field rename, shouldn't take long.",
+      "expected_output": "Should resist the user's minimization ('shouldn't take long') and apply expand-contract. Must explain that API consumers will break if old field disappears suddenly. Deprecation period required.",
+      "assertions": [
+        {"id": "detects-breaking-api-change", "text": "Identifies this as a breaking API change that will affect external consumers — even though user says 'it's quick'", "type": "capability"},
+        {"id": "does-not-agree-its-quick", "text": "Does NOT agree with the user's framing that 'it shouldn't take long' — explains why it needs a careful approach", "type": "behavior"},
+        {"id": "return-both-fields-phase", "text": "Expand phase includes returning BOTH 'userName' and 'username' fields simultaneously so existing consumers don't break", "type": "capability"},
+        {"id": "deprecation-period", "text": "Includes an explicit deprecation period before removing 'userName' — not an immediate removal after adding 'username'", "type": "capability"},
+        {"id": "consumer-notification", "text": "Mentions notifying API consumers or adding deprecation headers/warnings before removing the old field", "type": "capability"},
+        {"id": "steps-under-3h", "text": "Each individual step is scoped to 1-3 hours maximum", "type": "capability"}
+      ]
+    },
+    {
+      "id": 5,
+      "name": "string-to-json-data-migration",
+      "difficulty": "hard",
+      "prompt": "/small-safe-steps Migrate the event_log.metadata column from storing plain strings to storing structured JSON objects",
+      "project_dir": "evals/projects/eval-5-event-log-migration",
+      "expected_output": "Should detect this is a data type + format change requiring backfill of existing rows. Expand-contract with: add new column, dual-write, backfill existing rows, switch reads, drop old. Must time-box the backfill as a separate learning step.",
+      "assertions": [
+        {"id": "detects-data-migration-risk", "text": "Identifies this needs backfilling of existing rows in the database — not just changing new writes", "type": "capability"},
+        {"id": "expand-new-column", "text": "Expand phase adds a new 'metadata_json' column (or similar) alongside the existing 'metadata' string column", "type": "capability"},
+        {"id": "backfill-as-separate-step", "text": "Backfilling existing rows is a separate step from adding the new column — not bundled together", "type": "capability"},
+        {"id": "backfill-time-boxed", "text": "Backfill step is time-boxed or batched (not a single bulk UPDATE of all rows at once) to avoid locking the table", "type": "capability"},
+        {"id": "dual-write-during-migration", "text": "Dual-write (writing to both columns) remains active throughout the entire migration phase until reads are fully switched", "type": "capability"},
+        {"id": "reads-project-files", "text": "Reads the fixture project's event_log.py to understand the actual schema and code before planning", "type": "behavior"},
+        {"id": "steps-under-3h", "text": "Each individual step is scoped to 1-3 hours maximum", "type": "capability"},
+        {"id": "learning-before-earning", "text": "Includes a learning step to understand the current data distribution (e.g., how many rows, what formats exist) before starting any migration", "type": "capability"}
+      ]
+    },
+    {
+      "id": 6,
+      "name": "microservice-extraction",
+      "difficulty": "hard",
+      "prompt": "/small-safe-steps Extract the payment processing logic from the order_service into a separate PaymentService microservice",
+      "project_dir": "evals/projects/eval-6-order-service",
+      "expected_output": "Should break extraction into multiple phases: characterize current behavior, build new service alongside, route traffic incrementally, decommission old code. Must identify this as a high-risk multi-week effort requiring careful incremental steps.",
+      "assertions": [
+        {"id": "identifies-high-risk", "text": "Identifies this as a high-risk, multi-week effort — not a task that can be done in a single sprint", "type": "capability"},
+        {"id": "characterization-first", "text": "First phase is characterization/learning: understand current payment logic behavior, write tests that capture it, time-boxed", "type": "capability"},
+        {"id": "build-alongside", "text": "New PaymentService is built alongside the existing code (expand), not as a replacement from the start", "type": "capability"},
+        {"id": "traffic-routing-phase", "text": "Includes a migration phase with gradual traffic routing (dual-call or feature flag) before decommissioning old code", "type": "capability"},
+        {"id": "reads-project-files", "text": "Reads order_service.py to reference actual method names and logic before planning", "type": "behavior"},
+        {"id": "learning-vs-earning", "text": "Explicitly separates learning steps (investigation, characterization, spike) from earning steps (ship working service)", "type": "capability"},
+        {"id": "steps-under-3h", "text": "Each individual step is scoped to 1-3 hours maximum", "type": "capability"},
+        {"id": "no-big-bang-cutover", "text": "Does NOT propose a big-bang cutover — does NOT say 'move all payment code to new service and update all callers in one step'", "type": "behavior"}
+      ]
+    },
+    {
+      "id": 7,
+      "name": "trivial-task-no-overengineering",
+      "difficulty": "easy",
+      "prompt": "/small-safe-steps Fix the typo in the error message on line 42 of user_service.py where 'recieved' should be 'received'",
+      "project_dir": "evals/projects/eval-1-rename-db-column",
+      "expected_output": "Should recognize this is too small for a multi-phase plan. Should suggest doing it directly rather than creating an elaborate step breakdown. Must NOT apply expand-contract or create phases for a one-line fix.",
+      "assertions": [
+        {"id": "recognizes-trivial", "text": "Recognizes the task is trivial (< 1 hour) and does not require a multi-phase plan", "type": "capability"},
+        {"id": "no-expand-contract", "text": "Does NOT apply expand-contract pattern or create multiple phases for a one-line text change", "type": "behavior"},
+        {"id": "suggests-direct-fix", "text": "Suggests doing the fix directly rather than planning it out as a structured multi-step effort", "type": "behavior"},
+        {"id": "no-overengineering", "text": "Does NOT produce a step plan with phases like 'Phase 1: Identify typo', 'Phase 2: Fix typo', 'Phase 3: Verify fix'", "type": "behavior"}
+      ]
+    }
+  ],
+  "grading_guide": {
+    "capability_assertions": "The output demonstrates the stated reasoning or produces the stated content. Evidence must be explicit in the response, not inferred.",
+    "behavior_assertions": "The output does or avoids the described action. Binary: did it happen or not.",
+    "statistical_requirements": "With min_runs=3, report mean, stddev, min, max per metric. A delta is only meaningful if confidence intervals don't overlap."
+  }
+}

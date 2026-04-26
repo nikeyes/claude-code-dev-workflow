@@ -1,0 +1,48 @@
+{
+  "expectations": [
+    {
+      "text": "Identifies this as a service replacement — a risky change that needs expand-contract",
+      "passed": true,
+      "evidence": "**Risk level:** HIGH — this is a service replacement (risky change). Applies the **Expand-Contract pattern**."
+    },
+    {
+      "text": "Expand phase includes sending via BOTH SendGrid and SES simultaneously (dual-send) before switching",
+      "passed": true,
+      "evidence": "Step 1.3 creates an EmailService abstraction with both `_send_via_sendgrid()` and `_send_via_ses()` methods. Step 1.5 adds a feature flag defaulting to 'sendgrid', with SES path existing but unused — dual-provider support is in place before any traffic switches. Phase 2 overview states 'Keep dual-write capability available as a safety net throughout.'"
+    },
+    {
+      "text": "Migrate phase proposes gradual traffic routing (feature flag, percentage rollout, or canary) rather than a hard cutover",
+      "passed": true,
+      "evidence": "Phase 2 uses a feature flag with percentage rollout: Step 2.1 routes 1%, Step 2.3 routes 10%, Step 2.4 routes 50%, Step 2.5 routes 100%. 'Feature flag for gradual rollout: 1% → 10% → 50% → 100% — no big bang'"
+    },
+    {
+      "text": "Includes an explicit monitoring/verification step after routing traffic to new service before removing old one",
+      "passed": true,
+      "evidence": "Step 2.1: 'Monitor for 24-48h: SES delivery rate, Bounce rate, Complaint rate, Any application errors from SES SDK'. Step 2.2 is a dedicated 'Monitor and compare metrics (LEARNING)' step. Phase 2 Checklist requires stable metrics before moving to Phase 3."
+    },
+    {
+      "text": "Contract phase removes SendGrid only after confirming zero usage — not immediately after 100% routing",
+      "passed": true,
+      "evidence": "Phase 3 intro: 'Only start after Phase 2 is verified stable for 1-2 weeks with 0 SendGrid usage.' Phase 2 Checklist: 'Feature flag at 100% pointing to aws_ses for at least 1-2 weeks' and 'SendGrid dashboard confirms 0 emails sent for the last 1-2 weeks' before proceeding."
+    },
+    {
+      "text": "Includes a learning step (time-boxed investigation) to understand current SendGrid usage before building anything",
+      "passed": true,
+      "evidence": "Step 1.1 is typed 'Learning (time-boxed)', Duration: 1-2h: 'Verify AWS SES account setup and send limits (LEARNING)' — investigates the current environment before any code changes. Step 1.4 is also a Learning step: 'Send a test email via AWS SES to internal recipients only (LEARNING)'."
+    },
+    {
+      "text": "Each individual step is scoped to 1-3 hours maximum",
+      "passed": true,
+      "evidence": "All steps are within 1-3h: Step 1.1: 1-2h, Step 1.2: 1h, Step 1.3: 2h, Step 1.4: 1h, Step 1.5: 1h, Steps 2.1-2.5: 1h each, Steps 3.1, 3.3, 3.4, 3.5: 30min each, Step 3.2: 1h. No step exceeds 3 hours."
+    }
+  ],
+  "summary": {
+    "passed": 7,
+    "failed": 0,
+    "total": 7,
+    "pass_rate": 1.0
+  },
+  "timing": {
+    "executor_duration_seconds": 82.9
+  }
+}

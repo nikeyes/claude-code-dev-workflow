@@ -1,0 +1,43 @@
+{
+  "expectations": [
+    {
+      "text": "Identifies this as a breaking API change that will affect external consumers — even though user says 'it's quick'",
+      "passed": true,
+      "evidence": "The plan opens with: 'renaming a field in a public REST API response is a breaking change. Any external consumers (mobile apps, third-party integrations, partner systems, frontend clients) that currently read `userName` will break the moment it disappears.' and lists explicit red flags including 'This is a public API — consumers are outside our control'."
+    },
+    {
+      "text": "Does NOT agree with the user's framing that 'it shouldn't take long' — explains why it needs a careful approach",
+      "passed": true,
+      "evidence": "The plan directly counters the framing: 'Although the request frames this as \"just a field rename, shouldn't take long,\"' and then estimates '10-12 hours of work spread over 2-3 months'. The closing section 'Why Not Just Do It Now?' explicitly explains: 'A \"quick rename\" costs 30 minutes and risks breaking every API consumer simultaneously with no easy rollback.'"
+    },
+    {
+      "text": "Expand phase includes returning BOTH 'userName' and 'username' fields simultaneously so existing consumers don't break",
+      "passed": true,
+      "evidence": "Step 1.2 'Return both fields in GET response serializers' includes a code example showing both fields: '\"userName\": user.username,   # OLD — kept for backward compatibility' and '\"username\": user.username,   # NEW — preferred field' returned simultaneously."
+    },
+    {
+      "text": "Includes an explicit deprecation period before removing 'userName' — not an immediate removal after adding 'username'",
+      "passed": true,
+      "evidence": "Phase 2 (Migrate) spans ~2 months of monitoring before removal. Step 2.4 'Final check before removal' states: 'Only proceed to Phase 3 when `userName` request usage has been zero for at least 1-2 weeks'. The summary table shows the Contract phase (removal) begins at Week 11-12."
+    },
+    {
+      "text": "Mentions notifying API consumers or adding deprecation headers/warnings before removing the old field",
+      "passed": true,
+      "evidence": "Step 1.4 adds deprecation notices to API documentation with 'userName is deprecated and will be removed in 3 months'. Step 2.2 'Notify all known API consumers' explicitly covers: 'Email or contact all registered API consumers, partners, and internal teams'. Step 2.1 adds server-side deprecation logging."
+    },
+    {
+      "text": "Each individual step is scoped to 1-3 hours maximum",
+      "passed": true,
+      "evidence": "Step durations: 1.1 (1-2h), 1.2 (1-2h), 1.3 (1-2h), 1.4 (1h), 2.1 (1-2h), 2.2 (1h), 2.3 (passive/ongoing — no active work hours), 2.4 (1h), 3.1 (1h), 3.2 (1h), 3.3 (30min-1h). All active steps are within the 1-3h limit."
+    }
+  ],
+  "summary": {
+    "passed": 6,
+    "failed": 0,
+    "total": 6,
+    "pass_rate": 1.0
+  },
+  "timing": {
+    "executor_duration_seconds": 62.7
+  }
+}

@@ -1,0 +1,48 @@
+{
+  "expectations": [
+    {
+      "text": "Identifies this as a risky breaking change that cannot be done in one step",
+      "passed": true,
+      "evidence": "\"This is a **risky breaking change**: renaming a database column affects all queries, application code, and tests that reference the old name. A direct rename would break every caller simultaneously.\""
+    },
+    {
+      "text": "Proposes at least 3 phases following expand-contract: Expand (add new column + dual-write), Migrate (switch reads), Contract (drop old column)",
+      "passed": true,
+      "evidence": "Plan contains exactly 3 phases: 'Phase 1: EXPAND — Add `email_address` alongside `email`', 'Phase 2: MIGRATE — Switch reads to `email_address`', 'Phase 3: CONTRACT — Remove old `email` column'"
+    },
+    {
+      "text": "Expand phase includes dual-write — writing to BOTH old 'email' and new 'email_address' columns simultaneously",
+      "passed": true,
+      "evidence": "Step 1.2: \"Update every INSERT and UPDATE statement in UserService to write to **both** `email` and `email_address`: create_user: INSERT INTO users (username, email, email_address, role) VALUES (?, ?, ?, ?); update_email: UPDATE users SET email = ?, email_address = ? WHERE id = ?\""
+    },
+    {
+      "text": "Contract phase explicitly requires verifying zero usage of old column for days/weeks before dropping it — does NOT drop immediately",
+      "passed": true,
+      "evidence": "Step 3.2: \"Monitor for 1-2 weeks that `email` is unused (passive) ... Check slow query logs, application logs, and analytics for any read of `email` column ... Duration: 1-2 weeks.\" Drop only happens in Step 3.3 after this waiting period."
+    },
+    {
+      "text": "Each individual step is scoped to 1-3 hours maximum — no step is described as taking a full day or more",
+      "passed": true,
+      "evidence": "All earning steps are time-boxed: Step 1.1 (1h), Step 1.2 (2h), Step 1.3 (1h), Step 2.1 (2h), Step 3.1 (1h), Step 3.3 (30min), Step 3.4 (1h). Self-check confirms: \"Every step takes 1-3 hours (no step exceeds this)\""
+    },
+    {
+      "text": "Does NOT propose renaming the column in a single step (ALTER TABLE RENAME COLUMN as the only step)",
+      "passed": true,
+      "evidence": "The plan uses a full expand-contract pattern across 4 phases and 7 steps. The ALTER TABLE DROP COLUMN only appears in Step 3.3 as the final step after weeks of monitoring, not as a standalone rename."
+    },
+    {
+      "text": "Reads the fixture project's user_service.py to reference real column names and code before planning",
+      "passed": true,
+      "evidence": "Plan references specific methods from user_service.py by name: `create_user`, `update_email`, `get_user_by_email`, `get_user`, `list_users`, `_setup_schema`, and reproduces exact SQL patterns from the file (e.g., 'INSERT INTO users (username, email, email_address, role) VALUES (?, ?, ?, ?)')"
+    }
+  ],
+  "summary": {
+    "passed": 7,
+    "failed": 0,
+    "total": 7,
+    "pass_rate": 1.0
+  },
+  "timing": {
+    "executor_duration_seconds": 62.1
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "eval_id": 6,
+  "eval_name": "microservice-extraction",
+  "prompt": "/small-safe-steps Extract the payment processing logic from the order_service into a separate PaymentService microservice",
+  "assertions": [
+    {"id": "identifies-high-risk", "text": "Identifies this as a high-risk, multi-week effort — not a task that can be done in a single sprint"},
+    {"id": "characterization-first", "text": "First phase is characterization/learning: understand current payment logic behavior, write tests that capture it, time-boxed"},
+    {"id": "build-alongside", "text": "New PaymentService is built alongside the existing code (expand), not as a replacement from the start"},
+    {"id": "traffic-routing-phase", "text": "Includes a migration phase with gradual traffic routing (dual-call or feature flag) before decommissioning old code"},
+    {"id": "reads-project-files", "text": "Reads order_service.py to reference actual method names and logic before planning"},
+    {"id": "learning-vs-earning", "text": "Explicitly separates learning steps (investigation, characterization, spike) from earning steps (ship working service)"},
+    {"id": "steps-under-3h", "text": "Each individual step is scoped to 1-3 hours maximum"},
+    {"id": "no-big-bang-cutover", "text": "Does NOT propose a big-bang cutover — does NOT say 'move all payment code to new service and update all callers in one step'"}
+  ]
+}

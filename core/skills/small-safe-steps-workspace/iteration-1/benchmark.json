@@ -1,0 +1,771 @@
+{
+  "metadata": {
+    "skill_name": "small-safe-steps",
+    "skill_path": "<path/to/skill>",
+    "executor_model": "<model-name>",
+    "analyzer_model": "<model-name>",
+    "timestamp": "2026-04-26T09:08:00Z",
+    "evals_run": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "runs_per_configuration": 3
+  },
+  "runs": [
+    {
+      "eval_id": 1,
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 7,
+        "failed": 0,
+        "total": 7,
+        "time_seconds": 62.1,
+        "tokens": 27870,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "Identifies this as a risky breaking change that cannot be done in one step",
+          "passed": true,
+          "evidence": "\"This is a **risky breaking change**: renaming a database column affects all queries, application code, and tests that reference the old name. A direct rename would break every caller simultaneously.\""
+        },
+        {
+          "text": "Proposes at least 3 phases following expand-contract: Expand (add new column + dual-write), Migrate (switch reads), Contract (drop old column)",
+          "passed": true,
+          "evidence": "Plan contains exactly 3 phases: 'Phase 1: EXPAND \u2014 Add `email_address` alongside `email`', 'Phase 2: MIGRATE \u2014 Switch reads to `email_address`', 'Phase 3: CONTRACT \u2014 Remove old `email` column'"
+        },
+        {
+          "text": "Expand phase includes dual-write \u2014 writing to BOTH old 'email' and new 'email_address' columns simultaneously",
+          "passed": true,
+          "evidence": "Step 1.2: \"Update every INSERT and UPDATE statement in UserService to write to **both** `email` and `email_address`: create_user: INSERT INTO users (username, email, email_address, role) VALUES (?, ?, ?, ?); update_email: UPDATE users SET email = ?, email_address = ? WHERE id = ?\""
+        },
+        {
+          "text": "Contract phase explicitly requires verifying zero usage of old column for days/weeks before dropping it \u2014 does NOT drop immediately",
+          "passed": true,
+          "evidence": "Step 3.2: \"Monitor for 1-2 weeks that `email` is unused (passive) ... Check slow query logs, application logs, and analytics for any read of `email` column ... Duration: 1-2 weeks.\" Drop only happens in Step 3.3 after this waiting period."
+        },
+        {
+          "text": "Each individual step is scoped to 1-3 hours maximum \u2014 no step is described as taking a full day or more",
+          "passed": true,
+          "evidence": "All earning steps are time-boxed: Step 1.1 (1h), Step 1.2 (2h), Step 1.3 (1h), Step 2.1 (2h), Step 3.1 (1h), Step 3.3 (30min), Step 3.4 (1h). Self-check confirms: \"Every step takes 1-3 hours (no step exceeds this)\""
+        },
+        {
+          "text": "Does NOT propose renaming the column in a single step (ALTER TABLE RENAME COLUMN as the only step)",
+          "passed": true,
+          "evidence": "The plan uses a full expand-contract pattern across 4 phases and 7 steps. The ALTER TABLE DROP COLUMN only appears in Step 3.3 as the final step after weeks of monitoring, not as a standalone rename."
+        },
+        {
+          "text": "Reads the fixture project's user_service.py to reference real column names and code before planning",
+          "passed": true,
+          "evidence": "Plan references specific methods from user_service.py by name: `create_user`, `update_email`, `get_user_by_email`, `get_user`, `list_users`, `_setup_schema`, and reproduces exact SQL patterns from the file (e.g., 'INSERT INTO users (username, email, email_address, role) VALUES (?, ?, ?, ?)')"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": 2,
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 5,
+        "failed": 0,
+        "total": 5,
+        "time_seconds": 64.1,
+        "tokens": 28103,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "Does NOT apply expand-contract pattern \u2014 recognizes this is an additive, non-breaking change",
+          "passed": true,
+          "evidence": "Pattern to apply: **Performance improvement** (Baseline \u2192 Implement \u2192 Verify), not Expand-Contract."
+        },
+        {
+          "text": "Proposes phases appropriate to the risk: add cache implementation, add tests, deploy \u2014 no elaborate dual-write or migration phases",
+          "passed": true,
+          "evidence": "Three phases: Phase 1 (Establish Baseline), Phase 2 (Implement the Cache), Phase 3 (Verify Correctness and Cache Consistency). No dual-write or migration phases present."
+        },
+        {
+          "text": "Each individual step is scoped to 1-3 hours maximum",
+          "passed": true,
+          "evidence": "Summary table shows: 1.1=1h, 2.1=1h, 2.2=1h, 2.3=1h, 3.1=1h, 3.2=0.5h. Self-check confirms: '[x] Every step takes 1-3 hours (no step exceeds this)'"
+        },
+        {
+          "text": "Notes that adding a cache is reversible (can be removed without data loss) and therefore low-risk",
+          "passed": true,
+          "evidence": "Step 2.2: 'Reversibility: Revert this one method to its original form; tests instantly confirm correctness.' Step 2.3: 'Reversibility: Remove the _cache.pop calls and the cache dict; tests revert to confirming DB-only behaviour.' Risk Assessment: 'This is not a risky breaking change.' Self-check: '[x] Every step is reversible (cache can be removed without data loss)'"
+        },
+        {
+          "text": "Reads user_service.py to understand the actual get_user implementation before planning",
+          "passed": true,
+          "evidence": "Plan references specific methods from user_service.py (create_user, update_email, deactivate_user, get_user), specific test names (test_update_email, test_deactivate_user, test_deactivate_nonexistent_user), and provides the actual implementation code with exact method signatures matching the real file."
+        }
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": 3,
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 7,
+        "failed": 0,
+        "total": 7,
+        "time_seconds": 82.9,
+        "tokens": 27151,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "Identifies this as a service replacement \u2014 a risky change that needs expand-contract",
+          "passed": true,
+          "evidence": "**Risk level:** HIGH \u2014 this is a service replacement (risky change). Applies the **Expand-Contract pattern**."
+        },
+        {
+          "text": "Expand phase includes sending via BOTH SendGrid and SES simultaneously (dual-send) before switching",
+          "passed": true,
+          "evidence": "Step 1.3 creates an EmailService abstraction with both `_send_via_sendgrid()` and `_send_via_ses()` methods. Step 1.5 adds a feature flag defaulting to 'sendgrid', with SES path existing but unused \u2014 dual-provider support is in place before any traffic switches. Phase 2 overview states 'Keep dual-write capability available as a safety net throughout.'"
+        },
+        {
+          "text": "Migrate phase proposes gradual traffic routing (feature flag, percentage rollout, or canary) rather than a hard cutover",
+          "passed": true,
+          "evidence": "Phase 2 uses a feature flag with percentage rollout: Step 2.1 routes 1%, Step 2.3 routes 10%, Step 2.4 routes 50%, Step 2.5 routes 100%. 'Feature flag for gradual rollout: 1% \u2192 10% \u2192 50% \u2192 100% \u2014 no big bang'"
+        },
+        {
+          "text": "Includes an explicit monitoring/verification step after routing traffic to new service before removing old one",
+          "passed": true,
+          "evidence": "Step 2.1: 'Monitor for 24-48h: SES delivery rate, Bounce rate, Complaint rate, Any application errors from SES SDK'. Step 2.2 is a dedicated 'Monitor and compare metrics (LEARNING)' step. Phase 2 Checklist requires stable metrics before moving to Phase 3."
+        },
+        {
+          "text": "Contract phase removes SendGrid only after confirming zero usage \u2014 not immediately after 100% routing",
+          "passed": true,
+          "evidence": "Phase 3 intro: 'Only start after Phase 2 is verified stable for 1-2 weeks with 0 SendGrid usage.' Phase 2 Checklist: 'Feature flag at 100% pointing to aws_ses for at least 1-2 weeks' and 'SendGrid dashboard confirms 0 emails sent for the last 1-2 weeks' before proceeding."
+        },
+        {
+          "text": "Includes a learning step (time-boxed investigation) to understand current SendGrid usage before building anything",
+          "passed": true,
+          "evidence": "Step 1.1 is typed 'Learning (time-boxed)', Duration: 1-2h: 'Verify AWS SES account setup and send limits (LEARNING)' \u2014 investigates the current environment before any code changes. Step 1.4 is also a Learning step: 'Send a test email via AWS SES to internal recipients only (LEARNING)'."
+        },
+        {
+          "text": "Each individual step is scoped to 1-3 hours maximum",
+          "passed": true,
+          "evidence": "All steps are within 1-3h: Step 1.1: 1-2h, Step 1.2: 1h, Step 1.3: 2h, Step 1.4: 1h, Step 1.5: 1h, Steps 2.1-2.5: 1h each, Steps 3.1, 3.3, 3.4, 3.5: 30min each, Step 3.2: 1h. No step exceeds 3 hours."
+        }
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": 4,
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 6,
+        "failed": 0,
+        "total": 6,
+        "time_seconds": 62.7,
+        "tokens": 25997,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "Identifies this as a breaking API change that will affect external consumers \u2014 even though user says 'it's quick'",
+          "passed": true,
+          "evidence": "The plan opens with: 'renaming a field in a public REST API response is a breaking change. Any external consumers (mobile apps, third-party integrations, partner systems, frontend clients) that currently read `userName` will break the moment it disappears.' and lists explicit red flags including 'This is a public API \u2014 consumers are outside our control'."
+        },
+        {
+          "text": "Does NOT agree with the user's framing that 'it shouldn't take long' \u2014 explains why it needs a careful approach",
+          "passed": true,
+          "evidence": "The plan directly counters the framing: 'Although the request frames this as \"just a field rename, shouldn't take long,\"' and then estimates '10-12 hours of work spread over 2-3 months'. The closing section 'Why Not Just Do It Now?' explicitly explains: 'A \"quick rename\" costs 30 minutes and risks breaking every API consumer simultaneously with no easy rollback.'"
+        },
+        {
+          "text": "Expand phase includes returning BOTH 'userName' and 'username' fields simultaneously so existing consumers don't break",
+          "passed": true,
+          "evidence": "Step 1.2 'Return both fields in GET response serializers' includes a code example showing both fields: '\"userName\": user.username,   # OLD \u2014 kept for backward compatibility' and '\"username\": user.username,   # NEW \u2014 preferred field' returned simultaneously."
+        },
+        {
+          "text": "Includes an explicit deprecation period before removing 'userName' \u2014 not an immediate removal after adding 'username'",
+          "passed": true,
+          "evidence": "Phase 2 (Migrate) spans ~2 months of monitoring before removal. Step 2.4 'Final check before removal' states: 'Only proceed to Phase 3 when `userName` request usage has been zero for at least 1-2 weeks'. The summary table shows the Contract phase (removal) begins at Week 11-12."
+        },
+        {
+          "text": "Mentions notifying API consumers or adding deprecation headers/warnings before removing the old field",
+          "passed": true,
+          "evidence": "Step 1.4 adds deprecation notices to API documentation with 'userName is deprecated and will be removed in 3 months'. Step 2.2 'Notify all known API consumers' explicitly covers: 'Email or contact all registered API consumers, partners, and internal teams'. Step 2.1 adds server-side deprecation logging."
+        },
+        {
+          "text": "Each individual step is scoped to 1-3 hours maximum",
+          "passed": true,
+          "evidence": "Step durations: 1.1 (1-2h), 1.2 (1-2h), 1.3 (1-2h), 1.4 (1h), 2.1 (1-2h), 2.2 (1h), 2.3 (passive/ongoing \u2014 no active work hours), 2.4 (1h), 3.1 (1h), 3.2 (1h), 3.3 (30min-1h). All active steps are within the 1-3h limit."
+        }
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": 5,
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.75,
+        "passed": 6,
+        "failed": 2,
+        "total": 8,
+        "time_seconds": 87.5,
+        "tokens": 28914,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "Identifies this needs backfilling of existing rows in the database \u2014 not just changing new writes",
+          "passed": true,
+          "evidence": "Phase 1 risk section states: 'Existing rows have mixed data: some plain strings (\"session started\"), some JSON-encoded strings (\\'{\\'ip\\':\\'1.2.3.4\\'}\\')', and Step 1.5 is a dedicated backfill step: 'Add a migration method migrate_legacy_metadata(): One-time migration: wrap any non-JSON metadata values in {\"message\": ...}'"
+        },
+        {
+          "text": "Expand phase adds a new 'metadata_json' column (or similar) alongside the existing 'metadata' string column",
+          "passed": false,
+          "evidence": "The plan does not add any new column. It keeps the single 'metadata' TEXT column and changes the format of data stored in it via serialize/deserialize helpers. The expand phase only adds '_serialize_metadata' and '_deserialize_metadata' Python methods, never a 'metadata_json' or equivalent DB column."
+        },
+        {
+          "text": "Backfilling existing rows is a separate step from adding the new column \u2014 not bundled together",
+          "passed": true,
+          "evidence": "Step 1.5 is a dedicated backfill step ('Backfill: migrate existing plain-string rows to JSON objects') clearly separated from Step 1.2 (adding helpers) and Step 1.3 (wiring serialize into log()). The steps are numbered and independently deployable."
+        },
+        {
+          "text": "Backfill step is time-boxed or batched (not a single bulk UPDATE of all rows at once) to avoid locking the table",
+          "passed": false,
+          "evidence": "Step 1.5 fetches all rows at once with 'rows = self._conn.execute(\"SELECT id, metadata FROM events\").fetchall()' and then loops through them issuing individual UPDATEs, but there is no chunking, batching, LIMIT/OFFSET strategy, or any mention of avoiding table locks. It is effectively a full-table scan and sequential update with no time-boxing."
+        },
+        {
+          "text": "Dual-write (writing to both columns) remains active throughout the entire migration phase until reads are fully switched",
+          "passed": true,
+          "evidence": "The self-check at the end explicitly states: '[x] Dual-format support active during entire Migrate phase' and '[x] Contract phase starts only after zero plain-string rows confirmed for 1-2 weeks'. Step 2.3 also confirms: 'Dual-format support in _deserialize_metadata is still active \u2014 no caller is at risk even if one is missed.'"
+        },
+        {
+          "text": "Reads the fixture project's event_log.py to understand the actual schema and code before planning",
+          "passed": true,
+          "evidence": "The plan references specific implementation details from the fixture: method names (get_event, get_events_by_type, get_events_by_user, log()), test file (test_event_log.py), specific test names (test_log_and_get_event, test_log_with_json_string_metadata), and the exact test assertion 'event[\"metadata\"] == \"session started\"', demonstrating the skill read the actual project files."
+        },
+        {
+          "text": "Each individual step is scoped to 1-3 hours maximum",
+          "passed": true,
+          "evidence": "All steps are explicitly scoped: Step 1.1 'max 1h', Steps 1.2-1.5 '1h', Steps 2.1-2.2 '1h', Step 2.3 passive monitoring, Step 3.1 '1h', Steps 3.2-3.3 '30min'. The summary table confirms 'Expand: 4-5h over 1 week', 'Contract: ~2h'. No step exceeds 1h of active work."
+        },
+        {
+          "text": "Includes a learning step to understand the current data distribution (e.g., how many rows, what formats exist) before starting any migration",
+          "passed": true,
+          "evidence": "Step 1.1 is explicitly typed as 'Learning step (time-boxed investigation)' and instructs: 'Search the codebase for all calls to .log( with a metadata= argument', 'Categorize each call site: Passes a plain string / Passes a JSON-encoded string / Reads metadata and treats it as a string / Reads metadata and does json.loads() on it'. This is the first step before any earning steps."
+        }
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": 6,
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 8,
+        "failed": 0,
+        "total": 8,
+        "time_seconds": 89.5,
+        "tokens": 31477,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "Identifies this as a high-risk, multi-week effort \u2014 not a task that can be done in a single sprint",
+          "passed": true,
+          "evidence": "Phases Overview table shows '~2 weeks', '~1 week', '~1 week' per phase and 'Total estimated effort: ~18-24 hours of active work spread over 3-5 weeks.' The plan also opens with 'Decision: Apply Expand-Contract Pattern' after listing the risks."
+        },
+        {
+          "text": "First phase is characterization/learning: understand current payment logic behavior, write tests that capture it, time-boxed",
+          "passed": true,
+          "evidence": "Step 1.1 is explicitly 'Learning: Audit all payment-related code and tests (1-2h)' and labeled 'Type: Learning step (time-boxed)'. It catalogs all methods and tests before any code is written."
+        },
+        {
+          "text": "New PaymentService is built alongside the existing code (expand), not as a replacement from the start",
+          "passed": true,
+          "evidence": "Step 1.2: 'Create payment_service.py in the same repository (not a separate repo yet)' and 'OrderService is not changed at all in this step.' Phase 1 is named 'EXPAND \u2014 Build PaymentService Alongside OrderService'."
+        },
+        {
+          "text": "Includes a migration phase with gradual traffic routing (dual-call or feature flag) before decommissioning old code",
+          "passed": true,
+          "evidence": "Phase 2 (MIGRATE) uses shadow dual-call throughout Steps 2.1 and 2.2, keeping both old and new logic running simultaneously. Phase 2 Checklist includes 'Rollback plan confirmed: flip feature flag / swap authoritative call'. Old code is only decommissioned in Phase 3 (CONTRACT)."
+        },
+        {
+          "text": "Reads order_service.py to reference actual method names and logic before planning",
+          "passed": true,
+          "evidence": "Step 1.1: 'Read order_service.py and identify every method touching payment logic: charge_order, refund_order, _call_payment_gateway, _call_payment_refund' and 'Read test_order_service.py and catalog all tests: test_charge_order_success, test_charge_order_invalid_token, test_charge_already_paid_order, test_refund_order, test_process_order_full_lifecycle'."
+        },
+        {
+          "text": "Explicitly separates learning steps (investigation, characterization, spike) from earning steps (ship working service)",
+          "passed": true,
+          "evidence": "Each step is labeled with 'Type: Learning step (time-boxed)' or 'Type: Earning step'. The Final Self-Check states '[x] Learning steps are separated from earning steps (Step 1.1 is time-boxed research)'."
+        },
+        {
+          "text": "Each individual step is scoped to 1-3 hours maximum",
+          "passed": true,
+          "evidence": "Summary Timeline shows all steps at 1-2h, 2-3h, 1h, or 30min. The Final Self-Check confirms '[x] Every step takes 1-3 hours (no step exceeds this)'."
+        },
+        {
+          "text": "Does NOT propose a big-bang cutover \u2014 does NOT say 'move all payment code to new service and update all callers in one step'",
+          "passed": true,
+          "evidence": "The plan uses a 3-phase Expand-Contract pattern over 3-5 weeks. Phase 2 runs old and new logic in parallel via dual-call. Phase 3 only removes old code after 'zero discrepancies in shadow logs for at least 1 week' are confirmed. No step moves all code at once."
+        }
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": 7,
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 4,
+        "failed": 0,
+        "total": 4,
+        "time_seconds": 38.4,
+        "tokens": 25620,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "Recognizes the task is trivial (< 1 hour) and does not require a multi-phase plan",
+          "passed": true,
+          "evidence": "Assessment: This Task Does Not Need Small Safe Steps ... A single-character typo fix in an error message is: - Estimated time: 5 minutes - Risk: none (error message text has no behavioral impact) - Reversibility: instant (trivially undoable)"
+        },
+        {
+          "text": "Does NOT apply expand-contract pattern or create multiple phases for a one-line text change",
+          "passed": true,
+          "evidence": "No expand-contract pattern, no phasing, no migration is needed. ... No planning needed. No phases. No expand-contract."
+        },
+        {
+          "text": "Suggests doing the fix directly rather than planning it out as a structured multi-step effort",
+          "passed": true,
+          "evidence": "Just make the one-line edit directly: [code snippet showing before/after] One commit, one line, done in under 5 minutes."
+        },
+        {
+          "text": "Does NOT produce a step plan with phases like 'Phase 1: Identify typo', 'Phase 2: Fix typo', 'Phase 3: Verify fix'",
+          "passed": true,
+          "evidence": "The output contains no phase-based step plan. Instead it says 'No planning needed. No phases. No expand-contract.' and provides only a direct one-line fix recommendation."
+        }
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": 1,
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.29,
+        "passed": 2,
+        "failed": 5,
+        "total": 7,
+        "time_seconds": 28.2,
+        "tokens": 15586,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "Identifies this as a risky breaking change that cannot be done in one step",
+          "passed": false,
+          "evidence": "The plan treats this as a straightforward rename with no mention of risk, backward compatibility concerns, or why a single-step approach is dangerous. The context section says 'All of these touch points must be updated in a single coherent change' \u2014 the opposite of recognizing it as a risky change requiring phased rollout."
+        },
+        {
+          "text": "Proposes at least 3 phases following expand-contract: Expand (add new column + dual-write), Migrate (switch reads), Contract (drop old column)",
+          "passed": false,
+          "evidence": "The plan has no expand-contract phases. It proposes 6 steps that all rename the column in one sweep: Step 1 updates schema definition, Steps 2-4 update SQL queries, Step 5 updates tests, Step 6 runs tests. There is no Expand, Migrate, or Contract phase."
+        },
+        {
+          "text": "Expand phase includes dual-write \u2014 writing to BOTH old 'email' and new 'email_address' columns simultaneously",
+          "passed": false,
+          "evidence": "No dual-write concept appears anywhere in the plan. The plan immediately renames all references from 'email' to 'email_address' with no period of writing to both columns."
+        },
+        {
+          "text": "Contract phase explicitly requires verifying zero usage of old column for days/weeks before dropping it \u2014 does NOT drop immediately",
+          "passed": false,
+          "evidence": "There is no Contract phase, no monitoring period, and no verification of zero usage before removal. The plan drops the old column name immediately in Step 1 by rewriting the CREATE TABLE statement directly."
+        },
+        {
+          "text": "Each individual step is scoped to 1-3 hours maximum \u2014 no step is described as taking a full day or more",
+          "passed": true,
+          "evidence": "Each step is a small, targeted file edit (e.g., 'Update the schema definition', 'Update get_user_by_email', 'Update create_user'). None are described as taking a full day or more; all are minutes-scale changes."
+        },
+        {
+          "text": "Does NOT propose renaming the column in a single step (ALTER TABLE RENAME COLUMN as the only step)",
+          "passed": false,
+          "evidence": "While the rename is spread across 6 steps, they are all meant to be executed together as one atomic big-bang change. Step 1 immediately renames the column in the schema ('email TEXT UNIQUE NOT NULL' \u2192 'email_address TEXT UNIQUE NOT NULL'), and all subsequent steps update references to match. The summary table confirms all changes happen together with no phased rollout. This is effectively a big-bang rename."
+        },
+        {
+          "text": "Reads the fixture project's user_service.py to reference real column names and code before planning",
+          "passed": true,
+          "evidence": "The plan references specific methods by name (_setup_schema, get_user_by_email, create_user, update_email, update_email), exact SQL queries ('SELECT * FROM users WHERE email = ?', 'INSERT INTO users (username, email, role) VALUES (?, ?, ?)'), specific test method names (test_create_and_get_user, test_update_email), and the exact key access pattern (user[\"email\"]). This level of specificity indicates the fixture files were read."
+        }
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": 2,
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.8,
+        "passed": 4,
+        "failed": 1,
+        "total": 5,
+        "time_seconds": 37.6,
+        "tokens": 16133,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "Does NOT apply expand-contract pattern \u2014 recognizes this is an additive, non-breaking change",
+          "passed": true,
+          "evidence": "The plan contains no expand-contract phases, no dual-write steps, and no migration phases. It goes directly to implementation: write failing test \u2192 add cache attribute \u2192 populate on miss \u2192 invalidate on mutation \u2192 run suite."
+        },
+        {
+          "text": "Proposes phases appropriate to the risk: add cache implementation, add tests, deploy \u2014 no elaborate dual-write or migration phases",
+          "passed": true,
+          "evidence": "6 focused steps: (1) write failing test, (2) init _user_cache in __init__, (3) populate cache on miss in get_user, (4) invalidate in update_email, (5) invalidate in deactivate_user, (6) run full test suite. No dual-write, no migration phases."
+        },
+        {
+          "text": "Each individual step is scoped to 1-3 hours maximum",
+          "passed": true,
+          "evidence": "Each step is a single, narrow code change: add one test, add one attribute, modify one method, modify another method. Each is trivially under 1 hour, well within the 1-3h bound."
+        },
+        {
+          "text": "Notes that adding a cache is reversible (can be removed without data loss) and therefore low-risk",
+          "passed": false,
+          "evidence": "No mention of reversibility or low-risk in the plan. The Notes section only covers: create_user not needing explicit invalidation, get_user_by_email and list_users being out of scope, and cache lifetime. Nothing about being able to remove the cache without data loss."
+        },
+        {
+          "text": "Reads user_service.py to understand the actual get_user implementation before planning",
+          "passed": true,
+          "evidence": "The plan references exact implementation details: self._conn.execute with actual SQL ('SELECT * FROM users WHERE id = ?'), dict(row) pattern, cursor.rowcount, update_email calling get_user internally, deactivate_user setting is_active = 0, and specific test names like test_create_and_get_user. This level of specificity indicates user_service.py was read before planning."
+        }
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": 3,
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.57,
+        "passed": 4,
+        "failed": 3,
+        "total": 7,
+        "time_seconds": 60.5,
+        "tokens": 14935,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "Identifies this as a service replacement \u2014 a risky change that needs expand-contract",
+          "passed": true,
+          "evidence": "The plan names Phase 2 'Code Abstraction (Expand)' and Phase 4 'Cutover (Contract)', and the overview states 'migrate the application's email sending infrastructure... aims for zero downtime by running both providers in parallel during the transition'. The expand-contract structure is explicitly present throughout."
+        },
+        {
+          "text": "Expand phase includes sending via BOTH SendGrid and SES simultaneously (dual-send) before switching",
+          "passed": false,
+          "evidence": "Step 2.3 introduces EMAIL_PROVIDER=both which 'routes every send to SES but keeps SendGrid as a fallback', and Step 3.1 enables shadow mode in staging only. In production (Phase 4), the plan goes directly to a canary rollout of SES-only without a dual-send phase in production. True simultaneous dual-send to both services in production is not proposed."
+        },
+        {
+          "text": "Migrate phase proposes gradual traffic routing (feature flag, percentage rollout, or canary) rather than a hard cutover",
+          "passed": true,
+          "evidence": "Step 4.1 states: 'Deploy with EMAIL_PROVIDER=ses to a small percentage of traffic (canary/feature-flag rollout) if your infrastructure supports it'."
+        },
+        {
+          "text": "Includes an explicit monitoring/verification step after routing traffic to new service before removing old one",
+          "passed": true,
+          "evidence": "Step 4.1: 'Monitor SES CloudWatch metrics: Send, Bounce, Complaint, Reject, delivery rate'. Step 4.2: 'Monitor for 48\u201372 hours: bounce rate should stay below 5%, complaint rate below 0.1%'. SendGrid removal (Step 4.3) only happens after this monitoring window."
+        },
+        {
+          "text": "Contract phase removes SendGrid only after confirming zero usage \u2014 not immediately after 100% routing",
+          "passed": false,
+          "evidence": "Step 4.2 sets EMAIL_PROVIDER=ses for 100% of traffic and monitors for 48\u201372 hours, then Step 4.3 removes SendGrid. However, the plan has no explicit check to confirm zero SendGrid usage before removal \u2014 the trigger is a time window ('48\u201372 hours of clean metrics'), not a confirmed zero-usage verification."
+        },
+        {
+          "text": "Includes a learning step (time-boxed investigation) to understand current SendGrid usage before building anything",
+          "passed": true,
+          "evidence": "Step 1.1 'Audit current email usage' inventories all SendGrid calls, email types, volumes, sender addresses, and SendGrid-specific features before any code changes. This is the first step in the plan, preceding all implementation work."
+        },
+        {
+          "text": "Each individual step is scoped to 1-3 hours maximum",
+          "passed": false,
+          "evidence": "The effort table shows phases sized at 0.5\u20131 day, 1\u20132 days, and 1\u20133 days respectively. Individual steps are not time-scoped. Phase 2 alone is estimated at '1\u20132 days' and Phase 3 at '1\u20133 days (mostly waiting/monitoring)'. No step is explicitly bounded to 1-3 hours."
+        }
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": 4,
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.17,
+        "passed": 1,
+        "failed": 5,
+        "total": 6,
+        "time_seconds": 16.6,
+        "tokens": 13228,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "Identifies this as a breaking API change that will affect external consumers \u2014 even though user says 'it's quick'",
+          "passed": false,
+          "evidence": "The plan treats this as a straightforward rename with no mention of breaking API changes, external consumers, or backward compatibility concerns. Steps go directly to 'Update the serializer / response model' and 'Deploy and verify' with no warning about breaking existing API consumers."
+        },
+        {
+          "text": "Does NOT agree with the user's framing that 'it shouldn't take long' \u2014 explains why it needs a careful approach",
+          "passed": false,
+          "evidence": "The plan fully accepts the user's framing. The overview simply states 'Rename the userName field to username in the public REST API response.' with no pushback, no explanation of why a careful approach is needed, and no acknowledgment that this is riskier than the user implied."
+        },
+        {
+          "text": "Expand phase includes returning BOTH 'userName' and 'username' fields simultaneously so existing consumers don't break",
+          "passed": false,
+          "evidence": "There is no expand phase. Step 2 reads: 'Change the field name from userName to username in the response serializer or DTO.' This is an immediate hard rename with no transitional period where both fields coexist."
+        },
+        {
+          "text": "Includes an explicit deprecation period before removing 'userName' \u2014 not an immediate removal after adding 'username'",
+          "passed": false,
+          "evidence": "The plan has no deprecation period at all. After Step 2 renames the field, Step 5 is simply 'Deploy and verify'. There is no step or mention of keeping the old field alive for any period of time."
+        },
+        {
+          "text": "Mentions notifying API consumers or adding deprecation headers/warnings before removing the old field",
+          "passed": false,
+          "evidence": "Neither consumer notification nor deprecation headers/warnings appear anywhere in the plan. The only communication-adjacent step is 'Update API documentation' (Step 3), which updates docs to reflect the new field but does not notify existing consumers or add runtime warnings."
+        },
+        {
+          "text": "Each individual step is scoped to 1-3 hours maximum",
+          "passed": true,
+          "evidence": "All five steps are narrow in scope: 'Find all occurrences', 'Update the serializer / response model', 'Update API documentation', 'Update all tests', and 'Deploy and verify'. Each is a focused, well-bounded task that a developer could complete within 1-3 hours."
+        }
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": 5,
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.25,
+        "passed": 2,
+        "failed": 6,
+        "total": 8,
+        "time_seconds": 47.2,
+        "tokens": 16224,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "Identifies this needs backfilling of existing rows in the database \u2014 not just changing new writes",
+          "passed": false,
+          "evidence": "Step 1 explicitly states 'Existing rows are unaffected. Only new writes change behavior.' The plan never addresses backfilling existing rows that contain plain strings. The migration only changes the application layer for new writes."
+        },
+        {
+          "text": "Expand phase adds a new 'metadata_json' column (or similar) alongside the existing 'metadata' string column",
+          "passed": false,
+          "evidence": "The plan never adds a new column. It keeps the existing 'metadata' TEXT column and only changes the application-layer serialization: 'The database column type stays TEXT.' Step 5 mentions an optional column rename but not adding a parallel column."
+        },
+        {
+          "text": "Backfilling existing rows is a separate step from adding the new column \u2014 not bundled together",
+          "passed": false,
+          "evidence": "There is no backfill step anywhere in the plan. The plan has 5 steps: serialize on write, deserialize on read, update tests, default value, and optional schema rename. None addresses backfilling existing rows."
+        },
+        {
+          "text": "Backfill step is time-boxed or batched (not a single bulk UPDATE of all rows at once) to avoid locking the table",
+          "passed": false,
+          "evidence": "No backfill step exists in the plan at all, so there is no time-boxing or batching. The plan states 'Steps 1\u20134 can be done in a single session with no downtime risk because the database column type (TEXT) does not change' \u2014 this ignores the risk from existing rows with non-JSON strings."
+        },
+        {
+          "text": "Dual-write (writing to both columns) remains active throughout the entire migration phase until reads are fully switched",
+          "passed": false,
+          "evidence": "The plan immediately changes writes in Step 1 to JSON-only. There is no dual-write pattern \u2014 no parallel column is added, and no mechanism maintains backward compatibility for old-format reads. Step 1 states 'Change log() to accept metadata as a dict... Before the INSERT, call json.dumps(metadata or {})' with no dual-write."
+        },
+        {
+          "text": "Reads the fixture project's event_log.py to understand the actual schema and code before planning",
+          "passed": true,
+          "evidence": "The plan references specific implementation details from event_log.py: method names (log(), get_event(), get_events_by_type(), get_events_by_user()), the exact column declaration ('declared as TEXT'), specific existing tests ('test_log_and_get_event', 'test_log_with_json_string_metadata'), and callers' behavior ('callers already serialize dictionaries into it with json.dumps'). This level of detail requires reading the file."
+        },
+        {
+          "text": "Each individual step is scoped to 1-3 hours maximum",
+          "passed": true,
+          "evidence": "The Execution Order Summary table lists: Step 1 ~15 min, Step 2 ~15 min, Step 3 ~10 min, Step 4 ~10 min, Step 5 ~20 min. All steps are well under the 3-hour maximum."
+        },
+        {
+          "text": "Includes a learning step to understand the current data distribution (e.g., how many rows, what formats exist) before starting any migration",
+          "passed": false,
+          "evidence": "The plan has no learning or discovery step. It jumps directly to Step 1 (serialization change) with no analysis of how many existing rows there are, what formats the metadata column currently contains, or what proportion are plain strings vs JSON strings vs empty."
+        }
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": 6,
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.5,
+        "passed": 4,
+        "failed": 4,
+        "total": 8,
+        "time_seconds": 44.5,
+        "tokens": 17279,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "Identifies this as a high-risk, multi-week effort \u2014 not a task that can be done in a single sprint",
+          "passed": false,
+          "evidence": "The plan treats extraction as a straightforward 7-step refactor with no mention of high risk or multi-week effort. The only risk notes address minor implementation details (id generation). The final note even defers true microservice extraction: 'True microservice extraction (HTTP boundary, separate deployment) is a follow-on step beyond this plan.'"
+        },
+        {
+          "text": "First phase is characterization/learning: understand current payment logic behavior, write tests that capture it, time-boxed",
+          "passed": false,
+          "evidence": "Step 1 immediately writes tests for a new PaymentService class that does not yet exist, skipping any characterization of the current payment logic in OrderService. There is no investigation or time-boxed learning phase before implementation begins."
+        },
+        {
+          "text": "New PaymentService is built alongside the existing code (expand), not as a replacement from the start",
+          "passed": true,
+          "evidence": "Step 2 creates payment_service.py as a new class while OrderService continues to own its own logic. Step 3 injects PaymentService optionally: 'This is a backwards-compatible change: existing callers OrderService() continue to work.' Old methods are only removed in Step 6 after all delegation is verified."
+        },
+        {
+          "text": "Includes a migration phase with gradual traffic routing (dual-call or feature flag) before decommissioning old code",
+          "passed": false,
+          "evidence": "The plan contains no dual-call strategy, feature flags, or gradual traffic routing phase. After delegation is complete in Steps 4-5, the old private methods are deleted directly in Step 6 with no intermediate routing or validation period."
+        },
+        {
+          "text": "Reads order_service.py to reference actual method names and logic before planning",
+          "passed": true,
+          "evidence": "The plan references actual method names from order_service.py including charge_order, refund_order, _call_payment_gateway, _call_payment_refund, process_order, create_order, get_order, list_orders_for_customer, ship_order, and _call_shipping_provider, indicating the file was read before planning."
+        },
+        {
+          "text": "Explicitly separates learning steps (investigation, characterization, spike) from earning steps (ship working service)",
+          "passed": false,
+          "evidence": "The plan contains no explicit separation between learning and earning steps. There is no investigation, characterization, or spike phase. The plan proceeds directly from writing new tests (Step 1) to creating the new service (Step 2) without any designated learning phase."
+        },
+        {
+          "text": "Each individual step is scoped to 1-3 hours maximum",
+          "passed": true,
+          "evidence": "All 7 steps are single-focus tasks: write tests for one class, create one class, inject a dependency, delegate one method, delegate another method, delete dead code, optional cleanup. Each is narrow and achievable within 1-3 hours."
+        },
+        {
+          "text": "Does NOT propose a big-bang cutover \u2014 does NOT say 'move all payment code to new service and update all callers in one step'",
+          "passed": true,
+          "evidence": "The plan migrates incrementally: Step 4 delegates only charge_order, Step 5 delegates only refund_order, and dead code is deleted in Step 6 after each change is verified. No step moves all payment logic at once."
+        }
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": 7,
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 4,
+        "failed": 0,
+        "total": 4,
+        "time_seconds": 24.1,
+        "tokens": 14382,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "Recognizes the task is trivial (< 1 hour) and does not require a multi-phase plan",
+          "passed": true,
+          "evidence": "This is a trivial, well-scoped change \u2014 a single-character correction in a string literal \u2014 but it cannot be applied because the described content is not present in the file."
+        },
+        {
+          "text": "Does NOT apply expand-contract pattern or create multiple phases for a one-line text change",
+          "passed": true,
+          "evidence": "The output contains no phases, no expand-contract pattern, and no migration steps. It is structured as: Task, Findings, Conclusion, and 'What the fix would look like (if applicable)'."
+        },
+        {
+          "text": "Suggests doing the fix directly rather than planning it out as a structured multi-step effort",
+          "passed": true,
+          "evidence": "If an error message with the typo were present, the fix would be a single-character change: [before/after code snippet shown directly]. This is a one-line change with no risk, no tests required beyond verifying the string, and no impact on behavior."
+        },
+        {
+          "text": "Does NOT produce a step plan with phases like 'Phase 1: Identify typo', 'Phase 2: Fix typo', 'Phase 3: Verify fix'",
+          "passed": true,
+          "evidence": "The document has no numbered phases or step-by-step plan structure. It goes directly from findings to conclusion to a direct before/after code example."
+        }
+      ],
+      "notes": []
+    }
+  ],
+  "run_summary": {
+    "with_skill": {
+      "pass_rate": {
+        "mean": 0.9643,
+        "stddev": 0.0945,
+        "min": 0.75,
+        "max": 1.0
+      },
+      "time_seconds": {
+        "mean": 69.6,
+        "stddev": 18.2613,
+        "min": 38.4,
+        "max": 89.5
+      },
+      "tokens": {
+        "mean": 27876.0,
+        "stddev": 1968.1638,
+        "min": 25620,
+        "max": 31477
+      }
+    },
+    "without_skill": {
+      "pass_rate": {
+        "mean": 0.5114,
+        "stddev": 0.3054,
+        "min": 0.17,
+        "max": 1.0
+      },
+      "time_seconds": {
+        "mean": 36.9571,
+        "stddev": 15.1267,
+        "min": 16.6,
+        "max": 60.5
+      },
+      "tokens": {
+        "mean": 15395.2857,
+        "stddev": 1338.6236,
+        "min": 13228,
+        "max": 17279
+      }
+    },
+    "delta": {
+      "pass_rate": "+0.45",
+      "time_seconds": "+32.6",
+      "tokens": "+12481"
+    }
+  },
+  "notes": []
+}

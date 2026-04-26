@@ -1,0 +1,53 @@
+{
+  "expectations": [
+    {
+      "text": "Identifies this as a high-risk, multi-week effort — not a task that can be done in a single sprint",
+      "passed": true,
+      "evidence": "Phases Overview table shows '~2 weeks', '~1 week', '~1 week' per phase and 'Total estimated effort: ~18-24 hours of active work spread over 3-5 weeks.' The plan also opens with 'Decision: Apply Expand-Contract Pattern' after listing the risks."
+    },
+    {
+      "text": "First phase is characterization/learning: understand current payment logic behavior, write tests that capture it, time-boxed",
+      "passed": true,
+      "evidence": "Step 1.1 is explicitly 'Learning: Audit all payment-related code and tests (1-2h)' and labeled 'Type: Learning step (time-boxed)'. It catalogs all methods and tests before any code is written."
+    },
+    {
+      "text": "New PaymentService is built alongside the existing code (expand), not as a replacement from the start",
+      "passed": true,
+      "evidence": "Step 1.2: 'Create payment_service.py in the same repository (not a separate repo yet)' and 'OrderService is not changed at all in this step.' Phase 1 is named 'EXPAND — Build PaymentService Alongside OrderService'."
+    },
+    {
+      "text": "Includes a migration phase with gradual traffic routing (dual-call or feature flag) before decommissioning old code",
+      "passed": true,
+      "evidence": "Phase 2 (MIGRATE) uses shadow dual-call throughout Steps 2.1 and 2.2, keeping both old and new logic running simultaneously. Phase 2 Checklist includes 'Rollback plan confirmed: flip feature flag / swap authoritative call'. Old code is only decommissioned in Phase 3 (CONTRACT)."
+    },
+    {
+      "text": "Reads order_service.py to reference actual method names and logic before planning",
+      "passed": true,
+      "evidence": "Step 1.1: 'Read order_service.py and identify every method touching payment logic: charge_order, refund_order, _call_payment_gateway, _call_payment_refund' and 'Read test_order_service.py and catalog all tests: test_charge_order_success, test_charge_order_invalid_token, test_charge_already_paid_order, test_refund_order, test_process_order_full_lifecycle'."
+    },
+    {
+      "text": "Explicitly separates learning steps (investigation, characterization, spike) from earning steps (ship working service)",
+      "passed": true,
+      "evidence": "Each step is labeled with 'Type: Learning step (time-boxed)' or 'Type: Earning step'. The Final Self-Check states '[x] Learning steps are separated from earning steps (Step 1.1 is time-boxed research)'."
+    },
+    {
+      "text": "Each individual step is scoped to 1-3 hours maximum",
+      "passed": true,
+      "evidence": "Summary Timeline shows all steps at 1-2h, 2-3h, 1h, or 30min. The Final Self-Check confirms '[x] Every step takes 1-3 hours (no step exceeds this)'."
+    },
+    {
+      "text": "Does NOT propose a big-bang cutover — does NOT say 'move all payment code to new service and update all callers in one step'",
+      "passed": true,
+      "evidence": "The plan uses a 3-phase Expand-Contract pattern over 3-5 weeks. Phase 2 runs old and new logic in parallel via dual-call. Phase 3 only removes old code after 'zero discrepancies in shadow logs for at least 1 week' are confirmed. No step moves all code at once."
+    }
+  ],
+  "summary": {
+    "passed": 8,
+    "failed": 0,
+    "total": 8,
+    "pass_rate": 1.0
+  },
+  "timing": {
+    "executor_duration_seconds": 89.5
+  }
+}
