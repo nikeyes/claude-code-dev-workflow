@@ -1,0 +1,50 @@
+{
+  "eval_id": 3,
+  "configuration": "without_skill",
+  "discovery_expectations": [
+    {
+      "text": "Discovers Truncate uses len() instead of rune count (unicode truncation bug)",
+      "passed": true,
+      "evidence": "TestTruncate_MultiByteUTF8SlicesBytesNotRunes explicitly documents: '// BUG: Truncate uses byte length (len), not rune count. For a multi-byte UTF-8 string it may slice in the middle of a rune'. summary.md also confirms this as Bug 1 with root cause analysis."
+    },
+    {
+      "text": "Tests ExtractInitials with empty string input (index out of range panic)",
+      "passed": true,
+      "evidence": "TestExtractInitials_EmptyString tests ExtractInitials(\"\") and expects \"\". The implementation uses strings.Fields which returns [] for empty input, so the loop never runs — no panic. The test covers the case even if the panic doesn't materialize with the current implementation."
+    },
+    {
+      "text": "Tests WrapText with zero or negative width",
+      "passed": true,
+      "evidence": "TestWrapText_WidthZero tests WrapText(\"one two three\", 0) expecting each word on its own line. TestWrapText_WidthOne tests width=1. No negative width test, but zero width is explicitly covered."
+    },
+    {
+      "text": "Tests SlugifyText with input containing only special characters",
+      "passed": true,
+      "evidence": "TestSlugifyText_AllSpecialChars tests SlugifyText(\"!@#$%^&*()\") expecting \"\" — directly satisfies this assertion."
+    },
+    {
+      "text": "Tests all functions with empty string input",
+      "passed": true,
+      "evidence": "All five functions have empty string tests: TestTruncate_EmptyString, TestSlugifyText_EmptyString, TestCountWords_EmptyString, TestExtractInitials_EmptyString, TestWrapText_EmptyString."
+    }
+  ],
+  "format_expectations": [
+    {
+      "text": "Documents at least one discovered bug as a skipped test with BUG notation — look for t.Skip with \"BUG\" or similar",
+      "passed": false,
+      "evidence": "There are '// BUG:' comments and a t.Logf(\"CONFIRMED BUG:...\") call, but there are zero t.Skip() or t.SkipNow() calls in the entire file. The format requirement explicitly asks for t.Skip with BUG notation, which is absent. Bugs are documented via comments and t.Errorf instead."
+    }
+  ],
+  "quality_expectations": [
+    {
+      "text": "Generated tests compile and run without syntax errors",
+      "passed": true,
+      "evidence": "File has valid package declaration (package stringutils), correct imports (strings, testing), all test functions follow func TestXxx(t *testing.T) signature, and the code is syntactically well-formed. No Go compiler available in environment, but static inspection shows no syntax errors."
+    },
+    {
+      "text": "Skipped BUG tests actually fail when unskipped (bug is real, not a false positive)",
+      "passed": false,
+      "evidence": "No t.Skip calls exist in the file so this assertion is not directly applicable. Of the two BUG-documented tests: TestExtractInitials_MultiByteFirstCharBug uses t.Errorf and would genuinely fail (real bug — rune(p[0]) reads byte 0xC3 instead of 'É'). However, TestTruncate_MultiByteUTF8SlicesBytesNotRunes asserts the buggy behavior as its 'want' value (want := s[:3] + \"...\"), so it would PASS — it documents the bug but does not fail on it. Since no tests use t.Skip, the format requirement for skipped-but-failing BUG tests is not met."
+    }
+  ]
+}

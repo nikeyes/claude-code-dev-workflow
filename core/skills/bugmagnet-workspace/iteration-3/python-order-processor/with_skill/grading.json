@@ -1,0 +1,70 @@
+{
+  "eval_id": 7,
+  "configuration": "with_skill",
+  "discovery_expectations": [
+    {
+      "text": "Discovers tax is calculated on subtotal instead of discounted amount (process method passes subtotal to calculate_tax)",
+      "passed": true,
+      "evidence": "test_tax_is_calculated_on_pre_discount_subtotal (line 527) documents the current behavior, and test_tax_should_be_calculated_on_post_discount_amount_BUG (line 539, skipped) identifies it as a bug. Bug 4 in summary.md also explains: 'calculate_tax is called with subtotal (line 237) rather than discounted'."
+    },
+    {
+      "text": "Discovers percentage discounts compound: second discount applies to already-discounted amount, not original subtotal",
+      "passed": true,
+      "evidence": "test_percentage_discount_second_applied_to_already_reduced_amount (line 284) explicitly tests that two 10% discounts on 100 produce 81 (compounding), not 80 (additive). The summary also notes this as a documented behavioral finding."
+    },
+    {
+      "text": "Tests fixed discount larger than subtotal produces negative total",
+      "passed": true,
+      "evidence": "test_fixed_discount_does_not_make_total_negative_BUG (line 269, skipped) tests apply_discounts(50.0, fixed=150) and expects discounted >= 0. Bug 3 in summary.md confirms ACTUAL: discounted = -100.0. Verified real: apply_discounts(50.0, FIXED 150) returns -100.0."
+    },
+    {
+      "text": "Tests quantity break threshold + item discount interaction (double discounting)",
+      "passed": true,
+      "evidence": "test_quantity_break_applied_before_percentage_item_discount (line 195) tests quantity=11 with 10% item discount: verifies 110*0.95*0.9=94.05. test_quantity_break_applied_before_fixed_item_discount (line 201) tests the same interaction with a fixed item discount."
+    },
+    {
+      "text": "Tests apply_refund with all items refunded (division by zero if subtotal becomes 0)",
+      "passed": true,
+      "evidence": "test_full_refund_of_all_items_gives_zero_subtotal (line 908) refunds all items and asserts subtotal==0. The code guards the division at line 330: 'proportion = refund_subtotal / processed.subtotal if processed.subtotal else 0'. The test exercises this path, though the primary concern documented is shipping not being refunded (Bug 6), not division-by-zero."
+    },
+    {
+      "text": "Tests inventory is NOT released when process() fails after reserve() (partial failure leaves inventory inconsistent)",
+      "passed": false,
+      "evidence": "test_inventory_not_reserved_when_validation_fails (line 476) only tests pre-reserve failure (validation fails before reserve() is called). There is no test for the post-reserve failure path where reserve() succeeds but a subsequent step (e.g., calculate_subtotal) throws, leaving inventory permanently reserved. This specific partial failure scenario is not covered."
+    },
+    {
+      "text": "Tests process_batch where one order's inventory reservation affects subsequent orders",
+      "passed": false,
+      "evidence": "test_inventory_not_consumed_by_invalid_batch_order (line 688) tests that an invalid order does not consume stock. test_failed_order_does_not_stop_subsequent_orders (line 668) checks that processing continues after a failure. However, no test explicitly probes that one valid order's successful reserve() reduces available stock for a later order in the same batch (shared-inventory cross-order contamination scenario)."
+    }
+  ],
+  "format_expectations": [
+    {
+      "text": "Documents at least one discovered bug as a skipped test with BUG notation",
+      "passed": true,
+      "evidence": "7 tests use @pytest.mark.skip(reason='BUG: ...') with structured documentation including ROOT CAUSE, CODE LOCATION, PROPOSED FIX, EXPECTED, and ACTUAL sections. Examples: test_tax_should_be_calculated_on_post_discount_amount_BUG, test_fixed_discount_does_not_make_total_negative_BUG, etc."
+    },
+    {
+      "text": "Provides a structured test coverage summary at the end",
+      "passed": true,
+      "evidence": "summary.md contains a markdown table breaking down 118 tests across 13 categories, a 'Bugs Discovered' section with 7 numbered bugs (each with file, test name, root cause, proposed fix), 'Key Behavioral Findings' section with 10 items, and a 'Coverage Gaps Remaining' section."
+    }
+  ],
+  "quality_expectations": [
+    {
+      "text": "Generated tests compile and run without syntax errors",
+      "passed": true,
+      "evidence": "pytest collects all 118 tests successfully (no SyntaxError or collection errors). The ImportError seen during testing was due to missing PYTHONPATH (test environment setup), not a syntax issue in the test file itself. With correct PYTHONPATH, 109 pass, 2 fail due to test logic bugs, 7 skipped."
+    },
+    {
+      "text": "Skipped BUG tests actually fail when unskipped (bug is real, not a false positive)",
+      "passed": true,
+      "evidence": "All 7 bugs manually verified: Bug1 (pct>100 discount) returns -50.0; Bug2 (fixed item > base) returns -40.0; Bug3 (fixed order discount > subtotal) returns -100.0; Bug4 (tax on subtotal not discounted) returns 3.62 instead of 3.26; Bug5 (loyalty negative total) returns -10; Bug6 (full refund charges shipping) returns total=9.99 not 0. All bugs are real defects in the implementation."
+    },
+    {
+      "text": "No false positive bugs reported",
+      "passed": false,
+      "evidence": "Two non-BUG tests fail due to test authoring errors. (1) test_empty_items_list_produces_error fails because the _order() helper uses 'items or [_item()]': an empty list [] is falsy, so it silently substitutes a default item, making the test unable to exercise the empty-items path it claims to test. (2) test_error_dict_contains_customer_id fails because 'BAD-CID' is a valid non-empty customer_id string, so the order processes successfully as a ProcessedOrder rather than returning an error dict. Neither failure is a real bug in the implementation."
+    }
+  ]
+}

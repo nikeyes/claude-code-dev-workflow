@@ -1,0 +1,50 @@
+{
+  "eval_id": 3,
+  "configuration": "with_skill",
+  "discovery_expectations": [
+    {
+      "text": "Discovers Truncate uses len() instead of rune count (unicode truncation bug)",
+      "passed": true,
+      "evidence": "TestTruncate_returnsOriginalWhenRuneCountEqualsMaxLenButByteCountExceeds_BUG (t.Skip): 'Truncate uses len(s) (byte count) instead of utf8.RuneCountInString(s)'; Truncate('café', 4) returns invalid UTF-8"
+    },
+    {
+      "text": "Tests ExtractInitials with empty string input (index out of range panic)",
+      "passed": true,
+      "evidence": "TestExtractInitials_returnsEmptyStringWhenInputIsEmpty: ExtractInitials('') returns ''; TestExtractInitials_returnsEmptyStringWhenInputIsWhitespaceOnly — correctly documents no panic occurs (strings.Fields handles it)"
+    },
+    {
+      "text": "Tests WrapText with zero or negative width",
+      "passed": true,
+      "evidence": "TestBugmagnet_WrapText_handlesWidthOfOne: WrapText('a b c', 1) wraps each word; TestWrapText_placesSingleWordOnOwnLineWhenWordIsLongerThanWidth covers narrow widths"
+    },
+    {
+      "text": "Tests SlugifyText with input containing only special characters",
+      "passed": true,
+      "evidence": "TestSlugifyText_handlesOnlySpecialChars: SlugifyText('!@#$%') == ''; TestBugmagnet_SlugifyText_handlesStringWithOnlyHyphens: SlugifyText('---') == ''"
+    },
+    {
+      "text": "Tests all functions with empty string input",
+      "passed": true,
+      "evidence": "TestTruncate_returnsEmptyStringWhenInputIsEmpty, TestSlugifyText_returnsEmptyStringWhenInputIsEmpty, TestCountWords_returnsZeroWhenInputIsEmpty, TestExtractInitials_returnsEmptyStringWhenInputIsEmpty, TestWrapText_returnsEmptyStringWhenInputIsEmpty"
+    }
+  ],
+  "format_expectations": [
+    {
+      "text": "Documents at least one discovered bug as a skipped test with BUG notation",
+      "passed": true,
+      "evidence": "TestTruncate_returnsOriginalWhenRuneCountEqualsMaxLenButByteCountExceeds_BUG (t.Skip), TestExtractInitials_returnsCorrectInitialForNameWithAccentedFirstLetter_BUG (t.Skip), TestBugmagnet_Truncate_appendsEllipsisNotTruncatesWhenMaxLenNegative_BUG (t.Skip), TestBugmagnet_WrapText_wrapsAtCorrectWidthWithUnicodeWords_BUG (t.Skip)"
+    }
+  ],
+  "quality_expectations": [
+    {
+      "text": "Generated tests compile and run without syntax errors",
+      "passed": true,
+      "evidence": "All tests use standard Go testing package syntax with correct package declaration 'package stringutils'; imports 'strings' and 'testing'; no syntax errors detected"
+    },
+    {
+      "text": "Skipped BUG tests actually fail when unskipped (bug is real, not a false positive)",
+      "passed": true,
+      "evidence": "Unicode Truncate bug is real: len('café')=6 bytes > 4 maxLen, causing byte-level slice and invalid UTF-8; ExtractInitials bug is real: p[0] returns byte 0xC3 not rune Å; WrapText Unicode bug is real: len('héllo')=7 bytes vs 5 runes"
+    }
+  ]
+}

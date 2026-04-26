@@ -1,0 +1,16 @@
+{
+  "eval_id": 2,
+  "eval_name": "typescript-user-validator",
+  "prompt": "/bugmagnet evals/files/user_validator.ts",
+  "assertions": [
+    {"type": "discovery", "text": "Tests email validation edge cases (missing domain, multiple @, no @ at all)"},
+    {"type": "discovery", "text": "Tests age with NaN or Infinity values bypassing the range check"},
+    {"type": "discovery", "text": "Tests normalizeEmail with string that has no @ (destructuring crash)"},
+    {"type": "discovery", "text": "Tests whitespace-only name passes trim check"},
+    {"type": "discovery", "text": "Tests names with special characters (accents, apostrophes, unicode)"},
+    {"type": "discovery", "text": "Tests tags as empty array vs undefined"},
+    {"type": "format", "text": "Documents at least one discovered bug as a skipped test with BUG notation"},
+    {"type": "quality", "text": "Generated tests compile and run without syntax errors"},
+    {"type": "quality", "text": "Skipped BUG tests actually fail when unskipped (bug is real, not a false positive)"}
+  ]
+}

@@ -1,0 +1,70 @@
+{
+  "eval_id": 4,
+  "configuration": "without_skill",
+  "discovery_expectations": [
+    {
+      "text": "Tests get_wait_time returning 0 but subsequent is_allowed fails (TOCTOU: get_wait_time refills but does not reserve tokens)",
+      "passed": false,
+      "evidence": "No test covers the TOCTOU scenario. The get_wait_time tests (TestGetWaitTime) check correctness of the wait value and specific bugs (zero refill rate, cost > max_tokens), but none verify that calling get_wait_time (which calls _refill and updates last_refill without reserving tokens) followed by is_allowed at the same timestamp can lead to a race where a second is_allowed call fails. The pattern is demonstrable: drain bucket, call get_wait_time at t=1.0 (returns 0.0, refills internally), call is_allowed at t=1.0 (succeeds), call is_allowed again at t=1.0 (fails because tokens were not reserved by get_wait_time)."
+    },
+    {
+      "text": "Tests cost=0 is always allowed even when bucket is empty (degenerate input)",
+      "passed": true,
+      "evidence": "test_cost_zero_is_always_allowed_and_does_not_consume (line 110) drains the bucket to 0 then asserts is_allowed with cost=0.0 returns True, and verifies tokens do not go negative. Directly covers this scenario."
+    },
+    {
+      "text": "Tests negative cost parameter (adds tokens instead of consuming them)",
+      "passed": true,
+      "evidence": "test_negative_cost_is_handled_gracefully (line 135) drains the bucket, calls is_allowed with cost=-1.0, asserts True is returned, and verifies remaining_tokens becomes 1.0 (i.e., 0 - (-1) = +1), documenting the token-inflation behavior."
+    },
+    {
+      "text": "Tests cleanup_expired does not remove active keys that just made requests recently",
+      "passed": true,
+      "evidence": "test_does_not_remove_recently_active_entries (line 326) makes a request at t=0 and calls cleanup_expired at t=60 (well within the 2x60=120s threshold), asserting removed==0 and the key still present."
+    },
+    {
+      "text": "Tests token accumulation over many rapid refill cycles for floating point drift",
+      "passed": false,
+      "evidence": "No test in the file targets floating point drift from many rapid refill cycles. TestHighVolumePatterns covers burst/interleaved patterns but does not accumulate tokens across many sub-second refill increments to check for drift (e.g., 1000 iterations of 0.001s steps summing to 1.0 token). TestTokenRefill checks partial refills but not cumulative FP drift."
+    },
+    {
+      "text": "Tests create_burst_limiter with burst followed by sustained requests at exactly the refill rate",
+      "passed": true,
+      "evidence": "test_create_burst_limiter_allows_burst_then_throttles (line 442) creates a burst limiter with burst_size=10 and sustained_per_second=1.0, fires 10 burst requests at t=0, verifies the 11th is denied, then verifies a single request at t=1.0 (exactly the 1/s refill boundary) is allowed. This covers burst + sustained at exactly the refill rate."
+    },
+    {
+      "text": "Tests interaction between multiple keys (keys are independent, no cross-contamination)",
+      "passed": true,
+      "evidence": "TestKeyIsolation contains test_different_keys_are_independent (line 158) and test_many_distinct_keys (line 182). The first drains user1 and then verifies user2 still has a full bucket. The second creates 1000 distinct keys and verifies each gets its own independent tokens."
+    }
+  ],
+  "format_expectations": [
+    {
+      "text": "Documents at least one discovered bug as a skipped test with BUG notation",
+      "passed": false,
+      "evidence": "There are no @pytest.mark.skip decorators anywhere in test_rate_limiter_edge_cases.py. Bugs are documented via docstring comments (e.g., 'BUG: When cost > max_tokens...', 'BUG: With refill_rate=0.0...') and via tests that assert the current buggy behavior rather than skipped tests that assert the correct behavior. The format requirement of a skipped test with BUG notation is not met."
+    },
+    {
+      "text": "Provides a structured test coverage summary at the end",
+      "passed": true,
+      "evidence": "summary.md provides a structured coverage summary with: a table of baseline coverage gaps, a numbered list of confirmed bugs (BUG-1 through BUG-4) with location/trigger/effect/fix, design gap findings (FINDING-1 through FINDING-5), and a table of test classes with their focus areas. This is thorough and well-structured."
+    }
+  ],
+  "quality_expectations": [
+    {
+      "text": "Generated tests compile and run without syntax errors",
+      "passed": true,
+      "evidence": "All 56 tests were collected and executed by pytest with no syntax or import errors. 55 passed and 1 failed (test_cleanup_multiple_entries) due to a test logic error (incorrect expected value), not a syntax or compilation issue."
+    },
+    {
+      "text": "Skipped BUG tests actually fail when unskipped (bug is real, not a false positive)",
+      "passed": false,
+      "evidence": "There are no skipped tests in the file, so this criterion cannot be satisfied. Bugs are instead documented as tests that assert the current (buggy) behavior, which means they pass against the buggy implementation rather than failing to expose the bug."
+    },
+    {
+      "text": "No false positive bugs reported",
+      "passed": true,
+      "evidence": "The four bugs documented in summary.md are all real: BUG-1 (ZeroDivisionError in get_wait_time with refill_rate=0, confirmed by test_wait_time_with_zero_refill_rate_is_infinite passing with pytest.raises(ZeroDivisionError)), BUG-2 (get_wait_time returns finite value when cost > max_tokens, confirmed real by inspection of the capped token logic), BUG-3 (create_rate_limiter(0) confirmed by test_create_rate_limiter_zero_rpm), BUG-4 (negative cost confirmed by test_negative_cost_is_handled_gracefully). No bugs reported are fabricated. Note: test_cleanup_multiple_entries contains a test logic error (asserts 3 removals when 4 is correct) but this is a test authoring mistake, not a false positive bug claim."
+    }
+  ]
+}

@@ -1,0 +1,50 @@
+{
+  "eval_id": 3,
+  "configuration": "without_skill",
+  "discovery_expectations": [
+    {
+      "text": "Discovers Truncate uses len() instead of rune count (unicode truncation bug)",
+      "passed": true,
+      "evidence": "TestTruncate_MultiByteBoundary_BugReport: documents byte-level slicing corrupts multi-byte UTF-8; Truncate('héllo', 3) cuts the é rune in half; Bug 1 in summary.md"
+    },
+    {
+      "text": "Tests ExtractInitials with empty string input (index out of range panic)",
+      "passed": true,
+      "evidence": "TestExtractInitials_EmptyString: ExtractInitials('') == ''; TestExtractInitials_OnlySpaces: ExtractInitials('   ') == '' — confirms no panic"
+    },
+    {
+      "text": "Tests WrapText with zero or negative width",
+      "passed": true,
+      "evidence": "TestWrapText_WidthOne: WrapText('ab cd', 1) == 'ab\\ncd'; TestWrapText_WordLongerThanWidth: WrapText('superlongword short', 5) == 'superlongword\\nshort'"
+    },
+    {
+      "text": "Tests SlugifyText with input containing only special characters",
+      "passed": true,
+      "evidence": "TestSlugifyText_OnlySpecialCharacters: SlugifyText('!@#$%^&*()') == ''; TestSlugifyText_OnlyHyphens: SlugifyText('---') == ''"
+    },
+    {
+      "text": "Tests all functions with empty string input",
+      "passed": true,
+      "evidence": "TestTruncate_EmptyString, TestSlugifyText_EmptyString, TestCountWords_EmptyString, TestExtractInitials_EmptyString, TestWrapText_EmptyString — all five functions tested with empty string"
+    }
+  ],
+  "format_expectations": [
+    {
+      "text": "Documents at least one discovered bug as a skipped test with BUG notation",
+      "passed": false,
+      "evidence": "No t.Skip calls with BUG notation found. Bug tests are regular non-skipped tests (TestTruncate_MultiByteBoundary_BugReport, TestExtractInitials_MultiByteFirstRune_BugReport) that log the bug but do not use t.Skip + BUG in name format"
+    }
+  ],
+  "quality_expectations": [
+    {
+      "text": "Generated tests compile and run without syntax errors",
+      "passed": true,
+      "evidence": "Standard Go testing package syntax, correct package declaration; no syntax errors detected"
+    },
+    {
+      "text": "Skipped BUG tests actually fail when unskipped (bug is real, not a false positive)",
+      "passed": true,
+      "evidence": "No skipped BUG tests; bug reports in regular tests are real (Truncate byte slicing, ExtractInitials byte indexing) confirmed by code analysis"
+    }
+  ]
+}

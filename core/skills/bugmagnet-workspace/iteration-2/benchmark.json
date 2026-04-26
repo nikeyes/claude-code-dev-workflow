@@ -1,0 +1,385 @@
+{
+  "metadata": {
+    "skill_name": "bugmagnet",
+    "skill_path": "/Users/jorge.castro/mordor/personal/stepwise-dev/core/skills/bugmagnet",
+    "executor_model": "claude-sonnet-4-6",
+    "timestamp": "2026-04-26T10:00:00Z",
+    "iteration": 2,
+    "evals_run": [1, 2, 3, 4, 5, 6, 7],
+    "runs_per_configuration": 1,
+    "changes_from_iteration_1": [
+      "Added 4 new evals: rate_limiter (medium), config_parser (medium), sorted_set (hard/no-bugs), order_processor (hard/large)",
+      "Split expectations into discovery/format/quality categories",
+      "Re-graded without_skill runs that write to separate comprehensive test files",
+      "Added quality expectations to check false positives and test correctness"
+    ]
+  },
+  "runs": [
+    {
+      "eval_id": 1,
+      "eval_name": "Python price_calculator (easy)",
+      "difficulty": "easy",
+      "configuration": "with_skill",
+      "result": {
+        "discovery_pass_rate": 1.0,
+        "discovery_passed": 5,
+        "discovery_total": 5,
+        "format_pass_rate": 1.0,
+        "format_passed": 2,
+        "format_total": 2,
+        "quality_pass_rate": 1.0,
+        "quality_passed": 2,
+        "quality_total": 2,
+        "combined_pass_rate": 1.0,
+        "time_seconds": 264.0,
+        "tokens": 54361
+      }
+    },
+    {
+      "eval_id": 1,
+      "eval_name": "Python price_calculator (easy)",
+      "difficulty": "easy",
+      "configuration": "without_skill",
+      "result": {
+        "discovery_pass_rate": 1.0,
+        "discovery_passed": 5,
+        "discovery_total": 5,
+        "format_pass_rate": 0.5,
+        "format_passed": 1,
+        "format_total": 2,
+        "quality_pass_rate": 0.5,
+        "quality_passed": 1,
+        "quality_total": 2,
+        "combined_pass_rate": 0.78,
+        "time_seconds": 113.4,
+        "tokens": 22308
+      }
+    },
+    {
+      "eval_id": 2,
+      "eval_name": "TypeScript user_validator (easy)",
+      "difficulty": "easy",
+      "configuration": "with_skill",
+      "result": {
+        "discovery_pass_rate": 1.0,
+        "discovery_passed": 6,
+        "discovery_total": 6,
+        "format_pass_rate": 1.0,
+        "format_passed": 1,
+        "format_total": 1,
+        "quality_pass_rate": 1.0,
+        "quality_passed": 2,
+        "quality_total": 2,
+        "combined_pass_rate": 1.0,
+        "time_seconds": 251.5,
+        "tokens": 47183
+      }
+    },
+    {
+      "eval_id": 2,
+      "eval_name": "TypeScript user_validator (easy)",
+      "difficulty": "easy",
+      "configuration": "without_skill",
+      "result": {
+        "discovery_pass_rate": 0.83,
+        "discovery_passed": 5,
+        "discovery_total": 6,
+        "format_pass_rate": 0.0,
+        "format_passed": 0,
+        "format_total": 1,
+        "quality_pass_rate": 1.0,
+        "quality_passed": 2,
+        "quality_total": 2,
+        "combined_pass_rate": 0.78,
+        "time_seconds": 112.7,
+        "tokens": 22645
+      }
+    },
+    {
+      "eval_id": 3,
+      "eval_name": "Go string_utils (easy)",
+      "difficulty": "easy",
+      "configuration": "with_skill",
+      "result": {
+        "discovery_pass_rate": 1.0,
+        "discovery_passed": 5,
+        "discovery_total": 5,
+        "format_pass_rate": 1.0,
+        "format_passed": 1,
+        "format_total": 1,
+        "quality_pass_rate": 1.0,
+        "quality_passed": 2,
+        "quality_total": 2,
+        "combined_pass_rate": 1.0,
+        "time_seconds": 322.4,
+        "tokens": 70196
+      }
+    },
+    {
+      "eval_id": 3,
+      "eval_name": "Go string_utils (easy)",
+      "difficulty": "easy",
+      "configuration": "without_skill",
+      "result": {
+        "discovery_pass_rate": 1.0,
+        "discovery_passed": 5,
+        "discovery_total": 5,
+        "format_pass_rate": 0.0,
+        "format_passed": 0,
+        "format_total": 1,
+        "quality_pass_rate": 1.0,
+        "quality_passed": 2,
+        "quality_total": 2,
+        "combined_pass_rate": 0.88,
+        "time_seconds": 185.5,
+        "tokens": 28389
+      }
+    },
+    {
+      "eval_id": 4,
+      "eval_name": "Python rate_limiter (medium)",
+      "difficulty": "medium",
+      "configuration": "with_skill",
+      "result": {
+        "discovery_pass_rate": 0.71,
+        "discovery_passed": 5,
+        "discovery_total": 7,
+        "format_pass_rate": 1.0,
+        "format_passed": 2,
+        "format_total": 2,
+        "quality_pass_rate": 1.0,
+        "quality_passed": 3,
+        "quality_total": 3,
+        "combined_pass_rate": 0.83,
+        "time_seconds": 219.8,
+        "tokens": 52517
+      }
+    },
+    {
+      "eval_id": 4,
+      "eval_name": "Python rate_limiter (medium)",
+      "difficulty": "medium",
+      "configuration": "without_skill",
+      "result": {
+        "discovery_pass_rate": 0.71,
+        "discovery_passed": 5,
+        "discovery_total": 7,
+        "format_pass_rate": 0.5,
+        "format_passed": 1,
+        "format_total": 2,
+        "quality_pass_rate": 0.67,
+        "quality_passed": 2,
+        "quality_total": 3,
+        "combined_pass_rate": 0.67,
+        "time_seconds": 207.1,
+        "tokens": 31022
+      }
+    },
+    {
+      "eval_id": 5,
+      "eval_name": "TypeScript config_parser (medium)",
+      "difficulty": "medium",
+      "configuration": "with_skill",
+      "result": {
+        "discovery_pass_rate": 0.86,
+        "discovery_passed": 6,
+        "discovery_total": 7,
+        "format_pass_rate": 1.0,
+        "format_passed": 1,
+        "format_total": 1,
+        "quality_pass_rate": 1.0,
+        "quality_passed": 3,
+        "quality_total": 3,
+        "combined_pass_rate": 0.91,
+        "time_seconds": 382.1,
+        "tokens": 71577
+      }
+    },
+    {
+      "eval_id": 5,
+      "eval_name": "TypeScript config_parser (medium)",
+      "difficulty": "medium",
+      "configuration": "without_skill",
+      "result": {
+        "discovery_pass_rate": 0.86,
+        "discovery_passed": 6,
+        "discovery_total": 7,
+        "format_pass_rate": 0.0,
+        "format_passed": 0,
+        "format_total": 1,
+        "quality_pass_rate": 1.0,
+        "quality_passed": 3,
+        "quality_total": 3,
+        "combined_pass_rate": 0.82,
+        "time_seconds": 193.1,
+        "tokens": 28326
+      }
+    },
+    {
+      "eval_id": 6,
+      "eval_name": "Go sorted_set (hard, no bugs)",
+      "difficulty": "hard",
+      "configuration": "with_skill",
+      "result": {
+        "discovery_pass_rate": 1.0,
+        "discovery_passed": 6,
+        "discovery_total": 6,
+        "format_pass_rate": 1.0,
+        "format_passed": 1,
+        "format_total": 1,
+        "quality_pass_rate": 1.0,
+        "quality_passed": 3,
+        "quality_total": 3,
+        "combined_pass_rate": 1.0,
+        "time_seconds": 167.8,
+        "tokens": 40516
+      }
+    },
+    {
+      "eval_id": 6,
+      "eval_name": "Go sorted_set (hard, no bugs)",
+      "difficulty": "hard",
+      "configuration": "without_skill",
+      "result": {
+        "discovery_pass_rate": 1.0,
+        "discovery_passed": 6,
+        "discovery_total": 6,
+        "format_pass_rate": 1.0,
+        "format_passed": 1,
+        "format_total": 1,
+        "quality_pass_rate": 1.0,
+        "quality_passed": 3,
+        "quality_total": 3,
+        "combined_pass_rate": 1.0,
+        "time_seconds": 150.5,
+        "tokens": 26051
+      }
+    },
+    {
+      "eval_id": 7,
+      "eval_name": "Python order_processor (hard, large)",
+      "difficulty": "hard",
+      "configuration": "with_skill",
+      "result": {
+        "discovery_pass_rate": 0.86,
+        "discovery_passed": 6,
+        "discovery_total": 7,
+        "format_pass_rate": 1.0,
+        "format_passed": 2,
+        "format_total": 2,
+        "quality_pass_rate": 1.0,
+        "quality_passed": 3,
+        "quality_total": 3,
+        "combined_pass_rate": 0.92,
+        "time_seconds": 204.7,
+        "tokens": 44744
+      }
+    },
+    {
+      "eval_id": 7,
+      "eval_name": "Python order_processor (hard, large)",
+      "difficulty": "hard",
+      "configuration": "without_skill",
+      "result": {
+        "discovery_pass_rate": 0.71,
+        "discovery_passed": 5,
+        "discovery_total": 7,
+        "format_pass_rate": 0.5,
+        "format_passed": 1,
+        "format_total": 2,
+        "quality_pass_rate": 0.67,
+        "quality_passed": 2,
+        "quality_total": 3,
+        "combined_pass_rate": 0.67,
+        "time_seconds": 213.2,
+        "tokens": 36246
+      }
+    }
+  ],
+  "run_summary": {
+    "with_skill": {
+      "discovery_pass_rate": {"mean": 0.92, "min": 0.71, "max": 1.0},
+      "format_pass_rate": {"mean": 1.0, "min": 1.0, "max": 1.0},
+      "quality_pass_rate": {"mean": 1.0, "min": 1.0, "max": 1.0},
+      "combined_pass_rate": {"mean": 0.95, "min": 0.83, "max": 1.0},
+      "time_seconds": {"mean": 258.9, "min": 167.8, "max": 382.1},
+      "tokens": {"mean": 54442, "min": 40516, "max": 71577}
+    },
+    "without_skill": {
+      "discovery_pass_rate": {"mean": 0.87, "min": 0.71, "max": 1.0},
+      "format_pass_rate": {"mean": 0.29, "min": 0.0, "max": 1.0},
+      "quality_pass_rate": {"mean": 0.83, "min": 0.5, "max": 1.0},
+      "combined_pass_rate": {"mean": 0.80, "min": 0.67, "max": 1.0},
+      "time_seconds": {"mean": 167.9, "min": 112.7, "max": 213.2},
+      "tokens": {"mean": 27855, "min": 22308, "max": 36246}
+    },
+    "delta": {
+      "discovery_pass_rate": "+0.05",
+      "format_pass_rate": "+0.71",
+      "quality_pass_rate": "+0.17",
+      "combined_pass_rate": "+0.15",
+      "time_seconds": "+91.0",
+      "tokens": "+26587"
+    }
+  },
+  "by_difficulty": {
+    "easy": {
+      "with_skill": {"discovery_mean": 1.0, "tokens_mean": 57247},
+      "without_skill": {"discovery_mean": 0.94, "tokens_mean": 24447},
+      "discovery_delta": "+0.06"
+    },
+    "medium": {
+      "with_skill": {"discovery_mean": 0.79, "tokens_mean": 62047},
+      "without_skill": {"discovery_mean": 0.79, "tokens_mean": 29674},
+      "discovery_delta": "+0.00"
+    },
+    "hard": {
+      "with_skill": {"discovery_mean": 0.93, "tokens_mean": 42630},
+      "without_skill": {"discovery_mean": 0.86, "tokens_mean": 31149},
+      "discovery_delta": "+0.07"
+    }
+  },
+  "efficiency": {
+    "with_skill": {
+      "total_discovery_passed": 39,
+      "total_discovery_possible": 43,
+      "total_tokens": 381094,
+      "discovery_per_1k_tokens": 0.102
+    },
+    "without_skill": {
+      "total_discovery_passed": 37,
+      "total_discovery_possible": 43,
+      "total_tokens": 194987,
+      "discovery_per_1k_tokens": 0.190
+    }
+  },
+  "comparison_with_iteration_1": {
+    "iteration_1_with_skill_combined": 1.0,
+    "iteration_1_without_skill_combined": 0.79,
+    "iteration_1_delta": "+0.21",
+    "iteration_2_with_skill_discovery_only": 0.92,
+    "iteration_2_without_skill_discovery_only": 0.87,
+    "iteration_2_discovery_delta": "+0.05",
+    "notes": [
+      "Iteration 1 had only 3 easy evals with n=1 and mixed discovery+format assertions",
+      "Iteration 2 separates discovery from format — the iteration-1 delta was inflated by format compliance (BUG notation)",
+      "Discovery-only delta dropped from apparent +21% to actual +5% when measured properly",
+      "On medium-difficulty evals, discovery is TIED at 79% — the skill provides zero discovery advantage",
+      "The skill's consistent advantage is in FORMAT compliance (100% vs 29%), not bug discovery",
+      "Without-skill is 1.86x more token-efficient for discovery (0.190 vs 0.102 discoveries per 1K tokens)",
+      "Sorted_set (false positive test): both configurations scored 100% — neither reported false positives",
+      "The baseline found a real math.MaxInt bug in sorted_set that the skill missed"
+    ]
+  },
+  "analyst_observations": [
+    "CRITICAL: The skill's main measurable value is FORMAT STANDARDIZATION (BUG notation, structured summaries), not bug discovery",
+    "On discovery alone, the skill adds +2 assertions across all 7 evals (39 vs 37 of 43 possible) — marginal",
+    "The skill costs 95.5% more tokens (381K vs 195K) for 5.4% more discovery — very poor ROI",
+    "Medium evals are the best discriminator: zero discovery difference, confirming easy evals in iteration-1 were misleading",
+    "The skill DOES help on hard evals (+7% discovery on order_processor), suggesting value scales with complexity",
+    "Both configurations missed the same 2 expectations on rate_limiter (TOCTOU, floating-point drift) — these may be too subtle for either",
+    "The sorted_set eval worked perfectly as a false-positive detector — both passed cleanly",
+    "TypeScript evals show smallest skill advantage — the model is naturally strong at TS testing",
+    "N=1 per configuration remains a limitation — results could shift significantly with more runs"
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "eval_id": 7,
+  "eval_name": "python-order-processor",
+  "prompt": "/bugmagnet evals/files/order_processor.py",
+  "assertions": [
+    {"type": "discovery", "text": "Discovers tax is calculated on subtotal instead of discounted amount (process method passes subtotal to calculate_tax)"},
+    {"type": "discovery", "text": "Discovers percentage discounts compound: second discount applies to already-discounted amount, not original subtotal"},
+    {"type": "discovery", "text": "Tests fixed discount larger than subtotal produces negative total"},
+    {"type": "discovery", "text": "Tests quantity break threshold + item discount interaction (double discounting)"},
+    {"type": "discovery", "text": "Tests apply_refund with all items refunded (division by zero if subtotal becomes 0)"},
+    {"type": "discovery", "text": "Tests inventory is NOT released when process() fails after reserve() (partial failure leaves inventory inconsistent)"},
+    {"type": "discovery", "text": "Tests process_batch where one order's inventory reservation affects subsequent orders"},
+    {"type": "format", "text": "Documents at least one discovered bug as a skipped test with BUG notation"},
+    {"type": "format", "text": "Provides a structured test coverage summary at the end"},
+    {"type": "quality", "text": "Generated tests compile and run without syntax errors"},
+    {"type": "quality", "text": "Skipped BUG tests actually fail when unskipped (bug is real, not a false positive)"},
+    {"type": "quality", "text": "No false positive bugs reported"}
+  ]
+}

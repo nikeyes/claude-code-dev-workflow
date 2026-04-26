@@ -1,0 +1,50 @@
+{
+  "eval_id": 3,
+  "configuration": "with_skill",
+  "discovery_expectations": [
+    {
+      "text": "Discovers Truncate uses len() instead of rune count (unicode truncation bug)",
+      "passed": true,
+      "evidence": "TestTruncate_multibyteRuneCountEqualsMaxLen_BUG (line 68) and TestTruncate_midRuneSliceProducesInvalidUTF8_BUG (line 126) explicitly document that Truncate uses len(s) (byte count) at string_utils.go:10 and s[:maxLen] at line 13, which operates on bytes not runes. Summary.md Bug 1 and Bug 3 describe this in detail."
+    },
+    {
+      "text": "Tests ExtractInitials with empty string input (index out of range panic)",
+      "passed": true,
+      "evidence": "TestExtractInitials_emptyAndWhitespace (line 336) tests empty string input with expected result ''. The implementation uses strings.Fields which returns no tokens for empty input, so the loop body (p[0]) is never reached — the test passes and confirms the safe path. The BUG tests (lines 366, 396) also note the p[0] byte-access concern. The empty string case is covered in the table at line 339: {\"empty string\", \"\", \"\"}."
+    },
+    {
+      "text": "Tests WrapText with zero or negative width",
+      "passed": true,
+      "evidence": "TestWrapText_widthZeroPutsEachWordOnOwnLine (line 488) tests WrapText with width=0. TestWrapText_widthOneAllWordsSingleChar (line 498) tests width=1. Negative width is not explicitly tested as a separate case, but width=0 is covered with an assertion that each word lands on its own line."
+    },
+    {
+      "text": "Tests SlugifyText with input containing only special characters",
+      "passed": true,
+      "evidence": "TestSlugifyText_specialCharactersDropped (line 198) includes the table entry {\"only special chars\", \"!@#$%^&*()\", \"\"} at line 205, asserting the result is an empty string."
+    },
+    {
+      "text": "Tests all functions with empty string input",
+      "passed": true,
+      "evidence": "Empty string is covered for all five functions: Truncate via TestTruncate_noTruncationWhenStringFitsExactly table entry 'empty string any limit' (line 19); SlugifyText via TestSlugifyText_emptyAndWhitespaceInputs table entry 'empty string' (line 183); CountWords via TestCountWords_tableTests table entry 'empty string' (line 287); ExtractInitials via TestExtractInitials_emptyAndWhitespace table entry 'empty string' (line 339); WrapText via TestWrapText_emptyAndWhitespaceInputsReturnEmpty table entry 'empty string' (line 447)."
+    }
+  ],
+  "format_expectations": [
+    {
+      "text": "Documents at least one discovered bug as a skipped test with BUG notation — look for t.Skip with \"BUG\" in the test name or a skipped test function",
+      "passed": true,
+      "evidence": "Seven skipped BUG tests are present: TestTruncate_multibyteRuneCountEqualsMaxLen_BUG (line 68), TestTruncate_negativMaxLenPanics_BUG (line 99), TestTruncate_midRuneSliceProducesInvalidUTF8_BUG (line 126), TestExtractInitials_nonASCIIFirstLetterProducesGarbage_BUG (line 366), TestExtractInitials_CJKFirstLetterProducesGarbage_BUG (line 396), TestWrapText_byteVsRuneCountCausesEarlyWrapForUnicode_BUG (line 518), TestWrapText_emojiCausesEarlyWrapBecauseOfByteCount_BUG (line 548). Each calls t.Skip with a message beginning with 'BUG:'."
+    }
+  ],
+  "quality_expectations": [
+    {
+      "text": "Generated tests compile and run without syntax errors — check Go syntax",
+      "passed": true,
+      "evidence": "Static analysis confirms correct Go syntax: package declaration 'package stringutils' matches implementation; imports are valid ('strings', 'testing'); all test functions follow the signature func TestXxx(t *testing.T); table-driven tests use correct struct literal and range syntax; t.Errorf, t.Skip, strings.HasPrefix, strings.Split, strings.HasSuffix calls are all valid. No Go toolchain was available to run the compiler, but no syntax errors are detectable through static inspection."
+    },
+    {
+      "text": "Skipped BUG tests actually fail when unskipped (bug is real, not a false positive)",
+      "passed": true,
+      "evidence": "All skipped bugs are verified against the implementation source: (1) Truncate at string_utils.go:10 uses len(s) (byte count) not rune count, and line 13 slices by byte offset — confirmed real for multibyte input. (2) Truncate has no negative maxLen guard — s[:maxLen] with negative index is a real Go runtime panic. (3) ExtractInitials at string_utils.go:44 uses rune(p[0]) byte access — confirmed produces wrong codepoint for multibyte first characters. (4) WrapText at string_utils.go:58 uses len() in the width comparison — confirmed causes premature wrapping for multibyte/emoji input. All bugs are grounded in specific line-level code evidence."
+    }
+  ]
+}

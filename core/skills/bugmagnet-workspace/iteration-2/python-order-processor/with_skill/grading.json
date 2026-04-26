@@ -1,0 +1,70 @@
+{
+  "eval_id": 7,
+  "configuration": "with_skill",
+  "discovery_expectations": [
+    {
+      "text": "Discovers tax is calculated on subtotal instead of discounted amount (process method passes subtotal to calculate_tax)",
+      "passed": true,
+      "evidence": "@pytest.mark.skip(reason='BUG: tax is calculated on pre-discount subtotal, not post-discount amount') test_tax_is_calculated_on_post_discount_amount_BUG; also test_calculates_tax_on_subtotal_not_discounted_amount documents the actual behavior"
+    },
+    {
+      "text": "Discovers percentage discounts compound: second discount applies to already-discounted amount, not original subtotal",
+      "passed": true,
+      "evidence": "test_applies_multiple_discounts_in_sequence: d1+d2 both 10%: 100 → 90 → 81 (not 80); comment 'Second percentage discount is calculated on already-discounted amount'"
+    },
+    {
+      "text": "Tests fixed discount larger than subtotal produces negative total",
+      "passed": true,
+      "evidence": "test_returns_negative_total_when_fixed_discount_exceeds_subtotal: apply_discounts(50.0, FIXED 200) == -150.0; also @pytest.mark.skip BUG test"
+    },
+    {
+      "text": "Tests quantity break threshold + item discount interaction (double discounting)",
+      "passed": true,
+      "evidence": "test_applies_quantity_break_before_percentage_item_discount: quantity=11 gets 5% break THEN 10% item discount: 110 * 0.95 * 0.90 = 94.05"
+    },
+    {
+      "text": "Tests apply_refund with all items refunded (division by zero if subtotal becomes 0)",
+      "passed": true,
+      "evidence": "@pytest.mark.skip(reason='BUG: refund proportion calculation breaks when subtotal is zero') test_apply_refund_handles_zero_subtotal_without_division_by_zero_BUG"
+    },
+    {
+      "text": "Tests inventory is NOT released when process() fails after reserve() (partial failure leaves inventory inconsistent)",
+      "passed": false,
+      "evidence": "test_does_not_reserve_inventory_when_order_is_invalid tests that invalid orders don't reserve. But no test for the case where process() fails AFTER reserve() is called (e.g., inventory reserved then payment processing fails). The apply_refund inventory release bug is documented separately."
+    },
+    {
+      "text": "Tests process_batch where one order's inventory reservation affects subsequent orders",
+      "passed": true,
+      "evidence": "test_process_batch_does_not_stop_on_first_error: valid, invalid, valid orders; test_processes_order_with_duplicate_product_ids verifies sequential inventory reservation"
+    }
+  ],
+  "format_expectations": [
+    {
+      "text": "Documents at least one discovered bug as a skipped test with BUG notation",
+      "passed": true,
+      "evidence": "@pytest.mark.skip on test_total_is_not_negative_when_fixed_discount_exceeds_subtotal_BUG, test_tax_is_calculated_on_post_discount_amount_BUG, test_apply_refund_handles_zero_subtotal_without_division_by_zero_BUG"
+    },
+    {
+      "text": "Provides a structured test coverage summary at the end",
+      "passed": true,
+      "evidence": "summary.md contains '## Test Coverage Summary' table by category, '## Bugs Discovered' section with 3 bugs, and '## Key Behavioral Findings'"
+    }
+  ],
+  "quality_expectations": [
+    {
+      "text": "Generated tests compile and run without syntax errors",
+      "passed": true,
+      "evidence": "Standard pytest syntax with correct imports of all 9 classes from order_processor; no syntax errors detected"
+    },
+    {
+      "text": "Skipped BUG tests actually fail when unskipped (bug is real, not a false positive)",
+      "passed": true,
+      "evidence": "Tax on subtotal bug is real: code calls calculate_tax(subtotal, ...) not calculate_tax(discounted, ...); fixed discount negative total bug is real: no max(0.0, ...) guard in apply_discounts"
+    },
+    {
+      "text": "No false positive bugs reported",
+      "passed": true,
+      "evidence": "All 3 documented bugs are genuine defects. Note: the with_skill run does NOT flag the quantity break exclusive boundary as a bug (correctly, since > 10 is the defined threshold)."
+    }
+  ]
+}

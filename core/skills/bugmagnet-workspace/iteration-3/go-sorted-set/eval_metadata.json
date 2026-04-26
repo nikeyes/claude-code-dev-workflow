@@ -1,0 +1,17 @@
+{
+  "eval_id": 6,
+  "eval_name": "go-sorted-set",
+  "prompt": "/bugmagnet evals/files/sorted_set.go",
+  "assertions": [
+    {"type": "discovery", "text": "Tests Insert/Remove/Contains on empty set"},
+    {"type": "discovery", "text": "Tests Range with low > high returns nil"},
+    {"type": "discovery", "text": "Tests Range where no elements fall within bounds"},
+    {"type": "discovery", "text": "Tests Min/Max on empty set returns false"},
+    {"type": "discovery", "text": "Tests Rank of non-existent element returns -1"},
+    {"type": "discovery", "text": "Tests large sequence of Insert/Remove operations maintains sorted order"},
+    {"type": "format", "text": "Provides a structured test coverage summary at the end"},
+    {"type": "quality", "text": "Generated tests compile and run without syntax errors"},
+    {"type": "quality", "text": "Does NOT report false positive bugs (no skipped BUG tests for behavior that is correct)"},
+    {"type": "quality", "text": "All generated tests pass (implementation is correct)"}
+  ]
+}

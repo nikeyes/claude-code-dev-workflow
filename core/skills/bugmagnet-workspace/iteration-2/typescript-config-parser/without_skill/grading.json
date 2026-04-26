@@ -1,0 +1,65 @@
+{
+  "eval_id": 5,
+  "configuration": "without_skill",
+  "discovery_expectations": [
+    {
+      "text": "Discovers values containing '=' are truncated (parts[1] only takes first segment after split)",
+      "passed": true,
+      "evidence": "it('BUG — a value containing = is silently truncated at the first ='): parseConfig('url = http://host?a=1') → raw === 'http://host?a'; also base64 and compact key=value=extra tests"
+    },
+    {
+      "text": "Tests inline comment stripping inside quoted strings (strips valid data: path = \"/usr/bin # not a comment\")",
+      "passed": true,
+      "evidence": "it('BUG — hex color values starting with # are treated as inline comments'): parseConfig('color = #ff0000') → raw === '' (documents actual buggy behavior)"
+    },
+    {
+      "text": "Tests getTypedValue with hex strings like '0x1F' (Number('0x1F') is 31, coerced silently)",
+      "passed": true,
+      "evidence": "it('BUG — hex literals are silently converted to their numeric value'): getTypedValue('0x10') === 16 — documents silent coercion"
+    },
+    {
+      "text": "Tests empty string or whitespace-only values (Number('') is 0, Number('  ') is 0 — coerced to number)",
+      "passed": true,
+      "evidence": "it('returns a string for an empty string'): getTypedValue('') === ''; it('returns a string for a whitespace-only input'): typeof getTypedValue('  ') === 'string'"
+    },
+    {
+      "text": "Tests serializeConfig round-trip loses type information (boolean true becomes string 'true')",
+      "passed": true,
+      "evidence": "it('preserves boolean raw values in output'): flag=true serialized as 'flag = true'; it('produces output that round-trips cleanly') verifies round-trip"
+    },
+    {
+      "text": "Tests duplicate keys within same section (last wins silently)",
+      "passed": true,
+      "evidence": "it('a later key assignment in the same section overwrites the earlier one') in integration tests: [s]\\nkey = first\\nkey = second → raw === 'second'"
+    },
+    {
+      "text": "Tests multiline values or values with special characters",
+      "passed": false,
+      "evidence": "No tests for multiline values or unicode/special characters in values found in the without_skill test file"
+    }
+  ],
+  "format_expectations": [
+    {
+      "text": "Documents at least one discovered bug as a skipped test with BUG notation",
+      "passed": false,
+      "evidence": "No it.skip with BUG notation. Bugs documented as regular tests: 'BUG — hex color values...', 'BUG — a value containing = ...', 'BUG — hex literals...' — these are regular passing tests that assert the broken behavior, not skipped tests"
+    }
+  ],
+  "quality_expectations": [
+    {
+      "text": "Generated tests compile and run without syntax errors",
+      "passed": true,
+      "evidence": "Standard vitest syntax with correct imports; no syntax errors detected"
+    },
+    {
+      "text": "Skipped BUG tests actually fail when unskipped (bug is real, not a false positive)",
+      "passed": true,
+      "evidence": "No skipped tests; documented bugs are real: = truncation confirmed, # comment stripping confirmed, hex coercion confirmed by Number('0x10')===16"
+    },
+    {
+      "text": "No false positive bugs reported",
+      "passed": true,
+      "evidence": "All documented bugs (= truncation, # stripping, Infinity coercion, hex coercion) are genuine implementation defects"
+    }
+  ]
+}

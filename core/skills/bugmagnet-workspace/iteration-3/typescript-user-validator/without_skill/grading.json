@@ -1,0 +1,55 @@
+{
+  "eval_id": 2,
+  "configuration": "without_skill",
+  "discovery_expectations": [
+    {
+      "text": "Tests email validation edge cases (missing domain, multiple @, no @ at all)",
+      "passed": true,
+      "evidence": "Line 71: rejects email with no @ ('aliceexample.com'); line 81: rejects '@' only; line 94: rejects '@example.com' (no local part); line 106: rejects 'alice@' (no domain). Multiple @ is tested at line 374 in normalizeEmail ('a@b@c')."
+    },
+    {
+      "text": "Tests age with NaN or Infinity values bypassing the range check",
+      "passed": false,
+      "evidence": "NaN age is tested at line 185 and correctly identified as a bug (NaN comparisons always false). However, Infinity is not tested at all — no test for age: Infinity or age: -Infinity."
+    },
+    {
+      "text": "Tests normalizeEmail with string that has no @ (destructuring crash)",
+      "passed": true,
+      "evidence": "Line 368: 'throws when email has no @ symbol — BUG: domain is undefined' — calls normalizeEmail('not-an-email') and expects it to throw TypeError. Correctly identifies the destructuring crash."
+    },
+    {
+      "text": "Tests whitespace-only name passes trim check",
+      "passed": true,
+      "evidence": "Lines 9-18: 'rejects name that is only whitespace' tests name='   ' (three spaces). Lines 19-29: also tests single space ' '. Both correctly assert valid===false."
+    },
+    {
+      "text": "Tests names with special characters (accents, apostrophes, unicode)",
+      "passed": false,
+      "evidence": "No tests for names containing accents (é, ñ, ü), apostrophes (O'Brien), or unicode/emoji characters found anywhere in the test file."
+    },
+    {
+      "text": "Tests tags as empty array vs undefined",
+      "passed": true,
+      "evidence": "Lines 260-268: tests tags=undefined (omitted) — valid. Lines 270-279: tests tags=[] (empty array) — valid. The formatUserDisplay section also contrasts undefined vs [] at lines 413-436, revealing the '?? null coalescing' bug."
+    }
+  ],
+  "format_expectations": [
+    {
+      "text": "Documents at least one discovered bug as a skipped test with BUG notation — look for test.skip with 'BUG' in the test name",
+      "passed": false,
+      "evidence": "No test.skip calls found anywhere in the file. Bugs are documented inline as regular (non-skipped) tests with 'BUG' in the test name (e.g. line 185, 368, 374, 423) and via comments explaining expected vs actual behaviour, but none use test.skip."
+    }
+  ],
+  "quality_expectations": [
+    {
+      "text": "Generated tests compile and run without syntax errors",
+      "passed": true,
+      "evidence": "All 44 tests ran successfully via vitest (npx vitest run). No compile errors or syntax errors. 39 tests passed, 5 failed due to real implementation bugs, not test errors."
+    },
+    {
+      "text": "Skipped BUG tests actually fail when unskipped (bug is real, not a false positive)",
+      "passed": false,
+      "evidence": "No test.skip was used, so this assertion cannot be satisfied. However, the bug tests written as regular tests do expose real failures: NaN age (line 185), empty tags array in formatUserDisplay (line 423), and email edge cases (@, @example.com, alice@) all fail correctly — confirming the bugs are real."
+    }
+  ]
+}

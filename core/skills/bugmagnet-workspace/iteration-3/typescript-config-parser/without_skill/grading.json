@@ -1,0 +1,65 @@
+{
+  "eval_id": 5,
+  "configuration": "without_skill",
+  "discovery_expectations": [
+    {
+      "text": "Discovers values containing '=' are truncated (parts[1] only takes first segment after split)",
+      "passed": true,
+      "evidence": "Section 'parseConfig — values containing equals sign' has 3 tests covering URL (a=1&b=2), base64 (aGVsbG8=), and multi-= expressions. All 3 fail against the real implementation, confirming the bug is real and correctly discovered. Bug documented in summary.md as Bug 1."
+    },
+    {
+      "text": "Tests inline comment stripping inside quoted strings (strips valid data: path = \"/usr/bin # not a comment\")",
+      "passed": true,
+      "evidence": "Section 'parseConfig — quoted values with special characters' tests 'color = \"#ff0000\"' and 'color = \\'#ff0000\\''. Both fail: raw is '' instead of '#ff0000'. Same bug class as the path example. Bug documented in summary.md as Bug 3."
+    },
+    {
+      "text": "Tests getTypedValue with hex strings like '0x1F' (Number('0x1F') is 31, coerced silently)",
+      "passed": false,
+      "evidence": "No hex string tests found in the test file. grep for 'hex', '0x', '0X' returns no results. The model tested Infinity/-Infinity/NaN/whitespace edge cases in getTypedValue but missed the hex coercion case entirely."
+    },
+    {
+      "text": "Tests empty string or whitespace-only values (Number('') is 0, Number('  ') is 0 — coerced to number)",
+      "passed": true,
+      "evidence": "Tests 'returns empty string for an empty input' and 'does not convert a whitespace-only string to the number 0' both present. The guard 'raw.trim() !== \"\"' in getTypedValue actually protects against these, so both tests pass (behavior is correct). The model correctly characterizes these as edge cases to verify rather than false bugs."
+    },
+    {
+      "text": "Tests serializeConfig round-trip loses type information (boolean true becomes string 'true')",
+      "passed": true,
+      "evidence": "Test 'round-trips a boolean value' is present and passes. The round-trip works because raw='true' is re-parsed by getTypedValue back to boolean true. The model also tests round-trips for numbers and strings with spaces. The comment in the test notes that values needing quoting won't survive (a valid separate bug documented as Bug 5 in summary.md)."
+    },
+    {
+      "text": "Tests duplicate keys within same section (last wins silently)",
+      "passed": true,
+      "evidence": "Dedicated describe block 'parseConfig — duplicate keys' with test 'last duplicate key wins within the same section' (key = first, key = second -> raw is 'second'). Test passes, correctly documenting the silent last-wins behavior."
+    },
+    {
+      "text": "Tests multiline values or values with special characters",
+      "passed": true,
+      "evidence": "Section 'parseConfig — quoted values with special characters' covers semicolons, equals signs, spaces (C:\\\\Program Files\\\\app), and hash characters. Also CRLF line endings tested in 'parseConfig — line endings'. Windows path with spaces test passes."
+    }
+  ],
+  "format_expectations": [
+    {
+      "text": "Documents at least one discovered bug as a skipped test with BUG notation",
+      "passed": false,
+      "evidence": "The test file uses '// BUG:' comments to annotate bug-related tests but does NOT use test.skip() or it.skip() on any test. All bug tests run as regular (failing) tests. No skipped tests appear in the vitest output (9 failed | 55 passed, 0 skipped). The BUG notation is present in comments but the skip pattern is absent."
+    }
+  ],
+  "quality_expectations": [
+    {
+      "text": "Generated tests compile and run without syntax errors",
+      "passed": true,
+      "evidence": "TypeScript compilation with 'tsc --noEmit --strict --target ES2020 --module CommonJS --skipLibCheck' produces zero errors. Vitest runs all 64 tests successfully (9 fail due to real bugs, 55 pass). No syntax errors or runtime crashes."
+    },
+    {
+      "text": "Skipped BUG tests actually fail when unskipped (bug is real, not a false positive)",
+      "passed": true,
+      "evidence": "Although no tests are formally skipped, the BUG-annotated tests do fail when executed: '= truncation' (3 tests fail), '# in quoted values' (2 tests fail), 'inline ; comment' (1 test fails), 'Infinity coercion' (2 tests fail). All reported bugs are confirmed real by the test failures."
+    },
+    {
+      "text": "No false positive bugs reported",
+      "passed": true,
+      "evidence": "5 bugs documented in summary.md. Bug 1 (= truncation): confirmed by 3 failing tests. Bug 2 (inline ; not stripped): confirmed by 1 failing test. Bug 3 (# in quoted values): confirmed by 2 failing tests. Bug 4 (Infinity coercion): confirmed by 2 failing tests. Bug 5 (serializeConfig no re-quoting): correctly identified as a real limitation. No false positives found — all bugs produce actual test failures."
+    }
+  ]
+}

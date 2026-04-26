@@ -1,0 +1,55 @@
+{
+  "eval_id": 1,
+  "configuration": "without_skill",
+  "discovery_expectations": [
+    {
+      "text": "Tests split_payment with parts=0 (zero division bug)",
+      "passed": true,
+      "evidence": "test_split_by_zero_raises (line 302): 'with pytest.raises(ZeroDivisionError): split_payment(100.0, 0)' with comment 'BUG: no validation — zero parts causes ZeroDivisionError'"
+    },
+    {
+      "text": "Tests negative price values in calculate_discount or calculate_total",
+      "passed": true,
+      "evidence": "test_negative_price (line 48) in TestCalculateDiscount: calculate_discount(-100, 10) asserts result == -90.0 with comment 'BUG: no validation — negative price silently accepted'"
+    },
+    {
+      "text": "Tests calculate_total with empty items list",
+      "passed": true,
+      "evidence": "test_empty_items_list (line 97) in TestCalculateTotal: calls calculate_total([]) and asserts subtotal==0.0, tax==0.0, total==0.0, item_count==0"
+    },
+    {
+      "text": "Tests apply_coupon producing negative total (coupon value exceeds total)",
+      "passed": true,
+      "evidence": "test_fixed_coupon_exceeds_total_gives_negative_total (line 221): apply_coupon(50.0, {type:fixed, value:150.0}) asserts result == -100.0 with comment 'BUG: no validation — fixed coupon can exceed total'"
+    },
+    {
+      "text": "Tests floating point rounding edge cases",
+      "passed": true,
+      "evidence": "test_high_precision_subtotal_rounds_correctly (line 124): 3 x $3.33 = $9.99 rounding check; test_floating_point_tax_accumulation (line 146): 3 items at $1.10 with 21% tax; test_fractional_price_rounds_to_two_decimals (line 27): calculate_discount(9.99, 10)"
+    }
+  ],
+  "format_expectations": [
+    {
+      "text": "Documents at least one discovered bug as a skipped test with BUG notation",
+      "passed": false,
+      "evidence": "No test uses pytest.mark.skip with 'BUG' in the test name. Bugs are documented only as inline comments (e.g. '# BUG: no validation') within passing tests that assert current (buggy) behavior, not as skipped tests."
+    },
+    {
+      "text": "Provides a structured test coverage summary at the end",
+      "passed": true,
+      "evidence": "summary.md contains a 'Coverage Assessment' table covering all 5 functions across happy path, edge cases, boundary, and error/exception columns, plus a 'Bugs Discovered' section with 9 bugs."
+    }
+  ],
+  "quality_expectations": [
+    {
+      "text": "Generated tests compile and run without syntax errors",
+      "passed": true,
+      "evidence": "test_price_calculator_comprehensive.py is syntactically valid Python with proper imports, class structure (5 test classes, 47 methods), and correct pytest usage."
+    },
+    {
+      "text": "Skipped BUG tests actually fail when unskipped (bug is real, not a false positive)",
+      "passed": false,
+      "evidence": "There are no skipped BUG tests in the file. Bugs are documented as inline comments inside passing tests that assert the current buggy behavior. The skip+BUG notation format requirement was not followed."
+    }
+  ]
+}

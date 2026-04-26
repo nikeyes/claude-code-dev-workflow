@@ -1,0 +1,55 @@
+{
+  "eval_id": 1,
+  "configuration": "with_skill",
+  "discovery_expectations": [
+    {
+      "text": "Tests split_payment with parts=0 (zero division bug)",
+      "passed": true,
+      "evidence": "test_split_into_zero_parts_should_raise_value_error is present in TestSplitPaymentEdgeCases, skipped with reason 'split_payment(total, 0) raises ZeroDivisionError - BUG'. Directly exercises parts=0."
+    },
+    {
+      "text": "Tests negative price values in calculate_discount or calculate_total",
+      "passed": true,
+      "evidence": "test_negative_price_with_positive_discount in TestCalculateDiscountBoundaries calls calculate_discount(-100.0, 10) and asserts result == -90.0. Also test_negative_quantity_reduces_subtotal exercises a negative-quantity item in calculate_total."
+    },
+    {
+      "text": "Tests calculate_total with empty items list",
+      "passed": true,
+      "evidence": "test_empty_item_list_returns_zero_totals in TestCalculateTotalEdgeCases calls calculate_total([]) and asserts subtotal, tax, total == 0.0 and item_count == 0."
+    },
+    {
+      "text": "Tests apply_coupon producing negative total (coupon value exceeds total)",
+      "passed": true,
+      "evidence": "test_fixed_coupon_larger_than_total_should_clamp_to_zero calls apply_coupon(30.0, {\"type\": \"fixed\", \"value\": 50.0}) and is skipped as a confirmed bug. test_percent_coupon_over_100_should_clamp_to_zero covers the percent variant that also yields a negative result."
+    },
+    {
+      "text": "Tests floating point rounding edge cases",
+      "passed": true,
+      "evidence": "test_floating_point_accumulation_stays_rounded verifies that 3 × 0.10 accumulates to exactly 0.30 (not 0.30000000000000004). test_very_small_total_many_parts_remainder_in_last and test_rounding_remainder_goes_to_last_part also exercise rounding behaviour in split_payment."
+    }
+  ],
+  "format_expectations": [
+    {
+      "text": "Documents at least one discovered bug as a skipped test with BUG notation — look for test.skip or pytest.mark.skip with \"BUG\" in the test name",
+      "passed": true,
+      "evidence": "Five tests are decorated with @pytest.mark.skip and each skip reason contains the word 'BUG' (e.g. 'split_payment(total, 0) raises ZeroDivisionError - BUG', 'fixed coupon larger than total produces a negative result - BUG'). The BUG label appears in the reason string rather than the test function name, but the intent is clearly met."
+    },
+    {
+      "text": "Provides a structured test coverage summary at the end — look for summary.md with sections for Tests Added, Results, Bugs Discovered",
+      "passed": true,
+      "evidence": "summary.md contains exactly the required sections: '## Tests Added: 43 total', '## Results: 38 passing, 5 skipped (bugs)', and '## Bugs Discovered' listing all five confirmed bugs with root-cause and proposed-fix details."
+    }
+  ],
+  "quality_expectations": [
+    {
+      "text": "Generated tests compile and run without syntax errors — check for valid Python syntax and correct imports",
+      "passed": true,
+      "evidence": "test_price_calculator_extra.py has a well-formed module docstring, imports pytest and all five public functions from price_calculator, uses standard class-based test organisation, and contains no observable syntax errors. All pytest decorators and assertions follow correct Python syntax."
+    },
+    {
+      "text": "Skipped BUG tests actually fail when unskipped (bug is real, not a false positive) — check if the bugs documented are real based on reading the implementation",
+      "passed": true,
+      "evidence": "All five documented bugs are real: (1) split_payment divides by parts with no guard, so parts=0 raises ZeroDivisionError; (2) split_payment with negative parts produces an empty list and IndexError on result[-1]; (3) apply_coupon fixed branch returns round(total - value) with no floor, yielding -20.0 for apply_coupon(30.0, fixed 50); (4) apply_coupon percent branch similarly yields -100.0 for value=200; (5) calculate_discount has no clamp, so discount>100 propagates a negative item price into calculate_total. Each skipped test asserts behaviour the implementation does not currently provide."
+    }
+  ]
+}

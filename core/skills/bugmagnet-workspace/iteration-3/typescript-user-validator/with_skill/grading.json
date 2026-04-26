@@ -1,0 +1,55 @@
+{
+  "eval_id": 2,
+  "configuration": "with_skill",
+  "discovery_expectations": [
+    {
+      "text": "Tests email validation edge cases (missing domain, multiple @, no @ at all)",
+      "passed": true,
+      "evidence": "Lines 103-135: tests cover '@' alone, '@domain.com' (no local part), 'user@' (no domain part), and 'a@b@c.com' (multiple @), all under describe 'validateUser — email edge cases'"
+    },
+    {
+      "text": "Tests age with NaN or Infinity values bypassing the range check",
+      "passed": true,
+      "evidence": "Lines 179-210: 'rejects Infinity age', 'rejects -Infinity age' (both passing tests), and 'rejects NaN age - BUG' (test.skip at line 191) — NaN bug correctly identified as real issue since NaN < 0 || NaN > 150 is always false"
+    },
+    {
+      "text": "Tests normalizeEmail with string that has no @ (destructuring crash)",
+      "passed": true,
+      "evidence": "Lines 520-541: test.skip 'does not crash when input has no @ symbol - BUG' documents that split('@') returns one-element array, domain=undefined, then undefined.toLowerCase() throws TypeError"
+    },
+    {
+      "text": "Tests whitespace-only name passes trim check",
+      "passed": true,
+      "evidence": "Lines 27-37: 'rejects whitespace-only name (single space)' and 'rejects whitespace-only name (mixed tabs and spaces)' both verify name=' ' and name=' \\t ' are rejected with 'Name is required'"
+    },
+    {
+      "text": "Tests names with special characters (accents, apostrophes, unicode)",
+      "passed": true,
+      "evidence": "Line 652-660: 'preserves special characters in name without escaping' tests formatUserDisplay with name='O'Brien-Müller' containing apostrophe, hyphen, and umlaut. Note: test is in formatUserDisplay context, not validateUser directly, but covers the assertion's intent"
+    },
+    {
+      "text": "Tests tags as empty array vs undefined",
+      "passed": true,
+      "evidence": "Line 309-318: 'accepts no tags (omitted field)' tests undefined tags and 'accepts empty tags array' tests tags:[] — both covered. Additionally, test.skip at line 662 documents that formatUserDisplay behaves differently for [] vs omitted (BUG: empty array yields '[Tags: ]' not '[Tags: none]')"
+    }
+  ],
+  "format_expectations": [
+    {
+      "text": "Documents at least one discovered bug as a skipped test with BUG notation — look for test.skip with \"BUG\" in the test name",
+      "passed": true,
+      "evidence": "8 test.skip entries with 'BUG' in the name: line 46 'rejects name whose trimmed length exceeds 100 - BUG', line 191 'rejects NaN age - BUG', line 219 'rejects string \\'25\\' passed as age at runtime - BUG', line 397 'tag length check uses character count not byte count — potential Unicode BUG', lines 520/543/558 in normalizeEmail crash bugs, line 662 'shows \\'none\\' for an explicit empty tags array - BUG'"
+    }
+  ],
+  "quality_expectations": [
+    {
+      "text": "Generated tests compile and run without syntax errors — check vitest imports, TypeScript syntax",
+      "passed": true,
+      "evidence": "Line 1: correct vitest import 'import { describe, it, expect, test } from \"vitest\"'. Line 2: correct named imports from './user_validator'. TypeScript syntax is valid throughout — proper use of 'as any', 'as unknown as number', template literals, and const declarations. No syntax issues detected."
+    },
+    {
+      "text": "Skipped BUG tests actually fail when unskipped (bug is real, not a false positive)",
+      "passed": true,
+      "evidence": "Key verifications: (1) NaN bug (line 191) — NaN < 0 and NaN > 150 both return false in JS, so validateUser returns valid=true for NaN, but test expects valid=false — real failure. (2) normalizeEmail no-@ bug (line 520) — split('@') on 'nodomain' gives domain=undefined, calling undefined.toLowerCase() throws TypeError not Error, so 'not.toThrow(TypeError)' assertion fails — real failure. (3) formatUserDisplay empty tags bug (line 662) — [].join(',') returns '' not null/undefined, so ?? 'none' does not trigger, output is '[Tags: ]' not '[Tags: none]' — real failure. All bugs are confirmed against the actual implementation in user_validator.ts."
+    }
+  ]
+}

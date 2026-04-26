@@ -1,0 +1,70 @@
+{
+  "eval_id": 7,
+  "configuration": "without_skill",
+  "discovery_expectations": [
+    {
+      "text": "Discovers tax is calculated on subtotal instead of discounted amount (process method passes subtotal to calculate_tax)",
+      "passed": true,
+      "evidence": "test_tax_calculated_on_pre_discount_subtotal (line 523): explicitly documents 'BUG: In process(), calculate_tax is called with subtotal (before discounts), not discounted' and asserts result.tax == tax_on_original (the buggy value)"
+    },
+    {
+      "text": "Discovers percentage discounts compound: second discount applies to already-discounted amount, not original subtotal",
+      "passed": true,
+      "evidence": "test_stacked_discounts_apply_sequentially_on_running_total (line 293): applies two 10% discounts, asserts result==81.0 (90 * 0.90), explicitly documenting 'Second percentage discount is applied on already-reduced amount'"
+    },
+    {
+      "text": "Tests fixed discount larger than subtotal produces negative total",
+      "passed": true,
+      "evidence": "test_fixed_discount_exceeding_subtotal_produces_negative_total (line 323): apply_discounts(50.0, FIXED value=200.0) asserts result == -150.0 with comment 'BUG: No floor at 0 for fixed discounts'"
+    },
+    {
+      "text": "Tests quantity break threshold + item discount interaction (double discounting)",
+      "passed": true,
+      "evidence": "test_quantity_break_applies_before_percentage_discount (line 182): item with quantity=11 (above threshold) plus 10% percentage discount; verifies quantity break (5%) applies first then item discount (10%), resulting in 94.05"
+    },
+    {
+      "text": "Tests apply_refund with all items refunded (division by zero if subtotal becomes 0)",
+      "passed": true,
+      "evidence": "test_full_refund_all_items (line 816): refunds both P1 and P2, asserts refunded.subtotal == 0.0 and refunded.line_items == []. Tests the zero-subtotal scenario after full refund."
+    },
+    {
+      "text": "Tests inventory is NOT released when process() fails after reserve() (partial failure leaves inventory inconsistent)",
+      "passed": false,
+      "evidence": "No test covers process() failing partway through after inventory.reserve() has been called. test_refund_does_not_restore_inventory covers refund not restoring stock (a different bug). test_process_invalid_order_does_not_reserve_inventory tests validation failure before reserve(), not after."
+    },
+    {
+      "text": "Tests process_batch where one order's inventory reservation affects subsequent orders",
+      "passed": false,
+      "evidence": "TestOrderProcessorProcessBatch tests exist (6 tests) but none specifically tests that a successful order's inventory reservation reduces available stock for subsequent orders in the same batch. test_batch_partial_failure_continues_processing tests continued processing after failure, not inter-order inventory impact."
+    }
+  ],
+  "format_expectations": [
+    {
+      "text": "Documents at least one discovered bug as a skipped test with BUG notation",
+      "passed": false,
+      "evidence": "No test uses pytest.mark.skip with 'BUG' in the test name. Bugs are documented as inline comments and docstrings inside passing tests that assert current (buggy) behavior, not as skipped tests."
+    },
+    {
+      "text": "Provides a structured test coverage summary at the end",
+      "passed": true,
+      "evidence": "summary.md contains '## Bugs Discovered' with 6 confirmed bugs, '## Additional Concerns' section, and '## Coverage Assessment' table with before/after test counts for all 12 areas."
+    }
+  ],
+  "quality_expectations": [
+    {
+      "text": "Generated tests compile and run without syntax errors",
+      "passed": true,
+      "evidence": "test_order_processor_comprehensive.py is syntactically valid Python with proper imports (all symbols from order_processor), helper functions, 12 test classes, and 101 test methods."
+    },
+    {
+      "text": "Skipped BUG tests actually fail when unskipped (bug is real, not a false positive)",
+      "passed": false,
+      "evidence": "There are no skipped BUG tests in the file. Bugs are documented as docstrings and inline comments within passing tests that assert current buggy behavior. The skip+BUG notation format requirement was not followed."
+    },
+    {
+      "text": "No false positive bugs reported",
+      "passed": true,
+      "evidence": "All 6 documented bugs are real: BUG-1 (tax on undiscounted subtotal), BUG-2 (quantity break off-by-one with '>'), BUG-3 (negative total from fixed discount), BUG-4 (minimum_order check uses original not running total), BUG-5 (loyalty truncation before doubling), BUG-6 (refund does not release inventory). All confirmed against the implementation."
+    }
+  ]
+}

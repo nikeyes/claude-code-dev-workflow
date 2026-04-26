@@ -1,0 +1,19 @@
+{
+  "eval_id": 4,
+  "eval_name": "python-rate-limiter",
+  "prompt": "/bugmagnet evals/files/rate_limiter.py",
+  "assertions": [
+    {"type": "discovery", "text": "Tests get_wait_time returning 0 but subsequent is_allowed fails (TOCTOU: get_wait_time refills but does not reserve tokens)"},
+    {"type": "discovery", "text": "Tests cost=0 is always allowed even when bucket is empty (degenerate input)"},
+    {"type": "discovery", "text": "Tests negative cost parameter (adds tokens instead of consuming them)"},
+    {"type": "discovery", "text": "Tests cleanup_expired does not remove active keys that just made requests recently"},
+    {"type": "discovery", "text": "Tests token accumulation over many rapid refill cycles for floating point drift"},
+    {"type": "discovery", "text": "Tests create_burst_limiter with burst followed by sustained requests at exactly the refill rate"},
+    {"type": "discovery", "text": "Tests interaction between multiple keys (keys are independent, no cross-contamination)"},
+    {"type": "format", "text": "Documents at least one discovered bug as a skipped test with BUG notation"},
+    {"type": "format", "text": "Provides a structured test coverage summary at the end"},
+    {"type": "quality", "text": "Generated tests compile and run without syntax errors"},
+    {"type": "quality", "text": "Skipped BUG tests actually fail when unskipped (bug is real, not a false positive)"},
+    {"type": "quality", "text": "No false positive bugs reported (behavior that is actually correct flagged as wrong)"}
+  ]
+}

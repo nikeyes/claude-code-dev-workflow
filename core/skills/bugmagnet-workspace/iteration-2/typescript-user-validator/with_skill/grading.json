@@ -1,0 +1,55 @@
+{
+  "eval_id": 2,
+  "configuration": "with_skill",
+  "discovery_expectations": [
+    {
+      "text": "Tests email validation edge cases (missing domain, multiple @, no @ at all)",
+      "passed": true,
+      "evidence": "test 'returns error when email has no @ symbol'; test.skip 'preserves the full address when email contains multiple @ symbols - BUG' documents multiple-@ truncation; also 'passes validation for email with only @ present' documents permissive check"
+    },
+    {
+      "text": "Tests age with NaN or Infinity values bypassing the range check",
+      "passed": true,
+      "evidence": "test.skip 'returns error for NaN age - BUG': NaN bypasses age < 0 || age > 150 check; 'returns error for Infinity age' and 'returns error for -Infinity age' — Infinity is caught (passes correctly)"
+    },
+    {
+      "text": "Tests normalizeEmail with string that has no @ (destructuring crash)",
+      "passed": true,
+      "evidence": "test.skip 'does not crash when email has no @ symbol - BUG': normalizeEmail('notanemail') throws TypeError from undefined.toLowerCase()"
+    },
+    {
+      "text": "Tests whitespace-only name passes trim check",
+      "passed": true,
+      "evidence": "test 'returns error when name is whitespace only': name='   ' triggers 'Name is required' error; also 'returns error when name is tab and newline whitespace only'"
+    },
+    {
+      "text": "Tests names with special characters (accents, apostrophes, unicode)",
+      "passed": true,
+      "evidence": "test 'returns valid for name with apostrophe and hyphen': name=\"O'Brien-Smith\"; test 'returns valid for name with accented characters': name='Ångström'; plus Chinese and Arabic name tests in bugmagnet session"
+    },
+    {
+      "text": "Tests tags as empty array vs undefined",
+      "passed": true,
+      "evidence": "test 'returns valid for empty tags array' (validateUser); test.skip 'shows none for empty tags array instead of blank bracket - BUG': formatUserDisplay with tags=[] produces '[Tags: ]' not '[Tags: none]'"
+    }
+  ],
+  "format_expectations": [
+    {
+      "text": "Documents at least one discovered bug as a skipped test with BUG notation",
+      "passed": true,
+      "evidence": "test.skip('returns error for NaN age - BUG'), test.skip('does not crash when email has no @ symbol - BUG'), test.skip('does not crash when email is empty string - BUG'), test.skip('preserves the full address when email contains multiple @ symbols - BUG'), test.skip('shows none for empty tags array instead of blank bracket - BUG') — all use test.skip + BUG in name"
+    }
+  ],
+  "quality_expectations": [
+    {
+      "text": "Generated tests compile and run without syntax errors",
+      "passed": true,
+      "evidence": "All tests use standard vitest syntax (describe/test/expect) with correct imports; no syntax errors in static analysis"
+    },
+    {
+      "text": "Skipped BUG tests actually fail when unskipped (bug is real, not a false positive)",
+      "passed": true,
+      "evidence": "NaN age bug is real: NaN < 0 and NaN > 150 both return false in JS; normalizeEmail crash on no-@ is real: domain=undefined, undefined.toLowerCase() throws TypeError; empty tags [] bug is real: [].join() returns '' which ?? 'none' does not replace"
+    }
+  ]
+}

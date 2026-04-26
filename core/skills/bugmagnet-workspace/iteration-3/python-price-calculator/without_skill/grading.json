@@ -1,0 +1,55 @@
+{
+  "eval_id": 1,
+  "configuration": "without_skill",
+  "discovery_expectations": [
+    {
+      "text": "Tests split_payment with parts=0 (zero division bug)",
+      "passed": true,
+      "evidence": "test_edge_cases.py line 321-323: TestSplitPaymentEdgeCases::test_zero_parts_raises_zero_division_error asserts pytest.raises(ZeroDivisionError) when calling split_payment(100.0, 0). Bug confirmed real: price_calculator.py line 51 does round(total / parts, 2) with no guard."
+    },
+    {
+      "text": "Tests negative price values in calculate_discount or calculate_total",
+      "passed": true,
+      "evidence": "test_edge_cases.py line 39-42: test_negative_price_with_discount calls calculate_discount(-50.0, 10) and asserts result == -45.0, documenting that negative prices are accepted with no error."
+    },
+    {
+      "text": "Tests calculate_total with empty items list",
+      "passed": true,
+      "evidence": "test_edge_cases.py line 65-70: TestCalculateTotalEdgeCases::test_empty_items_list_returns_zero_totals calls calculate_total([]) and asserts subtotal==0.0, tax==0.0, total==0.0, item_count==0."
+    },
+    {
+      "text": "Tests apply_coupon producing negative total (coupon value exceeds total)",
+      "passed": true,
+      "evidence": "test_edge_cases.py line 244-248: test_fixed_coupon_exceeding_total_produces_negative_total calls apply_coupon(50.0, {\"type\": \"fixed\", \"value\": 200.0}) and asserts result < 0. Also line 238-242 covers percent coupon > 100%."
+    },
+    {
+      "text": "Tests floating point rounding edge cases",
+      "passed": true,
+      "evidence": "test_edge_cases.py line 157-163: test_floating_point_accumulation_stays_within_one_cent tests 0.1*3 floating-point accumulation. Line 52-57: test_small_fractional_price_and_discount tests round(0.005, 2) banker's rounding behaviour. Line 313-317: test_rounding_remainder_assigned_to_last_part documents rounding remainder assignment in split_payment."
+    }
+  ],
+  "format_expectations": [
+    {
+      "text": "Documents at least one discovered bug as a skipped test with BUG notation — look for test.skip or pytest.mark.skip with \"BUG\" in the test name",
+      "passed": false,
+      "evidence": "No pytest.mark.skip or test.skip decorators found anywhere in test_edge_cases.py. Bugs are documented only via inline comments (e.g. '# BUG: no guard') within passing tests that assert the buggy behaviour. The format requirement for skipped tests with BUG notation in the test name is not met."
+    },
+    {
+      "text": "Provides a structured test coverage summary at the end — look for summary.md",
+      "passed": true,
+      "evidence": "summary.md exists in the outputs directory with a structured format including: existing test coverage table, 11 numbered bugs with severity and description, and a coverage gaps table per function."
+    }
+  ],
+  "quality_expectations": [
+    {
+      "text": "Generated tests compile and run without syntax errors",
+      "passed": true,
+      "evidence": "Running 'python -m pytest test_edge_cases.py -q' from /tmp with price_calculator.py present produces: '59 passed in 0.05s' with no syntax errors, import errors, or collection errors."
+    },
+    {
+      "text": "Skipped BUG tests actually fail when unskipped (bug is real, not a false positive)",
+      "passed": false,
+      "evidence": "No skipped tests exist in the output, so this criterion cannot be satisfied. All bug-documenting tests are written as passing characterisation tests that assert the buggy behaviour directly (e.g. asserting result < 0), rather than as skipped tests that would fail against a fixed implementation."
+    }
+  ]
+}

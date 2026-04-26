@@ -1,0 +1,18 @@
+{
+  "eval_id": 5,
+  "eval_name": "typescript-config-parser",
+  "prompt": "/bugmagnet evals/files/config_parser.ts",
+  "assertions": [
+    {"type": "discovery", "text": "Discovers values containing '=' are truncated (parts[1] only takes first segment after split)"},
+    {"type": "discovery", "text": "Tests inline comment stripping inside quoted strings (strips valid data: path = \"/usr/bin # not a comment\")"},
+    {"type": "discovery", "text": "Tests getTypedValue with hex strings like '0x1F' (Number('0x1F') is 31, coerced silently)"},
+    {"type": "discovery", "text": "Tests empty string or whitespace-only values (Number('') is 0, Number('  ') is 0 — coerced to number)"},
+    {"type": "discovery", "text": "Tests serializeConfig round-trip loses type information (boolean true becomes string 'true')"},
+    {"type": "discovery", "text": "Tests duplicate keys within same section (last wins silently)"},
+    {"type": "discovery", "text": "Tests multiline values or values with special characters"},
+    {"type": "format", "text": "Documents at least one discovered bug as a skipped test with BUG notation"},
+    {"type": "quality", "text": "Generated tests compile and run without syntax errors"},
+    {"type": "quality", "text": "Skipped BUG tests actually fail when unskipped (bug is real, not a false positive)"},
+    {"type": "quality", "text": "No false positive bugs reported"}
+  ]
+}

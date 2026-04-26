@@ -1,0 +1,70 @@
+{
+  "eval_id": 7,
+  "configuration": "without_skill",
+  "discovery_expectations": [
+    {
+      "text": "Discovers tax is calculated on subtotal instead of discounted amount (process method passes subtotal to calculate_tax)",
+      "passed": true,
+      "evidence": "TestProcessTaxBug::test_tax_is_calculated_on_subtotal_not_discounted_amount explicitly documents this as BUG-1 in both the test file (lines 383-409) and summary.md. The test verifies result.tax == 7.25 (taxed on $100 subtotal) when a 50% discount should yield tax on $50 ($3.63). The summary identifies the exact location: OrderProcessor.process() line 237 passes 'subtotal' instead of 'discounted'."
+    },
+    {
+      "text": "Discovers percentage discounts compound: second discount applies to already-discounted amount, not original subtotal",
+      "passed": true,
+      "evidence": "TestApplyDiscounts::test_multiple_percentage_discounts_apply_sequentially (lines 229-237) explicitly tests and documents that two 10% discounts on $100 yield $81 (not $80), confirming the compounding behaviour: '100 -> -10% -> 90 -> -10% of 90 -> 81'. The test is labelled 'Each percentage discount should apply to the running total, not the original.'"
+    },
+    {
+      "text": "Tests fixed discount larger than subtotal produces negative total",
+      "passed": true,
+      "evidence": "TestApplyDiscounts::test_fixed_discount_larger_than_subtotal_produces_negative_total (lines 161-172) tests a $200 fixed discount on a $50 subtotal and asserts discounted == -150.0, explicitly noting 'current buggy behavior' and that 'A correct implementation should floor at 0.0'. Also documented as BUG-4 in summary.md."
+    },
+    {
+      "text": "Tests quantity break threshold + item discount interaction (double discounting)",
+      "passed": true,
+      "evidence": "TestCalculateLineTotal::test_quantity_break_and_item_discount_compound (lines 145-152) tests 11 items at $10 with a 10% item discount: quantity break reduces $110 to $104.50, then item discount reduces to $94.05. This explicitly verifies both discounts apply sequentially on the same item."
+    },
+    {
+      "text": "Tests apply_refund with all items refunded (division by zero if subtotal becomes 0)",
+      "passed": true,
+      "evidence": "TestApplyRefund::test_refund_with_zero_subtotal_does_not_raise (lines 700-718) constructs a ProcessedOrder with subtotal=0.0 and verifies apply_refund does not raise a ZeroDivisionError. It confirms the guard 'proportion = refund_subtotal / processed.subtotal if processed.subtotal else 0' works. test_full_refund_of_all_items_leaves_empty_line_items (lines 684-692) also tests refunding all items."
+    },
+    {
+      "text": "Tests inventory is NOT released when process() fails after reserve() (partial failure leaves inventory inconsistent)",
+      "passed": false,
+      "evidence": "No test covers the scenario where process() succeeds in reserving inventory but then fails in a subsequent step (e.g., pricing), leaving the inventory decremented without a compensating release. The closest test is test_inventory_reserved_after_process which only checks successful processing. The summary.md does not mention this as a bug or coverage gap."
+    },
+    {
+      "text": "Tests process_batch where one order's inventory reservation affects subsequent orders",
+      "passed": false,
+      "evidence": "TestProcessBatch tests do not verify stock depletion cascade: e.g., first order in a batch reserves all stock for a product, causing a subsequent order for the same product to fail. test_batch_mixes_success_and_failure uses different product IDs (P1 for valid, NONE for invalid) and does not test the shared-inventory interaction across batch items."
+    }
+  ],
+  "format_expectations": [
+    {
+      "text": "Documents at least one discovered bug as a skipped test with BUG notation",
+      "passed": false,
+      "evidence": "No @pytest.mark.skip decorator appears anywhere in the test file (confirmed by grep). Bugs are documented as characterisation tests that currently pass (asserting the buggy behavior) with inline comments explaining the correct behavior. The format uses docstring 'BUG:' labels but none are implemented as skipped tests. The format requirement for skip+BUG notation is not met."
+    },
+    {
+      "text": "Provides a structured test coverage summary at the end",
+      "passed": true,
+      "evidence": "summary.md contains a structured 'Coverage Gaps in Existing Tests' table listing 12 areas with specific gaps, and a 'Test File Overview' table listing all 12 test classes with their focus areas. The summary also contains 8 confirmed bugs with location, severity, and test references, and 'Testing Notes' explaining the characterisation test approach."
+    }
+  ],
+  "quality_expectations": [
+    {
+      "text": "Generated tests compile and run without syntax errors",
+      "passed": true,
+      "evidence": "pytest collected 71 tests with no import errors or syntax failures. 68 tests passed and 3 failed due to logic errors in the test helper (make_processor({}) treats empty dict as falsy and defaults to {'P1': 100}), not syntax issues. The file imports cleanly and all test classes instantiate correctly."
+    },
+    {
+      "text": "Skipped BUG tests actually fail when unskipped (bug is real, not a false positive)",
+      "passed": false,
+      "evidence": "No skipped tests exist in the file, so this criterion cannot be verified. Bugs are documented as characterisation tests that pass against the current implementation rather than as skipped tests that would fail when unskipped."
+    },
+    {
+      "text": "No false positive bugs reported",
+      "passed": false,
+      "evidence": "Three tests fail due to a false assumption in the make_processor helper: make_processor({}) uses 'stock or {\"P1\": 100}', and an empty dict {} is falsy in Python, so it silently falls back to 100 units of P1 instead of empty inventory. This causes test_item_not_in_inventory_treated_as_zero_stock, test_process_raises_on_invalid_order, and test_batch_returns_error_dict_for_invalid_orders to test against the wrong precondition, producing false failures. These are not bugs in the implementation but bugs in the tests themselves."
+    }
+  ]
+}

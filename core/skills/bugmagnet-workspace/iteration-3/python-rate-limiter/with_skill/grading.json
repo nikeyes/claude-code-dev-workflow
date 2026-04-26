@@ -1,0 +1,70 @@
+{
+  "eval_id": 4,
+  "configuration": "with_skill",
+  "discovery_expectations": [
+    {
+      "text": "Tests get_wait_time returning 0 but subsequent is_allowed fails (TOCTOU: get_wait_time refills but does not reserve tokens)",
+      "passed": false,
+      "evidence": "No test covers the TOCTOU scenario. test_drain_wait_and_refill_sequence tests the normal flow (wait then call is_allowed succeeds), but does not test the race condition where get_wait_time refills internally without reserving tokens and a subsequent is_allowed call at the same timestamp could be denied by a competing caller."
+    },
+    {
+      "text": "Tests cost=0 is always allowed even when bucket is empty (degenerate input)",
+      "passed": true,
+      "evidence": "TestZeroAndNegativeCost::test_zero_cost_always_allowed_when_exhausted: drains the bucket with cost=1.0 then asserts is_allowed('k', cost=0.0, now=0.0) is True. Also test_zero_cost_does_not_reduce_tokens verifies no side-effects."
+    },
+    {
+      "text": "Tests negative cost parameter (adds tokens instead of consuming them)",
+      "passed": true,
+      "evidence": "TestZeroAndNegativeCost::test_negative_cost_rejected_or_clamped_BUG (skipped with BUG notation) calls is_allowed with cost=-1.0 and asserts remaining_tokens <= 5.0. Verified the bug is real: tokens become 6.0 with max_tokens=5."
+    },
+    {
+      "text": "Tests cleanup_expired does not remove active keys that just made requests recently",
+      "passed": true,
+      "evidence": "TestCleanupExpired::test_does_not_remove_recently_active_entry: calls is_allowed at now=0.0 then cleanup_expired at now=100.0 (100 < 2*60=120 threshold) and asserts removed==0 and key is still present."
+    },
+    {
+      "text": "Tests token accumulation over many rapid refill cycles for floating point drift",
+      "passed": false,
+      "evidence": "No test specifically exercises many rapid refill cycles to check for floating point drift. test_rapid_sequence_with_interleaved_refills covers only 3 steps. There is no test simulating hundreds or thousands of tiny time increments to detect cumulative floating point error."
+    },
+    {
+      "text": "Tests create_burst_limiter with burst followed by sustained requests at exactly the refill rate",
+      "passed": true,
+      "evidence": "TestFactories::test_create_burst_limiter_sustained_refill: exhausts a burst_size=5/sustained_per_second=1.0 limiter then calls is_allowed(cost=3.0, now=3.0), verifying that exactly 3 tokens refilled at the sustained rate are consumed successfully."
+    },
+    {
+      "text": "Tests interaction between multiple keys (keys are independent, no cross-contamination)",
+      "passed": true,
+      "evidence": "TestKeyIsolation::test_different_keys_are_independent drains key 'a' and confirms key 'b' still has full tokens. TestMultiStepSequences::test_two_keys_race_for_shared_limiter confirms each key's bucket is independent across concurrent-style calls."
+    }
+  ],
+  "format_expectations": [
+    {
+      "text": "Documents at least one discovered bug as a skipped test with BUG notation",
+      "passed": true,
+      "evidence": "Three skipped tests use BUG notation in both the skip reason and method name: test_negative_cost_rejected_or_clamped_BUG, test_get_wait_time_zero_refill_rate_BUG, test_create_rate_limiter_zero_rpm_wait_time_BUG. Each includes ROOT CAUSE, CODE LOCATION, PROPOSED FIX, EXPECTED, and ACTUAL sections."
+    },
+    {
+      "text": "Provides a structured test coverage summary at the end",
+      "passed": true,
+      "evidence": "summary.md contains a structured summary listing: total tests (44), breakdown by category (10 sections), results (41 passing, 3 skipped), and a Bugs Discovered section with 3 bugs fully described including root cause, code location, and proposed fix."
+    }
+  ],
+  "quality_expectations": [
+    {
+      "text": "Generated tests compile and run without syntax errors",
+      "passed": true,
+      "evidence": "Running pytest on test_rate_limiter_edge_cases.py collected 47 items (44 passed, 3 skipped) with no syntax or import errors. Exit code 0."
+    },
+    {
+      "text": "Skipped BUG tests actually fail when unskipped (bug is real, not a false positive)",
+      "passed": true,
+      "evidence": "Verified manually: (1) negative cost bug — is_allowed with cost=-1.0 produces tokens=6.0 exceeding max_tokens=5, assertion fails; (2) zero refill rate bug — get_wait_time with refill_rate=0.0 on exhausted bucket raises ZeroDivisionError; (3) create_rate_limiter(0) bug — same ZeroDivisionError path confirmed."
+    },
+    {
+      "text": "No false positive bugs reported (behavior that is actually correct flagged as wrong)",
+      "passed": true,
+      "evidence": "All three reported bugs are genuine defects. The summary correctly distinguishes bugs from observations (cost > max_tokens never satisfiable, get_wait_time side-effect entry creation, strict > boundary in _clean_window, misleading resets_at) which are listed as 'additional observations' rather than bugs."
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "name": "user-validator-eval",
+  "private": true,
+  "type": "module",
+  "devDependencies": {
+    "vitest": "^3.0.0"
+  }
+}

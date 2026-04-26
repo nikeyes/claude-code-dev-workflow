@@ -1,0 +1,65 @@
+{
+  "eval_id": 5,
+  "configuration": "with_skill",
+  "discovery_expectations": [
+    {
+      "text": "Discovers values containing '=' are truncated (parts[1] only takes first segment after split)",
+      "passed": true,
+      "evidence": "Three it.skip BUG tests at lines 318-373 document this root cause explicitly: 'effective.split(\"=\") produces multiple parts and only parts[1] is kept'. Tests cover URL with query params, base64 padding, and multi-param URL."
+    },
+    {
+      "text": "Tests inline comment stripping inside quoted strings (strips valid data: path = \"/usr/bin # not a comment\")",
+      "passed": false,
+      "evidence": "No test exists for hash inside a quoted string value. The comment stripping BUG tests (lines 87-141) cover unquoted values like 'color = #ff0000' and 'ref = abc#123', but not the quoted-string case where the # should be fully protected. The quoted values describe block (lines 268-311) has no test for quoted strings containing #."
+    },
+    {
+      "text": "Tests getTypedValue with hex strings like '0x1F' (Number('0x1F') is 31, coerced silently)",
+      "passed": false,
+      "evidence": "No test for hex string coercion anywhere in the test file. The getTypedValue standalone tests (lines 469-568) cover integers, floats, scientific notation, booleans, NaN, Infinity, empty string, padded numbers, and MAX_SAFE_INTEGER — but no hex literals like '0x1F'."
+    },
+    {
+      "text": "Tests empty string or whitespace-only values (Number('') is 0, Number('  ') is 0 — coerced to number)",
+      "passed": true,
+      "evidence": "Lines 502-509: 'returns string for empty string (not coerced to 0)' asserts getTypedValue(\"\") === \"\" and 'returns string for whitespace-only string (not coerced to 0)' asserts getTypedValue(\"   \") === \"   \". The guard raw.trim() !== \"\" is verified to prevent this coercion."
+    },
+    {
+      "text": "Tests serializeConfig round-trip loses type information (boolean true becomes string 'true')",
+      "passed": false,
+      "evidence": "The round-trip tests (lines 608-622) confirm that re-parsing a serialized config recovers the typed value correctly (boolean true survives the round-trip via raw='true' → getTypedValue → true). There is no test documenting type-information loss as a bug. Line 603 ('serializes boolean values using their raw string form') verifies correct behavior, not a bug."
+    },
+    {
+      "text": "Tests duplicate keys within same section (last wins silently)",
+      "passed": true,
+      "evidence": "Line 167: 'overwrites earlier value when the same key repeats in a section' — parses '[s]\\nkey = first\\nkey = second' and asserts config['s']['key'].raw === 'second'. Documented as verified behavior (not flagged as a bug)."
+    },
+    {
+      "text": "Tests multiline values or values with special characters",
+      "passed": true,
+      "evidence": "Lines 375-425: tests for SQL injection ('Robert\\'); DROP TABLE students;--'), XSS ('<script>alert(1)</script>'), unicode chars in values and keys, CRLF line endings, very long values (10,000 chars), and special ASCII punctuation. The equals-sign BUG tests also cover multi-segment values like URLs and base64."
+    }
+  ],
+  "format_expectations": [
+    {
+      "text": "Documents at least one discovered bug as a skipped test with BUG notation (test.skip with \"BUG\")",
+      "passed": true,
+      "evidence": "Nine it.skip tests with 'BUG' in their names: lines 87, 109, 124, 318, 344, 360, 528, 547, 624. Each includes a detailed comment block with ROOT CAUSE, CODE LOCATION, PROPOSED FIX, EXPECTED, and ACTUAL fields."
+    }
+  ],
+  "quality_expectations": [
+    {
+      "text": "Generated tests compile and run without syntax errors — check vitest imports, TypeScript syntax",
+      "passed": true,
+      "evidence": "Line 1-2: 'import { describe, it, expect } from \"vitest\";' and 'import { parseConfig, serializeConfig, getValue, getTypedValue } from \"./config_parser\";'. All 96 tests use standard vitest API (describe/it/expect/it.skip). No syntax issues found; TypeScript types are not misused."
+    },
+    {
+      "text": "Skipped BUG tests actually fail when unskipped (bug is real, not a false positive)",
+      "passed": true,
+      "evidence": "All 9 bugs are verified against the implementation: (1) split('=') at line 60-64 of config_parser.ts only reads parts[1]; (2-3) indexOf('#') at lines 56-58 fires on first # regardless of context; (4) Infinity passes !isNaN guard at lines 28-29; (5) serializeConfig skips [default] header at lines 83-85. Each BUG test's ACTUAL result matches the real implementation behavior."
+    },
+    {
+      "text": "No false positive bugs reported",
+      "passed": true,
+      "evidence": "The summary explicitly categorizes behaviors as 'Key Behavioral Notes (not bugs — observed and verified)': empty-string guard, CRLF handling, case-sensitive booleans, NaN, scientific notation, empty section names. All 9 skipped tests map to genuine implementation defects with accurate root-cause analysis."
+    }
+  ]
+}

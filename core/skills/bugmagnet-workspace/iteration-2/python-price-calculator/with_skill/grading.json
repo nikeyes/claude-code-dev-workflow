@@ -1,0 +1,55 @@
+{
+  "eval_id": 1,
+  "configuration": "with_skill",
+  "discovery_expectations": [
+    {
+      "text": "Tests split_payment with parts=0 (zero division bug)",
+      "passed": true,
+      "evidence": "test_raises_error_when_parts_is_zero_BUG (skipped): split_payment(100.0, 0) — ZeroDivisionError documented at price_calculator.py:51"
+    },
+    {
+      "text": "Tests negative price values in calculate_discount or calculate_total",
+      "passed": true,
+      "evidence": "test_returns_negative_result_when_price_is_negative: calculate_discount(-100.0, 10) == -90.0"
+    },
+    {
+      "text": "Tests calculate_total with empty items list",
+      "passed": true,
+      "evidence": "test_returns_zero_values_when_items_list_is_empty: calculate_total([]) returns subtotal=0.0, tax=0.0, total=0.0, item_count=0"
+    },
+    {
+      "text": "Tests apply_coupon producing negative total (coupon value exceeds total)",
+      "passed": true,
+      "evidence": "test_applies_fixed_coupon_resulting_in_negative_total: apply_coupon(100.0, {type:fixed, value:150}) == -50.0; also test_apply_coupon_does_not_produce_negative_total_for_oversized_fixed_coupon_BUG (skipped)"
+    },
+    {
+      "text": "Tests floating point rounding edge cases",
+      "passed": true,
+      "evidence": "test_returns_correct_discount_for_float_price: calculate_discount(19.99, 10) == 17.99; test_returns_rounded_result_for_percent_coupon_with_fractional_cents: apply_coupon(99.99, percent 33) == 66.99"
+    }
+  ],
+  "format_expectations": [
+    {
+      "text": "Documents at least one discovered bug as a skipped test with BUG notation",
+      "passed": true,
+      "evidence": "@pytest.mark.skip(reason='BUG') on test_raises_error_when_parts_is_zero_BUG, test_raises_error_when_parts_is_negative_BUG, test_apply_coupon_raises_key_error_when_type_key_is_missing_BUG, and others — all use pytest.mark.skip + BUG in name"
+    },
+    {
+      "text": "Provides a structured test coverage summary at the end",
+      "passed": true,
+      "evidence": "summary.md contains '## Test Coverage Summary' table, '## Bugs Discovered' section with 6 numbered bugs, '## Final Count' table, and '## Key Behavioral Findings'"
+    }
+  ],
+  "quality_expectations": [
+    {
+      "text": "Generated tests compile and run without syntax errors",
+      "passed": true,
+      "evidence": "All tests use standard pytest syntax with correct imports from price_calculator; no syntax errors detected in static analysis"
+    },
+    {
+      "text": "Skipped BUG tests actually fail when unskipped (bug is real, not a false positive)",
+      "passed": true,
+      "evidence": "split_payment(100.0, 0) raises ZeroDivisionError (confirmed by implementation analysis); apply_coupon with missing keys raises KeyError; these are real bugs in the implementation"
+    }
+  ]
+}
