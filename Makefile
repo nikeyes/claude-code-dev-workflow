@@ -4,8 +4,13 @@ STRUCTURE_TEST := test/plugin-structure-test.sh
 MARKETPLACE_MANIFEST := .claude-plugin/marketplace.json
 PLUGIN_MANIFESTS := core/.claude-plugin/plugin.json git/.claude-plugin/plugin.json web/.claude-plugin/plugin.json research/.claude-plugin/plugin.json
 
+# Eval viewer
+SKILL_CREATOR_PATH ?= $(HOME)/.claude/plugins/marketplaces/claude-plugins-official/plugins/skill-creator/skills/skill-creator
+GENERATE_REVIEW := $(SKILL_CREATOR_PATH)/eval-viewer/generate_review.py
+ITER ?= LAST
+
 # Phony targets
-.PHONY: help test test-verbose check ci
+.PHONY: help test test-verbose check ci eval-list eval-view
 
 # Default target
 help:
@@ -15,6 +20,12 @@ help:
 	@echo "  make test-verbose       - Run tests with debug output"
 	@echo "  make check              - Run shellcheck on all bash scripts"
 	@echo "  make ci                 - Run full CI validation (test + check + plugin)"
+	@echo ""
+	@echo "Eval viewer:"
+	@echo "  make eval-list                                      - List skills with eval iterations"
+	@echo "  make eval-view SKILL=test-desiderata                - View latest iteration"
+	@echo "  make eval-view SKILL=test-desiderata ITER=1         - View specific iteration"
+	@echo "  make eval-view SKILL=test-desiderata PREV=1         - Compare latest vs iteration-1"
 	@echo ""
 
 # ============================================================================
@@ -67,3 +78,34 @@ ci: test check
 	fi
 	@echo ""
 	@echo "✓ All CI checks passed"
+
+# ============================================================================
+# Eval viewer targets
+# ============================================================================
+
+_check-skill:
+ifndef SKILL
+	$(error SKILL is required. Usage: make eval-view SKILL=test-desiderata)
+endif
+
+_check-viewer:
+	@test -f "$(GENERATE_REVIEW)" || (echo "Error: generate_review.py not found at $(GENERATE_REVIEW)" && echo "Set SKILL_CREATOR_PATH to your skill-creator directory" && exit 1)
+
+eval-list:
+	@for ws in */skills/*-workspace; do \
+		skill=$$(basename "$$ws" | sed 's/-workspace$$//'); \
+		iters=$$(ls -d "$$ws"/iteration-* 2>/dev/null | sort -V); \
+		if [ -n "$$iters" ]; then \
+			count=$$(echo "$$iters" | wc -l | tr -d ' '); \
+			last=$$(echo "$$iters" | tail -1 | xargs basename); \
+			echo "  $$skill  ($$count iterations, latest: $$last)"; \
+		fi; \
+	done
+
+eval-view: _check-skill _check-viewer
+	$(eval _WS := $(shell ls -d */skills/$(SKILL)-workspace 2>/dev/null | head -1))
+	$(eval _RESOLVED_ITER := $(if $(filter LAST,$(ITER)),$(shell ls -d $(_WS)/iteration-* 2>/dev/null | sort -V | tail -1 | xargs basename),iteration-$(ITER)))
+	@python "$(GENERATE_REVIEW)" "$(_WS)/$(_RESOLVED_ITER)" \
+		--skill-name "$(SKILL)" \
+		--benchmark "$(_WS)/$(_RESOLVED_ITER)/benchmark.json" \
+		$(if $(PREV),--previous-workspace "$(_WS)/iteration-$(PREV)")
