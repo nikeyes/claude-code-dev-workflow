@@ -289,6 +289,34 @@ Open `iteration-N/benchmark.md` for a quick summary table, or `benchmark.json` f
 
 Compare across iterations to track skill improvements over time.
 
+**Viewing detailed eval reports:**
+
+Launch the interactive eval viewer to browse outputs, grading, and benchmark side by side:
+
+```bash
+# Basic view
+python /path/to/skill-creator/eval-viewer/generate_review.py \
+  <skill-name>-workspace/iteration-N \
+  --skill-name "<skill-name>" \
+  --benchmark <skill-name>-workspace/iteration-N/benchmark.json
+
+# Compare with previous iteration
+python /path/to/skill-creator/eval-viewer/generate_review.py \
+  <skill-name>-workspace/iteration-2 \
+  --skill-name "<skill-name>" \
+  --benchmark <skill-name>-workspace/iteration-2/benchmark.json \
+  --previous-workspace <skill-name>-workspace/iteration-1
+
+# Static HTML (for CI or headless environments)
+python /path/to/skill-creator/eval-viewer/generate_review.py \
+  <skill-name>-workspace/iteration-N \
+  --skill-name "<skill-name>" \
+  --benchmark <skill-name>-workspace/iteration-N/benchmark.json \
+  --static report.html
+```
+
+The viewer opens two tabs: **Outputs** (per-eval outputs, grading, and feedback) and **Benchmark** (aggregate pass rates, delta, timing, and token usage).
+
 ## 📚 Learn More
 
 - **Original Article**: [I mastered the Claude Code workflow](https://medium.com/@ashleyha/i-mastered-the-claude-code-workflow-145d25e502cf) by Ashley Ha
