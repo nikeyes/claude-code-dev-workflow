@@ -291,41 +291,16 @@ Compare across iterations to track skill improvements over time.
 
 **Viewing detailed eval reports:**
 
-Launch the interactive eval viewer to browse outputs, grading, and benchmark side by side:
-
 ```bash
-# Basic view
-python /path/to/skill-creator/eval-viewer/generate_review.py \
-  <skill-name>-workspace/iteration-N \
-  --skill-name "<skill-name>" \
-  --benchmark <skill-name>-workspace/iteration-N/benchmark.json
-
-# Compare with previous iteration
-python /path/to/skill-creator/eval-viewer/generate_review.py \
-  <skill-name>-workspace/iteration-2 \
-  --skill-name "<skill-name>" \
-  --benchmark <skill-name>-workspace/iteration-2/benchmark.json \
-  --previous-workspace <skill-name>-workspace/iteration-1
-
-# Static HTML (for CI or headless environments)
-python /path/to/skill-creator/eval-viewer/generate_review.py \
-  <skill-name>-workspace/iteration-N \
-  --skill-name "<skill-name>" \
-  --benchmark <skill-name>-workspace/iteration-N/benchmark.json \
-  --static report.html
+make eval-list                            # List skills with eval iterations
+make eval-view    SKILL=test-desiderata   # View latest iteration
+make eval-view    SKILL=test-desiderata ITER=1  # View specific iteration
+make eval-compare SKILL=test-desiderata   # Compare latest vs previous
+make eval-compare SKILL=test-desiderata ITER=3 PREV=1  # Compare specific iterations
+make eval-report  SKILL=test-desiderata   # Export static HTML report
 ```
 
 The viewer opens two tabs: **Outputs** (per-eval outputs, grading, and feedback) and **Benchmark** (aggregate pass rates, delta, timing, and token usage).
-
-**Example** — compare test-desiderata iteration-3 against iteration-1:
-
-```bash
-python ~/.claude/plugins/cache/claude-plugins-official/skill-creator/unknown/skills/skill-creator/eval-viewer/generate_review.py \
-  core/skills/test-desiderata-workspace/iteration-3 \
-  --skill-name "test-desiderata" \
-  --benchmark core/skills/test-desiderata-workspace/iteration-3/benchmark.json \
-  --previous-workspace core/skills/test-desiderata-workspace/iteration-1
-```
 
 ## 📚 Learn More
 

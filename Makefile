@@ -4,8 +4,24 @@ STRUCTURE_TEST := test/plugin-structure-test.sh
 MARKETPLACE_MANIFEST := .claude-plugin/marketplace.json
 PLUGIN_MANIFESTS := core/.claude-plugin/plugin.json git/.claude-plugin/plugin.json web/.claude-plugin/plugin.json research/.claude-plugin/plugin.json
 
+# Eval viewer
+SKILL_CREATOR_PATH ?= $(HOME)/.claude/plugins/cache/claude-plugins-official/skill-creator/unknown/skills/skill-creator
+GENERATE_REVIEW := $(SKILL_CREATOR_PATH)/eval-viewer/generate_review.py
+SKILL ?=
+ITER ?= LAST
+PREV ?=
+OUT ?= report.html
+
+# Resolve workspace and iteration paths
+_WORKSPACE = core/skills/$(SKILL)-workspace
+_LAST_ITER = $(shell ls -d $(_WORKSPACE)/iteration-* 2>/dev/null | sort -V | tail -1 | xargs basename)
+_PREV_ITER = $(shell ls -d $(_WORKSPACE)/iteration-* 2>/dev/null | sort -V | tail -2 | head -1 | xargs basename)
+_ITER = $(if $(filter LAST,$(ITER)),$(_LAST_ITER),iteration-$(ITER))
+_ITER_PATH = $(_WORKSPACE)/$(_ITER)
+_BENCHMARK = $(_ITER_PATH)/benchmark.json
+
 # Phony targets
-.PHONY: help test test-verbose check ci
+.PHONY: help test test-verbose check ci eval-view eval-compare eval-report eval-list
 
 # Default target
 help:
@@ -15,6 +31,14 @@ help:
 	@echo "  make test-verbose       - Run tests with debug output"
 	@echo "  make check              - Run shellcheck on all bash scripts"
 	@echo "  make ci                 - Run full CI validation (test + check + plugin)"
+	@echo ""
+	@echo "Eval viewer:"
+	@echo "  make eval-list                            - List skills with eval iterations"
+	@echo "  make eval-view    SKILL=test-desiderata   - View latest iteration"
+	@echo "  make eval-view    SKILL=test-desiderata ITER=1  - View specific iteration"
+	@echo "  make eval-compare SKILL=test-desiderata   - Compare latest vs previous"
+	@echo "  make eval-compare SKILL=test-desiderata ITER=3 PREV=1  - Compare specific"
+	@echo "  make eval-report  SKILL=test-desiderata   - Export static HTML report"
 	@echo ""
 
 # ============================================================================
@@ -67,3 +91,47 @@ ci: test check
 	fi
 	@echo ""
 	@echo "✓ All CI checks passed"
+
+# ============================================================================
+# Eval viewer targets
+# ============================================================================
+
+_check-skill:
+ifndef SKILL
+	$(error SKILL is required. Usage: make eval-view SKILL=test-desiderata)
+endif
+
+_check-viewer:
+	@test -f "$(GENERATE_REVIEW)" || (echo "Error: generate_review.py not found at $(GENERATE_REVIEW)" && echo "Set SKILL_CREATOR_PATH to your skill-creator directory" && exit 1)
+
+eval-list:
+	@for ws in core/skills/*-workspace; do \
+		skill=$$(basename "$$ws" | sed 's/-workspace$$//'); \
+		iters=$$(ls -d "$$ws"/iteration-* 2>/dev/null | wc -l | tr -d ' '); \
+		if [ "$$iters" -gt 0 ]; then \
+			last=$$(ls -d "$$ws"/iteration-* 2>/dev/null | sort -V | tail -1 | xargs basename); \
+			echo "  $$skill  ($$iters iterations, latest: $$last)"; \
+		fi; \
+	done
+
+eval-view: _check-skill _check-viewer
+	@echo "Opening $(_ITER_PATH)..."
+	@python "$(GENERATE_REVIEW)" "$(_ITER_PATH)" \
+		--skill-name "$(SKILL)" \
+		--benchmark "$(_BENCHMARK)"
+
+eval-compare: _check-skill _check-viewer
+	$(eval _PREV_RESOLVED = $(if $(PREV),iteration-$(PREV),$(_PREV_ITER)))
+	@echo "Comparing $(_ITER) vs $(_PREV_RESOLVED)..."
+	@python "$(GENERATE_REVIEW)" "$(_ITER_PATH)" \
+		--skill-name "$(SKILL)" \
+		--benchmark "$(_BENCHMARK)" \
+		--previous-workspace "$(_WORKSPACE)/$(_PREV_RESOLVED)"
+
+eval-report: _check-skill _check-viewer
+	@echo "Generating static report at $(OUT)..."
+	@python "$(GENERATE_REVIEW)" "$(_ITER_PATH)" \
+		--skill-name "$(SKILL)" \
+		--benchmark "$(_BENCHMARK)" \
+		--static "$(OUT)"
+	@echo "Report saved to $(OUT)"
