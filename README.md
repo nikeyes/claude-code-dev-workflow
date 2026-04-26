@@ -256,13 +256,38 @@ make ci            # Run full CI validation
 
 ### Skill Evaluation
 
-Skills have benchmarks in `<skill-name>-workspace/` directories. Each contains test fixtures, grading results, and timing data for with-skill vs. baseline comparison.
+Each skill has an eval suite in its `<skill-name>-workspace/evals/` directory:
 
-To re-run an evaluation (e.g., against a different model):
+```
+core/skills/bugmagnet-workspace/evals/
+├── evals.json              # Eval definitions (prompts, assertions, grading guide)
+├── files/                  # Test fixtures (source files the skill analyzes)
+├── iteration-1/            # Benchmark run results
+│   ├── benchmark.json      # Machine-readable: per-eval pass rates, timing, tokens
+│   ├── benchmark.md        # Human-readable summary table
+│   └── eval-1-name/        # Per-eval evidence
+│       └── eval_metadata.json
+├── iteration-2/
+└── ...
+```
+
+**Running evals:**
 
 ```bash
-/skill-creator:skill-creator Re-run evals from <skill-name>-workspace/evals/evals.json
+/skill-creator:skill-creator Run evals from <skill-name>-workspace/evals/evals.json
 ```
+
+This runs each eval with-skill and without-skill, grades assertions, and writes results to a new `iteration-N/` directory.
+
+**Reading benchmark results:**
+
+Open `iteration-N/benchmark.md` for a quick summary table, or `benchmark.json` for detailed per-assertion evidence. Key metrics:
+
+- **pass_rate**: percentage of assertions passed (with_skill vs without_skill)
+- **delta**: the skill's added value over baseline — higher is better
+- **time_seconds / tokens**: cost of using the skill
+
+Compare across iterations to track skill improvements over time.
 
 ## 🐛 Troubleshooting
 
