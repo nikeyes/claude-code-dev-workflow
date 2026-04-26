@@ -1,0 +1,96 @@
+{
+  "expectations": [
+    {
+      "text": "Does NOT spawn research workers before asking for clarification \u2014 the topic is too ambiguous to sub-question usefully",
+      "passed": true,
+      "evidence": "Transcript explicitly states 'No sub-agents were spawned.' and 'What Was Not Done: No sub-agents were spawned.' The baseline made no attempt to spawn research workers at all. However, this passes for the wrong reason \u2014 the baseline skipped clarification entirely and went straight to answering, not because it held off on spawning while waiting for clarification."
+    },
+    {
+      "text": "Uses the AskUserQuestion tool to ask at least one clarifying question about the domain or context",
+      "passed": false,
+      "evidence": "The transcript explicitly states 'No clarification requested' and documents that the model 'proceeded with best-guess assumptions rather than asking follow-up questions.' The model acknowledged the ambiguity ('A clarifying question ... would have dramatically improved the usefulness of this answer') but made no attempt to use AskUserQuestion. The report.md was generated without any user interaction."
+    },
+    {
+      "text": "The clarifying question targets the domain (web? database? team? hardware?) or the intended use case \u2014 not just asking 'can you elaborate?'",
+      "passed": false,
+      "evidence": "No clarifying question was asked at all. The baseline instead made its own domain assumptions (software/AI development, academic research, AI-assisted research tools) and produced a broad multi-domain report without any user input."
+    },
+    {
+      "text": "Asks at most 2 clarifying questions \u2014 does NOT fire a five-question interrogation at the user",
+      "passed": true,
+      "evidence": "Zero clarifying questions were asked, which is technically \u2264 2. However, this passes only trivially \u2014 the intent of this expectation is to constrain an agent that does ask questions to a reasonable number. A baseline that asks zero questions and immediately produces a shallow broad report satisfies the letter but not the spirit of this assertion when read alongside expectation 2."
+    }
+  ],
+  "summary": {
+    "passed": 2,
+    "failed": 2,
+    "total": 4,
+    "pass_rate": 0.5
+  },
+  "execution_metrics": {
+    "tool_calls": {},
+    "total_tool_calls": 0,
+    "total_steps": 1,
+    "errors_encountered": 0,
+    "output_chars": 3486,
+    "transcript_chars": 1850
+  },
+  "timing": {
+    "executor_duration_seconds": 54.3,
+    "grader_duration_seconds": 0.0,
+    "total_duration_seconds": 54.3
+  },
+  "claims": [
+    {
+      "claim": "No sub-agents were spawned",
+      "type": "process",
+      "verified": true,
+      "evidence": "Transcript explicitly lists under 'What Was Not Done': 'No sub-agents were spawned.' No Task tool calls appear in the transcript."
+    },
+    {
+      "claim": "The prompt is highly ambiguous and clarification was not sought",
+      "type": "process",
+      "verified": true,
+      "evidence": "Transcript states: 'The prompt \"Research performance\" is highly ambiguous. No clarification was sought.' The model self-documents this choice explicitly."
+    },
+    {
+      "claim": "A clarifying question would have dramatically improved the usefulness of this answer",
+      "type": "quality",
+      "verified": true,
+      "evidence": "The model itself acknowledges this in its observations: 'A clarifying question (\"Performance of what? In what context? For what audience?\") would have dramatically improved the usefulness of this answer.' The report.md confirms this \u2014 it covers three unrelated domains at surface depth."
+    },
+    {
+      "claim": "The report covers software development, academic research, and AI-assisted research performance",
+      "type": "factual",
+      "verified": true,
+      "evidence": "report.md has four sections: Software Development Contexts, Academic Research Performance, AI-Assisted Research Performance, and Key Recommendations \u2014 matching the stated multi-domain interpretation."
+    },
+    {
+      "claim": "The practical benchmarks table in section 3 is not sourced",
+      "type": "quality",
+      "verified": true,
+      "evidence": "The table is explicitly labeled '(illustrative, not sourced)' and the report footer states 'This report was generated without web searches or sub-agent research.'"
+    }
+  ],
+  "user_notes_summary": {
+    "uncertainties": [],
+    "needs_review": [],
+    "workarounds": []
+  },
+  "eval_feedback": {
+    "suggestions": [
+      {
+        "assertion": "Asks at most 2 clarifying questions \u2014 does NOT fire a five-question interrogation at the user",
+        "reason": "This assertion is trivially satisfied by the contrast case (0 questions asked). It should only be evaluated when at least one clarifying question was asked. Consider combining it with expectation 2 as a single conditional: 'If questions are asked, at most 2 are asked.' As a standalone assertion, a model that asks zero questions and immediately answers always passes this, which provides no signal."
+      },
+      {
+        "assertion": "Does NOT spawn research workers before asking for clarification",
+        "reason": "For the contrast (without_skill) case, this passes because the baseline has no spawning capability at all, not because it deliberately held off. The assertion conflates two distinct behaviors: (a) a skill that spawns after clarification vs. (b) a baseline that never spawns. Consider a separate assertion for the skill variant: 'If sub-agents are eventually spawned, at least one clarifying question precedes them.'"
+      },
+      {
+        "reason": "No assertion checks the quality degradation of the baseline output. The model itself admits the answer is 'broad but shallow' and potentially hallucinated. An assertion like 'The output is grounded in at least one verified source' or 'The output addresses a specific, user-confirmed domain' would capture the key failure mode of the baseline and make the contrast with the skill more meaningful."
+      }
+    ],
+    "overall": "Two of the four assertions apply cleanly to the contrast case (expectations 2 and 3 both FAIL, correctly capturing the baseline's core limitation). The other two pass trivially and provide weak discriminating signal. The eval would benefit from at least one assertion about output quality or groundedness to sharpen the contrast between skilled and baseline behavior."
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "eval_id": 6,
+  "eval_name": "controversial-topic-balanced-perspectives",
+  "prompt": "/stepwise-research:deep-research Analyze the pros and cons of microservices vs monolith architectures for a growing startup",
+  "assertions": [
+    "Spawns 4-6 workers \u2014 recognizes this is a controversial multi-faceted comparison, not a simple definition",
+    "At least one worker is explicitly tasked with researching the case FOR monolith (not just 'monolith disadvantages')",
+    "Report explicitly includes the perspective that microservices can be premature for early startups \u2014 not just listing microservices benefits",
+    "Conclusions section names specific conditions under which a monolith is the correct choice (e.g., team size, traffic scale, deployment complexity)",
+    "Cross-References section acknowledges this is an active debate with no consensus \u2014 does NOT present one architecture as objectively superior",
+    "Bibliography includes real case studies or engineering blog posts from both monolith and microservices success stories (not just architectural theory)"
+  ]
+}

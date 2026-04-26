@@ -1,0 +1,12 @@
+{
+  "eval_id": 2,
+  "eval_name": "how-to-guide-two-workers",
+  "prompt": "/stepwise-research:deep-research How does JWT authentication work and what are common security pitfalls?",
+  "assertions": [
+    "Spawns 1-2 workers \u2014 does NOT spawn 4+ for a how-to question that can be answered with 2 focused searches",
+    "Report weaves JWT mechanics and security pitfalls into a coherent narrative \u2014 NOT two sequential sections that read like raw worker dumps",
+    "Report names at least 3 specific JWT security pitfalls (e.g., alg:none attack, missing expiry validation, insecure secret storage) with source citations",
+    "Spawns the citation-analyst agent after generating the report to verify citation accuracy",
+    "Report includes a 'Cross-References and Contradictions' section that discusses areas of consensus or disagreement across sources"
+  ]
+}

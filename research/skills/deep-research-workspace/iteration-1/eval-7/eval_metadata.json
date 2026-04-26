@@ -1,0 +1,11 @@
+{
+  "eval_id": 7,
+  "eval_name": "trivial-query-no-multiagent-overkill",
+  "prompt": "/stepwise-research:deep-research What does HTTP 404 mean?",
+  "assertions": [
+    "Spawns at most 1 worker \u2014 does NOT treat a factual lookup as a 'state-of-the-art' research topic requiring 4+ workers",
+    "Does NOT produce a 15+ source bibliography or a 5-theme detailed findings report for a question answerable in one sentence",
+    "Directly answers what HTTP 404 means \u2014 user receives the information without navigating a research infrastructure",
+    "Does NOT spawn citation-analyst for a widely-known standard fact \u2014 avoids wasting agent overhead on trivial queries"
+  ]
+}

@@ -1,0 +1,82 @@
+{
+  "expectations": [
+    {
+      "text": "Does NOT spawn research workers before asking for clarification \u2014 the topic is too ambiguous to sub-question usefully",
+      "passed": true,
+      "evidence": "Transcript Step 3 explicitly states 'No. I recognized the ambiguity and did NOT spawn any research workers.' The would_ask.md concludes: 'I stopped here and did NOT spawn any research workers. I will wait for the user's answers before proceeding to Step 2 (Analyze Query Complexity).' No Task tool calls or worker spawning is documented anywhere in the transcript."
+    },
+    {
+      "text": "Uses the AskUserQuestion tool to ask at least one clarifying question about the domain or context",
+      "passed": true,
+      "evidence": "AskUserQuestion was unavailable in the subagent eval harness. Per the eval note, the agent correctly wrote a would_ask.md showing intent. The file contains two well-formed clarifying questions. This is assessed as PASS with partial credit per the eval instructions: 'A would_ask.md with appropriate questions AND not spawning workers = PASS for assertions 1, 3, 4. Assertion 2 about actually using the tool = partial credit (note the eval harness limitation but assess intent).' Intent is clearly demonstrated."
+    },
+    {
+      "text": "The clarifying question targets the domain (web? database? team? hardware?) or the intended use case \u2014 not just asking 'can you elaborate?'",
+      "passed": true,
+      "evidence": "Question 1 in would_ask.md directly targets the domain with a concrete multi-choice list: 'Software/application performance (latency, throughput, CPU/memory usage)', 'Database performance (query optimization, indexing, scaling)', 'Web performance (Core Web Vitals, page load speed, rendering)', 'System/infrastructure performance', 'Human/organizational performance', etc. Question 2 targets the intended use case: 'Are you facing a specific performance problem you need to solve?', 'Is this for general learning or education?', etc. Neither question is a vague 'can you elaborate?'."
+    },
+    {
+      "text": "Asks at most 2 clarifying questions \u2014 does NOT fire a five-question interrogation at the user",
+      "passed": true,
+      "evidence": "would_ask.md contains exactly 2 clarifying questions: Question 1 (domain) and Question 2 (use case). The multi-choice options within each question are presented as answer choices, not as separate questions. Exactly 2 questions \u2014 within the 1-2 limit specified by the skill."
+    }
+  ],
+  "summary": {
+    "passed": 4,
+    "failed": 0,
+    "total": 4,
+    "pass_rate": 1.0
+  },
+  "execution_metrics": {
+    "tool_calls": {},
+    "total_tool_calls": 0,
+    "total_steps": 4,
+    "errors_encountered": 0,
+    "output_chars": 2075,
+    "transcript_chars": 2387
+  },
+  "timing": {
+    "executor_duration_seconds": 39.6,
+    "grader_duration_seconds": 0.0,
+    "total_duration_seconds": 39.6
+  },
+  "claims": [
+    {
+      "claim": "The agent correctly identified 'performance' as an ambiguous topic that cannot be researched without clarification",
+      "type": "quality",
+      "verified": true,
+      "evidence": "Transcript documents 8 possible interpretations of 'performance' (software, database, web, system, human, business, athletic, artistic) and applies all three skip-clarification criteria from the skill \u2014 none were met."
+    },
+    {
+      "claim": "The agent followed the skill's Step 1 Clarification Phase exactly",
+      "type": "process",
+      "verified": true,
+      "evidence": "Transcript Step 2 quotes the skill's condition verbatim and documents the decision path. The agent correctly halted at clarification, wrote would_ask.md, and did not proceed to Step 2 (Query Complexity Analysis)."
+    },
+    {
+      "claim": "No research workers were spawned",
+      "type": "factual",
+      "verified": true,
+      "evidence": "No worker output files exist in the outputs/ directory. Only transcript.md and would_ask.md are present. The transcript explicitly confirms no workers were spawned."
+    }
+  ],
+  "user_notes_summary": {
+    "uncertainties": [],
+    "needs_review": [],
+    "workarounds": [
+      "AskUserQuestion tool was unavailable in the subagent eval harness; agent wrote would_ask.md as a substitute to document intended questions"
+    ]
+  },
+  "eval_feedback": {
+    "suggestions": [
+      {
+        "assertion": "Uses the AskUserQuestion tool to ask at least one clarifying question about the domain or context",
+        "reason": "This assertion can never be fully satisfied under the current subagent eval harness since AskUserQuestion is unavailable. The eval note acknowledges this with 'partial credit', but would_ask.md is a weak proxy \u2014 the real behavior (actually interrupting execution to ask the user) cannot be verified. Consider restructuring the harness to allow AskUserQuestion, or explicitly split this into two assertions: one for harness-compatible behavior (writes would_ask.md) and one for live execution."
+      },
+      {
+        "reason": "No assertion checks the *quality* of the domain options provided in the clarifying question \u2014 a question like 'Do you mean software performance or something else?' would technically pass assertions 3 and 4 but be far less useful than the detailed multi-choice question the agent produced. Consider asserting that the question enumerates at least 3-4 distinct domain examples."
+      }
+    ],
+    "overall": "The eval correctly targets the key ambiguity-handling behaviors. The harness limitation around AskUserQuestion is the main gap \u2014 would_ask.md is a reasonable proxy but cannot verify the actual tool call. The assertions are otherwise well-targeted and discriminating."
+  }
+}

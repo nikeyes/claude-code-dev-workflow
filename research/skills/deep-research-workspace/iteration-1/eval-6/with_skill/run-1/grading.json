@@ -1,0 +1,126 @@
+{
+  "expectations": [
+    {
+      "text": "Spawns 4-6 workers \u2014 recognizes this is a controversial multi-faceted comparison, not a simple definition",
+      "passed": true,
+      "evidence": "Transcript explicitly states 'Workers Spawned: 5' with a table listing 5 distinct workers: (1) case FOR monolith, (2) case FOR microservices, (3) real-world startup case studies, (4) technical trade-offs and operational complexity, (5) monolith-first strategy and migration patterns. The transcript also notes 'Complexity Assessment: 4-6 workers recommended per skill instructions' and 'Query Type Identified: Controversial topic (pros and cons)'."
+    },
+    {
+      "text": "At least one worker is explicitly tasked with researching the case FOR monolith (not just 'monolith disadvantages')",
+      "passed": true,
+      "evidence": "Worker 1 is explicitly titled 'The case FOR monolith architecture for startups -- advantages, success stories, and when monolith is the right choice' with the note 'Pro-monolith perspective (specifically required for controversial topic)'. The transcript notes this was inspired by the skill's requirement for balanced perspectives. The report's Section 1 is titled 'The Strong Case FOR Monolith Architecture' and contains substantive pro-monolith arguments."
+    },
+    {
+      "text": "Report explicitly includes the perspective that microservices can be premature for early startups \u2014 not just listing microservices benefits",
+      "passed": true,
+      "evidence": "The executive summary states 'premature adoption of microservices introduces complexity that kills startup velocity.' The Conclusions section has a dedicated bullet: 'Premature microservice adoption is a significant risk. Segment's burnout, Amazon Prime Video's 90% cost overrun, and Uber's networked monolith problems all demonstrate that microservices without operational maturity create more problems than they solve.' Section 3 (Cautionary Tales) is entirely dedicated to companies harmed by premature microservices adoption."
+    },
+    {
+      "text": "Conclusions section names specific conditions under which a monolith is the correct choice (e.g., team size, traffic scale, deployment complexity)",
+      "passed": true,
+      "evidence": "Conclusions bullet 2 explicitly names team size: 'If your startup has fewer than 50-100 engineers, microservices likely add more complexity than they remove.' Bullet 1 names conditions: 'speed, simplicity, and boundary discovery.' The Detailed Findings in Section 1 also cite 'Small teams (under 20-30 engineers) rarely need microservices-level independence' and Section 4 names deployment maturity ('Microservices require mature DevOps culture that most startups lack') as a condition."
+    },
+    {
+      "text": "Cross-References section acknowledges this is an active debate with no consensus \u2014 does NOT present one architecture as objectively superior",
+      "passed": false,
+      "evidence": "The Cross-References section does map disagreements (DHH vs Uber/Microsoft vs Richardson on timing of transition), which is positive. However, both the executive summary and the Cross-References section itself present monolith-first as an 'overwhelming consensus': 'Across all 12 sources, there is remarkable agreement on several points: (1) startups should begin with a monolith...' The section frames the debate as settled in favor of monolith-first for startups, rather than acknowledging it as an active debate with no consensus. The report explicitly says the 'overwhelming consensus... is that growing startups should start with a monolith' \u2014 presenting one approach as objectively correct. While this may reflect the actual state of industry opinion, the expectation requires the report NOT to present one architecture as objectively superior, which it clearly does."
+    },
+    {
+      "text": "Bibliography includes real case studies or engineering blog posts from both monolith and microservices success stories (not just architectural theory)",
+      "passed": true,
+      "evidence": "Bibliography includes real engineering blog posts from both camps: monolith/retreat success stories include [4] Segment/Twilio's 'Goodbye Microservices' blog post, [9] Shopify Engineering's modular monolith post, and [11] Amazon Prime Video Tech Blog's '90% cost reduction' post. Microservices success stories include [7] Uber Engineering Blog on microservice architecture. These are genuine engineering blogs, not just architectural theory. Sources [1] Martin Fowler, [2] DHH, and [3]/[6] Chris Richardson add thought-leader perspective beyond pure case studies."
+    }
+  ],
+  "summary": {
+    "passed": 5,
+    "failed": 1,
+    "total": 6,
+    "pass_rate": 0.83
+  },
+  "execution_metrics": {
+    "tool_calls": {},
+    "total_tool_calls": 15,
+    "total_steps": 5,
+    "errors_encountered": 3,
+    "output_chars": 17703,
+    "transcript_chars": 5759,
+    "web_fetch_calls": 15,
+    "successful_fetches": 9,
+    "failed_fetches": 3
+  },
+  "timing": {
+    "executor_duration_seconds": 262.1,
+    "grader_duration_seconds": 0.0,
+    "total_duration_seconds": 262.1
+  },
+  "claims": [
+    {
+      "claim": "Workers Spawned: 5",
+      "type": "factual",
+      "verified": true,
+      "evidence": "Transcript table lists exactly 5 workers with distinct assignments. Report frontmatter confirms agent_count: 5."
+    },
+    {
+      "claim": "12 unique sources were used",
+      "type": "factual",
+      "verified": true,
+      "evidence": "Transcript lists a table of 12 sources; bibliography in report.md contains exactly 12 numbered references [1]-[12] with URLs."
+    },
+    {
+      "claim": "15 WebFetch calls were made with 9 successful fetches",
+      "type": "process",
+      "verified": false,
+      "evidence": "The transcript asserts this but there is no metrics.json to corroborate it. The claim cannot be independently verified from available files \u2014 only the transcript's self-report."
+    },
+    {
+      "claim": "Segment moved to a monolithic service called Centrifuge and deployment time dropped to minutes",
+      "type": "factual",
+      "verified": false,
+      "evidence": "The Segment/Twilio URL is cited ([4]) but the actual web fetch result is not shown in the transcript. The specific claim about 'Centrifuge' and deployment minutes is plausible and consistent with the real Segment blog post, but cannot be confirmed from available outputs alone."
+    },
+    {
+      "claim": "Amazon Prime Video achieved a 90% cost reduction by moving to a monolith",
+      "type": "factual",
+      "verified": false,
+      "evidence": "The Amazon Prime Video blog is cited ([11]) with a specific URL. This claim is well-known in the industry and consistent with the real article, but the actual fetch content is not shown in the transcript to verify the report accurately represents it."
+    },
+    {
+      "claim": "Balanced perspectives were explicitly included across all workers",
+      "type": "quality",
+      "verified": true,
+      "evidence": "The worker assignments clearly cover both pro-monolith (Worker 1) and pro-microservices (Worker 2) perspectives, plus evidence-based case studies (Worker 3), technical depth (Worker 4), and pragmatic middle ground (Worker 5). The resulting report sections reflect this balance."
+    },
+    {
+      "claim": "Report synthesis weaves findings into narrative themes, not concatenated per-worker",
+      "type": "quality",
+      "verified": true,
+      "evidence": "The report.md contains 5 thematic sections with cross-source citations (e.g., [1][2][3] within a single paragraph) rather than 5 separate worker summaries. The Cross-References section explicitly maps agreements and contradictions across sources."
+    }
+  ],
+  "user_notes_summary": {
+    "uncertainties": [],
+    "needs_review": [],
+    "workarounds": [
+      "The skill could not spawn Task-based sub-agents in this environment, so research was conducted via 5 parallel web research streams simulating the worker pattern. This means actual parallelism was not achieved."
+    ]
+  },
+  "eval_feedback": {
+    "suggestions": [
+      {
+        "assertion": "Cross-References section acknowledges this is an active debate with no consensus \u2014 does NOT present one architecture as objectively superior",
+        "reason": "The expectation is somewhat internally contradictory: the actual state of industry expert opinion IS a rough consensus (monolith-first for startups). A skill that accurately synthesizes real sources will naturally reflect that consensus. The assertion conflates 'the topic is debated' with 'the report must not reach a conclusion.' Consider rephrasing to: 'Cross-References section maps specific named experts or companies that disagree with the dominant view, rather than presenting a one-sided picture.'"
+      },
+      {
+        "reason": "No assertion checks whether the bibliographic URLs are real and reachable vs. hallucinated. The report cites 12 specific URLs; at least 3 fetch attempts failed (per transcript). An assertion like 'at least 8 of the cited URLs are verifiable, non-hallucinated links' would catch fabricated bibliography entries, which is a known risk with LLM research tools."
+      },
+      {
+        "reason": "No assertion checks whether the report was saved to the thoughts/shared/research/ directory as the skill is supposed to do. The transcript claims it was saved to thoughts/shared/research/microservices-vs-monolith-startup-2026-04-26.md \u2014 this is verifiable and should be an explicit expectation."
+      },
+      {
+        "assertion": "Spawns 4-6 workers \u2014 recognizes this is a controversial multi-faceted comparison, not a simple definition",
+        "reason": "This assertion is trivially satisfied by reading the transcript's own self-report ('Workers Spawned: 5'). Since Task sub-agents couldn't be spawned in this environment, the 'workers' were simulated sequentially within a single agent. An assertion checking that the research streams are actually distinct and parallel (not just labeled as such) would be more discriminating."
+      }
+    ],
+    "overall": "The evals are well-designed and cover the key quality dimensions. The main gap is that no assertion verifies the output file was actually saved to the correct location in thoughts/, and no assertion checks bibliography URL authenticity. The cross-references assertion conflates 'acknowledging debate' with 'refusing to reach a conclusion', which is a philosophical tension worth resolving."
+  }
+}

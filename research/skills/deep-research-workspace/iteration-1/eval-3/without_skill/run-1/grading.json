@@ -1,0 +1,122 @@
+{
+  "expectations": [
+    {
+      "text": "All workers are spawned in a single message (single Task tool invocation batch) \u2014 NOT spawned sequentially one at a time",
+      "passed": false,
+      "evidence": "The transcript explicitly states: 'No sub-agents were spawned.' and 'No multi-agent research pipeline was used.' Zero Task tool calls were made. The report was generated directly from the model's training knowledge in a single LLM call with no worker spawning at all."
+    },
+    {
+      "text": "Spawns 2-3 workers \u2014 one per comparison dimension (PostgreSQL, MySQL, benchmarks/cases)",
+      "passed": false,
+      "evidence": "Transcript confirms: 'No sub-agents were spawned.' No workers of any kind were created. The transcript notes this was done entirely without the deep-research skill or any multi-agent workflow."
+    },
+    {
+      "text": "Report covers both PostgreSQL AND MySQL with equivalent depth \u2014 neither is treated as an afterthought",
+      "passed": true,
+      "evidence": "The report.md covers both databases across 9 dimensions (Architecture, Performance, Replication/HA, Features, Ecosystem, Operations, Licensing, Decision Guide, Scorecard). Each dimension provides subsections for both PostgreSQL and MySQL with comparable detail. The summary scorecard evaluates both across 13 categories. Neither database is an afterthought."
+    },
+    {
+      "text": "Cross-References section identifies at least one real disagreement or nuance between sources (e.g., MySQL faster for simple reads vs PostgreSQL better for complex queries)",
+      "passed": false,
+      "evidence": "There is no 'Cross-References' section and no external sources were consulted. The transcript explicitly states: 'No external sources were consulted.' While the report does note performance nuances (e.g., 'For pure high-throughput OLTP... both are competitive', 'MySQL InnoDB historically had lower write amplification'), these are not sourced disagreements between references \u2014 they are unsupported claims from training data."
+    },
+    {
+      "text": "Bibliography includes at least 3 sources dated 2023 or later, or sources that discuss recent versions (PostgreSQL 15+, MySQL 8+)",
+      "passed": false,
+      "evidence": "No bibliography exists in the report. The transcript confirms: 'No external sources were consulted.' The report ends with a disclaimer: 'This report is based on knowledge current through early 2025 and general industry trends.' While the report mentions PostgreSQL 15/16 and MySQL 8.x in the text, these are not cited references."
+    },
+    {
+      "text": "Conclusions section includes a clear recommendation (or decision framework) for when to choose PostgreSQL vs MySQL \u2014 not 'it depends' without criteria",
+      "passed": true,
+      "evidence": "Section 8 'When to Choose Each' lists concrete criteria for each database (e.g., 'Choose PostgreSQL when: complex queries, JSONB, pgvector, PostGIS, open-source governance...' and 'Choose MySQL when: Vitess sharding, existing MySQL codebase, WordPress/PHP ecosystem...'). The Conclusion section gives a direct verdict: 'PostgreSQL is the default recommendation for new high-traffic web applications.' Clear criteria are provided, not a vague 'it depends.'"
+    }
+  ],
+  "summary": {
+    "passed": 2,
+    "failed": 4,
+    "total": 6,
+    "pass_rate": 0.33
+  },
+  "execution_metrics": {
+    "tool_calls": {},
+    "total_tool_calls": 0,
+    "total_steps": 5,
+    "errors_encountered": 0,
+    "output_chars": 6100,
+    "transcript_chars": 1750
+  },
+  "timing": {
+    "executor_duration_seconds": 84.2,
+    "grader_duration_seconds": 0.0,
+    "total_duration_seconds": 84.2
+  },
+  "claims": [
+    {
+      "claim": "The report covers 9 major comparison dimensions",
+      "type": "factual",
+      "verified": true,
+      "evidence": "Confirmed: Architecture and Concurrency, Performance at Scale, Replication and HA, Feature Richness, Ecosystem and Cloud Support, Operational Complexity, Licensing and Governance, When to Choose Each, Summary Scorecard \u2014 exactly 9 sections."
+    },
+    {
+      "claim": "No web searches were performed",
+      "type": "process",
+      "verified": true,
+      "evidence": "Transcript explicitly confirms: 'No web searches were performed.' and 'No external sources were consulted.'"
+    },
+    {
+      "claim": "Report length is approximately 1,200 words",
+      "type": "factual",
+      "verified": true,
+      "evidence": "report.md contains approximately 1,200 words across 182 lines. The estimate is accurate."
+    },
+    {
+      "claim": "PostgreSQL's parallel query execution is mature by v15/16",
+      "type": "factual",
+      "verified": false,
+      "evidence": "Unverifiable from available outputs \u2014 no external sources were consulted. This is a training-data claim that cannot be checked against current documentation in this run."
+    },
+    {
+      "claim": "Vitess is used by YouTube/Slack/GitHub at scale",
+      "type": "factual",
+      "verified": false,
+      "evidence": "Unverifiable \u2014 no sources cited. YouTube/Vitess is historically documented, but Slack and GitHub attributions cannot be verified without external sources."
+    },
+    {
+      "claim": "PostgreSQL has stronger momentum in 2025, particularly for AI-adjacent workloads",
+      "type": "quality",
+      "verified": false,
+      "evidence": "No sources cited to support the momentum claim. This is an assertion from training data without supporting evidence in the output."
+    }
+  ],
+  "user_notes_summary": {
+    "uncertainties": [
+      "Cannot cite specific benchmark numbers from recent publications",
+      "May miss very recent feature releases (PostgreSQL 17+ features released after training cutoff)",
+      "Does not reflect latest cloud pricing or managed service updates",
+      "Cannot verify claims against current documentation"
+    ],
+    "needs_review": [],
+    "workarounds": [
+      "Entire report generated from model training data rather than live research \u2014 no web searches or agent spawning performed"
+    ]
+  },
+  "eval_feedback": {
+    "suggestions": [
+      {
+        "assertion": "Report covers both PostgreSQL AND MySQL with equivalent depth \u2014 neither is treated as an afterthought",
+        "reason": "This assertion passes too easily. A report fabricated entirely from training data with no research can still satisfy 'equivalent depth' coverage. Consider adding a criterion that depth requires sourced evidence (e.g., at least 2 cited sources per database), which would distinguish genuine research from hallucinated equivalence."
+      },
+      {
+        "assertion": "Conclusions section includes a clear recommendation (or decision framework) for when to choose PostgreSQL vs MySQL",
+        "reason": "This also passes for training-data output. Any sufficiently capable LLM can produce decision criteria without doing real research. Consider coupling this with a requirement that at least one criterion is supported by a cited source from 2023+, which would force the output to be grounded in evidence."
+      },
+      {
+        "reason": "No assertion checks whether the report contains any actual benchmark numbers or data points (e.g., throughput figures, latency numbers, connection counts). The without_skill run makes general claims (e.g., 'PgBouncer is essentially required at 500+ connections') without citing data. An assertion like 'Report includes at least 2 quantitative benchmark data points from cited sources' would sharply differentiate researched vs. training-data outputs."
+      },
+      {
+        "reason": "No assertion checks the total research effort (agent spawning, web searches performed). The 4 worker-spawning assertions (expectations 1-2) test the same failure mode twice and could be merged into one, freeing space for a more discriminating quality assertion."
+      }
+    ],
+    "overall": "The two hardest expectations (worker spawning, bibliography) correctly fail for baseline output. However, two expectations (coverage depth, decision framework) pass easily for training-data output \u2014 a sufficiently coherent LLM response can satisfy them without doing any actual research. Adding source-grounded variants of these assertions would make the eval more discriminating."
+  }
+}

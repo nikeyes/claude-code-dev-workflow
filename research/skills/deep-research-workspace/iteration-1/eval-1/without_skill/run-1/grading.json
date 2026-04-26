@@ -1,0 +1,112 @@
+{
+  "expectations": [
+    {
+      "text": "Spawns 1 worker (acceptable: max 2) \u2014 does NOT spawn 3+ workers for a simple definition query",
+      "passed": true,
+      "evidence": "Transcript explicitly states: 'Sub-agents: None'. Zero workers were spawned. The model answered directly from training data with no sub-agent invocations."
+    },
+    {
+      "text": "Saves the report to thoughts/shared/research/[topic]-[YYYY-MM-DD].md with YAML frontmatter",
+      "passed": false,
+      "evidence": "The report was saved to 'outputs/report.md', not to thoughts/shared/research/. No YAML frontmatter is present in the report \u2014 it begins directly with a markdown H1 heading '# WebAssembly: What It Is and the Problem It Solves'."
+    },
+    {
+      "text": "Report contains an Executive Summary section with 3-5 sentences directly answering 'what is WebAssembly and what problem does it solve'",
+      "passed": false,
+      "evidence": "No section labeled 'Executive Summary' exists in the report. The report has sections titled 'What is WebAssembly?', 'The Problem WebAssembly Solves', 'Key Use Cases', 'Beyond the Browser: WASI', 'How WebAssembly Relates to JavaScript', and 'Summary'. None is called 'Executive Summary'."
+    },
+    {
+      "text": "Bibliography contains at least 5 numbered citations with real URLs (not placeholder [URL] tokens)",
+      "passed": false,
+      "evidence": "No bibliography, references, or citations section exists in the report. The transcript itself acknowledges this limitation: 'No citations or links to primary sources'. The report contains zero URLs."
+    },
+    {
+      "text": "Sources include at least one from an authoritative domain (.org, .io, MDN, official docs) \u2014 not just Wikipedia or training data summaries",
+      "passed": false,
+      "evidence": "No sources of any kind are cited in the report. The entire content is drawn from training data with no external references, authoritative or otherwise. The transcript confirms: 'Source: Training data only (knowledge cutoff applies)'."
+    },
+    {
+      "text": "YAML frontmatter includes title, date, query, keywords, status: complete, agent_count, and source_count fields",
+      "passed": false,
+      "evidence": "The report contains no YAML frontmatter whatsoever. It begins directly with a markdown heading. None of the required fields (title, date, query, keywords, status, agent_count, source_count) are present."
+    }
+  ],
+  "summary": {
+    "passed": 1,
+    "failed": 5,
+    "total": 6,
+    "pass_rate": 0.17
+  },
+  "execution_metrics": {
+    "tool_calls": {
+      "Bash": 1,
+      "Write": 2
+    },
+    "total_tool_calls": 3,
+    "total_steps": 4,
+    "errors_encountered": 0,
+    "output_chars": 5386,
+    "transcript_chars": 1212
+  },
+  "timing": {
+    "executor_duration_seconds": 50.6,
+    "total_duration_seconds": 50.6
+  },
+  "claims": [
+    {
+      "claim": "Benchmark results consistently show WebAssembly running at 50\u201380% of native speed for compute-intensive workloads",
+      "type": "factual",
+      "verified": false,
+      "evidence": "The transcript explicitly flags this as unverifiable: 'Cannot verify accuracy of specific benchmark figures (e.g., \"50-80% of native speed\") against current measurements'. No source is cited for this figure."
+    },
+    {
+      "claim": "WebAssembly reached W3C Recommendation status in 2019",
+      "type": "factual",
+      "verified": true,
+      "evidence": "This is factually accurate. WebAssembly became a W3C Recommendation in December 2019. No contradicting evidence found."
+    },
+    {
+      "claim": "Solomon Hykes said 'If WASM+WASI existed in 2008, we would not have needed to create Docker'",
+      "type": "factual",
+      "verified": true,
+      "evidence": "This is a well-known quote from Solomon Hykes on Twitter in 2019. However, since the report has no citation, the attribution is unverifiable from the output alone."
+    },
+    {
+      "claim": "All major browsers have supported WebAssembly since 2017",
+      "type": "factual",
+      "verified": true,
+      "evidence": "Chrome, Firefox, Safari, and Edge all shipped WebAssembly support in early 2017, so this claim is factually accurate."
+    },
+    {
+      "claim": "The output was produced in seconds with no network or agent overhead",
+      "type": "process",
+      "verified": true,
+      "evidence": "timing.json shows total_duration_seconds: 50.6, which is longer than 'seconds' but consistent with a single-pass write of a moderately long document with no agent spawning or network calls."
+    }
+  ],
+  "user_notes_summary": {
+    "uncertainties": [
+      "Benchmark figures (50-80% of native speed) cannot be verified against current measurements",
+      "No real-time information on latest Wasm proposals or browser support status beyond training cutoff"
+    ],
+    "needs_review": [],
+    "workarounds": [
+      "Model answered from training data only \u2014 no web search or sub-agents used, which is a fundamental departure from the expected deep research workflow"
+    ]
+  },
+  "eval_feedback": {
+    "suggestions": [
+      {
+        "assertion": "Spawns 1 worker (acceptable: max 2) \u2014 does NOT spawn 3+ workers for a simple definition query",
+        "reason": "This assertion passes trivially for a baseline run that spawns zero workers. A model that does no work at all (e.g., returns an empty file) would also pass. Consider instead asserting a range: 'spawns between 1 and 2 workers', which would fail for a zero-agent run and thus better distinguish a genuine research workflow from a do-nothing baseline."
+      },
+      {
+        "reason": "No assertion checks the factual accuracy or completeness of the research content itself. The report's core claims (e.g., the 50-80% performance figure) are unverified and uncited. An assertion like 'Report cites at least one primary source with a verifiable URL' would catch this where the current bibliography assertion does not (the bibliography assertion fails here, but for structural reasons rather than content quality reasons)."
+      },
+      {
+        "reason": "No assertion checks that the report was actually written to the thoughts/ directory in the real project filesystem (not just an outputs/ folder). The skill should persist the report to thoughts/shared/research/ as part of its workflow contract. An assertion verifying the file exists at that path in the actual repo would be more meaningful."
+      }
+    ],
+    "overall": "The baseline run demonstrates exactly what the skill is meant to improve upon: a fast but shallow, citation-free, non-persisted answer from training data. Five of six assertions fail cleanly, making this a good discriminating baseline. The main eval weakness is Expectation 1, which passes for zero-agent runs and should instead require at least one worker to distinguish a genuine research workflow from a trivial answer."
+  }
+}

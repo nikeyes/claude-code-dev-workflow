@@ -1,0 +1,102 @@
+{
+  "expectations": [
+    {
+      "text": "Spawns 4-6 workers \u2014 recognizes this is a controversial multi-faceted comparison, not a simple definition",
+      "passed": false,
+      "evidence": "The transcript explicitly states: 'No web searches, no sub-agents, no spawned tasks were used.' and 'This evaluation was completed without using the deep-research skill or any multi-agent workflow. The answer was generated directly from the base model's knowledge in a single pass.' Zero workers were spawned."
+    },
+    {
+      "text": "At least one worker is explicitly tasked with researching the case FOR monolith (not just 'monolith disadvantages')",
+      "passed": false,
+      "evidence": "No workers were spawned at all. The transcript confirms: 'No web searches, no sub-agents, no spawned tasks were used.' This expectation cannot be satisfied without a multi-agent workflow."
+    },
+    {
+      "text": "Report explicitly includes the perspective that microservices can be premature for early startups \u2014 not just listing microservices benefits",
+      "passed": true,
+      "evidence": "The report explicitly states in the Practical Recommendation section: 'Be wary of the \"just use microservices\" advice. Many teams that adopted microservices early spent months building platform infrastructure and debugging distributed systems issues before shipping product value.' The Microservices Cons section also lists 'Premature decomposition risk' as a named concern. This is a genuine and prominent perspective in the report, not superficial compliance."
+    },
+    {
+      "text": "Conclusions section names specific conditions under which a monolith is the correct choice (e.g., team size, traffic scale, deployment complexity)",
+      "passed": true,
+      "evidence": "The 'Decision Framework for a Growing Startup' table lists concrete conditions favoring a monolith: team size < 10-15 engineers, pre-product-market fit, domain boundaries still being discovered, low-to-medium deployment frequency, uniform load, and no dedicated platform team. The Practical Recommendation reinforces this: 'Start with a well-structured monolith. For most startups, the operational overhead of microservices will consume engineering capacity that should go toward finding product-market fit.'"
+    },
+    {
+      "text": "Cross-References section acknowledges this is an active debate with no consensus \u2014 does NOT present one architecture as objectively superior",
+      "passed": false,
+      "evidence": "The report has no 'Cross-References' section. The summary does close with 'Neither architecture is universally superior,' which is in the right spirit, but the assertion specifically requires a Cross-References section that frames this as an active debate. No such section exists, and no external references or citations are included at all."
+    },
+    {
+      "text": "Bibliography includes real case studies or engineering blog posts from both monolith and microservices success stories (not just architectural theory)",
+      "passed": false,
+      "evidence": "The report contains no bibliography section. Netflix, Amazon, and Uber are mentioned in passing as companies that 'started as monoliths and migrated incrementally,' but these are unsourced inline claims with no links, blog post references, or case study citations. No external sources of any kind are included."
+    }
+  ],
+  "summary": {
+    "passed": 2,
+    "failed": 4,
+    "total": 6,
+    "pass_rate": 0.33
+  },
+  "execution_metrics": {
+    "tool_calls": {
+      "Write": 2,
+      "Bash": 1
+    },
+    "total_tool_calls": 3,
+    "total_steps": 5,
+    "errors_encountered": 0,
+    "output_chars": 5123,
+    "transcript_chars": 1824
+  },
+  "timing": {
+    "executor_duration_seconds": 72.7,
+    "grader_duration_seconds": 0.0,
+    "total_duration_seconds": 72.7
+  },
+  "claims": [
+    {
+      "claim": "The report draws on well-established industry knowledge (Martin Fowler, Sam Newman, and widely cited case studies from Netflix/Amazon/Uber)",
+      "type": "factual",
+      "verified": false,
+      "evidence": "Martin Fowler and Sam Newman are mentioned only in the transcript's Observations section as justification for the single-pass approach, not cited in the report itself. Netflix/Amazon/Uber appear in the report as uncited inline assertions. None of these constitute actual citations or sourced references."
+    },
+    {
+      "claim": "The structure is balanced (pros/cons, decision table, recommendation)",
+      "type": "quality",
+      "verified": true,
+      "evidence": "The report does include a monolith section with 6 pros and 5 cons, a microservices section with 6 pros and 6 cons, a decision framework table, and a practical recommendation. The balance claim holds."
+    },
+    {
+      "claim": "Netflix, Amazon, and Uber all started as monoliths and migrated incrementally",
+      "type": "factual",
+      "verified": true,
+      "evidence": "This is a well-documented historical fact in the software engineering community. Netflix's monolith-to-microservices migration is one of the most widely referenced case studies. The claim is accurate, though unsourced."
+    },
+    {
+      "claim": "The report presents neither architecture as universally superior",
+      "type": "quality",
+      "verified": true,
+      "evidence": "The summary explicitly states 'Neither architecture is universally superior' and the decision table presents conditions for both choices. The recommendation is to 'start with a monolith' which leans toward one choice contextually, but the framing is conditional and contextual, not absolute."
+    }
+  ],
+  "user_notes_summary": {
+    "uncertainties": [],
+    "needs_review": [],
+    "workarounds": []
+  },
+  "eval_feedback": {
+    "suggestions": [
+      {
+        "assertion": "Cross-References section acknowledges this is an active debate with no consensus \u2014 does NOT present one architecture as objectively superior",
+        "reason": "The assertion is split into two distinct checks: (1) a structural check (Cross-References section exists) and (2) a content check (framing as active debate). These could be separated. A model could produce a 'Cross-References' section that simply lists links without acknowledging debate, or could acknowledge the debate inline without a dedicated section. The current formulation fails both when the section is absent, which is appropriate, but the dual nature makes it harder to diagnose which aspect failed."
+      },
+      {
+        "reason": "No assertion checks the depth or accuracy of the monolith/microservices analysis itself \u2014 a superficial or incorrect treatment of the tradeoffs would pass expectations 3 and 4 if it included the right keywords. Consider adding an assertion about whether the report cites specific failure modes with explanatory detail (e.g., distributed transactions, Conway's Law) rather than just surface-level pro/con lists."
+      },
+      {
+        "reason": "Expectation 1 (spawns 4-6 workers) is a process check, not an output check. A model could spawn 4 workers that all do poor research and still pass. Consider pairing it with an output quality assertion \u2014 e.g., 'Report includes at least 3 distinct perspectives not typically found in a basic pros/cons list' \u2014 to ensure the multi-agent overhead actually produces better outputs."
+      }
+    ],
+    "overall": "The eval correctly penalizes the without_skill run for its single-pass approach. The 2 passing expectations (premature microservices warning, specific conditions for monolith choice) reflect genuine content quality in the report. The 4 failures reflect structural absences (no workers, no bibliography, no cross-references section) that the skill is designed to address."
+  }
+}

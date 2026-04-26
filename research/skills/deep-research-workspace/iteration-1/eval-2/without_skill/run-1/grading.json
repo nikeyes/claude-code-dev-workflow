@@ -1,0 +1,97 @@
+{
+  "expectations": [
+    {
+      "text": "Spawns 1-2 workers \u2014 does NOT spawn 4+ for a how-to question that can be answered with 2 focused searches",
+      "passed": true,
+      "evidence": "The transcript explicitly states: 'No sub-agents (codebase-locator, research-worker, etc.) were spawned.' Zero workers were spawned, which is fewer than 4. However, the spirit of this assertion (that a focused question should not over-parallelize) is trivially satisfied here because no research infrastructure was used at all \u2014 no web searches, no agents."
+    },
+    {
+      "text": "Report weaves JWT mechanics and security pitfalls into a coherent narrative \u2014 NOT two sequential sections that read like raw worker dumps",
+      "passed": false,
+      "evidence": "The report is structured as two completely separate sequential sections: '## How JWT Works' followed by '## Common Security Pitfalls'. There is no narrative weaving \u2014 the mechanics section ends with a horizontal rule, then the pitfalls section begins independently. The pitfalls do not reference the mechanics text, and the mechanics section does not anticipate or contextualize the pitfalls. This is precisely the 'two sequential sections' anti-pattern the assertion warns against."
+    },
+    {
+      "text": "Report names at least 3 specific JWT security pitfalls (e.g., alg:none attack, missing expiry validation, insecure secret storage) with source citations",
+      "passed": true,
+      "evidence": "The report names 10 specific pitfalls: (1) alg:none attack, (2) RS256\u2192HS256 algorithm confusion, (3) weak/exposed secrets, (4) missing claim validation (exp, iss, aud, nbf), (5) localStorage storage, (6) no token revocation, (7) long token lifetimes, (8) sensitive data in payload, (9) CSRF with cookie-stored JWTs, (10) JWT header injection (kid, jku, x5u). A 10-entry Bibliography includes RFC 7519, Auth0's article on alg:none/algorithm confusion vulnerabilities, OWASP JWT Cheat Sheet, and PortSwigger's JWT attack guide. Note: citations are drawn from training knowledge and not live-verified."
+    },
+    {
+      "text": "Spawns the citation-analyst agent after generating the report to verify citation accuracy",
+      "passed": false,
+      "evidence": "The transcript explicitly states: 'No sub-agents (codebase-locator, research-worker, etc.) were spawned.' The 'What Was NOT Done' section further confirms: 'No sub-agents [...] were spawned.' No citation-analyst agent was invoked at any point."
+    },
+    {
+      "text": "Report includes a 'Cross-References and Contradictions' section that discusses areas of consensus or disagreement across sources",
+      "passed": false,
+      "evidence": "The report contains four sections: 'How JWT Works', 'Common Security Pitfalls', a Summary Table, and a Bibliography. There is no 'Cross-References and Contradictions' section or any equivalent discussion of consensus or disagreement across sources. Since the report was generated from a single pass of training knowledge rather than synthesizing multiple retrieved sources, cross-referencing was structurally impossible."
+    }
+  ],
+  "summary": {
+    "passed": 2,
+    "failed": 3,
+    "total": 5,
+    "pass_rate": 0.4
+  },
+  "execution_metrics": {
+    "tool_calls": {
+      "Bash": 1,
+      "Write": 2
+    },
+    "total_tool_calls": 3,
+    "total_steps": 5,
+    "errors_encountered": 0,
+    "output_chars": 6650,
+    "transcript_chars": 1650
+  },
+  "timing": {
+    "executor_duration_seconds": 79.0,
+    "grader_duration_seconds": 0.0,
+    "total_duration_seconds": 79.0
+  },
+  "claims": [
+    {
+      "claim": "Report was composed entirely from training knowledge (no web searches)",
+      "type": "process",
+      "verified": true,
+      "evidence": "Transcript confirms: 'No web searches were performed.' The bibliography itself acknowledges this: 'The following sources informed this report (drawn from training knowledge).'"
+    },
+    {
+      "claim": "Report covers RFC 7519, known CVEs, OWASP guidance, and widely cited security research",
+      "type": "factual",
+      "verified": true,
+      "evidence": "Bibliography includes RFC 7519, RFC 7515, RFC 7516, RFC 7517, Auth0 security blog (CVE-relevant alg:none article), OWASP JWT Cheat Sheet, Curity documentation, NIST SP 800-63B, and PortSwigger Web Security Academy. All 10 cited sources are plausible and well-known; however, since they were not live-fetched, their URLs and content cannot be independently verified from this run."
+    },
+    {
+      "claim": "Report is low token cost and fast due to single-pass generation",
+      "type": "quality",
+      "verified": true,
+      "evidence": "timing.json shows total_tokens: 16,743 and duration: 79 seconds. Compared to multi-agent runs, this is a minimal footprint \u2014 consistent with the transcript's claim of 'one or two tool calls plus in-context generation.'"
+    },
+    {
+      "claim": "Citations in the bibliography are accurate",
+      "type": "quality",
+      "verified": false,
+      "evidence": "No citation-analyst agent was invoked to verify citations. The bibliography URLs are plausible (RFC datatracker links, OWASP, PortSwigger, Auth0) but were not fetched or verified during execution. The report acknowledges the content is 'drawn from training knowledge', so citation accuracy cannot be confirmed from this run."
+    }
+  ],
+  "user_notes_summary": {
+    "uncertainties": [],
+    "needs_review": [],
+    "workarounds": []
+  },
+  "eval_feedback": {
+    "suggestions": [
+      {
+        "assertion": "Spawns 1-2 workers \u2014 does NOT spawn 4+ for a how-to question that can be answered with 2 focused searches",
+        "reason": "This assertion passes trivially for the baseline (no-skill) run because zero agents were spawned. A run that spawns zero workers is not the intended comparison target \u2014 the assertion is designed to catch over-spawning by the skill, not to reward doing no research at all. Consider adding a lower bound: 'Spawns 1-2 workers' rather than just 'NOT 4+', so that zero-agent runs fail this check when used as a skill-quality gate."
+      },
+      {
+        "reason": "No assertion checks whether the cited sources actually exist and are accurate. The report lists 10 bibliography entries drawn from training knowledge. Several URLs are plausible but unverified. Since citation accuracy is a key differentiator between a live-researched skill run and a hallucinated training-knowledge response, an assertion like 'All cited URLs resolve to pages about JWT security' would meaningfully discriminate between skill and no-skill outputs."
+      },
+      {
+        "reason": "No assertion checks the depth or accuracy of the security pitfall descriptions. The baseline report is technically correct and detailed \u2014 arguably as good as a real research run for a well-known topic like JWT. An assertion that probes for recency (e.g., 'Report references a CVE from the past 2 years') or source diversity (e.g., 'Content references at least 2 distinct primary sources') would better distinguish live-researched from training-knowledge responses."
+      }
+    ],
+    "overall": "The eval catches the most structurally important failures (no citation-analyst, no cross-references section, no narrative weaving). However, the worker-count assertion needs a lower bound to avoid passing trivially on zero-agent runs. Adding citation verification and recency checks would make the eval more discriminating against high-quality training-knowledge responses that superficially resemble well-researched outputs."
+  }
+}

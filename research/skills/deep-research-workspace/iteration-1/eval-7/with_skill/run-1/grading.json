@@ -1,0 +1,99 @@
+{
+  "expectations": [
+    {
+      "text": "Spawns at most 1 worker \u2014 does NOT treat a factual lookup as a 'state-of-the-art' research topic requiring 4+ workers",
+      "passed": true,
+      "evidence": "Transcript states: 'Workers Spawned: 1 worker (correct per skill instructions for a simple definition query).' The skill classified the query as a 'simple definition' per its complexity table and acted accordingly. The orchestrator conducted research directly due to an infra limitation, not due to skill misbehavior. The behavioral table in the transcript confirms: 'Workers spawned | 1 | 1 (direct research, no subagent tool available) | PASS'."
+    },
+    {
+      "text": "Does NOT produce a 15+ source bibliography or a 5-theme detailed findings report for a question answerable in one sentence",
+      "passed": true,
+      "evidence": "The report.md contains exactly 2 bibliography entries and 1 theme section ('Definition and Meaning'). Transcript confirms: '~300 words, 2 bibliography entries, 1 theme section (no unnecessary multi-section bloat)'. The skill correctly scoped the output to the trivial nature of the query."
+    },
+    {
+      "text": "Directly answers what HTTP 404 means \u2014 user receives the information without navigating a research infrastructure",
+      "passed": true,
+      "evidence": "The report opens with a clear 3-sentence Executive Summary: 'HTTP 404 (\"Not Found\") is a client error response status code indicating that the server cannot find the requested resource.' The answer is front-loaded and unambiguous. A user reading the report immediately gets the answer without having to parse methodology sections or multi-agent scaffolding."
+    },
+    {
+      "text": "Does NOT spawn citation-analyst for a widely-known standard fact \u2014 avoids wasting agent overhead on trivial queries",
+      "passed": false,
+      "evidence": "Transcript states: 'Citation-analyst spawned? No. The citation-analyst agent (step 8 of the skill) was not spawned. The Task tool for spawning stepwise-research:citation-analyst was not available.' The tool was not available as an infrastructure limitation of the eval harness, not because the skill decided to skip it. The transcript notes: 'In a full deployment, the skill specifies this agent should always be spawned after report generation.' This means the skill WOULD have spawned citation-analyst unconditionally even for this trivial query if the tool had been available. The expectation asks that citation-analyst be intentionally omitted for trivial queries \u2014 that behavior was not demonstrated; it was only absent due to tooling constraints."
+    }
+  ],
+  "summary": {
+    "passed": 3,
+    "failed": 1,
+    "total": 4,
+    "pass_rate": 0.75
+  },
+  "execution_metrics": {
+    "tool_calls": {},
+    "total_tool_calls": null,
+    "total_steps": null,
+    "errors_encountered": 0,
+    "output_chars": 1511,
+    "transcript_chars": 2108
+  },
+  "timing": {
+    "executor_duration_seconds": 86.0,
+    "grader_duration_seconds": 0.0,
+    "total_duration_seconds": 86.0
+  },
+  "claims": [
+    {
+      "claim": "1 worker was spawned (scoped correctly for a simple definition query)",
+      "type": "process",
+      "verified": true,
+      "evidence": "Transcript documents that the skill classified the query as 'simple definition' and the complexity table maps that to 1 worker. The orchestrator acted as the single worker directly."
+    },
+    {
+      "claim": "The report is ~300 words",
+      "type": "factual",
+      "verified": true,
+      "evidence": "report.md word count is approximately 300 words (excluding frontmatter), consistent with transcript claim."
+    },
+    {
+      "claim": "2 sources were fetched (MDN Web Docs, RFC 9110)",
+      "type": "factual",
+      "verified": true,
+      "evidence": "report.md bibliography lists exactly 2 entries: [1] MDN Web Docs and [2] RFC 9110, matching the transcript claim."
+    },
+    {
+      "claim": "Citation-analyst was not spawned due to tool unavailability, not by skill design choice",
+      "type": "process",
+      "verified": true,
+      "evidence": "Transcript explicitly states: 'In a full deployment, the skill specifies this agent should always be spawned after report generation.' This contradicts the expectation that the skill avoids citation-analyst for trivial queries."
+    },
+    {
+      "claim": "No contradictions across sources were found",
+      "type": "quality",
+      "verified": true,
+      "evidence": "report.md section 'Cross-References and Contradictions' states: 'Both MDN Web Docs and RFC 9110 agree on the core definition... There are no contradictions across sources.'"
+    }
+  ],
+  "user_notes_summary": {
+    "uncertainties": [],
+    "needs_review": [
+      "Citation-analyst was not spawned due to tool unavailability \u2014 it is unclear whether the skill would intentionally skip it for trivial queries in a full deployment, or always invoke it regardless of query complexity."
+    ],
+    "workarounds": [
+      "Orchestrator acted as single research worker directly because the Task tool for spawning stepwise-research:research-worker was unavailable in the eval harness."
+    ]
+  },
+  "eval_feedback": {
+    "suggestions": [
+      {
+        "assertion": "Does NOT spawn citation-analyst for a widely-known standard fact \u2014 avoids wasting agent overhead on trivial queries",
+        "reason": "This expectation cannot be fairly evaluated in an eval harness where the Task tool is unavailable. The citation-analyst was absent due to infrastructure constraints, not skill logic. To properly test this expectation, the eval must run in an environment where the Task tool is callable so we can observe whether the skill conditionally skips it for simple queries. As written, this expectation will always appear to pass (trivially) in the current harness \u2014 which is misleading because the skill may actually always spawn citation-analyst unconditionally."
+      },
+      {
+        "reason": "No assertion checks whether the report's answer is factually correct (i.e., that HTTP 404 actually means 'Not Found' / resource not found). The report could pass all current assertions even if it gave a wrong definition. Consider adding: 'The report states that 404 means the server cannot find the requested resource (Not Found)' \u2014 a minimal correctness check."
+      },
+      {
+        "reason": "The 'directly answers' expectation (assertion 3) is somewhat weak: any report with an Executive Summary section technically satisfies it. A stronger version would check that the answer appears within the first 2-3 sentences of the output, not buried after methodology."
+      }
+    ],
+    "overall": "The eval captures proportionality well (worker count, bibliography size, report length). The main gap is that expectation 4 is untestable in this harness \u2014 the tool was unavailable, so silence is not evidence of correct skill behavior. The eval also lacks a correctness assertion for the actual answer content."
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "eval_id": 3,
+  "eval_name": "comparison-two-items-parallel-workers",
+  "prompt": "/stepwise-research:deep-research Compare PostgreSQL vs MySQL for high-traffic web applications in 2025",
+  "assertions": [
+    "All workers are spawned in a single message (single Task tool invocation batch) \u2014 NOT spawned sequentially one at a time",
+    "Spawns 2-3 workers \u2014 one per comparison dimension (PostgreSQL, MySQL, benchmarks/cases)",
+    "Report covers both PostgreSQL AND MySQL with equivalent depth \u2014 neither is treated as an afterthought",
+    "Cross-References section identifies at least one real disagreement or nuance between sources (e.g., MySQL faster for simple reads vs PostgreSQL better for complex queries)",
+    "Bibliography includes at least 3 sources dated 2023 or later, or sources that discuss recent versions (PostgreSQL 15+, MySQL 8+)",
+    "Conclusions section includes a clear recommendation (or decision framework) for when to choose PostgreSQL vs MySQL \u2014 not 'it depends' without criteria"
+  ]
+}

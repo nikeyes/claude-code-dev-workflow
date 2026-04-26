@@ -1,0 +1,118 @@
+{
+  "expectations": [
+    {
+      "text": "Spawns at least 4 workers \u2014 recognizes this is multi-faceted, not a simple how-to",
+      "passed": false,
+      "evidence": "The transcript explicitly states: 'Workers spawned: 6 (simulated via parallel WebFetch batches, since the Task subagent tool was not available in the environment)'. No actual worker subagents were spawned \u2014 the Task tool was unavailable and the executor fell back to direct parallel WebFetch calls. While 6 sub-questions were defined and 6 parallel fetch batches were executed, these are not workers in the skill's intended sense (stepwise-research:research-worker subagents via Task tool). The skill's multi-agent architecture was not exercised."
+    },
+    {
+      "text": "Worker sub-questions cover distinct facets: at minimum challenges, tooling/vendors, ROI evidence, AND security/compliance as separate workers",
+      "passed": true,
+      "evidence": "All 4 required facets appear as distinct sub-questions: sub-question 2 ('Key challenges and barriers to enterprise AI implementation'), sub-question 3 ('Enterprise AI tooling landscape and platform ecosystem'), sub-question 4 ('ROI measurement, business impact, and financial outcomes'), and sub-question 5 ('Security, privacy, and governance concerns'). Each became its own H3 section in the report with distinct sources."
+    },
+    {
+      "text": "All 4+ workers are spawned in a single message \u2014 NOT spawned in multiple sequential rounds",
+      "passed": false,
+      "evidence": "No workers were actually spawned via the Task tool. The executor self-reports: 'Since the Task subagent spawning tool was not available in this environment, the workflow was executed directly with parallel WebFetch calls grouped by sub-question.' This is a simulation, not real parallel worker spawning. The assertion cannot be verified as satisfied because the underlying mechanism (Task tool + research-worker subagents) was never used."
+    },
+    {
+      "text": "Report identifies or flags when sources show vendor bias (e.g., vendor case studies claiming high ROI) and cross-references with independent analysts",
+      "passed": false,
+      "evidence": "The report does not flag vendor bias anywhere. Section 4 (ROI) heavily relies on Google Cloud's case study database [5] for quantified outcomes (the '$17M revenue lift', '54% cost reduction', '95% task time reduction' figures), which are all sourced directly from a vendor's marketing content. The Cross-References and Contradictions section notes that 'documented success stories may not be representative' and that 'large-scale aggregate ROI data remains limited', but does not explicitly flag Google Cloud, Microsoft, or Capgemini as potentially biased sources, nor does it systematically cross-reference their ROI claims with independent analysts. The transcript's quality assessment notes 'Source diversity' without cautioning about vendor interest in reported outcomes."
+    },
+    {
+      "text": "Total source count in frontmatter is 15 or more \u2014 befitting a multi-faceted research topic",
+      "passed": false,
+      "evidence": "The frontmatter explicitly states 'source_count: 10', and the bibliography lists exactly 10 sources. The transcript confirms: 'Total unique sources in bibliography: 10'. The transcript also documents 26 failed fetch attempts (McKinsey, Gartner, IBM, Stanford HAI, PwC, BCG, Forrester, etc.) that reduced the available source pool. 10 sources falls well short of the 15 minimum."
+    },
+    {
+      "text": "Detailed Findings section has multiple H3 themes that pull from multiple workers \u2014 NOT a series of 'Worker 1 says..., Worker 2 says...' sections",
+      "passed": true,
+      "evidence": "The Detailed Findings contains 6 H3 sections, none of which reference workers by number. Each section synthesizes across multiple sources: for example, section 2 (Key Challenges) cites [2][3][7][8][9] and weaves them into a unified narrative about data readiness, skills gaps, strategic-operational disconnect, and adoption gaps \u2014 without attributing findings to workers. Section 4 (ROI) similarly pulls from [3][5][2][9] into coherent paragraphs. The Cross-References section explicitly synthesizes contradictions across sources rather than listing worker outputs."
+    }
+  ],
+  "summary": {
+    "passed": 2,
+    "failed": 4,
+    "total": 6,
+    "pass_rate": 0.33
+  },
+  "execution_metrics": {
+    "tool_calls": null,
+    "total_tool_calls": null,
+    "total_steps": null,
+    "errors_encountered": 26,
+    "output_chars": 22669,
+    "transcript_chars": 5278
+  },
+  "timing": {
+    "executor_duration_seconds": 623.9,
+    "grader_duration_seconds": 0.0,
+    "total_duration_seconds": 623.9
+  },
+  "claims": [
+    {
+      "claim": "All 6 initial WebFetch calls were dispatched in a single parallel batch",
+      "type": "process",
+      "verified": false,
+      "evidence": "The transcript asserts this but there is no tool-call log to verify parallelism. The transcript is self-reported by the executor and cannot be independently confirmed from available outputs."
+    },
+    {
+      "claim": "All 10 source URLs were verified accessible during the fetch phase",
+      "type": "factual",
+      "verified": true,
+      "evidence": "The transcript lists 10 successfully fetched sources, each with a specific data point attributed to it in the report. The citations in the report body correspond to specific facts that plausibly originate from the named sources (e.g., OWASP Top 10 list from [10], EU AI Act risk categories from [6], Deloitte survey figures from [3])."
+    },
+    {
+      "claim": "All inline citations map to specific data points extracted directly from those sources",
+      "type": "quality",
+      "verified": false,
+      "evidence": "Citation verification was explicitly skipped: 'Citation verification was not performed via the stepwise-research:citation-analyst subagent (not available in environment).' The claim that citations are accurate cannot be independently confirmed from the available outputs \u2014 only the report text itself can be inspected, not the source pages."
+    },
+    {
+      "claim": "6 Detailed Findings themes were produced",
+      "type": "factual",
+      "verified": true,
+      "evidence": "The report contains exactly 6 H3 sections under Detailed Findings: 1. Adoption Rates and Market Trajectory, 2. Key Challenges and Barriers, 3. Enterprise AI Tooling Landscape, 4. ROI Measurement and Business Impact, 5. Security, Privacy, and Governance, 6. Workforce Impact and Organizational Change."
+    },
+    {
+      "claim": "Source diversity includes government, academic, consulting firms, technology vendors, industry analysts, and security organizations",
+      "type": "quality",
+      "verified": true,
+      "evidence": "Bibliography confirms: NIST (government), EU Parliament (government), MIT Sloan (academic), Deloitte/Accenture/Capgemini (consulting), Microsoft/Google Cloud (technology vendors), TechTarget (industry analyst), OWASP (security organization). The diversity claim is accurate, though vendor-sourced ROI data is not flagged as such."
+    },
+    {
+      "claim": "ROI section is unbiased because it uses multiple source types",
+      "type": "quality",
+      "verified": false,
+      "evidence": "The report's ROI section primarily relies on Google Cloud's vendor case study database [5] for all specific quantified outcomes ($17M revenue lift, 54% cost reduction, etc.). These are marketing materials from a vendor with direct interest in the outcomes, and no independent analyst corroboration is provided for these specific figures. The claim of balance is not fully supported."
+    }
+  ],
+  "user_notes_summary": {
+    "uncertainties": [],
+    "needs_review": [],
+    "workarounds": []
+  },
+  "eval_feedback": {
+    "suggestions": [
+      {
+        "assertion": "Spawns at least 4 workers \u2014 recognizes this is multi-faceted, not a simple how-to",
+        "reason": "This assertion passes when workers are genuinely spawned via Task tool, but the executor found a way to satisfy the spirit of parallel research while bypassing the mechanism entirely. Consider adding: 'Workers are spawned using the Task tool (not simulated via direct tool calls)' to make the assertion discriminating against fallback execution modes."
+      },
+      {
+        "assertion": "All 4+ workers are spawned in a single message \u2014 NOT spawned in multiple sequential rounds",
+        "reason": "This assertion is unverifiable when the Task tool is not used. If execution falls back to direct tool calls, there is no way to confirm single-message parallelism. The assertion needs a prerequisite: it only applies when Task tool spawning actually occurred."
+      },
+      {
+        "reason": "No assertion checks whether the citation-analyst subagent ran and verified citations. The executor explicitly skipped citation verification ('not available in environment'), yet no expectation catches this gap. An assertion like 'Citations are verified by the citation-analyst subagent' would catch this failure mode."
+      },
+      {
+        "reason": "The vendor bias expectation (expectation 4) is the most important quality check, but it's stated vaguely. 'Identifies or flags' could be satisfied by a single passing mention. Consider specifying: 'For each vendor-sourced ROI claim, the report either cites an independent corroborating source or explicitly notes the vendor interest.' This makes the assertion harder to pass superficially."
+      },
+      {
+        "reason": "No assertion checks that the report was saved to thoughts/shared/research/ with correct frontmatter. The file does exist at the expected path with proper frontmatter, but this output artifact is completely unchecked by any expectation."
+      }
+    ],
+    "overall": "The evals catch the right structural concerns (worker count, parallelism, source count, synthesis quality) but are vulnerable to simulation bypass: an executor that cannot spawn real workers can self-report compliance. Two of the six assertions (1 and 3) cannot be meaningfully evaluated when the Task tool is unavailable. The source count threshold (15) is the most discriminating assertion and correctly fails this run. The vendor bias assertion is the most substantively important but is stated loosely enough that a report could pass it with a single disclaimer sentence."
+  }
+}

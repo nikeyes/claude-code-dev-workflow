@@ -1,0 +1,125 @@
+{
+  "expectations": [
+    {
+      "text": "All workers are spawned in a single message (single Task tool invocation batch) \u2014 NOT spawned sequentially one at a time",
+      "passed": false,
+      "evidence": "The transcript explicitly states: 'The environment did not have access to the stepwise-research:research-worker sub-agent type, so research was conducted directly using parallel WebFetch calls.' No Task tool invocations were made at all. The transcript self-reports 'All 3 research streams launched in a SINGLE message (parallel WebFetch calls)' but the expectation specifically requires Task tool invocations \u2014 the fundamental sub-agent spawning mechanism the skill prescribes. WebFetch batches are a workaround, not compliance with the skill's worker-spawning step."
+    },
+    {
+      "text": "Spawns 2-3 workers \u2014 one per comparison dimension (PostgreSQL, MySQL, benchmarks/cases)",
+      "passed": false,
+      "evidence": "Transcript describes 3 sub-questions mapping to the 3 prescribed dimensions (PostgreSQL architecture/features, MySQL architecture/features, benchmarks/case studies), which is the right structure. However, no actual worker agents (Task tool) were spawned \u2014 the skill's research-worker sub-agents were skipped entirely due to environment limitations. The assertion checks spawning of workers (agents), not research streams modeled as direct WebFetch calls. Counting parallel WebFetch batches as 'workers spawned' is superficial compliance."
+    },
+    {
+      "text": "Report covers both PostgreSQL AND MySQL with equivalent depth \u2014 neither is treated as an afterthought",
+      "passed": true,
+      "evidence": "The report dedicates equivalent coverage to both databases across all 6 major sections: Architecture (both connection models analyzed), Performance (both read and write scenarios), Scalability/Replication (both WAL-based and binlog-based replication), Features (both ecosystems), Adoption (both trends), and Case Studies (Uber migration, Instagram PostgreSQL, Wikipedia MySQL). MySQL-specific content includes InnoDB Cluster, NDB Cluster, online DDL tooling, and MySQL 9.x innovations. Neither database is treated as secondary."
+    },
+    {
+      "text": "Cross-References section identifies at least one real disagreement or nuance between sources (e.g., MySQL faster for simple reads vs PostgreSQL better for complex queries)",
+      "passed": true,
+      "evidence": "The Cross-References section identifies two substantive contradictions: (1) Uber's engineering blog [7] presents PostgreSQL as fundamentally flawed for high-write workloads vs. PostgreSQL advocates (citing [2][8]) noting the issues are version-specific (9.2, 2012) and addressed in PostgreSQL 14-18. (2) AWS and DigitalOcean sources [5][6] claim MySQL is simpler to operate vs. Bytebase [2] which notes that MySQL's simplicity comes at the cost of fewer features. Both contradictions are real disagreements between named sources, not just summaries of a consensus."
+    },
+    {
+      "text": "Bibliography includes at least 3 sources dated 2023 or later, or sources that discuss recent versions (PostgreSQL 15+, MySQL 8+)",
+      "passed": true,
+      "evidence": "The bibliography includes at least 4 qualifying sources: [1] Stack Overflow Developer Survey 2024 (2024 data), [8] PostgreSQL 18 Release Notes (discusses PostgreSQL 18), [9] MySQL 9.6 Reference Manual (discusses MySQL 9.x), [10] MySQL 8.4 Reference Manual (discusses MySQL 8.4). Additionally [2] Bytebase comparison explicitly covers MySQL 8.0+ and recent PostgreSQL versions. More than 3 sources clearly qualify."
+    },
+    {
+      "text": "Conclusions section includes a clear recommendation (or decision framework) for when to choose PostgreSQL vs MySQL \u2014 not 'it depends' without criteria",
+      "passed": true,
+      "evidence": "The Conclusions section provides explicit, criteria-driven recommendations: 'PostgreSQL is the stronger default choice for new high-traffic web applications in 2025' with rationale (extensibility, write concurrency, ecosystem), and 'MySQL remains the better choice for read-dominated, connection-heavy workloads such as CMS platforms, e-commerce catalogs, and applications requiring simple horizontal read scaling.' The framework is actionable \u2014 specific workload types, not vague 'it depends' language."
+    }
+  ],
+  "summary": {
+    "passed": 4,
+    "failed": 2,
+    "total": 6,
+    "pass_rate": 0.67
+  },
+  "execution_metrics": {
+    "tool_calls": {},
+    "total_tool_calls": null,
+    "total_steps": null,
+    "errors_encountered": 4,
+    "output_chars": 32772,
+    "transcript_chars": 3778,
+    "note": "No metrics.json found. output_chars is sum of report.md + postgresql-vs-mysql report (both are identical copies at 16386 chars each). Transcript reports 14 URLs attempted, 10 successfully fetched, 4 failures (404, 500, SSL error, empty content)."
+  },
+  "timing": {
+    "executor_duration_seconds": 268.1,
+    "grader_duration_seconds": 0.0,
+    "total_duration_seconds": 268.1,
+    "total_tokens": 40308
+  },
+  "claims": [
+    {
+      "claim": "Workers spawned: 3 (simulated as parallel research streams), all in a single message",
+      "type": "process",
+      "verified": false,
+      "evidence": "No Task tool was used. The executor substituted parallel WebFetch batches. The transcript's claim of '3 workers spawned' is a simulation label, not actual sub-agent instantiation. The skill's step 4 requires spawning research-worker agents via the Task tool."
+    },
+    {
+      "claim": "PostgreSQL has overtaken MySQL in developer adoption (48.7% vs 40.3% in the 2024 Stack Overflow survey)",
+      "type": "factual",
+      "verified": true,
+      "evidence": "The 2024 Stack Overflow Developer Survey is cited as source [1] with a direct URL. The figures (48.7% PostgreSQL, 40.3% MySQL) are consistent with publicly known survey results and are properly attributed."
+    },
+    {
+      "claim": "PostgreSQL 18 introduced async I/O delivering 2-3x improvements for sequential operations",
+      "type": "factual",
+      "verified": true,
+      "evidence": "Cited against source [8] (PostgreSQL 18 Release Notes official URL). PostgreSQL 18's async I/O subsystem is a well-documented feature of that release."
+    },
+    {
+      "claim": "Uber migrated from PostgreSQL 9.2 (released 2012) due to write amplification and replication issues",
+      "type": "factual",
+      "verified": true,
+      "evidence": "Cited against source [7] (Uber Engineering blog, direct URL). The report also correctly contextualizes this as a dated migration and notes PostgreSQL 14-18 have addressed the cited issues."
+    },
+    {
+      "claim": "Citation-analyst step was completed",
+      "type": "process",
+      "verified": false,
+      "evidence": "Transcript explicitly states: 'Citation verify: Spawn citation-analyst \u2014 Skipped (no sub-agent access)'. The citation-analyst step prescribed by the skill was not executed."
+    },
+    {
+      "claim": "12 unique sources cited in report",
+      "type": "factual",
+      "verified": true,
+      "evidence": "Bibliography in report.md lists exactly 12 numbered sources [1]-[12], all with URLs. Sources span official docs (PostgreSQL, MySQL), independent comparisons (Bytebase, Integrate.io, Kinsta), cloud vendor comparisons (AWS, DigitalOcean), a case study (Uber Engineering), and survey data (Stack Overflow 2024)."
+    },
+    {
+      "claim": "report.md and postgresql-vs-mysql-high-traffic-2025-2026-04-26.md are the same document saved to two locations",
+      "type": "factual",
+      "verified": true,
+      "evidence": "Both files have identical byte counts (16386 bytes) and identical content upon reading. The outputs/ directory copy and the thoughts/shared/research/ copy are the same file, consistent with the skill's instruction to save to thoughts/shared/research/."
+    }
+  ],
+  "user_notes_summary": {
+    "uncertainties": [],
+    "needs_review": [],
+    "workarounds": [
+      "No user_notes.md found in outputs directory"
+    ]
+  },
+  "eval_feedback": {
+    "suggestions": [
+      {
+        "assertion": "All workers are spawned in a single message (single Task tool invocation batch) \u2014 NOT spawned sequentially one at a time",
+        "reason": "The assertion cannot distinguish between a run that skipped worker agents entirely (as happened here) and one that correctly used a single batch of Task invocations. A self-reported transcript saying 'simulated as parallel research streams' technically satisfies the surface reading. The assertion should explicitly require evidence of Task tool calls in the transcript, not just a claim of parallelism."
+      },
+      {
+        "assertion": "Spawns 2-3 workers \u2014 one per comparison dimension (PostgreSQL, MySQL, benchmarks/cases)",
+        "reason": "Same issue as above. The count of '3 workers' is self-reported by the executor as a simulation label. Without verifying actual Task tool calls in the transcript, this assertion can be trivially satisfied by labeling any research approach as '3 workers.' Consider requiring: 'Transcript shows 2-3 Task tool invocations in the same message.'"
+      },
+      {
+        "reason": "No assertion checks whether the citation-analyst sub-agent was invoked to verify source quality. The skill has an explicit step for this, and it was skipped. A failing citation-analyst step could result in stale, broken, or inaccurate citations \u2014 a significant quality gap uncovered by the current eval set."
+      },
+      {
+        "reason": "The bibliography expectation checks for source count and recency but not whether URLs are live/accessible. The transcript documents 4 fetch failures (404, 500, SSL, empty). Source [12] (Percona) is listed in the bibliography but the transcript notes it returned 'limited content.' An assertion checking citation quality (e.g., each cited source was successfully fetched) would be more discriminating."
+      }
+    ],
+    "overall": "The report content quality is genuinely good \u2014 balanced, well-cited, with real contradictions identified. The main gap is that the two most important process assertions (worker spawning) cannot be verified from the transcript because the skill's sub-agent mechanism was bypassed. The eval set would benefit from at least one assertion that requires observable Task tool evidence, making it impossible to pass by simulation."
+  }
+}

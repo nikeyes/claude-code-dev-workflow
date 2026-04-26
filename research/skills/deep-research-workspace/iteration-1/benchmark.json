@@ -1,0 +1,714 @@
+{
+  "metadata": {
+    "skill_name": "deep-research",
+    "skill_path": "<path/to/skill>",
+    "executor_model": "<model-name>",
+    "analyzer_model": "<model-name>",
+    "timestamp": "2026-04-26T13:07:23Z",
+    "evals_run": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "runs_per_configuration": 3
+  },
+  "runs": [
+    {
+      "eval_id": 1,
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 6,
+        "failed": 0,
+        "total": 6,
+        "time_seconds": 220.7,
+        "tokens": 12455,
+        "tool_calls": 18,
+        "errors": 5
+      },
+      "expectations": [
+        {
+          "text": "Spawns 1 worker (acceptable: max 2) \u2014 does NOT spawn 3+ workers for a simple definition query",
+          "passed": true,
+          "evidence": "Transcript Step 4 states the skill decided on '2 workers' for this query, which is within the acceptable max-2 range. The Task tool was unavailable, so 0 actual sub-agents were spawned, but the planning decision was 2. No evidence of 3+ workers being spawned or planned."
+        },
+        {
+          "text": "Saves the report to thoughts/shared/research/[topic]-[YYYY-MM-DD].md with YAML frontmatter",
+          "passed": true,
+          "evidence": "File confirmed at thoughts/shared/research/webassembly-what-it-is-and-problems-it-solves-2026-04-26.md. Transcript Step 10 confirms: 'Report saved to /Users/jorge.castro/mordor/personal/stepwise-dev/thoughts/shared/research/webassembly-what-it-is-and-problems-it-solves-2026-04-26.md'. File contains YAML frontmatter with all required fields."
+        },
+        {
+          "text": "Report contains an Executive Summary section with 3-5 sentences directly answering 'what is WebAssembly and what problem does it solve'",
+          "passed": true,
+          "evidence": "The report's Executive Summary contains exactly 4 sentences. Sentence 1 defines WebAssembly as 'a low-level binary instruction format and compilation target designed to run in modern web browsers at near-native speed.' Sentence 2 names the problem: 'the fundamental performance ceiling that JavaScript imposes on computationally intensive web applications.' Sentences 3-4 explain the mechanism and extend to WASI/cloud contexts."
+        },
+        {
+          "text": "Bibliography contains at least 5 numbered citations with real URLs (not placeholder [URL] tokens)",
+          "passed": true,
+          "evidence": "Bibliography contains 10 numbered citations, all with real, specific URLs. Examples: [1] https://webassembly.org/, [2] https://developer.mozilla.org/en-US/docs/WebAssembly/Guides/Concepts, [8] https://www.figma.com/blog/webassembly-cut-figmas-load-time-by-3x/. No placeholder [URL] tokens found."
+        },
+        {
+          "text": "Sources include at least one from an authoritative domain (.org, .io, MDN, official docs) \u2014 not just Wikipedia or training data summaries",
+          "passed": true,
+          "evidence": "Multiple authoritative sources are present: [1] webassembly.org (official site), [2][3] developer.mozilla.org (MDN official docs), [6] v8.dev (V8 engine team blog), [10] bytecodealliance.org (.org standards body). No Wikipedia links appear in the bibliography."
+        },
+        {
+          "text": "YAML frontmatter includes title, date, query, keywords, status: complete, agent_count, and source_count fields",
+          "passed": true,
+          "evidence": "Frontmatter confirmed: title: 'Research on WebAssembly - What It Is and What Problem It Solves', date: 2026-04-26, query: 'What is WebAssembly and what problem does it solve?', keywords: 'WebAssembly, Wasm, web performance, binary format, compilation target, JavaScript, WASI, portability', status: complete, agent_count: 2, source_count: 10. All 7 required fields present."
+        }
+      ],
+      "notes": [
+        "agent_count field in YAML frontmatter is set to 2, but actual sub-agent spawns were 0 due to Task tool unavailability. The count reflects planned workers, not actual agents.",
+        "Task tool with subagent_type was unavailable; research workers simulated via parallel WebFetch batches",
+        "Citation analyst could not be spawned; inline URL verification performed instead"
+      ]
+    },
+    {
+      "eval_id": 2,
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.6,
+        "passed": 3,
+        "failed": 2,
+        "total": 5,
+        "time_seconds": 208.3,
+        "tokens": 12096,
+        "tool_calls": null,
+        "errors": 2
+      },
+      "expectations": [
+        {
+          "text": "Spawns 1-2 workers \u2014 does NOT spawn 4+ for a how-to question that can be answered with 2 focused searches",
+          "passed": true,
+          "evidence": "Transcript Step 2 classifies the query as 'How-to guide (medium complexity): 2 workers warranted (one per axis)'. Step 4 documents exactly 2 simulated workers (Worker 1 \u2014 JWT Mechanics, Worker 2 \u2014 JWT Security Pitfalls). Step 10 summary confirms: 'Workers spawned: 2'."
+        },
+        {
+          "text": "Report weaves JWT mechanics and security pitfalls into a coherent narrative \u2014 NOT two sequential sections that read like raw worker dumps",
+          "passed": false,
+          "evidence": "The report is organized as two clearly separated sections: 'JWT Structure and How It Works' followed by 'Common Security Pitfalls', each covering its own topic independently. There is no narrative weaving \u2014 mechanics and pitfalls are not interleaved or cross-referenced within paragraphs. The Executive Summary briefly mentions both axes, but the Detailed Findings reads as two sequential worker dumps. The Cross-References section acknowledges consensus but does not integrate mechanics into the pitfall discussion (e.g., the alg:none pitfall section does not explain the header structure it exploits in context)."
+        },
+        {
+          "text": "Report names at least 3 specific JWT security pitfalls (e.g., alg:none attack, missing expiry validation, insecure secret storage) with source citations",
+          "passed": true,
+          "evidence": "The report enumerates 9 distinct named pitfalls, each with citations: (1) alg:none attack [2][8]; (2) Algorithm Confusion RS256\u2192HS256 [3][8]; (3) Weak Signing Keys and Brute-Force [2][3][5][4]; (4) Header Parameter Injection [3]; (5) Missing/Incomplete Claim Validation including exp check [4][7]; (6) Sensitive Data Exposure [5][7]; (7) Token Storage XSS/CSRF [5]; (8) No Token Revocation [5][7]; (9) Compression Oracle Attacks [4]. All 9 include inline citations referencing the bibliography."
+        },
+        {
+          "text": "Spawns the citation-analyst agent after generating the report to verify citation accuracy",
+          "passed": false,
+          "evidence": "Transcript Step 8 explicitly states: 'The stepwise-research:citation-analyst agent was not directly spawnable in this eval context. Citation verification was performed manually.' Step 10 summary confirms: 'citation-analyst called: No (simulated manually)'. The citation-analyst agent was not spawned \u2014 manual URL accessibility checks were substituted. This is a process failure regardless of whether the manual check produced equivalent results."
+        },
+        {
+          "text": "Report includes a 'Cross-References and Contradictions' section that discusses areas of consensus or disagreement across sources",
+          "passed": true,
+          "evidence": "The report contains a dedicated 'Cross-References and Contradictions' section (report.md lines 134-143). It identifies: (1) consensus across RFC 7519, RFC 8725, OWASP, Auth0, PortSwigger, and Curity on algorithm allowlisting, claim validation, key entropy, and short token lifetimes; (2) a notable tension around storage recommendations (OWASP closure-based vs. HttpOnly cookies in practice); (3) a supersession tension between RFC 8725 and RFC 7519 on algorithm agility philosophy; (4) gaps in federated JWT and post-quantum readiness coverage."
+        }
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": 3,
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.67,
+        "passed": 4,
+        "failed": 2,
+        "total": 6,
+        "time_seconds": 268.1,
+        "tokens": 32772,
+        "tool_calls": null,
+        "errors": 4
+      },
+      "expectations": [
+        {
+          "text": "All workers are spawned in a single message (single Task tool invocation batch) \u2014 NOT spawned sequentially one at a time",
+          "passed": false,
+          "evidence": "The transcript explicitly states: 'The environment did not have access to the stepwise-research:research-worker sub-agent type, so research was conducted directly using parallel WebFetch calls.' No Task tool invocations were made at all. The transcript self-reports 'All 3 research streams launched in a SINGLE message (parallel WebFetch calls)' but the expectation specifically requires Task tool invocations \u2014 the fundamental sub-agent spawning mechanism the skill prescribes. WebFetch batches are a workaround, not compliance with the skill's worker-spawning step."
+        },
+        {
+          "text": "Spawns 2-3 workers \u2014 one per comparison dimension (PostgreSQL, MySQL, benchmarks/cases)",
+          "passed": false,
+          "evidence": "Transcript describes 3 sub-questions mapping to the 3 prescribed dimensions (PostgreSQL architecture/features, MySQL architecture/features, benchmarks/case studies), which is the right structure. However, no actual worker agents (Task tool) were spawned \u2014 the skill's research-worker sub-agents were skipped entirely due to environment limitations. The assertion checks spawning of workers (agents), not research streams modeled as direct WebFetch calls. Counting parallel WebFetch batches as 'workers spawned' is superficial compliance."
+        },
+        {
+          "text": "Report covers both PostgreSQL AND MySQL with equivalent depth \u2014 neither is treated as an afterthought",
+          "passed": true,
+          "evidence": "The report dedicates equivalent coverage to both databases across all 6 major sections: Architecture (both connection models analyzed), Performance (both read and write scenarios), Scalability/Replication (both WAL-based and binlog-based replication), Features (both ecosystems), Adoption (both trends), and Case Studies (Uber migration, Instagram PostgreSQL, Wikipedia MySQL). MySQL-specific content includes InnoDB Cluster, NDB Cluster, online DDL tooling, and MySQL 9.x innovations. Neither database is treated as secondary."
+        },
+        {
+          "text": "Cross-References section identifies at least one real disagreement or nuance between sources (e.g., MySQL faster for simple reads vs PostgreSQL better for complex queries)",
+          "passed": true,
+          "evidence": "The Cross-References section identifies two substantive contradictions: (1) Uber's engineering blog [7] presents PostgreSQL as fundamentally flawed for high-write workloads vs. PostgreSQL advocates (citing [2][8]) noting the issues are version-specific (9.2, 2012) and addressed in PostgreSQL 14-18. (2) AWS and DigitalOcean sources [5][6] claim MySQL is simpler to operate vs. Bytebase [2] which notes that MySQL's simplicity comes at the cost of fewer features. Both contradictions are real disagreements between named sources, not just summaries of a consensus."
+        },
+        {
+          "text": "Bibliography includes at least 3 sources dated 2023 or later, or sources that discuss recent versions (PostgreSQL 15+, MySQL 8+)",
+          "passed": true,
+          "evidence": "The bibliography includes at least 4 qualifying sources: [1] Stack Overflow Developer Survey 2024 (2024 data), [8] PostgreSQL 18 Release Notes (discusses PostgreSQL 18), [9] MySQL 9.6 Reference Manual (discusses MySQL 9.x), [10] MySQL 8.4 Reference Manual (discusses MySQL 8.4). Additionally [2] Bytebase comparison explicitly covers MySQL 8.0+ and recent PostgreSQL versions. More than 3 sources clearly qualify."
+        },
+        {
+          "text": "Conclusions section includes a clear recommendation (or decision framework) for when to choose PostgreSQL vs MySQL \u2014 not 'it depends' without criteria",
+          "passed": true,
+          "evidence": "The Conclusions section provides explicit, criteria-driven recommendations: 'PostgreSQL is the stronger default choice for new high-traffic web applications in 2025' with rationale (extensibility, write concurrency, ecosystem), and 'MySQL remains the better choice for read-dominated, connection-heavy workloads such as CMS platforms, e-commerce catalogs, and applications requiring simple horizontal read scaling.' The framework is actionable \u2014 specific workload types, not vague 'it depends' language."
+        }
+      ],
+      "notes": [
+        "No user_notes.md found in outputs directory"
+      ]
+    },
+    {
+      "eval_id": 4,
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.33,
+        "passed": 2,
+        "failed": 4,
+        "total": 6,
+        "time_seconds": 623.9,
+        "tokens": 22669,
+        "tool_calls": null,
+        "errors": 26
+      },
+      "expectations": [
+        {
+          "text": "Spawns at least 4 workers \u2014 recognizes this is multi-faceted, not a simple how-to",
+          "passed": false,
+          "evidence": "The transcript explicitly states: 'Workers spawned: 6 (simulated via parallel WebFetch batches, since the Task subagent tool was not available in the environment)'. No actual worker subagents were spawned \u2014 the Task tool was unavailable and the executor fell back to direct parallel WebFetch calls. While 6 sub-questions were defined and 6 parallel fetch batches were executed, these are not workers in the skill's intended sense (stepwise-research:research-worker subagents via Task tool). The skill's multi-agent architecture was not exercised."
+        },
+        {
+          "text": "Worker sub-questions cover distinct facets: at minimum challenges, tooling/vendors, ROI evidence, AND security/compliance as separate workers",
+          "passed": true,
+          "evidence": "All 4 required facets appear as distinct sub-questions: sub-question 2 ('Key challenges and barriers to enterprise AI implementation'), sub-question 3 ('Enterprise AI tooling landscape and platform ecosystem'), sub-question 4 ('ROI measurement, business impact, and financial outcomes'), and sub-question 5 ('Security, privacy, and governance concerns'). Each became its own H3 section in the report with distinct sources."
+        },
+        {
+          "text": "All 4+ workers are spawned in a single message \u2014 NOT spawned in multiple sequential rounds",
+          "passed": false,
+          "evidence": "No workers were actually spawned via the Task tool. The executor self-reports: 'Since the Task subagent spawning tool was not available in this environment, the workflow was executed directly with parallel WebFetch calls grouped by sub-question.' This is a simulation, not real parallel worker spawning. The assertion cannot be verified as satisfied because the underlying mechanism (Task tool + research-worker subagents) was never used."
+        },
+        {
+          "text": "Report identifies or flags when sources show vendor bias (e.g., vendor case studies claiming high ROI) and cross-references with independent analysts",
+          "passed": false,
+          "evidence": "The report does not flag vendor bias anywhere. Section 4 (ROI) heavily relies on Google Cloud's case study database [5] for quantified outcomes (the '$17M revenue lift', '54% cost reduction', '95% task time reduction' figures), which are all sourced directly from a vendor's marketing content. The Cross-References and Contradictions section notes that 'documented success stories may not be representative' and that 'large-scale aggregate ROI data remains limited', but does not explicitly flag Google Cloud, Microsoft, or Capgemini as potentially biased sources, nor does it systematically cross-reference their ROI claims with independent analysts. The transcript's quality assessment notes 'Source diversity' without cautioning about vendor interest in reported outcomes."
+        },
+        {
+          "text": "Total source count in frontmatter is 15 or more \u2014 befitting a multi-faceted research topic",
+          "passed": false,
+          "evidence": "The frontmatter explicitly states 'source_count: 10', and the bibliography lists exactly 10 sources. The transcript confirms: 'Total unique sources in bibliography: 10'. The transcript also documents 26 failed fetch attempts (McKinsey, Gartner, IBM, Stanford HAI, PwC, BCG, Forrester, etc.) that reduced the available source pool. 10 sources falls well short of the 15 minimum."
+        },
+        {
+          "text": "Detailed Findings section has multiple H3 themes that pull from multiple workers \u2014 NOT a series of 'Worker 1 says..., Worker 2 says...' sections",
+          "passed": true,
+          "evidence": "The Detailed Findings contains 6 H3 sections, none of which reference workers by number. Each section synthesizes across multiple sources: for example, section 2 (Key Challenges) cites [2][3][7][8][9] and weaves them into a unified narrative about data readiness, skills gaps, strategic-operational disconnect, and adoption gaps \u2014 without attributing findings to workers. Section 4 (ROI) similarly pulls from [3][5][2][9] into coherent paragraphs. The Cross-References section explicitly synthesizes contradictions across sources rather than listing worker outputs."
+        }
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": 5,
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 4,
+        "failed": 0,
+        "total": 4,
+        "time_seconds": 39.6,
+        "tokens": 2075,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "Does NOT spawn research workers before asking for clarification \u2014 the topic is too ambiguous to sub-question usefully",
+          "passed": true,
+          "evidence": "Transcript Step 3 explicitly states 'No. I recognized the ambiguity and did NOT spawn any research workers.' The would_ask.md concludes: 'I stopped here and did NOT spawn any research workers. I will wait for the user's answers before proceeding to Step 2 (Analyze Query Complexity).' No Task tool calls or worker spawning is documented anywhere in the transcript."
+        },
+        {
+          "text": "Uses the AskUserQuestion tool to ask at least one clarifying question about the domain or context",
+          "passed": true,
+          "evidence": "AskUserQuestion was unavailable in the subagent eval harness. Per the eval note, the agent correctly wrote a would_ask.md showing intent. The file contains two well-formed clarifying questions. This is assessed as PASS with partial credit per the eval instructions: 'A would_ask.md with appropriate questions AND not spawning workers = PASS for assertions 1, 3, 4. Assertion 2 about actually using the tool = partial credit (note the eval harness limitation but assess intent).' Intent is clearly demonstrated."
+        },
+        {
+          "text": "The clarifying question targets the domain (web? database? team? hardware?) or the intended use case \u2014 not just asking 'can you elaborate?'",
+          "passed": true,
+          "evidence": "Question 1 in would_ask.md directly targets the domain with a concrete multi-choice list: 'Software/application performance (latency, throughput, CPU/memory usage)', 'Database performance (query optimization, indexing, scaling)', 'Web performance (Core Web Vitals, page load speed, rendering)', 'System/infrastructure performance', 'Human/organizational performance', etc. Question 2 targets the intended use case: 'Are you facing a specific performance problem you need to solve?', 'Is this for general learning or education?', etc. Neither question is a vague 'can you elaborate?'."
+        },
+        {
+          "text": "Asks at most 2 clarifying questions \u2014 does NOT fire a five-question interrogation at the user",
+          "passed": true,
+          "evidence": "would_ask.md contains exactly 2 clarifying questions: Question 1 (domain) and Question 2 (use case). The multi-choice options within each question are presented as answer choices, not as separate questions. Exactly 2 questions \u2014 within the 1-2 limit specified by the skill."
+        }
+      ],
+      "notes": [
+        "AskUserQuestion tool was unavailable in the subagent eval harness; agent wrote would_ask.md as a substitute to document intended questions"
+      ]
+    },
+    {
+      "eval_id": 6,
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.83,
+        "passed": 5,
+        "failed": 1,
+        "total": 6,
+        "time_seconds": 262.1,
+        "tokens": 17703,
+        "tool_calls": 15,
+        "errors": 3
+      },
+      "expectations": [
+        {
+          "text": "Spawns 4-6 workers \u2014 recognizes this is a controversial multi-faceted comparison, not a simple definition",
+          "passed": true,
+          "evidence": "Transcript explicitly states 'Workers Spawned: 5' with a table listing 5 distinct workers: (1) case FOR monolith, (2) case FOR microservices, (3) real-world startup case studies, (4) technical trade-offs and operational complexity, (5) monolith-first strategy and migration patterns. The transcript also notes 'Complexity Assessment: 4-6 workers recommended per skill instructions' and 'Query Type Identified: Controversial topic (pros and cons)'."
+        },
+        {
+          "text": "At least one worker is explicitly tasked with researching the case FOR monolith (not just 'monolith disadvantages')",
+          "passed": true,
+          "evidence": "Worker 1 is explicitly titled 'The case FOR monolith architecture for startups -- advantages, success stories, and when monolith is the right choice' with the note 'Pro-monolith perspective (specifically required for controversial topic)'. The transcript notes this was inspired by the skill's requirement for balanced perspectives. The report's Section 1 is titled 'The Strong Case FOR Monolith Architecture' and contains substantive pro-monolith arguments."
+        },
+        {
+          "text": "Report explicitly includes the perspective that microservices can be premature for early startups \u2014 not just listing microservices benefits",
+          "passed": true,
+          "evidence": "The executive summary states 'premature adoption of microservices introduces complexity that kills startup velocity.' The Conclusions section has a dedicated bullet: 'Premature microservice adoption is a significant risk. Segment's burnout, Amazon Prime Video's 90% cost overrun, and Uber's networked monolith problems all demonstrate that microservices without operational maturity create more problems than they solve.' Section 3 (Cautionary Tales) is entirely dedicated to companies harmed by premature microservices adoption."
+        },
+        {
+          "text": "Conclusions section names specific conditions under which a monolith is the correct choice (e.g., team size, traffic scale, deployment complexity)",
+          "passed": true,
+          "evidence": "Conclusions bullet 2 explicitly names team size: 'If your startup has fewer than 50-100 engineers, microservices likely add more complexity than they remove.' Bullet 1 names conditions: 'speed, simplicity, and boundary discovery.' The Detailed Findings in Section 1 also cite 'Small teams (under 20-30 engineers) rarely need microservices-level independence' and Section 4 names deployment maturity ('Microservices require mature DevOps culture that most startups lack') as a condition."
+        },
+        {
+          "text": "Cross-References section acknowledges this is an active debate with no consensus \u2014 does NOT present one architecture as objectively superior",
+          "passed": false,
+          "evidence": "The Cross-References section does map disagreements (DHH vs Uber/Microsoft vs Richardson on timing of transition), which is positive. However, both the executive summary and the Cross-References section itself present monolith-first as an 'overwhelming consensus': 'Across all 12 sources, there is remarkable agreement on several points: (1) startups should begin with a monolith...' The section frames the debate as settled in favor of monolith-first for startups, rather than acknowledging it as an active debate with no consensus. The report explicitly says the 'overwhelming consensus... is that growing startups should start with a monolith' \u2014 presenting one approach as objectively correct. While this may reflect the actual state of industry opinion, the expectation requires the report NOT to present one architecture as objectively superior, which it clearly does."
+        },
+        {
+          "text": "Bibliography includes real case studies or engineering blog posts from both monolith and microservices success stories (not just architectural theory)",
+          "passed": true,
+          "evidence": "Bibliography includes real engineering blog posts from both camps: monolith/retreat success stories include [4] Segment/Twilio's 'Goodbye Microservices' blog post, [9] Shopify Engineering's modular monolith post, and [11] Amazon Prime Video Tech Blog's '90% cost reduction' post. Microservices success stories include [7] Uber Engineering Blog on microservice architecture. These are genuine engineering blogs, not just architectural theory. Sources [1] Martin Fowler, [2] DHH, and [3]/[6] Chris Richardson add thought-leader perspective beyond pure case studies."
+        }
+      ],
+      "notes": [
+        "The skill could not spawn Task-based sub-agents in this environment, so research was conducted via 5 parallel web research streams simulating the worker pattern. This means actual parallelism was not achieved."
+      ]
+    },
+    {
+      "eval_id": 7,
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.75,
+        "passed": 3,
+        "failed": 1,
+        "total": 4,
+        "time_seconds": 86.0,
+        "tokens": 1511,
+        "tool_calls": null,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "Spawns at most 1 worker \u2014 does NOT treat a factual lookup as a 'state-of-the-art' research topic requiring 4+ workers",
+          "passed": true,
+          "evidence": "Transcript states: 'Workers Spawned: 1 worker (correct per skill instructions for a simple definition query).' The skill classified the query as a 'simple definition' per its complexity table and acted accordingly. The orchestrator conducted research directly due to an infra limitation, not due to skill misbehavior. The behavioral table in the transcript confirms: 'Workers spawned | 1 | 1 (direct research, no subagent tool available) | PASS'."
+        },
+        {
+          "text": "Does NOT produce a 15+ source bibliography or a 5-theme detailed findings report for a question answerable in one sentence",
+          "passed": true,
+          "evidence": "The report.md contains exactly 2 bibliography entries and 1 theme section ('Definition and Meaning'). Transcript confirms: '~300 words, 2 bibliography entries, 1 theme section (no unnecessary multi-section bloat)'. The skill correctly scoped the output to the trivial nature of the query."
+        },
+        {
+          "text": "Directly answers what HTTP 404 means \u2014 user receives the information without navigating a research infrastructure",
+          "passed": true,
+          "evidence": "The report opens with a clear 3-sentence Executive Summary: 'HTTP 404 (\"Not Found\") is a client error response status code indicating that the server cannot find the requested resource.' The answer is front-loaded and unambiguous. A user reading the report immediately gets the answer without having to parse methodology sections or multi-agent scaffolding."
+        },
+        {
+          "text": "Does NOT spawn citation-analyst for a widely-known standard fact \u2014 avoids wasting agent overhead on trivial queries",
+          "passed": false,
+          "evidence": "Transcript states: 'Citation-analyst spawned? No. The citation-analyst agent (step 8 of the skill) was not spawned. The Task tool for spawning stepwise-research:citation-analyst was not available.' The tool was not available as an infrastructure limitation of the eval harness, not because the skill decided to skip it. The transcript notes: 'In a full deployment, the skill specifies this agent should always be spawned after report generation.' This means the skill WOULD have spawned citation-analyst unconditionally even for this trivial query if the tool had been available. The expectation asks that citation-analyst be intentionally omitted for trivial queries \u2014 that behavior was not demonstrated; it was only absent due to tooling constraints."
+        }
+      ],
+      "notes": [
+        "Citation-analyst was not spawned due to tool unavailability \u2014 it is unclear whether the skill would intentionally skip it for trivial queries in a full deployment, or always invoke it regardless of query complexity.",
+        "Orchestrator acted as single research worker directly because the Task tool for spawning stepwise-research:research-worker was unavailable in the eval harness."
+      ]
+    },
+    {
+      "eval_id": 1,
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.17,
+        "passed": 1,
+        "failed": 5,
+        "total": 6,
+        "time_seconds": 50.6,
+        "tokens": 5386,
+        "tool_calls": 3,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "Spawns 1 worker (acceptable: max 2) \u2014 does NOT spawn 3+ workers for a simple definition query",
+          "passed": true,
+          "evidence": "Transcript explicitly states: 'Sub-agents: None'. Zero workers were spawned. The model answered directly from training data with no sub-agent invocations."
+        },
+        {
+          "text": "Saves the report to thoughts/shared/research/[topic]-[YYYY-MM-DD].md with YAML frontmatter",
+          "passed": false,
+          "evidence": "The report was saved to 'outputs/report.md', not to thoughts/shared/research/. No YAML frontmatter is present in the report \u2014 it begins directly with a markdown H1 heading '# WebAssembly: What It Is and the Problem It Solves'."
+        },
+        {
+          "text": "Report contains an Executive Summary section with 3-5 sentences directly answering 'what is WebAssembly and what problem does it solve'",
+          "passed": false,
+          "evidence": "No section labeled 'Executive Summary' exists in the report. The report has sections titled 'What is WebAssembly?', 'The Problem WebAssembly Solves', 'Key Use Cases', 'Beyond the Browser: WASI', 'How WebAssembly Relates to JavaScript', and 'Summary'. None is called 'Executive Summary'."
+        },
+        {
+          "text": "Bibliography contains at least 5 numbered citations with real URLs (not placeholder [URL] tokens)",
+          "passed": false,
+          "evidence": "No bibliography, references, or citations section exists in the report. The transcript itself acknowledges this limitation: 'No citations or links to primary sources'. The report contains zero URLs."
+        },
+        {
+          "text": "Sources include at least one from an authoritative domain (.org, .io, MDN, official docs) \u2014 not just Wikipedia or training data summaries",
+          "passed": false,
+          "evidence": "No sources of any kind are cited in the report. The entire content is drawn from training data with no external references, authoritative or otherwise. The transcript confirms: 'Source: Training data only (knowledge cutoff applies)'."
+        },
+        {
+          "text": "YAML frontmatter includes title, date, query, keywords, status: complete, agent_count, and source_count fields",
+          "passed": false,
+          "evidence": "The report contains no YAML frontmatter whatsoever. It begins directly with a markdown heading. None of the required fields (title, date, query, keywords, status, agent_count, source_count) are present."
+        }
+      ],
+      "notes": [
+        "Benchmark figures (50-80% of native speed) cannot be verified against current measurements",
+        "No real-time information on latest Wasm proposals or browser support status beyond training cutoff",
+        "Model answered from training data only \u2014 no web search or sub-agents used, which is a fundamental departure from the expected deep research workflow"
+      ]
+    },
+    {
+      "eval_id": 2,
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.4,
+        "passed": 2,
+        "failed": 3,
+        "total": 5,
+        "time_seconds": 79.0,
+        "tokens": 6650,
+        "tool_calls": 3,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "Spawns 1-2 workers \u2014 does NOT spawn 4+ for a how-to question that can be answered with 2 focused searches",
+          "passed": true,
+          "evidence": "The transcript explicitly states: 'No sub-agents (codebase-locator, research-worker, etc.) were spawned.' Zero workers were spawned, which is fewer than 4. However, the spirit of this assertion (that a focused question should not over-parallelize) is trivially satisfied here because no research infrastructure was used at all \u2014 no web searches, no agents."
+        },
+        {
+          "text": "Report weaves JWT mechanics and security pitfalls into a coherent narrative \u2014 NOT two sequential sections that read like raw worker dumps",
+          "passed": false,
+          "evidence": "The report is structured as two completely separate sequential sections: '## How JWT Works' followed by '## Common Security Pitfalls'. There is no narrative weaving \u2014 the mechanics section ends with a horizontal rule, then the pitfalls section begins independently. The pitfalls do not reference the mechanics text, and the mechanics section does not anticipate or contextualize the pitfalls. This is precisely the 'two sequential sections' anti-pattern the assertion warns against."
+        },
+        {
+          "text": "Report names at least 3 specific JWT security pitfalls (e.g., alg:none attack, missing expiry validation, insecure secret storage) with source citations",
+          "passed": true,
+          "evidence": "The report names 10 specific pitfalls: (1) alg:none attack, (2) RS256\u2192HS256 algorithm confusion, (3) weak/exposed secrets, (4) missing claim validation (exp, iss, aud, nbf), (5) localStorage storage, (6) no token revocation, (7) long token lifetimes, (8) sensitive data in payload, (9) CSRF with cookie-stored JWTs, (10) JWT header injection (kid, jku, x5u). A 10-entry Bibliography includes RFC 7519, Auth0's article on alg:none/algorithm confusion vulnerabilities, OWASP JWT Cheat Sheet, and PortSwigger's JWT attack guide. Note: citations are drawn from training knowledge and not live-verified."
+        },
+        {
+          "text": "Spawns the citation-analyst agent after generating the report to verify citation accuracy",
+          "passed": false,
+          "evidence": "The transcript explicitly states: 'No sub-agents (codebase-locator, research-worker, etc.) were spawned.' The 'What Was NOT Done' section further confirms: 'No sub-agents [...] were spawned.' No citation-analyst agent was invoked at any point."
+        },
+        {
+          "text": "Report includes a 'Cross-References and Contradictions' section that discusses areas of consensus or disagreement across sources",
+          "passed": false,
+          "evidence": "The report contains four sections: 'How JWT Works', 'Common Security Pitfalls', a Summary Table, and a Bibliography. There is no 'Cross-References and Contradictions' section or any equivalent discussion of consensus or disagreement across sources. Since the report was generated from a single pass of training knowledge rather than synthesizing multiple retrieved sources, cross-referencing was structurally impossible."
+        }
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": 3,
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.33,
+        "passed": 2,
+        "failed": 4,
+        "total": 6,
+        "time_seconds": 84.2,
+        "tokens": 6100,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "All workers are spawned in a single message (single Task tool invocation batch) \u2014 NOT spawned sequentially one at a time",
+          "passed": false,
+          "evidence": "The transcript explicitly states: 'No sub-agents were spawned.' and 'No multi-agent research pipeline was used.' Zero Task tool calls were made. The report was generated directly from the model's training knowledge in a single LLM call with no worker spawning at all."
+        },
+        {
+          "text": "Spawns 2-3 workers \u2014 one per comparison dimension (PostgreSQL, MySQL, benchmarks/cases)",
+          "passed": false,
+          "evidence": "Transcript confirms: 'No sub-agents were spawned.' No workers of any kind were created. The transcript notes this was done entirely without the deep-research skill or any multi-agent workflow."
+        },
+        {
+          "text": "Report covers both PostgreSQL AND MySQL with equivalent depth \u2014 neither is treated as an afterthought",
+          "passed": true,
+          "evidence": "The report.md covers both databases across 9 dimensions (Architecture, Performance, Replication/HA, Features, Ecosystem, Operations, Licensing, Decision Guide, Scorecard). Each dimension provides subsections for both PostgreSQL and MySQL with comparable detail. The summary scorecard evaluates both across 13 categories. Neither database is an afterthought."
+        },
+        {
+          "text": "Cross-References section identifies at least one real disagreement or nuance between sources (e.g., MySQL faster for simple reads vs PostgreSQL better for complex queries)",
+          "passed": false,
+          "evidence": "There is no 'Cross-References' section and no external sources were consulted. The transcript explicitly states: 'No external sources were consulted.' While the report does note performance nuances (e.g., 'For pure high-throughput OLTP... both are competitive', 'MySQL InnoDB historically had lower write amplification'), these are not sourced disagreements between references \u2014 they are unsupported claims from training data."
+        },
+        {
+          "text": "Bibliography includes at least 3 sources dated 2023 or later, or sources that discuss recent versions (PostgreSQL 15+, MySQL 8+)",
+          "passed": false,
+          "evidence": "No bibliography exists in the report. The transcript confirms: 'No external sources were consulted.' The report ends with a disclaimer: 'This report is based on knowledge current through early 2025 and general industry trends.' While the report mentions PostgreSQL 15/16 and MySQL 8.x in the text, these are not cited references."
+        },
+        {
+          "text": "Conclusions section includes a clear recommendation (or decision framework) for when to choose PostgreSQL vs MySQL \u2014 not 'it depends' without criteria",
+          "passed": true,
+          "evidence": "Section 8 'When to Choose Each' lists concrete criteria for each database (e.g., 'Choose PostgreSQL when: complex queries, JSONB, pgvector, PostGIS, open-source governance...' and 'Choose MySQL when: Vitess sharding, existing MySQL codebase, WordPress/PHP ecosystem...'). The Conclusion section gives a direct verdict: 'PostgreSQL is the default recommendation for new high-traffic web applications.' Clear criteria are provided, not a vague 'it depends.'"
+        }
+      ],
+      "notes": [
+        "Cannot cite specific benchmark numbers from recent publications",
+        "May miss very recent feature releases (PostgreSQL 17+ features released after training cutoff)",
+        "Does not reflect latest cloud pricing or managed service updates",
+        "Cannot verify claims against current documentation",
+        "Entire report generated from model training data rather than live research \u2014 no web searches or agent spawning performed"
+      ]
+    },
+    {
+      "eval_id": 4,
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.0,
+        "passed": 0,
+        "failed": 6,
+        "total": 6,
+        "time_seconds": 138.8,
+        "tokens": 11826,
+        "tool_calls": 2,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "Spawns at least 4 workers \u2014 recognizes this is multi-faceted, not a simple how-to",
+          "passed": false,
+          "evidence": "Transcript Step 2 states explicitly: 'Without any web searches, sub-agent spawning, or retrieval tools, I composed the full report directly from knowledge acquired during model training.' Zero workers were spawned. The baseline model treated this as a single-pass synthesis task."
+        },
+        {
+          "text": "Worker sub-questions cover distinct facets: at minimum challenges, tooling/vendors, ROI evidence, AND security/compliance as separate workers",
+          "passed": false,
+          "evidence": "No workers were spawned at all. The four facets appear as sections in the report (1. Challenges, 2. Tooling Ecosystem, 3. ROI and Business Value, 4. Security and Governance), but these are headers in a monolithic document, not separate worker threads. There is no decomposition into parallel sub-questions."
+        },
+        {
+          "text": "All 4+ workers are spawned in a single message \u2014 NOT spawned in multiple sequential rounds",
+          "passed": false,
+          "evidence": "No workers were spawned at any point. The execution model was single-agent, single-pass synthesis from training knowledge. The question of spawning order is moot."
+        },
+        {
+          "text": "Report identifies or flags when sources show vendor bias (e.g., vendor case studies claiming high ROI) and cross-references with independent analysts",
+          "passed": false,
+          "evidence": "The report cites 'Multiple studies (GitHub, McKinsey)' for developer productivity gains and references a '2025 MIT/Stanford survey' for ROI timelines. No actual sources were consulted (the methodology note at the end reads: 'No live data sources consulted'). The report does not flag that GitHub (a vendor) citing its own Copilot productivity data is vendor-biased, nor does it cross-reference those claims with independent analysts. There is no bias analysis anywhere in the document."
+        },
+        {
+          "text": "Total source count in frontmatter is 15 or more \u2014 befitting a multi-faceted research topic",
+          "passed": false,
+          "evidence": "The report has no frontmatter whatsoever and no source list or citation section. The methodology note at the bottom explicitly states 'No live data sources consulted.' Source count: 0."
+        },
+        {
+          "text": "Detailed Findings section has multiple H3 themes that pull from multiple workers \u2014 NOT a series of 'Worker 1 says..., Worker 2 says...' sections",
+          "passed": false,
+          "evidence": "The report does contain multiple H3 sections (e.g., 1.1 Data Readiness, 1.2 Integration with Legacy Systems, 3.1 Where ROI Has Been Demonstrated, etc.), but these do not pull from multiple workers because no workers exist. The expectation tests for synthesis across worker outputs; with zero workers, the underlying intent of this assertion cannot be satisfied even if the surface structure (H3 headings) is present."
+        }
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": 5,
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.5,
+        "passed": 2,
+        "failed": 2,
+        "total": 4,
+        "time_seconds": 54.3,
+        "tokens": 3486,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "Does NOT spawn research workers before asking for clarification \u2014 the topic is too ambiguous to sub-question usefully",
+          "passed": true,
+          "evidence": "Transcript explicitly states 'No sub-agents were spawned.' and 'What Was Not Done: No sub-agents were spawned.' The baseline made no attempt to spawn research workers at all. However, this passes for the wrong reason \u2014 the baseline skipped clarification entirely and went straight to answering, not because it held off on spawning while waiting for clarification."
+        },
+        {
+          "text": "Uses the AskUserQuestion tool to ask at least one clarifying question about the domain or context",
+          "passed": false,
+          "evidence": "The transcript explicitly states 'No clarification requested' and documents that the model 'proceeded with best-guess assumptions rather than asking follow-up questions.' The model acknowledged the ambiguity ('A clarifying question ... would have dramatically improved the usefulness of this answer') but made no attempt to use AskUserQuestion. The report.md was generated without any user interaction."
+        },
+        {
+          "text": "The clarifying question targets the domain (web? database? team? hardware?) or the intended use case \u2014 not just asking 'can you elaborate?'",
+          "passed": false,
+          "evidence": "No clarifying question was asked at all. The baseline instead made its own domain assumptions (software/AI development, academic research, AI-assisted research tools) and produced a broad multi-domain report without any user input."
+        },
+        {
+          "text": "Asks at most 2 clarifying questions \u2014 does NOT fire a five-question interrogation at the user",
+          "passed": true,
+          "evidence": "Zero clarifying questions were asked, which is technically \u2264 2. However, this passes only trivially \u2014 the intent of this expectation is to constrain an agent that does ask questions to a reasonable number. A baseline that asks zero questions and immediately produces a shallow broad report satisfies the letter but not the spirit of this assertion when read alongside expectation 2."
+        }
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": 6,
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.33,
+        "passed": 2,
+        "failed": 4,
+        "total": 6,
+        "time_seconds": 72.7,
+        "tokens": 5123,
+        "tool_calls": 3,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "Spawns 4-6 workers \u2014 recognizes this is a controversial multi-faceted comparison, not a simple definition",
+          "passed": false,
+          "evidence": "The transcript explicitly states: 'No web searches, no sub-agents, no spawned tasks were used.' and 'This evaluation was completed without using the deep-research skill or any multi-agent workflow. The answer was generated directly from the base model's knowledge in a single pass.' Zero workers were spawned."
+        },
+        {
+          "text": "At least one worker is explicitly tasked with researching the case FOR monolith (not just 'monolith disadvantages')",
+          "passed": false,
+          "evidence": "No workers were spawned at all. The transcript confirms: 'No web searches, no sub-agents, no spawned tasks were used.' This expectation cannot be satisfied without a multi-agent workflow."
+        },
+        {
+          "text": "Report explicitly includes the perspective that microservices can be premature for early startups \u2014 not just listing microservices benefits",
+          "passed": true,
+          "evidence": "The report explicitly states in the Practical Recommendation section: 'Be wary of the \"just use microservices\" advice. Many teams that adopted microservices early spent months building platform infrastructure and debugging distributed systems issues before shipping product value.' The Microservices Cons section also lists 'Premature decomposition risk' as a named concern. This is a genuine and prominent perspective in the report, not superficial compliance."
+        },
+        {
+          "text": "Conclusions section names specific conditions under which a monolith is the correct choice (e.g., team size, traffic scale, deployment complexity)",
+          "passed": true,
+          "evidence": "The 'Decision Framework for a Growing Startup' table lists concrete conditions favoring a monolith: team size < 10-15 engineers, pre-product-market fit, domain boundaries still being discovered, low-to-medium deployment frequency, uniform load, and no dedicated platform team. The Practical Recommendation reinforces this: 'Start with a well-structured monolith. For most startups, the operational overhead of microservices will consume engineering capacity that should go toward finding product-market fit.'"
+        },
+        {
+          "text": "Cross-References section acknowledges this is an active debate with no consensus \u2014 does NOT present one architecture as objectively superior",
+          "passed": false,
+          "evidence": "The report has no 'Cross-References' section. The summary does close with 'Neither architecture is universally superior,' which is in the right spirit, but the assertion specifically requires a Cross-References section that frames this as an active debate. No such section exists, and no external references or citations are included at all."
+        },
+        {
+          "text": "Bibliography includes real case studies or engineering blog posts from both monolith and microservices success stories (not just architectural theory)",
+          "passed": false,
+          "evidence": "The report contains no bibliography section. Netflix, Amazon, and Uber are mentioned in passing as companies that 'started as monoliths and migrated incrementally,' but these are unsourced inline claims with no links, blog post references, or case study citations. No external sources of any kind are included."
+        }
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": 7,
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 4,
+        "failed": 0,
+        "total": 4,
+        "time_seconds": 20.4,
+        "tokens": 1143,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "Spawns at most 1 worker \u2014 does NOT treat a factual lookup as a 'state-of-the-art' research topic requiring 4+ workers",
+          "passed": true,
+          "evidence": "Transcript states: 'Answered directly from training data without any research workflow, sub-agents, or web searches.' Zero workers were spawned."
+        },
+        {
+          "text": "Does NOT produce a 15+ source bibliography or a 5-theme detailed findings report for a question answerable in one sentence",
+          "passed": true,
+          "evidence": "report.md is a concise document (~33 lines) with 4 short sections (Definition, What It Means, Common Causes, 404 vs. Related Codes) and no bibliography whatsoever."
+        },
+        {
+          "text": "Directly answers what HTTP 404 means \u2014 user receives the information without navigating a research infrastructure",
+          "passed": true,
+          "evidence": "report.md opens with 'HTTP 404 is a standard HTTP response status code indicating that the server could not find the requested resource' and closes with the plain-language summary 'HTTP 404 means the thing you asked for doesn\u2019t exist here.' The answer is immediate and self-contained."
+        },
+        {
+          "text": "Does NOT spawn citation-analyst for a widely-known standard fact \u2014 avoids wasting agent overhead on trivial queries",
+          "passed": true,
+          "evidence": "Transcript explicitly states no sub-agents were used. No citation-analyst or any other agent was invoked."
+        }
+      ],
+      "notes": []
+    }
+  ],
+  "run_summary": {
+    "with_skill": {
+      "pass_rate": {
+        "mean": 0.74,
+        "stddev": 0.2366,
+        "min": 0.33,
+        "max": 1.0
+      },
+      "time_seconds": {
+        "mean": 244.1,
+        "stddev": 188.7649,
+        "min": 39.6,
+        "max": 623.9
+      },
+      "tokens": {
+        "mean": 14468.7143,
+        "stddev": 11134.8319,
+        "min": 1511,
+        "max": 32772
+      }
+    },
+    "without_skill": {
+      "pass_rate": {
+        "mean": 0.39,
+        "stddev": 0.3141,
+        "min": 0.0,
+        "max": 1.0
+      },
+      "time_seconds": {
+        "mean": 71.4286,
+        "stddev": 36.7244,
+        "min": 20.4,
+        "max": 138.8
+      },
+      "tokens": {
+        "mean": 5673.4286,
+        "stddev": 3283.418,
+        "min": 1143,
+        "max": 11826
+      }
+    },
+    "delta": {
+      "pass_rate": "+0.35",
+      "time_seconds": "+172.7",
+      "tokens": "+8795"
+    }
+  },
+  "notes": []
+}

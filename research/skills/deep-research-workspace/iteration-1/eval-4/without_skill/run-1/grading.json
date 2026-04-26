@@ -1,0 +1,115 @@
+{
+  "expectations": [
+    {
+      "text": "Spawns at least 4 workers \u2014 recognizes this is multi-faceted, not a simple how-to",
+      "passed": false,
+      "evidence": "Transcript Step 2 states explicitly: 'Without any web searches, sub-agent spawning, or retrieval tools, I composed the full report directly from knowledge acquired during model training.' Zero workers were spawned. The baseline model treated this as a single-pass synthesis task."
+    },
+    {
+      "text": "Worker sub-questions cover distinct facets: at minimum challenges, tooling/vendors, ROI evidence, AND security/compliance as separate workers",
+      "passed": false,
+      "evidence": "No workers were spawned at all. The four facets appear as sections in the report (1. Challenges, 2. Tooling Ecosystem, 3. ROI and Business Value, 4. Security and Governance), but these are headers in a monolithic document, not separate worker threads. There is no decomposition into parallel sub-questions."
+    },
+    {
+      "text": "All 4+ workers are spawned in a single message \u2014 NOT spawned in multiple sequential rounds",
+      "passed": false,
+      "evidence": "No workers were spawned at any point. The execution model was single-agent, single-pass synthesis from training knowledge. The question of spawning order is moot."
+    },
+    {
+      "text": "Report identifies or flags when sources show vendor bias (e.g., vendor case studies claiming high ROI) and cross-references with independent analysts",
+      "passed": false,
+      "evidence": "The report cites 'Multiple studies (GitHub, McKinsey)' for developer productivity gains and references a '2025 MIT/Stanford survey' for ROI timelines. No actual sources were consulted (the methodology note at the end reads: 'No live data sources consulted'). The report does not flag that GitHub (a vendor) citing its own Copilot productivity data is vendor-biased, nor does it cross-reference those claims with independent analysts. There is no bias analysis anywhere in the document."
+    },
+    {
+      "text": "Total source count in frontmatter is 15 or more \u2014 befitting a multi-faceted research topic",
+      "passed": false,
+      "evidence": "The report has no frontmatter whatsoever and no source list or citation section. The methodology note at the bottom explicitly states 'No live data sources consulted.' Source count: 0."
+    },
+    {
+      "text": "Detailed Findings section has multiple H3 themes that pull from multiple workers \u2014 NOT a series of 'Worker 1 says..., Worker 2 says...' sections",
+      "passed": false,
+      "evidence": "The report does contain multiple H3 sections (e.g., 1.1 Data Readiness, 1.2 Integration with Legacy Systems, 3.1 Where ROI Has Been Demonstrated, etc.), but these do not pull from multiple workers because no workers exist. The expectation tests for synthesis across worker outputs; with zero workers, the underlying intent of this assertion cannot be satisfied even if the surface structure (H3 headings) is present."
+    }
+  ],
+  "summary": {
+    "passed": 0,
+    "failed": 6,
+    "total": 6,
+    "pass_rate": 0.0
+  },
+  "execution_metrics": {
+    "tool_calls": {},
+    "total_tool_calls": 2,
+    "total_steps": 4,
+    "errors_encountered": 0,
+    "output_chars": 11826,
+    "transcript_chars": 2456
+  },
+  "timing": {
+    "executor_duration_seconds": 138.8,
+    "grader_duration_seconds": 0.0,
+    "total_duration_seconds": 138.8
+  },
+  "claims": [
+    {
+      "claim": "Multiple studies (GitHub, McKinsey) report 20\u201355% productivity gains for developers using AI coding assistants",
+      "type": "factual",
+      "verified": false,
+      "evidence": "The methodology note confirms no live data sources were consulted. This figure is drawn from training-data recollection, not a verified citation. GitHub and McKinsey have published productivity research but the 20\u201355% range conflates multiple studies with different methodologies and cannot be traced to a primary source here."
+    },
+    {
+      "claim": "A 2025 MIT/Stanford survey of 1,000 enterprise AI deployments found median ROI positive at 12\u201318 months",
+      "type": "factual",
+      "verified": false,
+      "evidence": "No source was consulted. This claim has the form of a specific empirical finding but cannot be verified; the model may be confabulating a plausible-sounding statistic consistent with its training data."
+    },
+    {
+      "claim": "Samsung 2023 incident established a cautionary archetype for data leakage",
+      "type": "factual",
+      "verified": true,
+      "evidence": "The Samsung incident (employees pasting proprietary source code into ChatGPT) is a well-documented and widely reported event consistent with training data through 2025."
+    },
+    {
+      "claim": "The report is approximately 2,200 words",
+      "type": "factual",
+      "verified": true,
+      "evidence": "Character count of report.md is approximately 11,826 characters, consistent with roughly 2,000\u20132,400 words depending on average word length."
+    },
+    {
+      "claim": "30% of deployments were written off within 18 months (from the 2025 MIT/Stanford survey)",
+      "type": "factual",
+      "verified": false,
+      "evidence": "Same provenance issue as the broader MIT/Stanford survey claim \u2014 no source consulted, likely confabulated or paraphrased from training-data approximations."
+    },
+    {
+      "claim": "McKinsey Global Institute estimates AI could add $2.6\u20134.4 trillion annually",
+      "type": "factual",
+      "verified": true,
+      "evidence": "This figure appears in McKinsey's widely cited 'The economic potential of generative AI' report (2023). It is plausibly accurate from training data and consistent with published figures, though the report does not cite the publication directly."
+    }
+  ],
+  "user_notes_summary": {
+    "uncertainties": [],
+    "needs_review": [],
+    "workarounds": []
+  },
+  "eval_feedback": {
+    "suggestions": [
+      {
+        "reason": "Expectations 1\u20133 are effectively the same assertion (workers were spawned) tested three ways. If a baseline produces zero workers, all three fail identically. Consider collapsing them into one expectation or making each independently discriminating \u2014 for example, expectation 3 (single-message spawning) is only meaningful when workers exist, so it adds no signal in the baseline case."
+      },
+      {
+        "assertion": "Detailed Findings section has multiple H3 themes that pull from multiple workers \u2014 NOT a series of 'Worker 1 says..., Worker 2 says...' sections",
+        "reason": "This assertion is structurally vacuous for the baseline: a single-agent report with H3 headings passes the surface test (has H3s) but fails the intent (no workers to pull from). The assertion should be rewritten to explicitly require evidence of cross-worker synthesis \u2014 e.g., 'A finding under one theme cites or integrates evidence from at least two different research dimensions' \u2014 so it cannot pass accidentally."
+      },
+      {
+        "assertion": "Report identifies or flags when sources show vendor bias",
+        "reason": "An important additional assertion is missing: whether the report actually conducted live research at all (i.e., made web searches or retrieved documents). A report synthesized entirely from training-data memory cannot demonstrate vendor bias analysis because it has no sources. Consider adding an assertion like 'The report cites at least 8 specific, retrievable sources with URLs or publication details' to enforce that research actually occurred."
+      },
+      {
+        "reason": "No assertion checks the factual accuracy of specific statistics in the report. The baseline output includes several suspiciously precise figures (e.g., '30% of deployments written off within 18 months', '2025 MIT/Stanford survey of 1,000 enterprises') that appear to be confabulated. An assertion testing whether cited statistics are traceable to real publications would differentiate a research-backed report from a confident hallucination."
+      }
+    ],
+    "overall": "The eval is well-designed in that the baseline scores 0/6, correctly capturing that a single-agent synthesis from training memory is qualitatively different from a multi-agent, source-grounded research workflow. The main gap is that three of six expectations test the same underlying property (worker spawning), reducing the eval's diagnostic value. The more important unchecked property is factual groundedness \u2014 whether stated statistics and studies are real and retrievable."
+  }
+}

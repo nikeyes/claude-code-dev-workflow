@@ -1,0 +1,110 @@
+{
+  "expectations": [
+    {
+      "text": "Spawns 1-2 workers \u2014 does NOT spawn 4+ for a how-to question that can be answered with 2 focused searches",
+      "passed": true,
+      "evidence": "Transcript Step 2 classifies the query as 'How-to guide (medium complexity): 2 workers warranted (one per axis)'. Step 4 documents exactly 2 simulated workers (Worker 1 \u2014 JWT Mechanics, Worker 2 \u2014 JWT Security Pitfalls). Step 10 summary confirms: 'Workers spawned: 2'."
+    },
+    {
+      "text": "Report weaves JWT mechanics and security pitfalls into a coherent narrative \u2014 NOT two sequential sections that read like raw worker dumps",
+      "passed": false,
+      "evidence": "The report is organized as two clearly separated sections: 'JWT Structure and How It Works' followed by 'Common Security Pitfalls', each covering its own topic independently. There is no narrative weaving \u2014 mechanics and pitfalls are not interleaved or cross-referenced within paragraphs. The Executive Summary briefly mentions both axes, but the Detailed Findings reads as two sequential worker dumps. The Cross-References section acknowledges consensus but does not integrate mechanics into the pitfall discussion (e.g., the alg:none pitfall section does not explain the header structure it exploits in context)."
+    },
+    {
+      "text": "Report names at least 3 specific JWT security pitfalls (e.g., alg:none attack, missing expiry validation, insecure secret storage) with source citations",
+      "passed": true,
+      "evidence": "The report enumerates 9 distinct named pitfalls, each with citations: (1) alg:none attack [2][8]; (2) Algorithm Confusion RS256\u2192HS256 [3][8]; (3) Weak Signing Keys and Brute-Force [2][3][5][4]; (4) Header Parameter Injection [3]; (5) Missing/Incomplete Claim Validation including exp check [4][7]; (6) Sensitive Data Exposure [5][7]; (7) Token Storage XSS/CSRF [5]; (8) No Token Revocation [5][7]; (9) Compression Oracle Attacks [4]. All 9 include inline citations referencing the bibliography."
+    },
+    {
+      "text": "Spawns the citation-analyst agent after generating the report to verify citation accuracy",
+      "passed": false,
+      "evidence": "Transcript Step 8 explicitly states: 'The stepwise-research:citation-analyst agent was not directly spawnable in this eval context. Citation verification was performed manually.' Step 10 summary confirms: 'citation-analyst called: No (simulated manually)'. The citation-analyst agent was not spawned \u2014 manual URL accessibility checks were substituted. This is a process failure regardless of whether the manual check produced equivalent results."
+    },
+    {
+      "text": "Report includes a 'Cross-References and Contradictions' section that discusses areas of consensus or disagreement across sources",
+      "passed": true,
+      "evidence": "The report contains a dedicated 'Cross-References and Contradictions' section (report.md lines 134-143). It identifies: (1) consensus across RFC 7519, RFC 8725, OWASP, Auth0, PortSwigger, and Curity on algorithm allowlisting, claim validation, key entropy, and short token lifetimes; (2) a notable tension around storage recommendations (OWASP closure-based vs. HttpOnly cookies in practice); (3) a supersession tension between RFC 8725 and RFC 7519 on algorithm agility philosophy; (4) gaps in federated JWT and post-quantum readiness coverage."
+    }
+  ],
+  "summary": {
+    "passed": 3,
+    "failed": 2,
+    "total": 5,
+    "pass_rate": 0.6
+  },
+  "execution_metrics": {
+    "tool_calls": null,
+    "total_tool_calls": null,
+    "total_steps": 10,
+    "errors_encountered": 2,
+    "output_chars": 12096,
+    "transcript_chars": 5421
+  },
+  "timing": {
+    "executor_duration_seconds": 208.3,
+    "grader_duration_seconds": 0.0,
+    "total_duration_seconds": 208.3
+  },
+  "claims": [
+    {
+      "claim": "Workers spawned: 2 (simulated via direct WebFetch)",
+      "type": "process",
+      "verified": true,
+      "evidence": "Transcript Step 4 documents exactly 2 worker blocks with distinct research axes. Step 2 records the classification decision leading to this count. Step 10 confirms the count."
+    },
+    {
+      "claim": "9 sources successfully fetched",
+      "type": "factual",
+      "verified": true,
+      "evidence": "Transcript Step 4 lists 9 successfully fetched URLs across both workers. The report bibliography contains exactly 9 numbered entries matching those URLs. 3 failed fetches (403/404) are also documented."
+    },
+    {
+      "claim": "All 9 citation URLs are accessible",
+      "type": "quality",
+      "verified": false,
+      "evidence": "The transcript states URLs were manually verified as accessible, but no actual HTTP verification was performed via tool calls in the transcript \u2014 this is an assertion by the executor, not a verified result. The transcript only says 'ACCESSIBLE' for each URL without showing the verification tool calls."
+    },
+    {
+      "claim": "Cross-references cover RFC 7519, RFC 8725, OWASP, Auth0, PortSwigger, and Curity",
+      "type": "factual",
+      "verified": true,
+      "evidence": "The Cross-References and Contradictions section explicitly names all six sources and attributes specific positions to them (algorithm allowlisting consensus, storage disagreement, algorithm agility philosophy shift)."
+    },
+    {
+      "claim": "Report weaves mechanics and pitfalls into a coherent narrative",
+      "type": "quality",
+      "verified": false,
+      "evidence": "The report structure is two sequential sections with no cross-referencing between JWT structure details and the pitfalls that exploit them. For example, the alg:none section does not reference the header structure section, and the algorithm confusion section does not link back to the signing algorithms section. The narrative integration does not occur."
+    },
+    {
+      "claim": "citation-analyst equivalent verification performed",
+      "type": "process",
+      "verified": false,
+      "evidence": "The transcript explicitly acknowledges the citation-analyst agent was not spawned. The 'manual verification' consists only of labeling URLs as 'ACCESSIBLE' with no evidence of actual fetch attempts or content-claim matching."
+    }
+  ],
+  "user_notes_summary": {
+    "uncertainties": [],
+    "needs_review": [],
+    "workarounds": []
+  },
+  "eval_feedback": {
+    "suggestions": [
+      {
+        "assertion": "Spawns 1-2 workers \u2014 does NOT spawn 4+ for a how-to question that can be answered with 2 focused searches",
+        "reason": "This assertion passes trivially when agents cannot be spawned (as in this eval context) since the skill falls back to simulated workers. The assertion should be qualified to also pass for simulation, OR the eval harness should support real agent spawning so this is a meaningful constraint. Currently it cannot distinguish between 'skill correctly chose 2 workers' and 'skill had no choice because spawning was unavailable'."
+      },
+      {
+        "assertion": "Spawns the citation-analyst agent after generating the report to verify citation accuracy",
+        "reason": "The skill documented that agent spawning was unavailable in the eval harness and fell back to manual simulation. This is an eval harness gap, not a skill logic gap. The eval should either use a harness that supports plugin agent spawning, or reframe the assertion as 'citation verification step is performed (via agent or equivalent)' \u2014 otherwise this assertion will always fail in this harness regardless of skill quality."
+      },
+      {
+        "reason": "No assertion checks whether the report's cited claims are actually supported by the cited sources (content-citation accuracy). A report could cite RFC 8725 for every claim and still pass the citation assertions even if RFC 8725 does not support those claims. Consider adding an assertion like: 'At least 3 cited claims are verifiably supported by the referenced source content'."
+      },
+      {
+        "reason": "No assertion checks report depth or completeness \u2014 a 3-sentence report with 3 pitfall names and 3 citations would pass expectations 1, 3, and 5. Consider adding an assertion about minimum substantive coverage (e.g., 'Each named pitfall includes a mechanism explanation and a concrete mitigation')."
+      }
+    ],
+    "overall": "Two failures stem from eval harness limitations (agent spawning not supported) rather than skill logic failures. The narrative integration failure (expectation 2) is a genuine skill quality issue. The eval suite is reasonable but has a systemic gap: it cannot test agent-spawning behavior in the current harness, making expectations 1 and 4 structurally unreliable."
+  }
+}

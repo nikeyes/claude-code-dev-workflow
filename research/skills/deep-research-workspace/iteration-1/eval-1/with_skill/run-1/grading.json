@@ -1,0 +1,113 @@
+{
+  "expectations": [
+    {
+      "text": "Spawns 1 worker (acceptable: max 2) \u2014 does NOT spawn 3+ workers for a simple definition query",
+      "passed": true,
+      "evidence": "Transcript Step 4 states the skill decided on '2 workers' for this query, which is within the acceptable max-2 range. The Task tool was unavailable, so 0 actual sub-agents were spawned, but the planning decision was 2. No evidence of 3+ workers being spawned or planned."
+    },
+    {
+      "text": "Saves the report to thoughts/shared/research/[topic]-[YYYY-MM-DD].md with YAML frontmatter",
+      "passed": true,
+      "evidence": "File confirmed at thoughts/shared/research/webassembly-what-it-is-and-problems-it-solves-2026-04-26.md. Transcript Step 10 confirms: 'Report saved to /Users/jorge.castro/mordor/personal/stepwise-dev/thoughts/shared/research/webassembly-what-it-is-and-problems-it-solves-2026-04-26.md'. File contains YAML frontmatter with all required fields."
+    },
+    {
+      "text": "Report contains an Executive Summary section with 3-5 sentences directly answering 'what is WebAssembly and what problem does it solve'",
+      "passed": true,
+      "evidence": "The report's Executive Summary contains exactly 4 sentences. Sentence 1 defines WebAssembly as 'a low-level binary instruction format and compilation target designed to run in modern web browsers at near-native speed.' Sentence 2 names the problem: 'the fundamental performance ceiling that JavaScript imposes on computationally intensive web applications.' Sentences 3-4 explain the mechanism and extend to WASI/cloud contexts."
+    },
+    {
+      "text": "Bibliography contains at least 5 numbered citations with real URLs (not placeholder [URL] tokens)",
+      "passed": true,
+      "evidence": "Bibliography contains 10 numbered citations, all with real, specific URLs. Examples: [1] https://webassembly.org/, [2] https://developer.mozilla.org/en-US/docs/WebAssembly/Guides/Concepts, [8] https://www.figma.com/blog/webassembly-cut-figmas-load-time-by-3x/. No placeholder [URL] tokens found."
+    },
+    {
+      "text": "Sources include at least one from an authoritative domain (.org, .io, MDN, official docs) \u2014 not just Wikipedia or training data summaries",
+      "passed": true,
+      "evidence": "Multiple authoritative sources are present: [1] webassembly.org (official site), [2][3] developer.mozilla.org (MDN official docs), [6] v8.dev (V8 engine team blog), [10] bytecodealliance.org (.org standards body). No Wikipedia links appear in the bibliography."
+    },
+    {
+      "text": "YAML frontmatter includes title, date, query, keywords, status: complete, agent_count, and source_count fields",
+      "passed": true,
+      "evidence": "Frontmatter confirmed: title: 'Research on WebAssembly - What It Is and What Problem It Solves', date: 2026-04-26, query: 'What is WebAssembly and what problem does it solve?', keywords: 'WebAssembly, Wasm, web performance, binary format, compilation target, JavaScript, WASI, portability', status: complete, agent_count: 2, source_count: 10. All 7 required fields present."
+    }
+  ],
+  "summary": {
+    "passed": 6,
+    "failed": 0,
+    "total": 6,
+    "pass_rate": 1.0
+  },
+  "execution_metrics": {
+    "tool_calls": {
+      "WebFetch": 16,
+      "Write": 2
+    },
+    "total_tool_calls": 18,
+    "total_steps": 10,
+    "errors_encountered": 5,
+    "output_chars": 12455,
+    "transcript_chars": 6657
+  },
+  "timing": {
+    "executor_duration_seconds": 220.7,
+    "grader_duration_seconds": 0.0,
+    "total_duration_seconds": 220.7
+  },
+  "claims": [
+    {
+      "claim": "0 Task tool workers were spawned because the Task tool was unavailable",
+      "type": "process",
+      "verified": true,
+      "evidence": "Transcript Step 4 explicitly states: 'the Task tool with subagent_type parameter was not available in this execution environment. The research was conducted directly using WebFetch tool calls in parallel.' Step 8 confirms citation analyst was also not spawned for the same reason."
+    },
+    {
+      "claim": "10 sources were successfully fetched and used in the report",
+      "type": "factual",
+      "verified": true,
+      "evidence": "Transcript Step 5 table shows 16 sources attempted, 5 failures (3 404s, 1 content-too-large, 1 no-article-content), leaving 10 successful fetches. The bibliography lists exactly 10 citations matching the successful sources listed in the table."
+    },
+    {
+      "claim": "agent_count: 2 in frontmatter accurately reflects the execution",
+      "type": "quality",
+      "verified": false,
+      "evidence": "The frontmatter states agent_count: 2 but the transcript confirms 0 sub-agents were actually spawned (Task tool unavailable). The '2' reflects the planned worker count, not actual agent spawns. This is a misleading claim in the metadata."
+    },
+    {
+      "claim": "All 10 bibliography URLs were confirmed as actual sources fetched during research",
+      "type": "quality",
+      "verified": true,
+      "evidence": "Each of the 10 bibliography URLs appears in the transcript's Step 5 source table under 'Status: Success', confirming they were fetched and not invented. Cross-reference: [1] webassembly.org \u2713, [2] MDN Concepts \u2713, [3] MDN Overview \u2713, [4][5] Mozilla Hacks \u2713, [6] v8.dev \u2713, [7] LogRocket \u2713, [8] Figma Blog \u2713, [9] Mozilla Hacks WASI \u2713, [10] Bytecode Alliance \u2713."
+    },
+    {
+      "claim": "Report contains 5 detailed finding sections",
+      "type": "factual",
+      "verified": true,
+      "evidence": "Report under 'Detailed Findings' contains exactly 5 subsections: 'What Is WebAssembly?', 'The Problem: JavaScript's Performance Ceiling', 'How WebAssembly Solves the Performance Problem', 'Language Portability and Code Reuse', 'Beyond the Browser: WASI and Non-Web Environments', plus a 6th section on 'Design Goals and Standardization'."
+    }
+  ],
+  "user_notes_summary": {
+    "uncertainties": [],
+    "needs_review": [
+      "agent_count field in YAML frontmatter is set to 2, but actual sub-agent spawns were 0 due to Task tool unavailability. The count reflects planned workers, not actual agents."
+    ],
+    "workarounds": [
+      "Task tool with subagent_type was unavailable; research workers simulated via parallel WebFetch batches",
+      "Citation analyst could not be spawned; inline URL verification performed instead"
+    ]
+  },
+  "eval_feedback": {
+    "suggestions": [
+      {
+        "reason": "The worker-count assertion ('Spawns 1 worker, acceptable max 2') cannot be meaningfully verified when the Task tool is unavailable in the execution environment \u2014 the skill falls back to direct WebFetch calls, making the assertion trivially pass regardless of whether the skill's worker-spawning logic is correct. Consider adding an assertion that checks how many actual sub-task agents appear in the transcript, or testing in an environment where Task tool is available."
+      },
+      {
+        "assertion": "YAML frontmatter includes ... agent_count ... fields",
+        "reason": "agent_count: 2 is present and passes the assertion, but the value is inaccurate (actual spawns: 0 due to tool unavailability). The assertion checks field presence, not correctness. Consider asserting that agent_count reflects the actual number of sub-agents that ran, which would catch the misleading metadata."
+      },
+      {
+        "reason": "No assertion checks whether the report's factual claims are grounded in the fetched sources (citation integrity). The current assertions verify URL format but not whether in-text claims like 'Figma achieved 3x load time reduction' or '~20% overhead vs. native' trace back to a cited source. A spot-check assertion on at least one specific claim would make the eval more discriminating."
+      }
+    ],
+    "overall": "All 6 assertions pass with clear, substantive evidence. The primary gap is that the worker-spawning assertion is untestable in this execution environment (Task tool missing), creating false confidence. The agent_count metadata inaccuracy also goes undetected. Evals would benefit from environment validation and a claim-traceability check."
+  }
+}

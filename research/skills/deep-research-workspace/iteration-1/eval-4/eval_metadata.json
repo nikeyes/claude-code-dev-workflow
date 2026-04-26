@@ -1,0 +1,13 @@
+{
+  "eval_id": 4,
+  "eval_name": "multi-faceted-analysis-scales-workers",
+  "prompt": "/stepwise-research:deep-research Analyze the current state of enterprise AI adoption: challenges, tooling, ROI, and security concerns",
+  "assertions": [
+    "Spawns at least 4 workers \u2014 recognizes this is multi-faceted, not a simple how-to",
+    "Worker sub-questions cover distinct facets: at minimum challenges, tooling/vendors, ROI evidence, AND security/compliance as separate workers",
+    "All 4+ workers are spawned in a single message \u2014 NOT spawned in multiple sequential rounds",
+    "Report identifies or flags when sources show vendor bias (e.g., vendor case studies claiming high ROI) and cross-references with independent analysts",
+    "Total source count in frontmatter is 15 or more \u2014 befitting a multi-faceted research topic",
+    "Detailed Findings section has multiple H3 themes that pull from multiple workers \u2014 NOT a series of 'Worker 1 says..., Worker 2 says...' sections"
+  ]
+}

@@ -1,0 +1,80 @@
+{
+  "expectations": [
+    {
+      "text": "Spawns at most 1 worker \u2014 does NOT treat a factual lookup as a 'state-of-the-art' research topic requiring 4+ workers",
+      "passed": true,
+      "evidence": "Transcript states: 'Answered directly from training data without any research workflow, sub-agents, or web searches.' Zero workers were spawned."
+    },
+    {
+      "text": "Does NOT produce a 15+ source bibliography or a 5-theme detailed findings report for a question answerable in one sentence",
+      "passed": true,
+      "evidence": "report.md is a concise document (~33 lines) with 4 short sections (Definition, What It Means, Common Causes, 404 vs. Related Codes) and no bibliography whatsoever."
+    },
+    {
+      "text": "Directly answers what HTTP 404 means \u2014 user receives the information without navigating a research infrastructure",
+      "passed": true,
+      "evidence": "report.md opens with 'HTTP 404 is a standard HTTP response status code indicating that the server could not find the requested resource' and closes with the plain-language summary 'HTTP 404 means the thing you asked for doesn\u2019t exist here.' The answer is immediate and self-contained."
+    },
+    {
+      "text": "Does NOT spawn citation-analyst for a widely-known standard fact \u2014 avoids wasting agent overhead on trivial queries",
+      "passed": true,
+      "evidence": "Transcript explicitly states no sub-agents were used. No citation-analyst or any other agent was invoked."
+    }
+  ],
+  "summary": {
+    "passed": 4,
+    "failed": 0,
+    "total": 4,
+    "pass_rate": 1.0
+  },
+  "execution_metrics": {
+    "tool_calls": {},
+    "total_tool_calls": 0,
+    "total_steps": 1,
+    "errors_encountered": 0,
+    "output_chars": 1143,
+    "transcript_chars": 327
+  },
+  "timing": {
+    "executor_duration_seconds": 20.4,
+    "grader_duration_seconds": 0.0,
+    "total_duration_seconds": 20.4
+  },
+  "claims": [
+    {
+      "claim": "Answered directly from training data without any research workflow, sub-agents, or web searches",
+      "type": "process",
+      "verified": true,
+      "evidence": "Transcript contains no tool calls, no agent spawning, and no web searches. The output is a self-contained markdown document written from built-in knowledge."
+    },
+    {
+      "claim": "HTTP 404 is a client error indicating the server could not find the requested resource",
+      "type": "factual",
+      "verified": true,
+      "evidence": "Correct per RFC 9110 / HTTP standards. The report accurately places 404 in the 4xx client error class and describes it correctly."
+    },
+    {
+      "claim": "The comparison table (404 vs 410, 403, 301) is accurate",
+      "type": "factual",
+      "verified": true,
+      "evidence": "All four codes and their meanings in the table are standard and correct per HTTP specifications."
+    }
+  ],
+  "user_notes_summary": {
+    "uncertainties": [],
+    "needs_review": [],
+    "workarounds": []
+  },
+  "eval_feedback": {
+    "suggestions": [
+      {
+        "reason": "All four expectations test the absence of over-engineering behaviors (no workers, no bibliography, no agent overhead). They all pass trivially for a baseline that does nothing except answer directly. A complementary assertion checking answer correctness and completeness would make the eval more discriminating \u2014 a baseline that returned 'HTTP 404 means the server is down' would still pass all four current expectations."
+      },
+      {
+        "assertion": "Directly answers what HTTP 404 means \u2014 user receives the information without navigating a research infrastructure",
+        "reason": "This assertion passes even if the answer were factually wrong. Consider adding an expectation like 'The answer correctly identifies 404 as a client-side Not Found error' to guard against confidently incorrect responses."
+      }
+    ],
+    "overall": "The evals are well-suited to catching over-engineering regressions (the main risk for a deep-research skill on a trivial query), but they do not guard against the opposite failure mode: a terse but incorrect answer. Adding at least one correctness-checking expectation would make the suite more robust."
+  }
+}

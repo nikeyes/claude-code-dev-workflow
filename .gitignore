@@ -89,3 +89,9 @@ research_codebase-workspace/
 git/skills/commit-workspace/evals/fixtures/
 git/skills/commit-workspace/iteration-*/fixtures/
 git/skills/commit-workspace/iteration-*/eval-*/*/transcript.md
+
+# Eval viewer HTML (regenerated with generate_review.py)
+**/iteration-*/review.html
+
+# Thoughts generated during eval runs (outputs, not source)
+thoughts/

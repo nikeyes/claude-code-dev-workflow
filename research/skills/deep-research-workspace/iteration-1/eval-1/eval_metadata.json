@@ -1,0 +1,13 @@
+{
+  "eval_id": 1,
+  "eval_name": "simple-definition-one-worker",
+  "prompt": "/stepwise-research:deep-research What is WebAssembly and what problem does it solve?",
+  "assertions": [
+    "Spawns 1 worker (acceptable: max 2) \u2014 does NOT spawn 3+ workers for a simple definition query",
+    "Saves the report to thoughts/shared/research/[topic]-[YYYY-MM-DD].md with YAML frontmatter",
+    "Report contains an Executive Summary section with 3-5 sentences directly answering 'what is WebAssembly and what problem does it solve'",
+    "Bibliography contains at least 5 numbered citations with real URLs (not placeholder [URL] tokens)",
+    "Sources include at least one from an authoritative domain (.org, .io, MDN, official docs) \u2014 not just Wikipedia or training data summaries",
+    "YAML frontmatter includes title, date, query, keywords, status: complete, agent_count, and source_count fields"
+  ]
+}

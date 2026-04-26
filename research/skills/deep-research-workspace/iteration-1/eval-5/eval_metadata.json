@@ -1,0 +1,11 @@
+{
+  "eval_id": 5,
+  "eval_name": "ambiguous-topic-asks-clarification",
+  "prompt": "/stepwise-research:deep-research Research performance",
+  "assertions": [
+    "Does NOT spawn research workers before asking for clarification \u2014 the topic is too ambiguous to sub-question usefully",
+    "Uses the AskUserQuestion tool to ask at least one clarifying question about the domain or context",
+    "The clarifying question targets the domain (web? database? team? hardware?) or the intended use case \u2014 not just asking 'can you elaborate?'",
+    "Asks at most 2 clarifying questions \u2014 does NOT fire a five-question interrogation at the user"
+  ]
+}
