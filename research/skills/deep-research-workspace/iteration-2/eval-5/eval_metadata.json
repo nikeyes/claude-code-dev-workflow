@@ -1,0 +1,11 @@
+{
+  "eval_id": 5,
+  "eval_name": "ambiguous-topic-asks-clarification",
+  "prompt": "/stepwise-research:deep-research Research performance",
+  "assertions": [
+    "Does NOT spawn research workers before asking for clarification — the topic is too ambiguous to sub-question usefully",
+    "Does NOT call generate-report script before receiving clarification — no report should be generated from an ambiguous query",
+    "Uses the AskUserQuestion tool to ask at least one clarifying question about the domain or context",
+    "The clarifying question targets the domain (web? database? team? hardware?) or the intended use case — not just asking 'can you elaborate?'"
+  ]
+}

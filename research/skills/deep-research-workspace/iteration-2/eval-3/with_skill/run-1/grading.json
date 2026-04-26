@@ -1,0 +1,74 @@
+{
+  "eval": "eval-3",
+  "scenario": "comparison-parallel-workers-and-script",
+  "run": 1,
+  "date": "2026-04-26",
+  "overall_pass": true,
+  "score": 7,
+  "max_score": 7,
+  "timing": {
+    "total_tokens": 29132,
+    "duration_ms": 145535,
+    "total_duration_seconds": 145.5
+  },
+  "summary": {
+    "passed": 7,
+    "failed": 0,
+    "total": 7,
+    "pass_rate": 1.0
+  },
+  "user_notes_summary": {
+    "uncertainties": [],
+    "needs_review": [],
+    "workarounds": []
+  },
+  "eval_feedback": {
+    "suggestions": [],
+    "overall": "No suggestions."
+  },
+  "execution_metrics": {
+    "tool_calls": {},
+    "total_tool_calls": 0,
+    "total_steps": 0,
+    "errors_encountered": 0,
+    "output_chars": 0,
+    "transcript_chars": 0
+  },
+  "expectations": [
+    {
+      "text": "All workers are spawned in a single message (single Task tool invocation batch) \u2014 NOT spawned sequentially one at a time",
+      "passed": true,
+      "evidence": "Transcript Step 4 explicitly states: 'All 3 workers spawned in a SINGLE message (parallel execution)'. The Skill Compliance Notes table also records this as PASS. Consistent with the skill's parallel spawning requirement."
+    },
+    {
+      "text": "Spawns 2-3 workers \u2014 one per comparison dimension (PostgreSQL, MySQL, benchmarks/cases)",
+      "passed": true,
+      "evidence": "3 workers were spawned: Worker 1 = PostgreSQL architecture & performance, Worker 2 = MySQL architecture & performance, Worker 3 = real-world benchmarks and case studies. Matches the 3-worker recommendation from the skill's complexity table for a 2-item comparison."
+    },
+    {
+      "text": "Calls research/skills/deep-research/scripts/generate-report via Bash tool \u2014 does NOT write the report file directly",
+      "passed": true,
+      "evidence": "Transcript Step 7b shows a bash call to 'research/skills/deep-research/scripts/generate-report' with all parameters. The transcript records 'Script output: Report generated successfully: ...' indicating the script was invoked rather than the file being written directly by the agent."
+    },
+    {
+      "text": "The generate-report call includes all 6 required parameters: --title, --query, --keywords, --agent-count, --source-count, --output-file",
+      "passed": true,
+      "evidence": "The bash call in Step 7b contains: --title 'PostgreSQL vs MySQL for High-Traffic Web Applications in 2025', --query 'Compare PostgreSQL vs MySQL for high-traffic web applications in 2025', --keywords 'PostgreSQL,MySQL,high-traffic,performance,scalability,benchmarks,replication,ACID,2025', --agent-count 3, --source-count 18, --output-file 'thoughts/shared/research/postgresql-vs-mysql-high-traffic-2025-2026-04-26.md'. All 6 required parameters are present."
+    },
+    {
+      "text": "The --agent-count parameter passed to generate-report matches the actual number of workers spawned",
+      "passed": true,
+      "evidence": "3 workers were spawned (Step 4) and --agent-count 3 was passed to generate-report (Step 7b). The report frontmatter also records agent_count: 3. Exact match."
+    },
+    {
+      "text": "Report covers both PostgreSQL AND MySQL with equivalent depth \u2014 neither is treated as an afterthought",
+      "passed": true,
+      "evidence": "Worker 1 dedicated exclusively to PostgreSQL (4 searches, 6 sources). Worker 2 dedicated exclusively to MySQL (4 searches, 7 sources). The report's Architecture section gives parallel sub-sections to each database. Benchmarks, Replication/HA, Feature Comparison, Operational Considerations, and Real-World Adopters sections all address both databases with comparable detail. MySQL sources (7) slightly exceed PostgreSQL sources (6), confirming neither is an afterthought."
+    },
+    {
+      "text": "Conclusions section includes a clear recommendation (or decision framework) for when to choose PostgreSQL vs MySQL \u2014 not 'it depends' without criteria",
+      "passed": true,
+      "evidence": "The Conclusions section provides explicit, criteria-based guidance: (1) 'For complex query workloads and modern feature requirements, choose PostgreSQL' \u2014 lists specific conditions (JSONB, extensions, full-text search). (2) 'For extreme write throughput and proven hyperscale patterns, MySQL (with Vitess) remains competitive' \u2014 lists specific conditions (Meta/Shopify scale, write-heavy). (3) Benchmark data given with numeric thresholds. (4) Connection pooling noted as mandatory for PostgreSQL. (5) Team expertise factor called out explicitly. This is a concrete decision framework with named criteria, not a vague 'it depends'."
+    }
+  ]
+}

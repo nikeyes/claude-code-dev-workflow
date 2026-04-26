@@ -1,0 +1,82 @@
+{
+  "eval_id": "eval-1",
+  "eval_name": "simple-definition-one-worker",
+  "condition": "without_skill",
+  "run": "run-1",
+  "graded_at": "2026-04-26",
+  "overall_pass": false,
+  "score": "2/7",
+  "summary": {
+    "passed": 1,
+    "failed": 6,
+    "total": 7,
+    "pass_rate": 0.14
+  },
+  "timing": {
+    "total_tokens": 20325,
+    "duration_ms": 155321,
+    "total_duration_seconds": 155.3
+  },
+  "baseline_observations": [
+    "The baseline produced substantively high-quality content (comprehensive, well-structured, accurate) but failed all process/structural requirements.",
+    "Zero workers spawned \u2014 the multi-agent research workflow was entirely bypassed.",
+    "Report saved to wrong location (outputs/report.md vs thoughts/shared/research/).",
+    "No YAML frontmatter, no numbered bibliography, no script footer.",
+    "The only passing assertion is #4 (Executive Summary content), which depends solely on writing quality, not on the skill's workflow.",
+    "This baseline result clearly demonstrates the value of the deep-research skill: it enforces the multi-agent workflow, correct output path, YAML frontmatter, numbered bibliography, and standard footer."
+  ],
+  "user_notes_summary": {
+    "uncertainties": [],
+    "needs_review": [],
+    "workarounds": []
+  },
+  "eval_feedback": {
+    "suggestions": [],
+    "overall": "No suggestions."
+  },
+  "execution_metrics": {
+    "tool_calls": {},
+    "total_tool_calls": 0,
+    "total_steps": 0,
+    "errors_encountered": 0,
+    "output_chars": 0,
+    "transcript_chars": 0
+  },
+  "expectations": [
+    {
+      "text": "Spawns 1 worker (acceptable: max 2) \u2014 does NOT spawn 3+ workers for a simple definition query",
+      "passed": false,
+      "evidence": "The transcript explicitly states: 'No web searches, no agent spawning, no skill invocations'. Zero workers were spawned. The baseline did not use the multi-agent framework at all \u2014 it answered entirely from training knowledge. While it did not spawn 3+ workers (pass condition for that sub-clause), it spawned 0 which violates the expectation of spawning at least 1 worker. Ruling FAIL because the assertion evaluates use of the research workflow, and zero workers means the workflow was not engaged."
+    },
+    {
+      "text": "Calls research/skills/deep-research/scripts/generate-report via Bash tool \u2014 does NOT write the report file directly with Write tool or inline markdown",
+      "passed": false,
+      "evidence": "The transcript explicitly states the report was 'Wrote the full report directly using the Write tool in a single pass.' The generate-report script was never called. This is the canonical baseline failure \u2014 without the skill, the agent does not know about the script and writes the file directly."
+    },
+    {
+      "text": "Saves the report to thoughts/shared/research/[topic]-[YYYY-MM-DD].md with YAML frontmatter",
+      "passed": false,
+      "evidence": "The report was saved to outputs/report.md (inside the eval working directory), not to thoughts/shared/research/. The filename is 'report.md' rather than a topic-slug with date. Additionally, the report has no YAML frontmatter \u2014 it starts with '# WebAssembly: What It Is and the Problems It Solves' and uses a bold key-value header, not YAML."
+    },
+    {
+      "text": "Report contains an Executive Summary section with 3-5 sentences directly answering 'what is WebAssembly and what problem does it solve'",
+      "passed": true,
+      "evidence": "The report contains an '## Executive Summary' section with 3 sentences: (1) definition of WebAssembly as a binary instruction format, (2) its purpose in solving JavaScript's performance ceiling, (3) its growth from browser tool to broader runtime environment. All three sentences directly answer the query. The count is exactly 3, within the 3-5 acceptable range."
+    },
+    {
+      "text": "Bibliography contains at least 5 numbered citations with real URLs (not placeholder [URL] tokens)",
+      "passed": false,
+      "evidence": "The report ends with '## References and Further Reading' containing 11 entries. However, they are NOT numbered citations \u2014 they are a bullet list using bold labels (e.g., '- **WebAssembly Specification:** https://...'). The assertion requires numbered citations (1. Author, Title, URL format). Additionally, two entries have no URL at all ('Lin Clark's WebAssembly Explainer series' and the O'Reilly book). While real URLs are present for most entries (not placeholder tokens), the format is a reference list, not a numbered bibliography."
+    },
+    {
+      "text": "Report ends with the generate-report script footer: '*Research conducted by stepwise-research multi-agent system*' and '*Generated: [timestamp]*'",
+      "passed": false,
+      "evidence": "The report ends with: '*Report compiled from training knowledge. No live web sources were consulted. Knowledge cutoff: early 2025.*' \u2014 this is the baseline's own footer. The required footer lines '*Research conducted by stepwise-research multi-agent system*' and '*Generated: [timestamp]*' are entirely absent."
+    },
+    {
+      "text": "YAML frontmatter includes title, date, query, keywords, status: complete, agent_count, and source_count fields",
+      "passed": false,
+      "evidence": "The report has no YAML frontmatter whatsoever. It begins directly with a markdown H1 heading and bold key-value pairs (**Research Date:** and **Topic:**). None of the required YAML fields (title, date, query, keywords, status, agent_count, source_count) are present in any structured format."
+    }
+  ]
+}

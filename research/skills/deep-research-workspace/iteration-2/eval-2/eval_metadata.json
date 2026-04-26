@@ -1,0 +1,13 @@
+{
+  "eval_id": 2,
+  "eval_name": "how-to-guide-citation-verification",
+  "prompt": "/stepwise-research:deep-research How does JWT authentication work and what are common security pitfalls?",
+  "assertions": [
+    "Spawns 1-2 workers — does NOT spawn 4+ for a how-to question that can be answered with 2 focused searches",
+    "Calls research/skills/deep-research/scripts/generate-report via Bash tool — does NOT write the report file directly",
+    "Spawns the citation-analyst agent AFTER the generate-report script has run — not before, not skipped",
+    "Report weaves JWT mechanics and security pitfalls into a coherent narrative — NOT two sequential sections that read like raw worker dumps",
+    "Report names at least 3 specific JWT security pitfalls (e.g., alg:none attack, missing expiry validation, insecure secret storage) with source citations",
+    "Report includes a 'Cross-References and Contradictions' section that discusses areas of consensus or disagreement across sources"
+  ]
+}

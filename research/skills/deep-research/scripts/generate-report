@@ -7,7 +7,8 @@
 #                   --agent-count N --source-count M \
 #                   --output-file "path/to/report.md" \
 #                   [--executive-summary "..."] [--findings "..."] \
-#                   [--conclusions "..."] [--bibliography "..."]
+#                   [--cross-references "..."] [--conclusions "..."] \
+#                   [--bibliography "..."]
 
 set -euo pipefail
 
@@ -20,6 +21,7 @@ SOURCE_COUNT=""
 OUTPUT_FILE=""
 EXECUTIVE_SUMMARY=""
 FINDINGS=""
+CROSS_REFERENCES=""
 CONCLUSIONS=""
 BIBLIOGRAPHY=""
 
@@ -56,6 +58,10 @@ while [[ $# -gt 0 ]]; do
       ;;
     --findings)
       FINDINGS="$2"
+      shift 2
+      ;;
+    --cross-references)
+      CROSS_REFERENCES="$2"
       shift 2
       ;;
     --conclusions)
@@ -145,6 +151,16 @@ if [[ -n "$FINDINGS" ]]; then
 
 EOF
   echo -e "${FINDINGS}" >> "$OUTPUT_FILE"
+  echo "" >> "$OUTPUT_FILE"
+fi
+
+# Add Cross-References and Contradictions if provided
+if [[ -n "$CROSS_REFERENCES" ]]; then
+  cat >> "$OUTPUT_FILE" << EOF
+## Cross-References and Contradictions
+
+EOF
+  echo -e "${CROSS_REFERENCES}" >> "$OUTPUT_FILE"
   echo "" >> "$OUTPUT_FILE"
 fi
 

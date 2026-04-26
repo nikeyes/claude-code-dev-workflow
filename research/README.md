@@ -45,7 +45,7 @@ Based on research showing that **multi-agent systems produce 90.2% better result
    - Flags unsupported claims
    - Generates citation quality report
 
-5. **research-reports Skill**
+5. **generate-report script** (part of deep-research skill)
    - Formats reports with YAML frontmatter
    - Standardizes citation format
    - Integrates with `thoughts/` system

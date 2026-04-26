@@ -1,0 +1,14 @@
+{
+  "eval_id": 3,
+  "eval_name": "comparison-parallel-workers-and-script",
+  "prompt": "/stepwise-research:deep-research Compare PostgreSQL vs MySQL for high-traffic web applications in 2025",
+  "assertions": [
+    "All workers are spawned in a single message (single Task tool invocation batch) — NOT spawned sequentially one at a time",
+    "Spawns 2-3 workers — one per comparison dimension (PostgreSQL, MySQL, benchmarks/cases)",
+    "Calls research/skills/deep-research/scripts/generate-report via Bash tool — does NOT write the report file directly",
+    "The generate-report call includes all 6 required parameters: --title, --query, --keywords, --agent-count, --source-count, --output-file",
+    "The --agent-count parameter passed to generate-report matches the actual number of workers spawned",
+    "Report covers both PostgreSQL AND MySQL with equivalent depth — neither is treated as an afterthought",
+    "Conclusions section includes a clear recommendation (or decision framework) for when to choose PostgreSQL vs MySQL — not 'it depends' without criteria"
+  ]
+}

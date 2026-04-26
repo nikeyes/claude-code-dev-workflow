@@ -1,0 +1,84 @@
+{
+  "expectations": [
+    {
+      "text": "Spawns 1-2 workers — does NOT spawn 4+ for a how-to question that can be answered with 2 focused searches",
+      "passed": true,
+      "evidence": "Transcript explicitly states 'no tool calls beyond directory verification and file writing' — zero workers or sub-agents were spawned. The entire report was composed in a single inference pass from training data."
+    },
+    {
+      "text": "Calls research/skills/deep-research/scripts/generate-report via Bash tool — does NOT write the report file directly",
+      "passed": false,
+      "evidence": "Transcript confirms the report was written directly via a file-write operation: 'The research report was written in a single pass by synthesizing knowledge from training data.' No Bash tool call to generate-report script appears anywhere. The report.md was written directly."
+    },
+    {
+      "text": "Spawns the citation-analyst agent AFTER the generate-report script has run — not before, not skipped",
+      "passed": false,
+      "evidence": "Citation-analyst was never spawned. No agents were used at all. The transcript documents only: directory check, write report.md, write transcript.md — no agent invocations of any kind."
+    },
+    {
+      "text": "Report weaves JWT mechanics and security pitfalls into a coherent narrative — NOT two sequential sections that read like raw worker dumps",
+      "passed": true,
+      "evidence": "The report is structured as polished continuous prose with numbered sections (1=JWT structure, 2=auth flow, 3=security pitfalls). While mechanics and pitfalls occupy separate sections, the narrative is coherent and internally consistent — each pitfall section includes context, severity, attack description, and mitigation. It does not read like raw worker dumps."
+    },
+    {
+      "text": "Report names at least 3 specific JWT security pitfalls (e.g., alg:none attack, missing expiry validation, insecure secret storage) with source citations",
+      "passed": true,
+      "evidence": "Report names 11 specific pitfalls: alg:none attack (3.1), algorithm confusion RS256→HS256 (3.2), weak/hardcoded secrets (3.3), missing claims validation (3.4), insecure client-side storage (3.5), lack of token revocation (3.6), sensitive data in payload (3.7), insufficient token expiry (3.8), kid/jku header injection (3.9), replay attacks (3.10), library vulnerabilities (3.11). Citations include RFC 7519, RFC 7518, RFC 8725, OWASP JWT Cheat Sheet, PortSwigger Web Security Academy, and Auth0 Blog."
+    },
+    {
+      "text": "Report includes a 'Cross-References and Contradictions' section that discusses areas of consensus or disagreement across sources",
+      "passed": false,
+      "evidence": "No 'Cross-References and Contradictions' section exists in report.md. The report has sections: Executive Summary, What Is a JWT, How JWT Authentication Works, Common Security Pitfalls, Best Practices Summary, JWT vs. Alternatives, Conclusion, References. No discussion of agreement or disagreement across sources is present anywhere."
+    }
+  ],
+  "summary": {
+    "passed": 3,
+    "failed": 3,
+    "total": 6,
+    "pass_rate": 0.50
+  },
+  "execution_metrics": {
+    "tool_calls": {
+      "bash": 1,
+      "write": 2,
+      "task_agent": 0
+    },
+    "total_tool_calls": 3,
+    "total_steps": 4,
+    "errors_encountered": 0,
+    "output_chars": 13955,
+    "transcript_chars": 2929
+  },
+  "timing": {
+    "executor_duration_seconds": 104.0,
+    "grader_duration_seconds": 30,
+    "total_duration_seconds": 134
+  },
+  "claims": [
+    "Report was composed entirely from training data in a single inference pass",
+    "No web searches or external URLs were fetched",
+    "References are cited from memory; URLs are not verified to be live or current",
+    "11 security pitfalls documented with severity ratings and mitigations"
+  ],
+  "user_notes_summary": {
+    "uncertainties": [
+      "Transcript was self-authored by the executor — it describes what was done rather than being a mechanical log of tool calls, so exact step count is an estimate"
+    ],
+    "needs_review": [
+      "Expectation 4 (coherent narrative vs. raw worker dumps) is borderline: the report has separate sequential sections for mechanics and pitfalls rather than weaving them together, but the prose quality is high and not dump-like"
+    ],
+    "workarounds": [
+      "Executor bypassed the generate-report script entirely by writing report.md directly — this circumvents the intended skill workflow"
+    ]
+  },
+  "eval_feedback": {
+    "suggestions": [
+      "Expectation 2 is the most critical structural failure: without the generate-report script being called, the skill's citation infrastructure and structured output format are bypassed entirely",
+      "Expectation 6 (Cross-References and Contradictions section) cannot be satisfied by a single training-data synthesis since there are no multiple sources to cross-reference — this expectation implicitly requires multi-source research",
+      "The eval scenario reveals that without the skill, the baseline produces a high-quality content report but completely ignores the workflow requirements (script invocation, agent spawning, citation verification)",
+      "Expectation 1 technically passes since no workers were spawned, but the spirit of the expectation (workers doing actual research) is violated — the baseline did 0 research vs. the expected 1-2 focused searches",
+      "Consider adding an expectation: 'At least 1 real web search or external source lookup is performed' to catch this training-data-only failure mode"
+    ],
+    "overall": "3/6 pass (50%). The baseline produces a technically competent and content-rich JWT report entirely from training data, which satisfies content-level expectations (pitfall count, narrative quality) but fails all process-level expectations. The generate-report script was never called, no citation-analyst was spawned, and no Cross-References section was produced. The execution is a single-pass training data synthesis that bypasses the entire research workflow the skill is designed to enforce."
+  }
+}

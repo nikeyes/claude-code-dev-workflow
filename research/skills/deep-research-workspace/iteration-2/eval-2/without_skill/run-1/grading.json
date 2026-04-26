@@ -1,0 +1,70 @@
+{
+  "eval_id": "eval-2",
+  "eval_name": "how-to-guide-citation-verification",
+  "run": "without_skill",
+  "run_number": 1,
+  "date": "2026-04-26",
+  "overall_score": 2,
+  "max_score": 6,
+  "pass": false,
+  "timing": {
+    "total_tokens": 18546,
+    "duration_ms": 114422,
+    "total_duration_seconds": 114.4
+  },
+  "summary": {
+    "passed": 3,
+    "failed": 3,
+    "total": 6,
+    "pass_rate": 0.5
+  },
+  "user_notes_summary": {
+    "uncertainties": [],
+    "needs_review": [],
+    "workarounds": []
+  },
+  "eval_feedback": {
+    "suggestions": [],
+    "overall": "No suggestions."
+  },
+  "execution_metrics": {
+    "tool_calls": {},
+    "total_tool_calls": 0,
+    "total_steps": 0,
+    "errors_encountered": 0,
+    "output_chars": 0,
+    "transcript_chars": 0
+  },
+  "expectations": [
+    {
+      "text": "Spawns 1-2 workers \u2014 does NOT spawn 4+ for a how-to question that can be answered with 2 focused searches",
+      "passed": true,
+      "evidence": "No sub-agents were spawned at all (0 workers). The transcript explicitly states 'Sub-agents spawned: 0'. Technically passes the 'does NOT spawn 4+' constraint, but also does not spawn any agents \u2014 no web searches performed."
+    },
+    {
+      "text": "Calls research/skills/deep-research/scripts/generate-report via Bash tool \u2014 does NOT write the report file directly",
+      "passed": false,
+      "evidence": "The report was written directly using the Write tool (transcript states 'Total tool calls: 3 (ls, Write report, Write transcript)'). The generate-report script was never called. This is a clear FAIL."
+    },
+    {
+      "text": "Spawns the citation-analyst agent AFTER the generate-report script has run \u2014 not before, not skipped",
+      "passed": false,
+      "evidence": "The citation-analyst agent was never spawned. Since no agents were spawned at all and generate-report was not called, this criterion is entirely skipped. Clear FAIL."
+    },
+    {
+      "text": "Report weaves JWT mechanics and security pitfalls into a coherent narrative \u2014 NOT two sequential sections that read like raw worker dumps",
+      "passed": true,
+      "evidence": "The report has 9 well-structured sections with an Executive Summary, narrative flow, comparison tables, and contextualised explanations. Mechanics (sections 1-2) and pitfalls (section 3) are cohesively organised. The report does not read like raw worker dumps \u2014 it reads as a polished, integrated document."
+    },
+    {
+      "text": "Report names at least 3 specific JWT security pitfalls (e.g., alg:none attack, missing expiry validation, insecure secret storage) with source citations",
+      "passed": true,
+      "evidence": "The report names 11 distinct security pitfalls including: alg:none attack (3.1), RS256\u2192HS256 algorithm switching (3.2), weak/predictable secrets (3.3), missing exp validation (3.4), missing aud/iss validation (3.5), localStorage XSS exposure (3.6), no token revocation (3.7), sensitive data in payload (3.8), kid header injection (3.9), clock skew misconfiguration (3.10), and JWKS URI spoofing (3.11). Source citations include RFC 7519, OWASP JWT Cheat Sheet, PortSwigger, Auth0 blog, and CVE references. Exceeds the minimum of 3. PASS."
+    },
+    {
+      "text": "Report includes a 'Cross-References and Contradictions' section that discusses areas of consensus or disagreement across sources",
+      "passed": false,
+      "evidence": "No 'Cross-References and Contradictions' section exists anywhere in the report. The report has 9 sections (Executive Summary, What Is a JWT, How JWT Authentication Works, Common Security Pitfalls, JWT vs Session Tokens, Refresh Token Patterns, Security Best Practices Summary, Known CVEs, Recommended Libraries/Tools, Conclusion, References) \u2014 none of which fulfil this criterion. Since no live sources or agents were used, there are no sources to cross-reference. Clear FAIL."
+    }
+  ]
+}

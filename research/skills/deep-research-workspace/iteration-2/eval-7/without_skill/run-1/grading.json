@@ -1,0 +1,59 @@
+{
+  "eval_id": "eval-7",
+  "variant": "without_skill",
+  "run": 1,
+  "date": "2026-04-26",
+  "overall_pass": true,
+  "score": 4,
+  "max_score": 4,
+  "timing": {
+    "duration_ms": 30878,
+    "total_tokens": 14034
+  },
+  "summary": {
+    "passed": 4,
+    "failed": 0,
+    "total": 4,
+    "pass_rate": 1.0
+  },
+  "notes": "This is a strong baseline result. The model without the skill appropriately self-regulated and avoided research overkill. The skill's value proposition for this particular eval type (trivial queries) may be minimal, since the baseline already exhibits the desired behavior.",
+  "user_notes_summary": {
+    "uncertainties": [],
+    "needs_review": [],
+    "workarounds": []
+  },
+  "eval_feedback": {
+    "suggestions": [],
+    "overall": "No suggestions."
+  },
+  "execution_metrics": {
+    "tool_calls": {},
+    "total_tool_calls": 0,
+    "total_steps": 0,
+    "errors_encountered": 0,
+    "output_chars": 0,
+    "transcript_chars": 0
+  },
+  "expectations": [
+    {
+      "text": "Spawns at most 1 worker \u2014 does NOT treat a factual lookup as a 'state-of-the-art' research topic requiring 4+ workers",
+      "passed": true,
+      "evidence": "No workers/agents were spawned at all. The baseline answered directly without delegating to any sub-agents. Zero workers, which satisfies 'at most 1'."
+    },
+    {
+      "text": "Does NOT produce a 15+ source bibliography or a 5-theme detailed findings report for a question answerable in one sentence",
+      "passed": true,
+      "evidence": "The report.md contains no bibliography or citations whatsoever. The output is a concise, practical answer (~38 lines including a comparison table). No multi-theme research structure was applied. The transcript explicitly states 'A research report would add no value here'."
+    },
+    {
+      "text": "Directly answers what HTTP 404 means \u2014 user receives the information without navigating a research infrastructure",
+      "passed": true,
+      "evidence": "report.md opens immediately with 'HTTP 404 is an HTTP status code meaning Not Found' and provides a clear, complete answer covering meaning, causes, related codes, and developer guidance. No research pipeline overhead was imposed on the user."
+    },
+    {
+      "text": "Does NOT spawn citation-analyst for a widely-known standard fact \u2014 avoids wasting agent overhead on trivial queries",
+      "passed": true,
+      "evidence": "No citation-analyst or any other specialized agent was invoked. The transcript lists only two actions: creating the output directory and writing report.md. Total token usage was 14,034 and execution completed in ~31 seconds, consistent with a single direct answer with no agent orchestration."
+    }
+  ]
+}

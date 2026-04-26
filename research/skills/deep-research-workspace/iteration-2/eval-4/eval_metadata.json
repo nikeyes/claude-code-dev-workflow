@@ -1,0 +1,14 @@
+{
+  "eval_id": 4,
+  "eval_name": "multi-faceted-analysis-full-workflow",
+  "prompt": "/stepwise-research:deep-research Analyze the current state of enterprise AI adoption: challenges, tooling, ROI, and security concerns",
+  "assertions": [
+    "Spawns at least 4 workers — recognizes this is multi-faceted, not a simple how-to",
+    "All 4+ workers are spawned in a single message — NOT spawned in multiple sequential rounds",
+    "Calls research/skills/deep-research/scripts/generate-report via Bash tool — does NOT write the report file directly",
+    "The generate-report call includes --executive-summary, --findings, --conclusions, and --bibliography content parameters — does NOT leave them empty",
+    "Total source count in frontmatter is 15 or more — befitting a multi-faceted research topic",
+    "Detailed Findings section has multiple H3 themes that pull from multiple workers — NOT a series of 'Worker 1 says..., Worker 2 says...' sections",
+    "Spawns the citation-analyst agent AFTER the generate-report script has produced the file"
+  ]
+}

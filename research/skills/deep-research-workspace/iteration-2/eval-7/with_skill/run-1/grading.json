@@ -1,0 +1,70 @@
+{
+  "eval_id": "eval-7",
+  "eval_name": "trivial-query-no-multiagent-overkill",
+  "query": "What does HTTP 404 mean?",
+  "run": "run-1",
+  "iteration": "iteration-2",
+  "date": "2026-04-26",
+  "overall_pass": true,
+  "score": 4,
+  "max_score": 4,
+  "timing": {
+    "duration_ms": 65720,
+    "total_duration_seconds": 65.7,
+    "total_tokens": 19691
+  },
+  "summary": {
+    "passed": 4,
+    "failed": 0,
+    "total": 4,
+    "pass_rate": 1.0
+  },
+  "notes": {
+    "report_saved": true,
+    "report_path": "thoughts/shared/research/http-404-2026-04-26.md",
+    "workers_spawned": 0,
+    "sources_fetched": 0,
+    "citation_analyst_used": false,
+    "generate_report_script_used": false,
+    "proportion_rating": "excellent \u2014 skill correctly identified this as sub-threshold for the research pipeline"
+  },
+  "user_notes_summary": {
+    "uncertainties": [],
+    "needs_review": [],
+    "workarounds": []
+  },
+  "eval_feedback": {
+    "suggestions": [],
+    "overall": "No suggestions."
+  },
+  "execution_metrics": {
+    "tool_calls": {},
+    "total_tool_calls": 0,
+    "total_steps": 0,
+    "errors_encountered": 0,
+    "output_chars": 0,
+    "transcript_chars": 0
+  },
+  "expectations": [
+    {
+      "text": "Spawns at most 1 worker \u2014 does NOT treat a factual lookup as a 'state-of-the-art' research topic requiring 4+ workers",
+      "passed": true,
+      "evidence": "Transcript explicitly states '0 workers spawned' and classifies the query as a trivial definition. The skill decided that even the '1 worker' lower bound for simple definitions was excessive for HTTP 404, which is standard knowledge requiring no web search."
+    },
+    {
+      "text": "Does NOT produce a 15+ source bibliography or a 5-theme detailed findings report for a question answerable in one sentence",
+      "passed": true,
+      "evidence": "The saved report (thoughts/shared/research/http-404-2026-04-26.md) has source_count=0 and no bibliography entries. The report is minimal: a 3-sentence executive summary, a short findings paragraph, and 4 bullet-point conclusions. No multi-theme deep-dive structure was used."
+    },
+    {
+      "text": "Directly answers what HTTP 404 means \u2014 user receives the information without navigating a research infrastructure",
+      "passed": true,
+      "evidence": "The transcript concludes with a direct one-sentence answer: 'HTTP 404 means Not Found \u2014 the server received a valid request but could not find the resource at the requested URL.' The report frontmatter and content are equally direct. The answer is immediately accessible."
+    },
+    {
+      "text": "Does NOT spawn citation-analyst for a widely-known standard fact \u2014 avoids wasting agent overhead on trivial queries",
+      "passed": true,
+      "evidence": "Transcript Step 8 explicitly states 'Skipped. No external sources were fetched; there are no citations to verify. The citation-analyst agent is designed to verify URLs and map claims to sources. With zero sources fetched, running it would be pointless overhead.' citation-analyst was not spawned."
+    }
+  ]
+}

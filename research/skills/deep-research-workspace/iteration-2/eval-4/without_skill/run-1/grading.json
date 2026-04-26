@@ -1,0 +1,75 @@
+{
+  "eval_id": "eval-4",
+  "scenario": "multi-faceted-analysis-full-workflow",
+  "condition": "without_skill",
+  "run": 1,
+  "date": "2026-04-26",
+  "overall_pass": false,
+  "score": 0,
+  "max_score": 7,
+  "summary": {
+    "passed": 0,
+    "failed": 7,
+    "total": 7,
+    "pass_rate": 0.0
+  },
+  "timing": {
+    "total_tokens": 20383,
+    "duration_ms": 170172,
+    "total_duration_seconds": 170.2
+  },
+  "user_notes_summary": {
+    "uncertainties": [],
+    "needs_review": [],
+    "workarounds": []
+  },
+  "eval_feedback": {
+    "suggestions": [],
+    "overall": "No suggestions."
+  },
+  "execution_metrics": {
+    "tool_calls": {},
+    "total_tool_calls": 0,
+    "total_steps": 0,
+    "errors_encountered": 0,
+    "output_chars": 0,
+    "transcript_chars": 0
+  },
+  "expectations": [
+    {
+      "text": "Spawns at least 4 workers \u2014 recognizes this is multi-faceted, not a simple how-to",
+      "passed": false,
+      "evidence": "The transcript explicitly states: 'No web searches, no agent spawning, no tool-assisted research were used. The entire report was composed from knowledge in the model's training data.' Zero workers were spawned."
+    },
+    {
+      "text": "All 4+ workers are spawned in a single message \u2014 NOT spawned in multiple sequential rounds",
+      "passed": false,
+      "evidence": "No workers were spawned at all. Criterion is not satisfiable given criterion 1 also failed."
+    },
+    {
+      "text": "Calls research/skills/deep-research/scripts/generate-report via Bash tool \u2014 does NOT write the report file directly",
+      "passed": false,
+      "evidence": "The report.md was written directly to the outputs directory from the model's training data synthesis. The generate-report script was never called. The transcript confirms this: 'Composed Research Report from Training Data' and 'Wrote This Transcript' are the only steps listed."
+    },
+    {
+      "text": "The generate-report call includes --executive-summary, --findings, --conclusions, and --bibliography content parameters \u2014 does NOT leave them empty",
+      "passed": false,
+      "evidence": "generate-report was never invoked. All required parameters are absent by definition."
+    },
+    {
+      "text": "Total source count in frontmatter is 15 or more \u2014 befitting a multi-faceted research topic",
+      "passed": false,
+      "evidence": "The report.md has no YAML frontmatter at all. It opens with a plain markdown H1 title and two bold key-value lines (Research Date, Research Method). The 'Sources and Evidence Base' section at the end lists approximately 10 sources as a prose list, which is below the threshold of 15 and is not in frontmatter."
+    },
+    {
+      "text": "Detailed Findings section has multiple H3 themes that pull from multiple workers \u2014 NOT a series of 'Worker 1 says..., Worker 2 says...' sections",
+      "passed": false,
+      "evidence": "The report does use thematic H3 subsections (e.g., 2.1 Data Quality, 2.2 Talent Gaps, etc.) rather than worker-attributed sections. However, because no workers were spawned, the criterion's core requirement \u2014 that findings synthesize across multiple workers \u2014 cannot be met. The structure is entirely single-agent and not derived from multi-worker synthesis."
+    },
+    {
+      "text": "Spawns the citation-analyst agent AFTER the generate-report script has produced the file",
+      "passed": false,
+      "evidence": "Neither the citation-analyst agent nor the generate-report script were used at any point in the execution."
+    }
+  ]
+}

@@ -1,0 +1,76 @@
+{
+  "eval_id": "eval-6",
+  "eval_name": "controversial-topic-report-file-location",
+  "run": 1,
+  "date": "2026-04-26",
+  "overall_score": 6,
+  "max_score": 7,
+  "pass_rate": 0.857,
+  "verdict": "PASS",
+  "expectations": [
+    {
+      "text": "Spawns 4-6 workers \u2014 recognizes this is a controversial multi-faceted comparison, not a simple definition",
+      "passed": true,
+      "evidence": "Transcript Step 2 explicitly classifies the topic as 'Controversial topic' and decides '5 workers spawned to cover both architectures fairly, including failure modes and real-world cases.' 5 is within the required 4-6 range. Step 4 confirms all 5 workers with their assigned sub-questions."
+    },
+    {
+      "text": "Calls research/skills/deep-research/scripts/generate-report via Bash tool",
+      "passed": false,
+      "evidence": "The transcript shows the script invocation as a code block in Step 7b (described/simulated), but there is no evidence of an actual Bash tool call. The transcript is a simulation document describing what would happen rather than a live tool execution log. The script path shown is 'research/skills/deep-research/scripts/generate-report' (relative, not absolute), and it is presented as documentation rather than a recorded tool invocation."
+    },
+    {
+      "text": "The --output-file parameter follows the sanitized naming convention: thoughts/shared/research/[lowercase-hyphenated-topic]-YYYY-MM-DD.md (no special characters, max 60 chars before date)",
+      "passed": true,
+      "evidence": "Transcript Step 7a documents the naming computation explicitly: original topic sanitized to lowercase+hyphens, then semantically condensed to 'microservices-vs-monolith-startup' (33 characters, well under the 60-char limit). Final filename: 'thoughts/shared/research/microservices-vs-monolith-startup-2026-04-26.md'. No special characters. Date suffix correct (YYYY-MM-DD). Path prefix correct."
+    },
+    {
+      "text": "After execution, the report file actually exists at the path specified in --output-file inside thoughts/shared/research/",
+      "passed": true,
+      "evidence": "File confirmed to exist at /Users/jorge.castro/mordor/personal/stepwise-dev/thoughts/shared/research/microservices-vs-monolith-startup-2026-04-26.md. Contents are a complete 137-line research report with frontmatter, executive summary, detailed findings, conclusions, and bibliography."
+    },
+    {
+      "text": "Report explicitly includes the perspective that microservices can be premature for early startups \u2014 not just listing microservices benefits",
+      "passed": true,
+      "evidence": "Theme 3 is entirely dedicated to 'Hidden Costs and Failure Modes' and explicitly covers 'Microservices complexity tax at small scale' including the Segment cautionary tale (premature decomposition to 150 services, 18-month migration back). Executive Summary states microservices 'typically cannot be absorbed by small teams.' The MonolithFirst principle in Theme 4 directly cites Fowler/Newman advising against starting with microservices. The Netflix case study explicitly notes that context (50M users, hundreds of engineers) contradicts applying it to startups."
+    },
+    {
+      "text": "Conclusions section names specific conditions under which a monolith is the correct choice (e.g., team size, traffic scale, deployment complexity)",
+      "passed": true,
+      "evidence": "The Conclusions section contains named, specific conditions: (1) team coordination friction above ~15 engineers per component as trigger for microservices (implying monolith is correct below this), (2) scaling bottlenecks on specific components, (3) deployment conflicts as the measurable pain threshold, (4) regulatory requirements as the only day-one exception. These are concrete, actionable conditions rather than vague generalizations."
+    },
+    {
+      "text": "Bibliography includes real case studies or engineering blog posts from both monolith and microservices success stories",
+      "passed": true,
+      "evidence": "Bibliography contains 28 citations covering both sides: Monolith success stories include Shopify Engineering blog ([1],[2],[24]), Basecamp/Signal v. Noise ([4]), Stack Overflow blog ([18],[19]), DHH's blog ([25]). Microservices success stories include Netflix Tech Blog ([8],[9]), Spotify Engineering Culture ([12]), Amazon/Werner Vogels ACM Queue interview ([10]). Cautionary tale from Segment engineering blog ([15]). Academic sources include ACM Queue ([3],[10]) and O'Reilly books ([11],[20]). Mix of engineering blogs, academic, and books from both architectural camps."
+    }
+  ],
+  "timing": {
+    "total_tokens": 30090,
+    "duration_ms": 162189,
+    "total_duration_seconds": 162.2
+  },
+  "notes": "The single failure (expectation 2) is that the transcript is a simulation document rather than a recorded live execution log \u2014 the generate-report script invocation is described as a code block rather than captured as an actual Bash tool call. All content quality expectations (worker count, naming, file existence, balanced perspective, specific conclusions, bibliography diversity) pass with strong evidence.",
+  "user_notes_summary": {
+    "uncertainties": [],
+    "needs_review": [],
+    "workarounds": []
+  },
+  "eval_feedback": {
+    "suggestions": [],
+    "overall": "No suggestions."
+  },
+  "summary": {
+    "passed": 6,
+    "failed": 1,
+    "total": 7,
+    "pass_rate": 0.86
+  },
+  "execution_metrics": {
+    "tool_calls": {},
+    "total_tool_calls": 0,
+    "total_steps": 0,
+    "errors_encountered": 0,
+    "output_chars": 0,
+    "transcript_chars": 0
+  }
+}

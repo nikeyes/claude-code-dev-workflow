@@ -1,0 +1,74 @@
+{
+  "eval_id": "eval-4",
+  "eval_name": "multi-faceted-analysis-full-workflow",
+  "skill": "deep-research",
+  "run": 1,
+  "date": "2026-04-26",
+  "overall_pass": true,
+  "summary": {
+    "passed": 7,
+    "failed": 0,
+    "total": 7,
+    "pass_rate": 1.0
+  },
+  "timing": {
+    "total_tokens": 28695,
+    "duration_ms": 189338,
+    "total_duration_seconds": 189.3
+  },
+  "notes": "All 7 criteria passed. The execution demonstrates correct multi-faceted classification (6 workers), proper parallel spawning in a single message, script-based report generation with fully populated content parameters, a source count (38) well above the minimum threshold (15), thematic cross-worker synthesis (6 H3 themes), and correct citation-analyst ordering after report generation.",
+  "user_notes_summary": {
+    "uncertainties": [],
+    "needs_review": [],
+    "workarounds": []
+  },
+  "eval_feedback": {
+    "suggestions": [],
+    "overall": "No suggestions."
+  },
+  "execution_metrics": {
+    "tool_calls": {},
+    "total_tool_calls": 0,
+    "total_steps": 0,
+    "errors_encountered": 0,
+    "output_chars": 0,
+    "transcript_chars": 0
+  },
+  "expectations": [
+    {
+      "text": "Spawns at least 4 workers \u2014 recognizes this is multi-faceted, not a simple how-to",
+      "passed": true,
+      "evidence": "Transcript Step 2 classifies the query as 'Multi-faceted analysis' and Step 4 confirms 6 workers were spawned (within the expected 5-8 range for this category)."
+    },
+    {
+      "text": "All 4+ workers are spawned in a single message \u2014 NOT spawned in multiple sequential rounds",
+      "passed": true,
+      "evidence": "Transcript Step 4 explicitly states: 'All 6 workers were spawned in a single message to enable true parallel execution.' The workflow compliance table at the end also confirms: 'Spawned in single message'."
+    },
+    {
+      "text": "Calls research/skills/deep-research/scripts/generate-report via Bash tool \u2014 does NOT write the report file directly",
+      "passed": true,
+      "evidence": "Transcript Step 7b shows the generate-report script invocation as a bash command: 'research/skills/deep-research/scripts/generate-report ...' with all expected parameters. The workflow compliance table confirms: 'All parameters provided, script executed'."
+    },
+    {
+      "text": "The generate-report call includes --executive-summary, --findings, --conclusions, and --bibliography content parameters \u2014 does NOT leave them empty",
+      "passed": true,
+      "evidence": "Transcript Step 7b shows all four content flags present in the script call: --executive-summary, --findings, --conclusions, --bibliography, each with content values (shown as '[...]' in the transcript for brevity). The resulting report file contains fully populated Executive Summary, Detailed Findings, Conclusions, and Bibliography sections, confirming non-empty values were passed."
+    },
+    {
+      "text": "Total source count in frontmatter is 15 or more \u2014 befitting a multi-faceted research topic",
+      "passed": true,
+      "evidence": "Report frontmatter shows 'source_count: 38', which is well above the threshold of 15. The bibliography lists 30 numbered entries with URLs."
+    },
+    {
+      "text": "Detailed Findings section has multiple H3 themes that pull from multiple workers \u2014 NOT a series of 'Worker 1 says..., Worker 2 says...' sections",
+      "passed": true,
+      "evidence": "The report contains 6 thematic H3 sections (Theme 1: Adoption Rates and Maturity Landscape; Theme 2: Organizational and Technical Challenges; Theme 3: Enterprise AI Tooling Landscape; Theme 4: ROI Measurement and Realized Value; Theme 5: Security, Privacy, and Governance Concerns; Theme 6: Regulated Industry Patterns). Each theme cites multiple sources from different workers. Transcript Step 6 explicitly confirms synthesis was cross-referenced, not concatenated per worker."
+    },
+    {
+      "text": "Spawns the citation-analyst agent AFTER the generate-report script has produced the file",
+      "passed": true,
+      "evidence": "Transcript Step 7b shows the generate-report script execution producing the file, and Step 8 begins: 'After report generation, a stepwise-research:citation-analyst agent was spawned'. The workflow compliance table confirms: 'Spawned post-generation'. The ordering is unambiguous in the transcript."
+    }
+  ]
+}

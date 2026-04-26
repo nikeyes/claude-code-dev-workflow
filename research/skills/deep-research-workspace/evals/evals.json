@@ -6,58 +6,62 @@
       "name": "simple-definition-one-worker",
       "difficulty": "easy",
       "prompt": "/stepwise-research:deep-research What is WebAssembly and what problem does it solve?",
-      "expected_output": "Classifies as simple definition query. Spawns exactly 1 worker (not 3-5). Worker executes web searches and retrieves current sources. Report includes executive summary, key findings section, and bibliography with real URLs. Report saved to thoughts/shared/research/. Does NOT over-research a simple question.",
+      "expected_output": "Classifies as simple definition query. Spawns exactly 1 worker (not 3-5). Worker executes web searches and retrieves current sources. Uses generate-report script to create the report file. Report includes executive summary, key findings section, and bibliography with real URLs. Report saved to thoughts/shared/research/. Does NOT over-research a simple question.",
       "assertions": [
         {"id": "spawns-one-worker-max-two", "text": "Spawns 1 worker (acceptable: max 2) — does NOT spawn 3+ workers for a simple definition query", "type": "behavior"},
+        {"id": "calls-generate-report-script", "text": "Calls research/skills/deep-research/scripts/generate-report via Bash tool — does NOT write the report file directly with Write tool or inline markdown", "type": "behavior"},
         {"id": "report-saved-to-thoughts", "text": "Saves the report to thoughts/shared/research/[topic]-[YYYY-MM-DD].md with YAML frontmatter", "type": "capability"},
         {"id": "report-has-executive-summary", "text": "Report contains an Executive Summary section with 3-5 sentences directly answering 'what is WebAssembly and what problem does it solve'", "type": "capability"},
         {"id": "bibliography-has-real-urls", "text": "Bibliography contains at least 5 numbered citations with real URLs (not placeholder [URL] tokens)", "type": "capability"},
-        {"id": "report-uses-web-sources", "text": "Sources include at least one from an authoritative domain (.org, .io, MDN, official docs) — not just Wikipedia or training data summaries", "type": "capability"},
+        {"id": "report-has-generation-footer", "text": "Report ends with the generate-report script footer: '*Research conducted by stepwise-research multi-agent system*' and '*Generated: [timestamp]*'", "type": "capability"},
         {"id": "frontmatter-complete", "text": "YAML frontmatter includes title, date, query, keywords, status: complete, agent_count, and source_count fields", "type": "capability"}
       ]
     },
     {
       "id": 2,
-      "name": "how-to-guide-two-workers",
+      "name": "how-to-guide-citation-verification",
       "difficulty": "easy",
       "prompt": "/stepwise-research:deep-research How does JWT authentication work and what are common security pitfalls?",
-      "expected_output": "Classifies as how-to guide. Spawns 1-2 workers. First covers JWT mechanics, second covers security pitfalls. Report synthesizes both aspects into a coherent narrative — NOT two separate copy-pasted worker outputs. Identifies concrete pitfalls (alg:none attack, short expiry, weak secret) with citations. Citation-analyst is spawned.",
+      "expected_output": "Classifies as how-to guide. Spawns 1-2 workers. Uses generate-report script. After report generation, spawns citation-analyst agent to verify citations. Report synthesizes JWT mechanics and security pitfalls into a coherent narrative.",
       "assertions": [
         {"id": "spawns-one-or-two-workers", "text": "Spawns 1-2 workers — does NOT spawn 4+ for a how-to question that can be answered with 2 focused searches", "type": "behavior"},
+        {"id": "calls-generate-report-script", "text": "Calls research/skills/deep-research/scripts/generate-report via Bash tool — does NOT write the report file directly", "type": "behavior"},
+        {"id": "spawns-citation-analyst-after-report", "text": "Spawns the citation-analyst agent AFTER the generate-report script has run — not before, not skipped", "type": "behavior"},
         {"id": "report-is-synthesis-not-concatenation", "text": "Report weaves JWT mechanics and security pitfalls into a coherent narrative — NOT two sequential sections that read like raw worker dumps", "type": "capability"},
         {"id": "names-concrete-pitfalls", "text": "Report names at least 3 specific JWT security pitfalls (e.g., alg:none attack, missing expiry validation, insecure secret storage) with source citations", "type": "capability"},
-        {"id": "spawns-citation-analyst", "text": "Spawns the citation-analyst agent after generating the report to verify citation accuracy", "type": "capability"},
         {"id": "cross-references-section-present", "text": "Report includes a 'Cross-References and Contradictions' section that discusses areas of consensus or disagreement across sources", "type": "capability"}
       ]
     },
     {
       "id": 3,
-      "name": "comparison-two-items-parallel-workers",
+      "name": "comparison-parallel-workers-and-script",
       "difficulty": "medium",
       "prompt": "/stepwise-research:deep-research Compare PostgreSQL vs MySQL for high-traffic web applications in 2025",
-      "expected_output": "Classifies as 2-item comparison. Spawns 2-3 workers in a SINGLE message (parallel). Workers cover: PostgreSQL characteristics, MySQL characteristics, and (optionally) benchmarks/case studies. Report includes a structured comparison with both consensus and contradictions. Explicit findings on when to use each. Sources include recent benchmarks or case studies (not just documentation).",
+      "expected_output": "Classifies as 2-item comparison. Spawns 2-3 workers in a SINGLE message (parallel). Uses generate-report script with all required parameters. Report includes structured comparison. Script receives correct agent-count and source-count matching actual research.",
       "assertions": [
         {"id": "spawns-workers-in-single-message", "text": "All workers are spawned in a single message (single Task tool invocation batch) — NOT spawned sequentially one at a time", "type": "behavior"},
         {"id": "spawns-two-or-three-workers", "text": "Spawns 2-3 workers — one per comparison dimension (PostgreSQL, MySQL, benchmarks/cases)", "type": "capability"},
+        {"id": "calls-generate-report-script", "text": "Calls research/skills/deep-research/scripts/generate-report via Bash tool — does NOT write the report file directly", "type": "behavior"},
+        {"id": "script-receives-all-required-params", "text": "The generate-report call includes all 6 required parameters: --title, --query, --keywords, --agent-count, --source-count, --output-file", "type": "behavior"},
+        {"id": "agent-count-matches-actual-workers", "text": "The --agent-count parameter passed to generate-report matches the actual number of workers spawned", "type": "behavior"},
         {"id": "report-has-both-databases", "text": "Report covers both PostgreSQL AND MySQL with equivalent depth — neither is treated as an afterthought", "type": "capability"},
-        {"id": "contradictions-section-identifies-disagreements", "text": "Cross-References section identifies at least one real disagreement or nuance between sources (e.g., MySQL faster for simple reads vs PostgreSQL better for complex queries)", "type": "capability"},
-        {"id": "includes-recent-sources", "text": "Bibliography includes at least 3 sources dated 2023 or later, or sources that discuss recent versions (PostgreSQL 15+, MySQL 8+)", "type": "capability"},
         {"id": "actionable-conclusion", "text": "Conclusions section includes a clear recommendation (or decision framework) for when to choose PostgreSQL vs MySQL — not 'it depends' without criteria", "type": "capability"}
       ]
     },
     {
       "id": 4,
-      "name": "multi-faceted-analysis-scales-workers",
+      "name": "multi-faceted-analysis-full-workflow",
       "difficulty": "medium",
       "prompt": "/stepwise-research:deep-research Analyze the current state of enterprise AI adoption: challenges, tooling, ROI, and security concerns",
-      "expected_output": "Classifies as multi-faceted analysis. Spawns 4-6 workers covering different facets in parallel. Each worker covers one angle (challenges, tooling landscape, ROI evidence, security/compliance). Report synthesizes into coherent themes that cross-reference worker findings. Does NOT treat this as a how-to guide (1-2 workers). Identifies contradictions across sources (e.g., optimistic vendor ROI vs skeptical analyst ROI).",
+      "expected_output": "Classifies as multi-faceted analysis. Spawns 4-6 workers covering different facets in parallel. Uses generate-report script. Full workflow: workers → synthesis → generate-report → citation-analyst. Report themes cross-reference worker findings.",
       "assertions": [
         {"id": "spawns-four-or-more-workers", "text": "Spawns at least 4 workers — recognizes this is multi-faceted, not a simple how-to", "type": "capability"},
-        {"id": "workers-cover-different-facets", "text": "Worker sub-questions cover distinct facets: at minimum challenges, tooling/vendors, ROI evidence, AND security/compliance as separate workers", "type": "capability"},
         {"id": "all-workers-parallel-single-message", "text": "All 4+ workers are spawned in a single message — NOT spawned in multiple sequential rounds", "type": "behavior"},
-        {"id": "report-identifies-vendor-bias", "text": "Report identifies or flags when sources show vendor bias (e.g., vendor case studies claiming high ROI) and cross-references with independent analysts", "type": "capability"},
+        {"id": "calls-generate-report-script", "text": "Calls research/skills/deep-research/scripts/generate-report via Bash tool — does NOT write the report file directly", "type": "behavior"},
+        {"id": "script-receives-content-params", "text": "The generate-report call includes --executive-summary, --findings, --conclusions, and --bibliography content parameters — does NOT leave them empty", "type": "behavior"},
         {"id": "source-count-above-fifteen", "text": "Total source count in frontmatter is 15 or more — befitting a multi-faceted research topic", "type": "capability"},
-        {"id": "themes-synthesized-across-workers", "text": "Detailed Findings section has multiple H3 themes that pull from multiple workers — NOT a series of 'Worker 1 says..., Worker 2 says...' sections", "type": "behavior"}
+        {"id": "themes-synthesized-across-workers", "text": "Detailed Findings section has multiple H3 themes that pull from multiple workers — NOT a series of 'Worker 1 says..., Worker 2 says...' sections", "type": "behavior"},
+        {"id": "spawns-citation-analyst-after-report", "text": "Spawns the citation-analyst agent AFTER the generate-report script has produced the file", "type": "behavior"}
       ]
     },
     {
@@ -65,27 +69,28 @@
       "name": "ambiguous-topic-asks-clarification",
       "difficulty": "hard",
       "prompt": "/stepwise-research:deep-research Research performance",
-      "expected_output": "Recognizes 'performance' is ambiguous without context (web performance? database performance? team performance? compiler optimizations?). Uses AskUserQuestion to ask 1-2 targeted clarifying questions. Does NOT spawn workers immediately on a vague topic. Does NOT make assumptions and research the wrong domain.",
+      "expected_output": "Recognizes 'performance' is ambiguous. Uses AskUserQuestion before doing anything. Does NOT call generate-report or spawn workers before clarifying.",
       "assertions": [
         {"id": "does-not-spawn-workers-immediately", "text": "Does NOT spawn research workers before asking for clarification — the topic is too ambiguous to sub-question usefully", "type": "behavior"},
+        {"id": "does-not-call-generate-report", "text": "Does NOT call generate-report script before receiving clarification — no report should be generated from an ambiguous query", "type": "behavior"},
         {"id": "uses-ask-user-question-tool", "text": "Uses the AskUserQuestion tool to ask at least one clarifying question about the domain or context", "type": "capability"},
-        {"id": "asks-about-domain-or-context", "text": "The clarifying question targets the domain (web? database? team? hardware?) or the intended use case — not just asking 'can you elaborate?'", "type": "capability"},
-        {"id": "asks-max-two-questions", "text": "Asks at most 2 clarifying questions — does NOT fire a five-question interrogation at the user", "type": "behavior"}
+        {"id": "asks-about-domain-or-context", "text": "The clarifying question targets the domain (web? database? team? hardware?) or the intended use case — not just asking 'can you elaborate?'", "type": "capability"}
       ]
     },
     {
       "id": 6,
-      "name": "controversial-topic-balanced-perspectives",
+      "name": "controversial-topic-report-file-location",
       "difficulty": "hard",
       "prompt": "/stepwise-research:deep-research Analyze the pros and cons of microservices vs monolith architectures for a growing startup",
-      "expected_output": "Classifies as controversial topic. Spawns 4-6 workers including at least one dedicated to the case FOR monolith and one dedicated to the case FOR microservices. Report explicitly includes contrarian views. Conclusions do not unilaterally recommend microservices (the trendy choice) — includes conditions under which a monolith is the better choice. Cross-References section discusses the debate as an ongoing one with legitimate disagreements.",
+      "expected_output": "Classifies as controversial topic. Spawns 4-6 workers. Uses generate-report script with output-file following the sanitized filename convention. Report saved to correct location. Balanced perspectives on both architectures.",
       "assertions": [
         {"id": "spawns-four-to-six-workers", "text": "Spawns 4-6 workers — recognizes this is a controversial multi-faceted comparison, not a simple definition", "type": "capability"},
-        {"id": "worker-for-monolith-case", "text": "At least one worker is explicitly tasked with researching the case FOR monolith (not just 'monolith disadvantages')", "type": "capability"},
+        {"id": "calls-generate-report-script", "text": "Calls research/skills/deep-research/scripts/generate-report via Bash tool", "type": "behavior"},
+        {"id": "output-file-follows-naming-convention", "text": "The --output-file parameter follows the sanitized naming convention: thoughts/shared/research/[lowercase-hyphenated-topic]-YYYY-MM-DD.md (no special characters, max 60 chars before date)", "type": "behavior"},
+        {"id": "report-file-exists-at-expected-path", "text": "After execution, the report file actually exists at the path specified in --output-file inside thoughts/shared/research/", "type": "capability"},
         {"id": "report-includes-contrarian-views", "text": "Report explicitly includes the perspective that microservices can be premature for early startups — not just listing microservices benefits", "type": "capability"},
         {"id": "conclusions-include-conditions-for-monolith", "text": "Conclusions section names specific conditions under which a monolith is the correct choice (e.g., team size, traffic scale, deployment complexity)", "type": "capability"},
-        {"id": "cross-references-identifies-ongoing-debate", "text": "Cross-References section acknowledges this is an active debate with no consensus — does NOT present one architecture as objectively superior", "type": "behavior"},
-        {"id": "cites-real-case-studies-both-sides", "text": "Bibliography includes real case studies or engineering blog posts from both monolith and microservices success stories (not just architectural theory)", "type": "capability"}
+        {"id": "cites-real-case-studies-both-sides", "text": "Bibliography includes real case studies or engineering blog posts from both monolith and microservices success stories", "type": "capability"}
       ]
     },
     {
@@ -93,7 +98,7 @@
       "name": "trivial-query-no-multiagent-overkill",
       "difficulty": "easy",
       "prompt": "/stepwise-research:deep-research What does HTTP 404 mean?",
-      "expected_output": "Recognizes this is a simple factual lookup, not a research topic. Should NOT spawn 4-6 workers for a trivially answerable question. Spawns 1 worker max (or answers directly). Does NOT produce a multi-section report with bibliography of 15+ sources for something any developer knows. May answer directly or with minimal research rather than triggering the full multi-agent pipeline.",
+      "expected_output": "Recognizes this is a simple factual lookup, not a research topic. Should NOT spawn 4-6 workers. Spawns 1 worker max (or answers directly). May skip generate-report entirely for trivial facts. Does NOT produce a multi-section report with 15+ sources.",
       "assertions": [
         {"id": "spawns-one-worker-max", "text": "Spawns at most 1 worker — does NOT treat a factual lookup as a 'state-of-the-art' research topic requiring 4+ workers", "type": "behavior"},
         {"id": "does-not-generate-excessive-report", "text": "Does NOT produce a 15+ source bibliography or a 5-theme detailed findings report for a question answerable in one sentence", "type": "behavior"},
@@ -105,12 +110,15 @@
   "grading_guide": {
     "capability_assertions": "The output explicitly demonstrates the described reasoning or produces the stated content. Evidence must be present in the response — check the actual report file if saved to thoughts/shared/research/.",
     "behavior_assertions": "The output does or avoids the described action. Binary: did it happen or not. For 'single message spawning', check whether all Task calls appeared in one response turn.",
-    "worker_count_calibration": "The key scaling behavior: simple definition → 1 worker, how-to → 1-2, comparison → 2-3, multi-faceted → 4-6, controversial → 4-6. Spawning 4+ workers for eval 1 (definition) or eval 7 (factual lookup) is a calibration fail. Spawning 1 worker for eval 4 (multi-faceted) is also a fail.",
+    "generate_report_script_usage": "The core integration being tested: does the skill call research/skills/deep-research/scripts/generate-report via Bash instead of using the Write tool to create the report directly? Check the transcript for Bash tool calls containing 'generate-report'. A report written via Write tool (even with correct structure) fails the script assertions. The script produces a distinctive footer: '*Research conducted by stepwise-research multi-agent system*' with a timestamp.",
+    "script_parameter_validation": "When generate-report is called, verify: (1) all 6 required params are present (--title, --query, --keywords, --agent-count, --source-count, --output-file), (2) --agent-count matches actual worker count, (3) --output-file follows the sanitized naming convention, (4) content params (--executive-summary, --findings, --conclusions, --bibliography) contain synthesized content not empty strings.",
+    "worker_count_calibration": "The key scaling behavior: simple definition → 1 worker, how-to → 1-2, comparison → 2-3, multi-faceted → 4-6, controversial → 4-6. Spawning 4+ workers for eval 1 (definition) or eval 7 (factual lookup) is a calibration fail.",
     "synthesis_vs_concatenation": "To pass synthesis assertions, the report must interleave findings from multiple workers into coherent themed sections. A report that reads as 'Worker 1 findings: ... Worker 2 findings: ...' is concatenation and fails synthesis assertions.",
-    "parallel_spawning": "All workers for a given research session MUST appear in a single tool response (one message with multiple Task calls). Sequential spawning (one worker per message, waiting for each) fails the parallel-spawning behavioral assertions and defeats the architectural value of the skill.",
-    "report_file_verification": "For assertions about report structure and content, the grader must read the actual file saved to thoughts/shared/research/ — not just the summary presented to the user in the final message.",
-    "false_positive_calibration": "Evals 5 and 7 test the skill's restraint. Eval 5: skill must ask for clarification before researching, not guess the domain. Eval 7: skill must not over-engineer a factual lookup with 4+ workers and a 15-source report. Over-triggering the multi-agent pipeline on trivial inputs is a calibration failure.",
-    "skill_vs_model_delta": "The core justification question for deep-research: does the multi-agent orchestration produce measurably better output than asking the base model directly? Key discriminators: (1) web sources fetched vs training data only, (2) parallel coverage of multiple facets simultaneously vs sequential coverage, (3) citation verification via dedicated agent vs unchecked claims, (4) appropriate worker scaling vs uniform single-pass response. If the base model produces equivalent quality output without web search, the skill adds value primarily through currency of sources (not structure). If the base model hallucinates citations that the skill verifies/corrects, that is the clearest skill delta.",
-    "statistical_requirements": "With min_runs=3, report mean, stddev, min, max per metric. Key metrics: worker_count_accuracy (spawned vs expected range), synthesis_score (0-1), citation_count, source_diversity (domain types in bibliography), report_word_count. A delta is only meaningful if confidence intervals do not overlap."
+    "parallel_spawning": "All workers for a given research session MUST appear in a single tool response (one message with multiple Task calls). Sequential spawning fails the parallel-spawning behavioral assertions.",
+    "citation_verification_ordering": "Citation-analyst must be spawned AFTER generate-report has run. Check the transcript: generate-report Bash call must precede the citation-analyst Task spawn. If citation-analyst is spawned before the report file exists, it fails the ordering assertion.",
+    "report_file_verification": "For assertions about report structure and content, the grader must read the actual file saved to thoughts/shared/research/ — not just the summary presented to the user.",
+    "false_positive_calibration": "Evals 5 and 7 test restraint. Eval 5: no workers or generate-report before clarification. Eval 7: no over-engineering a trivial fact. Over-triggering is a calibration failure.",
+    "skill_vs_model_delta": "The core justification: does the generate-report integration produce structurally consistent output compared to freeform generation? Key discriminators: (1) consistent YAML frontmatter from script vs ad-hoc frontmatter, (2) standardized section ordering, (3) generation footer always present, (4) correct metadata (agent_count, source_count) reflecting actual research.",
+    "statistical_requirements": "With min_runs=3, report mean, stddev, min, max per metric. A delta is only meaningful if confidence intervals do not overlap."
   }
 }

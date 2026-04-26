@@ -56,7 +56,7 @@ Web search and research capabilities for external context.
 Advanced multi-agent research system with parallel web searches and synthesis.
 
 **Includes:**
-- 2 skills (`deep-research`, `research-reports`)
+- 1 skill (`deep-research`, includes `generate-report` script for structured reports)
 - 3 specialized agents (research-lead, research-worker, citation-analyst)
 - Comprehensive research reports with citations and metadata
 

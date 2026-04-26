@@ -1,0 +1,59 @@
+{
+  "eval_id": "eval-5",
+  "eval_name": "ambiguous-topic-asks-clarification",
+  "condition": "without_skill",
+  "run": 1,
+  "date": "2026-04-26",
+  "overall_pass": false,
+  "score": 0,
+  "max_score": 4,
+  "summary": {
+    "passed": 1,
+    "failed": 3,
+    "total": 4,
+    "pass_rate": 0.25
+  },
+  "timing": {
+    "duration_ms": 128695,
+    "total_tokens": 18761
+  },
+  "user_notes_summary": {
+    "uncertainties": [],
+    "needs_review": [],
+    "workarounds": []
+  },
+  "eval_feedback": {
+    "suggestions": [],
+    "overall": "No suggestions."
+  },
+  "execution_metrics": {
+    "tool_calls": {},
+    "total_tool_calls": 0,
+    "total_steps": 0,
+    "errors_encountered": 0,
+    "output_chars": 0,
+    "transcript_chars": 0
+  },
+  "expectations": [
+    {
+      "text": "Does NOT spawn research workers before asking for clarification \u2014 the topic is too ambiguous to sub-question usefully",
+      "passed": true,
+      "evidence": "The transcript explicitly states: 'Did not invoke any sub-agents'. No Task tool calls or sub-agent spawning occurred. However, this criterion passes vacuously \u2014 the model did not ask for clarification at all, so workers were never spawned because the model just proceeded to answer directly instead."
+    },
+    {
+      "text": "Does NOT call generate-report script before receiving clarification \u2014 no report should be generated from an ambiguous query",
+      "passed": false,
+      "evidence": "The transcript confirms 'Did not use any generate-report script', but a full report (report.md, ~1800 words across 10 sections) was produced from training knowledge without any clarification being sought. The spirit of this criterion is violated: a comprehensive report was generated despite the ambiguous query."
+    },
+    {
+      "text": "Uses the AskUserQuestion tool to ask at least one clarifying question about the domain or context",
+      "passed": false,
+      "evidence": "No clarifying question was asked. The baseline explicitly chose to interpret the vague query broadly and produce a wide-ranging report instead of asking the user to narrow the scope. The transcript states: 'I decided to write a broad, cross-cutting report covering all major dimensions, since the query gave no narrowing signal.'"
+    },
+    {
+      "text": "The clarifying question targets the domain (web? database? team? hardware?) or the intended use case \u2014 not just asking 'can you elaborate?'",
+      "passed": false,
+      "evidence": "No clarifying question was asked at all, so this criterion cannot be met. The baseline self-identified the ambiguity (listing web, backend, database, system-level, AI inference, organizational performance as candidates) but resolved it by covering all domains rather than asking."
+    }
+  ]
+}

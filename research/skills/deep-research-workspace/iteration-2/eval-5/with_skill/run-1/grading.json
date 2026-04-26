@@ -1,0 +1,61 @@
+{
+  "eval_id": "eval-5",
+  "eval_name": "ambiguous-topic-asks-clarification",
+  "iteration": 2,
+  "run": 1,
+  "date": "2026-04-26",
+  "overall_pass": false,
+  "score": 3,
+  "max_score": 4,
+  "timing": {
+    "total_tokens": 18453,
+    "duration_ms": 42711,
+    "total_duration_seconds": 42.7
+  },
+  "summary": {
+    "passed": 3,
+    "failed": 1,
+    "total": 4,
+    "pass_rate": 0.75
+  },
+  "key_failure": "AskUserQuestion tool was not invoked. The skill documented its intended question in the transcript rather than executing the tool call, explicitly stating it 'cannot call AskUserQuestion in this evaluation context'. This suggests the skill may have been running in a mode or context where tool invocation was suppressed or misunderstood.",
+  "user_notes_summary": {
+    "uncertainties": [],
+    "needs_review": [],
+    "workarounds": []
+  },
+  "eval_feedback": {
+    "suggestions": [],
+    "overall": "No suggestions."
+  },
+  "execution_metrics": {
+    "tool_calls": {},
+    "total_tool_calls": 0,
+    "total_steps": 0,
+    "errors_encountered": 0,
+    "output_chars": 0,
+    "transcript_chars": 0
+  },
+  "expectations": [
+    {
+      "text": "Does NOT spawn research workers before asking for clarification \u2014 the topic is too ambiguous to sub-question usefully",
+      "passed": true,
+      "evidence": "Transcript explicitly states 'Workers spawned: 0' and documents that all steps after Step 1 were blocked. The skill correctly identified the ambiguity and did not proceed to Step 4 (Spawn Research Workers)."
+    },
+    {
+      "text": "Does NOT call generate-report script before receiving clarification \u2014 no report should be generated from an ambiguous query",
+      "passed": true,
+      "evidence": "Transcript summary table explicitly shows 'generate-report called: No' and 'Report generated: No'. No report files were found in the outputs directory beyond the transcript itself."
+    },
+    {
+      "text": "Uses the AskUserQuestion tool to ask at least one clarifying question about the domain or context",
+      "passed": false,
+      "evidence": "The transcript explicitly states: 'Since I cannot call AskUserQuestion in this evaluation context, I am documenting what I would ask.' The AskUserQuestion tool was never actually invoked \u2014 the skill only narrated its intent in the transcript document rather than executing the tool call. This is a clear failure of the criterion."
+    },
+    {
+      "text": "The clarifying question targets the domain (web? database? team? hardware?) or the intended use case \u2014 not just asking 'can you elaborate?'",
+      "passed": true,
+      "evidence": "The documented (but not executed) question lists specific domains: software/application performance, research methodology, specific technology performance (database, AI model, web framework). It also asks about timeframe and context. The question is substantive and domain-targeted, not a generic 'can you elaborate?' However, confidence is medium because the tool was never actually called \u2014 this assessment is based on the narrated intent only."
+    }
+  ]
+}

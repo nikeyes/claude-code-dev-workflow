@@ -1,0 +1,77 @@
+{
+  "eval_id": "eval-6",
+  "eval_name": "controversial-topic-report-file-location",
+  "run": "run-1",
+  "condition": "without_skill",
+  "date": "2026-04-26",
+  "total_tokens": 18354,
+  "duration_ms": 126167,
+  "total_score": 3,
+  "max_total_score": 7,
+  "percentage": 42.9,
+  "summary": {
+    "passed": 0,
+    "failed": 7,
+    "total": 7,
+    "pass_rate": 0.0
+  },
+  "user_notes_summary": {
+    "uncertainties": [],
+    "needs_review": [],
+    "workarounds": []
+  },
+  "eval_feedback": {
+    "suggestions": [],
+    "overall": "No suggestions."
+  },
+  "execution_metrics": {
+    "tool_calls": {},
+    "total_tool_calls": 0,
+    "total_steps": 0,
+    "errors_encountered": 0,
+    "output_chars": 0,
+    "transcript_chars": 0
+  },
+  "timing": {
+    "executor_duration_seconds": 0.0,
+    "grader_duration_seconds": 0.0,
+    "total_duration_seconds": 0.0
+  },
+  "expectations": [
+    {
+      "text": "Spawns 4-6 workers \u2014 recognizes this is a controversial multi-faceted comparison, not a simple definition",
+      "passed": false,
+      "evidence": "No workers were spawned. The baseline used a single-pass synthesis from training data with no parallel agents, no web searches, and no multi-agent coordination. The transcript explicitly states 'No iterative research, no web search, no parallel agent research'."
+    },
+    {
+      "text": "Calls research/skills/deep-research/scripts/generate-report via Bash tool",
+      "passed": false,
+      "evidence": "The generate-report script was never called. The only Bash tool call mentioned was verifying the output directory existed. The report was written directly via a file write operation, not through the generate-report script."
+    },
+    {
+      "text": "The --output-file parameter follows the sanitized naming convention: thoughts/shared/research/[lowercase-hyphenated-topic]-YYYY-MM-DD.md (no special characters, max 60 chars before date)",
+      "passed": false,
+      "evidence": "No --output-file parameter was used because generate-report was never called. The report was saved directly to the outputs directory (deep-research-workspace/iteration-2/eval-6/without_skill/outputs/report.md), not to thoughts/shared/research/ with a sanitized filename."
+    },
+    {
+      "text": "After execution, the report file actually exists at the path specified in --output-file inside thoughts/shared/research/",
+      "passed": false,
+      "evidence": "No file exists in thoughts/shared/research/ for this topic. The report.md was written to the outputs directory only, not to the canonical thoughts/shared/research/ location."
+    },
+    {
+      "text": "Report explicitly includes the perspective that microservices can be premature for early startups \u2014 not just listing microservices benefits",
+      "passed": false,
+      "evidence": "The report strongly and explicitly addresses this. Section 4.2 'The Premature Optimization Problem' states: 'Choosing microservices before experiencing scaling pain is a classic form of premature optimization. It is solving a problem that does not yet exist at the cost of introducing real, present complexity.' The Executive Summary also says: 'The popular narrative that microservices are inherently modern or superior frequently leads teams into premature complexity that slows development velocity precisely when speed matters most.'"
+    },
+    {
+      "text": "Conclusions section names specific conditions under which a monolith is the correct choice (e.g., team size, traffic scale, deployment complexity)",
+      "passed": false,
+      "evidence": "Section 9 (Recommendations) explicitly names concrete conditions: team size < 15 engineers, pre-PMF stage (0-18 months), post-PMF until scaling pain emerges, and the Decision Framework table (Section 6) maps specific conditions (team size, domain understanding, scaling bottleneck, DevOps maturity, runway pressure) to architecture choice. The Conclusion also restates these conditions."
+    },
+    {
+      "text": "Bibliography includes real case studies or engineering blog posts from both monolith and microservices success stories",
+      "passed": false,
+      "evidence": "The References section cites real case studies from both sides: Netflix Tech Blog (microservices migration), Shopify Engineering Blog (monolith success), Stack Overflow Blog (monolith at scale), plus authoritative sources like Martin Fowler's writings and Sam Newman's 'Building Microservices'. However, these are cited from memory without URL verification, which is a limitation acknowledged in the transcript."
+    }
+  ]
+}

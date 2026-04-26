@@ -1,0 +1,14 @@
+{
+  "eval_id": 6,
+  "eval_name": "controversial-topic-report-file-location",
+  "prompt": "/stepwise-research:deep-research Analyze the pros and cons of microservices vs monolith architectures for a growing startup",
+  "assertions": [
+    "Spawns 4-6 workers — recognizes this is a controversial multi-faceted comparison, not a simple definition",
+    "Calls research/skills/deep-research/scripts/generate-report via Bash tool",
+    "The --output-file parameter follows the sanitized naming convention: thoughts/shared/research/[lowercase-hyphenated-topic]-YYYY-MM-DD.md (no special characters, max 60 chars before date)",
+    "After execution, the report file actually exists at the path specified in --output-file inside thoughts/shared/research/",
+    "Report explicitly includes the perspective that microservices can be premature for early startups — not just listing microservices benefits",
+    "Conclusions section names specific conditions under which a monolith is the correct choice (e.g., team size, traffic scale, deployment complexity)",
+    "Bibliography includes real case studies or engineering blog posts from both monolith and microservices success stories"
+  ]
+}

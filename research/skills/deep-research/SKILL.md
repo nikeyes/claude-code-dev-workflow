@@ -154,81 +154,17 @@ After all workers complete, synthesize their findings into a coherent research r
 
 ### 7. Generate Research Report
 
-Create a structured markdown report and save to:
-```
-thoughts/shared/research/[sanitized-topic]-[YYYY-MM-DD].md
-```
+Use the `generate-report` script to create the report with proper YAML frontmatter and structure.
 
-**Report Structure:**
+**Step 7a: Synthesize content**
 
-```markdown
----
-title: Research on [Topic]
-date: YYYY-MM-DD
-query: [Original research question]
-keywords: [5-8 extracted key terms]
-status: complete
-agent_count: [number of workers spawned]
-source_count: [total unique sources]
----
+Before calling the script, prepare the content for each section:
 
-# Research on [Topic]
-
-## Executive Summary
-
-[3-5 sentence overview of main findings. Answer the research question directly.]
-
-## Detailed Findings
-
-### [Theme 1]
-
-[Synthesized findings from multiple sources. 2-4 paragraphs.]
-
-Key points:
-- [Point 1] [1] [2]
-- [Point 2] [3] [4]
-- [Point 3] [5]
-
-[Continue with more detail as needed.]
-
-### [Theme 2]
-
-[More synthesized findings...]
-
-### [Theme 3]
-
-[Continue for all major themes...]
-
-## Cross-References and Contradictions
-
-[2-3 paragraphs discussing:]
-- Areas of strong consensus across sources
-- Contradictions or disagreements between sources
-- Evolution of thinking on the topic
-- Gaps in current knowledge
-
-## Conclusions
-
-[3-5 bullet points summarizing key takeaways]
-
-- [Takeaway 1]
-- [Takeaway 2]
-- [Takeaway 3]
-- [Takeaway 4]
-- [Takeaway 5]
-
-## Bibliography
-
-[1] Source Title - URL
-[2] Source Title - URL
-[3] Source Title - URL
-...
-[N] Source Title - URL
-
----
-*Research conducted by stepwise-research multi-agent system*
-*Generated: [timestamp]*
-```
+1. **Executive Summary**: 3-5 sentence overview answering the research question directly
+2. **Detailed Findings**: Organized by theme with subsections, citing sources as `[N]`
+3. **Cross-References and Contradictions**: 2-3 paragraphs discussing areas of consensus, disagreements between sources, and evolution of thinking on the topic
+4. **Conclusions**: 3-5 bullet points summarizing key takeaways
+5. **Bibliography**: Numbered list `[N] Source Title - URL`
 
 **Quality Guidelines:**
 - **Synthesis, not concatenation:** Don't just copy-paste worker findings. Weave them into a coherent narrative.
@@ -237,6 +173,40 @@ Key points:
 - **Source diversity:** Mix .gov, .edu, industry blogs, official docs.
 - **Clarity:** Write for a technical audience but explain jargon.
 - **No fluff:** Every sentence should provide value.
+
+**Step 7b: Generate report file**
+
+Compute the sanitized filename:
+- Convert topic to lowercase
+- Replace spaces with hyphens
+- Remove special characters (keep only alphanumeric and hyphens)
+- Truncate to 60 characters max
+- Append date suffix: `[sanitized-topic]-YYYY-MM-DD.md`
+
+Then call the script:
+```bash
+research/skills/deep-research/scripts/generate-report \
+  --title "Research on [Topic]" \
+  --query "[Original research question]" \
+  --keywords "[keyword1,keyword2,keyword3,...]" \
+  --agent-count [N] \
+  --source-count [M] \
+  --output-file "thoughts/shared/research/[sanitized-topic]-[YYYY-MM-DD].md" \
+  --executive-summary "[synthesized executive summary]" \
+  --findings "[synthesized detailed findings with citations]" \
+  --cross-references "[cross-references and contradictions analysis]" \
+  --conclusions "[synthesized conclusions]" \
+  --bibliography "[numbered bibliography entries]"
+```
+
+**All parameters are required except** `--executive-summary`, `--findings`, `--cross-references`, `--conclusions`, and `--bibliography` (which are optional but should always be provided for a complete report).
+
+The script:
+- Validates required parameters
+- Generates YAML frontmatter (title, date, query, keywords, status, agent_count, source_count)
+- Creates the report with all sections
+- Adds a generation timestamp footer
+- Creates parent directories if needed
 
 ### 8. Citation Verification
 

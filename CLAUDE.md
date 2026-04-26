@@ -31,8 +31,7 @@ This project is distributed as **4 independent Claude Code plugins** in a single
 ### Plugin 4: stepwise-research
 **Location**: `research/`
 **Components**:
-- 1 skill (deep-research)
-- 1 skill (research-reports)
+- 1 skill (deep-research, includes generate-report script)
 - 3 specialized agents (research-lead, research-worker, citation-analyst)
 
 **Installation**:
@@ -100,9 +99,8 @@ research/              # stepwise-research plugin
 │   ├── research-lead.md
 │   ├── research-worker.md
 │   └── citation-analyst.md
-└── skills/            # 2 skills
-    ├── deep-research/SKILL.md
-    └── research-reports/
+└── skills/            # 1 skill
+    └── deep-research/
         ├── SKILL.md
         └── scripts/
             └── generate-report
