@@ -1,0 +1,30 @@
+{
+  "expectations": [
+    {
+      "text": "explains-why: Commit message mentions the reason for the change (security, brute-force protection, or incident mitigation) — not just 'add rate limiter'",
+      "passed": true,
+      "evidence": "Subject includes 'protect login endpoint from brute-force'. Body explicitly states 'After a production incident where bots were brute-forcing logins—causing account lockouts and spiking AWS costs'."
+    },
+    {
+      "text": "not-just-what: Subject line is NOT a pure restatement of the diff like 'Add rate_limiter.py' or 'Modify auth module'",
+      "passed": true,
+      "evidence": "Subject is 'Add sliding-window rate limiter to protect login endpoint from brute-force' — names the protection purpose (brute-force), not just the file or mechanism added."
+    },
+    {
+      "text": "references-session-context: Uses the session conversation context to inform the commit message — does not ask the user what was changed",
+      "passed": true,
+      "evidence": "Transcript uses the user's stated context ('We just fixed a security incident — the login endpoint was being brute-forced...') directly in the commit body. No question was asked; context was taken from the conversation."
+    },
+    {
+      "text": "no-attribution: No Claude attribution in message",
+      "passed": true,
+      "evidence": "git show HEAD shows Author: Dev User <dev@example.com>. No 'Co-authored-by: Claude' or any Claude attribution in the commit message or metadata."
+    }
+  ],
+  "summary": {
+    "passed": 4,
+    "failed": 0,
+    "total": 4,
+    "pass_rate": 1.0
+  }
+}

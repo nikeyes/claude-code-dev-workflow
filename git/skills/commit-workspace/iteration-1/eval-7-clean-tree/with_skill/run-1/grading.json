@@ -1,0 +1,25 @@
+{
+  "expectations": [
+    {
+      "text": "detects-clean-tree",
+      "passed": true,
+      "evidence": "Step 2 of transcript runs `git status` and receives 'nothing to commit, working tree clean'. The assessment in Step 3 explicitly notes no staged changes, no unstaged modifications, and no untracked files."
+    },
+    {
+      "text": "no-empty-commit",
+      "passed": true,
+      "evidence": "The transcript contains no `git commit` call. After detecting the clean tree in Step 3, the skill stops and informs the user without attempting any commit. The evaluation notes confirm 'No empty commit was created.'"
+    },
+    {
+      "text": "informs-user-clearly",
+      "passed": true,
+      "evidence": "Step 4 delivers a clear user-facing message: 'There is nothing to commit. The working tree is completely clean — no staged changes, no unstaged modifications, and no untracked files.' Also provides a helpful tip to check saved files or directory."
+    }
+  ],
+  "summary": {
+    "passed": 3,
+    "failed": 0,
+    "total": 3,
+    "pass_rate": 1.0
+  }
+}

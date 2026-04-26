@@ -1,0 +1,35 @@
+{
+  "expectations": [
+    {
+      "text": "groups-by-concern: Groups the Stripe files (stripe.py, invoice.py) into one commit and the session files into a separate commit",
+      "passed": true,
+      "evidence": "Commit 1 contains src/payments/stripe.py and src/payments/invoice.py; Commit 2 contains src/auth/session.py and tests/test_session.py. Output result.md confirms correct grouping."
+    },
+    {
+      "text": "proposes-multiple-commits: Proposes at least 2 commits instead of lumping all 4 files into one commit",
+      "passed": true,
+      "evidence": "Step 3 identifies two unrelated concerns and decides to make two separate commits. Two commits are created (f459ac6 and 0b1e44e)."
+    },
+    {
+      "text": "specific-git-add: Each commit plan uses specific file paths in git add — NOT 'git add -A' or 'git add .'",
+      "passed": false,
+      "evidence": "The transcript shows 'git commit -m \"...\" -- src/payments/stripe.py src/payments/invoice.py' — file paths are passed directly to git commit, not via a separate 'git add' step. No 'git add <specific-files>' command is shown for either commit."
+    },
+    {
+      "text": "no-attribution: None of the proposed commit messages contain Claude attribution or co-author lines",
+      "passed": true,
+      "evidence": "Both commit messages contain no Claude attribution, co-author lines, or AI-generated footers. The output result.md confirms clean commit messages."
+    },
+    {
+      "text": "asks-for-confirmation: Asks user confirmation before executing any of the commits",
+      "passed": false,
+      "evidence": "The transcript Observations section explicitly states: 'No user interaction was requested before committing.' Commits were executed directly without asking the user."
+    }
+  ],
+  "summary": {
+    "passed": 3,
+    "failed": 2,
+    "total": 5,
+    "pass_rate": 0.6
+  }
+}

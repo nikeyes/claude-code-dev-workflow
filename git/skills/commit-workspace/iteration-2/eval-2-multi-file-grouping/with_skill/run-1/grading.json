@@ -1,0 +1,35 @@
+{
+  "expectations": [
+    {
+      "text": "groups-by-concern: Groups the Stripe files (stripe.py, invoice.py) into one commit and the session files into a separate commit",
+      "passed": true,
+      "evidence": "Transcript Step 3 and output result.md show Commit 1 contains only src/payments/stripe.py + src/payments/invoice.py, and Commit 2 contains only src/auth/session.py + tests/test_session.py. Git log confirms two separate commits: 70cb74b and cefa547."
+    },
+    {
+      "text": "proposes-multiple-commits: Proposes at least 2 commits instead of lumping all 4 files into one commit",
+      "passed": true,
+      "evidence": "Transcript Step 3 explicitly presents two logical groupings as a plan and asks 'Shall I proceed?' before executing. The git log shows 2 feature commits (plus a setup commit)."
+    },
+    {
+      "text": "specific-git-add: Each commit plan uses specific file paths in git add — NOT 'git add -A' or 'git add .'",
+      "passed": true,
+      "evidence": "Transcript Step 4 shows: 'git add src/payments/stripe.py src/payments/invoice.py' for Commit 1 and 'git add src/auth/session.py tests/test_session.py' for Commit 2. No -A or . flags used."
+    },
+    {
+      "text": "no-attribution: None of the proposed commit messages contain Claude attribution or co-author lines",
+      "passed": true,
+      "evidence": "Commit messages are 'Add Stripe payment integration with invoice service' and 'Fix session TTL from 86400 to 3600 to ensure sessions expire'. The result.md shows Author: Dev User <dev@example.com> with no Co-authored-by or Claude attribution lines. Transcript also notes: 'No Claude attribution or co-author lines were added.'"
+    },
+    {
+      "text": "asks-for-confirmation: Asks user confirmation before executing any of the commits",
+      "passed": true,
+      "evidence": "Transcript Step 3 ends with: 'I plan to create 2 commits with these changes. Shall I proceed?' followed by 'User confirmed.' before any git commands are run in Step 4."
+    }
+  ],
+  "summary": {
+    "passed": 5,
+    "failed": 0,
+    "total": 5,
+    "pass_rate": 1.0
+  }
+}

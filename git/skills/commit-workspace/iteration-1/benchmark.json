@@ -1,0 +1,611 @@
+{
+  "metadata": {
+    "skill_name": "commit",
+    "skill_path": "<path/to/skill>",
+    "executor_model": "<model-name>",
+    "analyzer_model": "<model-name>",
+    "timestamp": "2026-04-26T11:44:17Z",
+    "evals_run": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "runs_per_configuration": 3
+  },
+  "runs": [
+    {
+      "eval_id": 1,
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 5,
+        "failed": 0,
+        "total": 5,
+        "time_seconds": 74.2,
+        "tokens": 479,
+        "tool_calls": null,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "presents-plan-first: Shows the list of files to commit and the proposed commit message BEFORE running git commit",
+          "passed": true,
+          "evidence": "Transcript Step 3 shows the full plan \u2014 file 'src/auth.py' and the complete commit message \u2014 presented to the user before any git commit command is run. git commit is not executed until Step 4, after confirmation."
+        },
+        {
+          "text": "asks-for-confirmation: Explicitly asks for user confirmation before executing the commit (e.g. 'Shall I proceed?')",
+          "passed": true,
+          "evidence": "Transcript Step 3 ends with: 'Shall I proceed?' followed by 'User response: Yes, proceed.' \u2014 an explicit confirmation request before any commit is made."
+        },
+        {
+          "text": "no-auto-commit: Does NOT create the commit without waiting for user approval",
+          "passed": true,
+          "evidence": "The skill presented a plan (Step 3), asked 'Shall I proceed?', and only executed git commit (Step 4) after receiving user approval. The confirmation step was not skipped."
+        },
+        {
+          "text": "no-attribution: Proposed commit message does NOT contain 'Co-Authored-By', 'Generated with Claude', or 'Claude' anywhere",
+          "passed": true,
+          "evidence": "Commit message in outputs/result.md is 'Add login validation to auth module\\n\\nAdds validate_login() that enforces non-empty credentials and a minimum password length of 8 characters.' \u2014 no attribution strings present. result.md also explicitly notes: 'Author: Git config default (no Claude attribution added)'."
+        },
+        {
+          "text": "imperative-mood: Commit message uses imperative mood (e.g. 'Add', 'Fix', 'Update') not past tense ('Added', 'Fixed')",
+          "passed": true,
+          "evidence": "Subject line is 'Add login validation to auth module' \u2014 'Add' is imperative mood, not past tense."
+        }
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": 2,
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 5,
+        "failed": 0,
+        "total": 5,
+        "time_seconds": 83.6,
+        "tokens": 20128,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "groups-by-concern: Groups the Stripe files (stripe.py, invoice.py) into one commit and the session files into a separate commit",
+          "passed": true,
+          "evidence": "Commit 1 contains src/payments/stripe.py and src/payments/invoice.py; Commit 2 contains src/auth/session.py and tests/test_session.py. Explicitly planned in Step 2 and executed in Step 4."
+        },
+        {
+          "text": "proposes-multiple-commits: Proposes at least 2 commits instead of lumping all 4 files into one commit",
+          "passed": true,
+          "evidence": "Step 2 and Step 3 explicitly plan 2 commits before execution: 'I plan to create 2 commits with these changes'."
+        },
+        {
+          "text": "specific-git-add: Each commit plan uses specific file paths in git add \u2014 NOT 'git add -A' or 'git add .'",
+          "passed": true,
+          "evidence": "Transcript shows 'git add src/payments/stripe.py src/payments/invoice.py' for Commit 1 and 'git add src/auth/session.py tests/test_session.py' for Commit 2. No 'git add -A' or 'git add .' used."
+        },
+        {
+          "text": "no-attribution: None of the proposed commit messages contain Claude attribution or co-author lines",
+          "passed": true,
+          "evidence": "Both commit messages ('Add Stripe payment integration with invoice service' and 'Fix session expiry TTL from 24h to 1h') contain no Claude attribution, co-author lines, or AI-generated footers."
+        },
+        {
+          "text": "asks-for-confirmation: Asks user confirmation before executing any of the commits",
+          "passed": true,
+          "evidence": "Step 3 explicitly presents the plan and asks 'Shall I proceed?' before executing any commits in Step 4."
+        }
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": 3,
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 4,
+        "failed": 0,
+        "total": 4,
+        "time_seconds": 41.8,
+        "tokens": 16538,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "no-co-authored-by: Commit message does NOT include a 'Co-Authored-By:' trailer line",
+          "passed": true,
+          "evidence": "git show HEAD output in result.md contains no 'Co-Authored-By:' line. Commit message ends after the body paragraph with no trailers."
+        },
+        {
+          "text": "no-generated-with-claude: Commit message does NOT include 'Generated with Claude' or similar AI-generation notices",
+          "passed": true,
+          "evidence": "git show HEAD output contains no 'Generated with Claude' or any AI-generation notice. Transcript Attribution Check section also explicitly confirms this."
+        },
+        {
+          "text": "no-claude-mention: Commit message body and subject do NOT mention 'Claude', 'AI', 'LLM', or 'Anthropic'",
+          "passed": true,
+          "evidence": "Commit subject is 'Add installation, configuration, and API documentation to README' and body explains setup requirements. None of Claude, AI, LLM, or Anthropic appear anywhere in the commit message."
+        },
+        {
+          "text": "message-sounds-human: Commit message reads as if authored by the developer \u2014 uses first-person or neutral technical language",
+          "passed": true,
+          "evidence": "Subject uses imperative mood ('Add ...') and body uses neutral technical language ('Document setup requirements including pip dependencies...'). Reads naturally as developer-authored."
+        }
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": 4,
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 5,
+        "failed": 0,
+        "total": 5,
+        "time_seconds": 70.7,
+        "tokens": 19029,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "no-git-add-dot: Does NOT run 'git add .' in any form",
+          "passed": true,
+          "evidence": "No 'git add .' command appears anywhere in the transcript. Step 4 explicitly states the command used was 'git add src/config.py'."
+        },
+        {
+          "text": "no-git-add-dash-A: Does NOT run 'git add -A' in any form",
+          "passed": true,
+          "evidence": "No 'git add -A' command appears anywhere in the transcript. The transcript explicitly notes '(specific file path, not -A or .)'."
+        },
+        {
+          "text": "specific-file-in-add: Runs 'git add src/config.py' (or equivalent specific path), not a wildcard",
+          "passed": true,
+          "evidence": "Step 4 states: \"Command used: git add src/config.py (specific file path, not -A or .)\" and result.md confirms 'Only src/config.py was staged using git add src/config.py'."
+        },
+        {
+          "text": "does-not-stage-env: Does NOT stage or mention .env as a file to commit",
+          "passed": true,
+          "evidence": ".env is explicitly excluded with the note 'production secrets \u2014 never commit'. Final git status in result.md shows .env remains untracked after the commit."
+        },
+        {
+          "text": "asks-for-confirmation: Shows the plan and asks for confirmation before executing",
+          "passed": true,
+          "evidence": "Step 3 presents the full plan: files to stage (src/config.py), commit message, note that .env will NOT be staged, and explicitly asks 'Shall I proceed?' before executing."
+        }
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": 5,
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 4,
+        "failed": 0,
+        "total": 4,
+        "time_seconds": 57.7,
+        "tokens": 18020,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "explains-why: Commit message mentions the reason for the change (security, brute-force protection, or incident mitigation) \u2014 not just 'add rate limiter'",
+          "passed": true,
+          "evidence": "Subject includes 'protect login endpoint from brute-force'. Body explicitly states 'After a production incident where bots were brute-forcing logins\u2014causing account lockouts and spiking AWS costs'."
+        },
+        {
+          "text": "not-just-what: Subject line is NOT a pure restatement of the diff like 'Add rate_limiter.py' or 'Modify auth module'",
+          "passed": true,
+          "evidence": "Subject is 'Add sliding-window rate limiter to protect login endpoint from brute-force' \u2014 names the protection purpose (brute-force), not just the file or mechanism added."
+        },
+        {
+          "text": "references-session-context: Uses the session conversation context to inform the commit message \u2014 does not ask the user what was changed",
+          "passed": true,
+          "evidence": "Transcript explicitly notes 'The conversation context is rich with the why' and lists incident details (production incident, bots, account lockouts, AWS cost spike) drawn from the session scenario. No question was asked of the user."
+        },
+        {
+          "text": "no-attribution: No Claude attribution in message",
+          "passed": true,
+          "evidence": "git show HEAD shows Author: Dev User <dev@example.com>. No 'Co-authored-by: Claude' or any Claude attribution in the commit message or metadata."
+        }
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": 6,
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 3,
+        "failed": 0,
+        "total": 3,
+        "time_seconds": 55.2,
+        "tokens": 17061,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "shows-git-log: After commit is created, runs 'git log --oneline' showing the new commit hash and message",
+          "passed": true,
+          "evidence": "result.md shows 'git log --oneline -n 1' output: 'b70469c Add user API endpoints for listing and retrieving users'. Transcript Step 5 explicitly runs the command and includes the output in the completion message shown to the user."
+        },
+        {
+          "text": "suggests-next-steps: Suggests at least one next step: review with git show, push to remote, or create PR",
+          "passed": true,
+          "evidence": "result.md lists three next steps: 'Review commits with `git show b70469c`', 'Push to remote when ready', and 'Create PR if applicable'. All three next-step categories are covered."
+        },
+        {
+          "text": "mentions-clear-tip: Mentions '/clear' as a tip to free up context for the next task",
+          "passed": true,
+          "evidence": "result.md ends with 'Tip: Use `/clear` to free up context for your next task'. Also confirmed in transcript line 99."
+        }
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": 7,
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 3,
+        "failed": 0,
+        "total": 3,
+        "time_seconds": 28.2,
+        "tokens": 14802,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "detects-clean-tree",
+          "passed": true,
+          "evidence": "Step 2 of transcript runs `git status` and receives 'nothing to commit, working tree clean'. The assessment in Step 3 explicitly notes no staged changes, no unstaged modifications, and no untracked files."
+        },
+        {
+          "text": "no-empty-commit",
+          "passed": true,
+          "evidence": "The transcript contains no `git commit` call. After detecting the clean tree in Step 3, the skill stops and informs the user without attempting any commit. The evaluation notes confirm 'No empty commit was created.'"
+        },
+        {
+          "text": "informs-user-clearly",
+          "passed": true,
+          "evidence": "Step 4 delivers a clear user-facing message: 'There is nothing to commit. The working tree is completely clean \u2014 no staged changes, no unstaged modifications, and no untracked files.' Also provides a helpful tip to check saved files or directory."
+        }
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": 1,
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.4,
+        "passed": 2,
+        "failed": 3,
+        "total": 5,
+        "time_seconds": 43.9,
+        "tokens": 294,
+        "tool_calls": null,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "presents-plan-first: Shows the list of files to commit and the proposed commit message BEFORE running git commit",
+          "passed": false,
+          "evidence": "Transcript goes directly from Step 2 (diff analysis) to Step 3 (git commit execution). There is no intermediate step where the files and proposed message are presented to the user before committing. The commit is created in Step 3 without any prior plan presentation."
+        },
+        {
+          "text": "asks-for-confirmation: Explicitly asks for user confirmation before executing the commit (e.g. 'Shall I proceed?')",
+          "passed": false,
+          "evidence": "No confirmation request appears anywhere in the transcript. The agent runs git status, git diff --staged, then immediately executes git commit with no approval step."
+        },
+        {
+          "text": "no-auto-commit: Does NOT create the commit without waiting for user approval",
+          "passed": false,
+          "evidence": "The commit is executed in Step 3 immediately after inspecting the diff, with no plan presentation or confirmation step. The transcript contains no user approval \u2014 the commit was created without waiting."
+        },
+        {
+          "text": "no-attribution: Proposed commit message does NOT contain 'Co-Authored-By', 'Generated with Claude', or 'Claude' anywhere",
+          "passed": true,
+          "evidence": "Commit message in outputs/result.md is 'Add login validation to auth module\\n\\nAdds validate_login() that enforces non-empty credentials and a minimum password length of 8 characters.' \u2014 contains none of the prohibited attribution strings."
+        },
+        {
+          "text": "imperative-mood: Commit message uses imperative mood (e.g. 'Add', 'Fix', 'Update') not past tense ('Added', 'Fixed')",
+          "passed": true,
+          "evidence": "Subject line is 'Add login validation to auth module' \u2014 'Add' is imperative mood, not past tense."
+        }
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": 2,
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.6,
+        "passed": 3,
+        "failed": 2,
+        "total": 5,
+        "time_seconds": 90.0,
+        "tokens": 19350,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "groups-by-concern: Groups the Stripe files (stripe.py, invoice.py) into one commit and the session files into a separate commit",
+          "passed": true,
+          "evidence": "Commit 1 contains src/payments/stripe.py and src/payments/invoice.py; Commit 2 contains src/auth/session.py and tests/test_session.py. Output result.md confirms correct grouping."
+        },
+        {
+          "text": "proposes-multiple-commits: Proposes at least 2 commits instead of lumping all 4 files into one commit",
+          "passed": true,
+          "evidence": "Step 3 identifies two unrelated concerns and decides to make two separate commits. Two commits are created (f459ac6 and 0b1e44e)."
+        },
+        {
+          "text": "specific-git-add: Each commit plan uses specific file paths in git add \u2014 NOT 'git add -A' or 'git add .'",
+          "passed": false,
+          "evidence": "The transcript shows 'git commit -m \"...\" -- src/payments/stripe.py src/payments/invoice.py' \u2014 file paths are passed directly to git commit, not via a separate 'git add' step. No 'git add <specific-files>' command is shown for either commit."
+        },
+        {
+          "text": "no-attribution: None of the proposed commit messages contain Claude attribution or co-author lines",
+          "passed": true,
+          "evidence": "Both commit messages contain no Claude attribution, co-author lines, or AI-generated footers. The output result.md confirms clean commit messages."
+        },
+        {
+          "text": "asks-for-confirmation: Asks user confirmation before executing any of the commits",
+          "passed": false,
+          "evidence": "The transcript Observations section explicitly states: 'No user interaction was requested before committing.' Commits were executed directly without asking the user."
+        }
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": 3,
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 4,
+        "failed": 0,
+        "total": 4,
+        "time_seconds": 94.9,
+        "tokens": 21883,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "no-co-authored-by: Commit message does NOT include a 'Co-Authored-By:' trailer line",
+          "passed": true,
+          "evidence": "git show HEAD output in result.md contains no 'Co-Authored-By:' line. Commit message ends after the body paragraph with no trailers."
+        },
+        {
+          "text": "no-generated-with-claude: Commit message does NOT include 'Generated with Claude' or similar AI-generation notices",
+          "passed": true,
+          "evidence": "git show HEAD output contains no 'Generated with Claude' or any AI-generation notice. Transcript notes section also explicitly confirms: 'No Claude attribution was added (no Co-Authored-By, no Generated with Claude, no mention of Claude/AI/LLM/Anthropic)'."
+        },
+        {
+          "text": "no-claude-mention: Commit message body and subject do NOT mention 'Claude', 'AI', 'LLM', or 'Anthropic'",
+          "passed": true,
+          "evidence": "Commit subject is 'Add installation, configuration, and API documentation to README' and body explains setup requirements. None of Claude, AI, LLM, or Anthropic appear anywhere in the commit message."
+        },
+        {
+          "text": "message-sounds-human: Commit message reads as if authored by the developer \u2014 uses first-person or neutral technical language",
+          "passed": true,
+          "evidence": "Subject uses imperative mood ('Add ...') and body uses neutral technical language ('Document setup requirements including pip dependencies...'). Transcript notes confirm imperative mood usage. Reads naturally as developer-authored."
+        }
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": 4,
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.8,
+        "passed": 4,
+        "failed": 1,
+        "total": 5,
+        "time_seconds": 44.2,
+        "tokens": 16298,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "no-git-add-dot: Does NOT run 'git add .' in any form",
+          "passed": true,
+          "evidence": "No 'git add .' command appears anywhere in the transcript. Step 4 uses 'git add src/config.py'."
+        },
+        {
+          "text": "no-git-add-dash-A: Does NOT run 'git add -A' in any form",
+          "passed": true,
+          "evidence": "No 'git add -A' command appears anywhere in the transcript. Only 'git add src/config.py' is mentioned."
+        },
+        {
+          "text": "specific-file-in-add: Runs 'git add src/config.py' (or equivalent specific path), not a wildcard",
+          "passed": true,
+          "evidence": "Step 4 states: \"Only src/config.py was staged explicitly\" via 'git add src/config.py'."
+        },
+        {
+          "text": "does-not-stage-env: Does NOT stage or mention .env as a file to commit",
+          "passed": true,
+          "evidence": ".env contents are inspected and explicitly decided against committing. Final git status in result.md shows .env remains untracked after the commit."
+        },
+        {
+          "text": "asks-for-confirmation: Shows the plan and asks for confirmation before executing",
+          "passed": false,
+          "evidence": "The transcript shows no plan presented to the user and no confirmation requested. After reviewing git status, diff, and .env contents, Claude proceeds directly to 'git add src/config.py' and 'git commit' without pausing to show a plan or ask 'Shall I proceed?'."
+        }
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": 5,
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 4,
+        "failed": 0,
+        "total": 4,
+        "time_seconds": 45.5,
+        "tokens": 17448,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "explains-why: Commit message mentions the reason for the change (security, brute-force protection, or incident mitigation) \u2014 not just 'add rate limiter'",
+          "passed": true,
+          "evidence": "Subject includes 'protect login endpoint from brute-force'. Body explicitly states 'After a production incident where bots were brute-forcing logins\u2014causing account lockouts and spiking AWS costs'."
+        },
+        {
+          "text": "not-just-what: Subject line is NOT a pure restatement of the diff like 'Add rate_limiter.py' or 'Modify auth module'",
+          "passed": true,
+          "evidence": "Subject is 'Add sliding-window rate limiter to protect login endpoint from brute-force' \u2014 names the protection purpose (brute-force), not just the file or mechanism added."
+        },
+        {
+          "text": "references-session-context: Uses the session conversation context to inform the commit message \u2014 does not ask the user what was changed",
+          "passed": true,
+          "evidence": "Transcript uses the user's stated context ('We just fixed a security incident \u2014 the login endpoint was being brute-forced...') directly in the commit body. No question was asked; context was taken from the conversation."
+        },
+        {
+          "text": "no-attribution: No Claude attribution in message",
+          "passed": true,
+          "evidence": "git show HEAD shows Author: Dev User <dev@example.com>. No 'Co-authored-by: Claude' or any Claude attribution in the commit message or metadata."
+        }
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": 6,
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.0,
+        "passed": 0,
+        "failed": 3,
+        "total": 3,
+        "time_seconds": 42.6,
+        "tokens": 15414,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "shows-git-log: After commit is created, runs 'git log --oneline' showing the new commit hash and message",
+          "passed": false,
+          "evidence": "result.md explicitly states: 'FAIL \u2014 The git log was not shown to the user as part of the commit workflow. It was only retrieved internally for recording purposes.' Transcript observations confirm: 'No explicit show log after commit step was performed unprompted \u2014 log was shown only when checking results.'"
+        },
+        {
+          "text": "suggests-next-steps: Suggests at least one next step: review with git show, push to remote, or create PR",
+          "passed": false,
+          "evidence": "result.md 'Next Steps Mentioned' section states: 'None. No next steps were suggested to the user after the commit.' Transcript observations confirm: 'No next steps were mentioned to the user.'"
+        },
+        {
+          "text": "mentions-clear-tip: Mentions '/clear' as a tip to free up context for the next task",
+          "passed": false,
+          "evidence": "No mention of '/clear' anywhere in the transcript or result.md. The without_skill run ends after the git commit output with no follow-up tips or workflow guidance."
+        }
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": 7,
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 3,
+        "failed": 0,
+        "total": 3,
+        "time_seconds": 20.1,
+        "tokens": 13539,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "detects-clean-tree",
+          "passed": true,
+          "evidence": "Step 1 of transcript runs `git status` and receives 'nothing to commit, working tree clean'. The response explicitly confirms no staged changes, no unstaged modifications, and no untracked files."
+        },
+        {
+          "text": "no-empty-commit",
+          "passed": true,
+          "evidence": "The transcript contains no `git commit` call. After detecting the clean tree, the baseline response states 'No commit was created.' and stops immediately."
+        },
+        {
+          "text": "informs-user-clearly",
+          "passed": true,
+          "evidence": "The response clearly states: 'The working tree is completely clean \u2014 there is nothing to commit.' and 'No commit was created.' \u2014 no errors and no silent success."
+        }
+      ],
+      "notes": []
+    }
+  ],
+  "run_summary": {
+    "with_skill": {
+      "pass_rate": {
+        "mean": 1.0,
+        "stddev": 0.0,
+        "min": 1.0,
+        "max": 1.0
+      },
+      "time_seconds": {
+        "mean": 58.7714,
+        "stddev": 19.2931,
+        "min": 28.2,
+        "max": 83.6
+      },
+      "tokens": {
+        "mean": 15151.0,
+        "stddev": 6695.7926,
+        "min": 479,
+        "max": 20128
+      }
+    },
+    "without_skill": {
+      "pass_rate": {
+        "mean": 0.6857,
+        "stddev": 0.3805,
+        "min": 0.0,
+        "max": 1.0
+      },
+      "time_seconds": {
+        "mean": 54.4571,
+        "stddev": 27.4373,
+        "min": 20.1,
+        "max": 94.9
+      },
+      "tokens": {
+        "mean": 14889.4286,
+        "stddev": 6981.6721,
+        "min": 294,
+        "max": 21883
+      }
+    },
+    "delta": {
+      "pass_rate": "+0.31",
+      "time_seconds": "+4.3",
+      "tokens": "+262"
+    }
+  },
+  "notes": []
+}

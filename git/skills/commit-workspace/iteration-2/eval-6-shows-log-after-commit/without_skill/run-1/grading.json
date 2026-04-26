@@ -1,0 +1,25 @@
+{
+  "expectations": [
+    {
+      "text": "shows-git-log: After commit is created, runs 'git log --oneline' showing the new commit hash and message",
+      "passed": false,
+      "evidence": "Transcript shows 'git log --oneline' was run as an internal step (step 4) and the log line appears in the raw output block, but it was not shown as part of a structured completion output — it is incidental, included alongside the raw commit output with no framing as a deliberate post-commit verification step."
+    },
+    {
+      "text": "suggests-next-steps: Suggests at least one next step: review with git show, push to remote, or create PR",
+      "passed": false,
+      "evidence": "The output file contains only the commit output and the git log line. No next steps (git show, push to remote, create PR) are suggested anywhere in the transcript or output."
+    },
+    {
+      "text": "mentions-clear-tip: Mentions '/clear' as a tip to free up context for the next task",
+      "passed": false,
+      "evidence": "No mention of '/clear' appears anywhere in the transcript or output file. The without_skill baseline has no awareness of this workflow tip."
+    }
+  ],
+  "summary": {
+    "passed": 0,
+    "failed": 3,
+    "total": 3,
+    "pass_rate": 0.0
+  }
+}

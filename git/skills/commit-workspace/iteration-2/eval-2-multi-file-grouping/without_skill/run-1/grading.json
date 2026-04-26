@@ -1,0 +1,35 @@
+{
+  "expectations": [
+    {
+      "text": "groups-by-concern: Groups the Stripe files (stripe.py, invoice.py) into one commit and the session files into a separate commit",
+      "passed": false,
+      "evidence": "Transcript Step 3 explicitly states 'Created a single commit covering all staged files'. The result.md confirms 1 commit (deb042d) containing all 4 files: src/auth/session.py, src/payments/invoice.py, src/payments/stripe.py, tests/test_session.py. Both concerns are mixed in one commit."
+    },
+    {
+      "text": "proposes-multiple-commits: Proposes at least 2 commits instead of lumping all 4 files into one commit",
+      "passed": false,
+      "evidence": "Only 1 commit was created (deb042d). Transcript Step 3 says 'Created a single commit covering all staged files'. The observations note: 'No attempt was made to split the two concerns into separate commits.'"
+    },
+    {
+      "text": "specific-git-add: Each commit plan uses specific file paths in git add — NOT 'git add -A' or 'git add .'",
+      "passed": false,
+      "evidence": "The transcript does not show any explicit git add command. The single commit was a root-commit that captured all staged files without any per-file staging step documented. There is no evidence of specific file path usage in git add, making this unverifiable and therefore failing the assertion."
+    },
+    {
+      "text": "no-attribution: None of the proposed commit messages contain Claude attribution or co-author lines",
+      "passed": true,
+      "evidence": "The commit message is 'Add Stripe payment integration and fix session TTL bug' with a body listing three bullet points about the changes. No Co-authored-by, Claude attribution, or co-author lines are present in the transcript or result.md."
+    },
+    {
+      "text": "asks-for-confirmation: Asks user confirmation before executing any of the commits",
+      "passed": false,
+      "evidence": "The transcript shows no confirmation step. Step 3 (Commit decision) goes directly to Step 4 (Commit created) without any prompt asking the user to approve. No 'Shall I proceed?' or equivalent confirmation request is present."
+    }
+  ],
+  "summary": {
+    "passed": 1,
+    "failed": 4,
+    "total": 5,
+    "pass_rate": 0.2
+  }
+}

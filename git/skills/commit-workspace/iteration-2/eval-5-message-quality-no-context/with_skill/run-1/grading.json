@@ -1,0 +1,30 @@
+{
+  "expectations": [
+    {
+      "text": "reads-diff-to-infer-message",
+      "passed": true,
+      "evidence": "Step 2 explicitly runs 'git status' and 'git diff --cached', reads the full diff showing MAX_DISCOUNT_PERCENT change from 150 to 100, and infers the commit message entirely from that diff with no user input."
+    },
+    {
+      "text": "message-describes-actual-change",
+      "passed": true,
+      "evidence": "Commit message is 'Cap maximum discount at 100% to prevent invalid over-discounting'. It explicitly references 100% (the new cap value) and describes the discount cap fix, satisfying the requirement to mention MAX_DISCOUNT_PERCENT cap or the value 100."
+    },
+    {
+      "text": "not-generic",
+      "passed": true,
+      "evidence": "Subject line 'Cap maximum discount at 100% to prevent invalid over-discounting' is specific and descriptive — it is not 'Update files', 'Fix bug', 'Minor fix', or 'Update discount.py'."
+    },
+    {
+      "text": "no-attribution",
+      "passed": true,
+      "evidence": "git show HEAD output shows Author: Dev User <dev@example.com>. No 'Co-authored-by: Claude' or any Claude attribution line present in the commit message or metadata."
+    }
+  ],
+  "summary": {
+    "passed": 4,
+    "failed": 0,
+    "total": 4,
+    "pass_rate": 1.0
+  }
+}

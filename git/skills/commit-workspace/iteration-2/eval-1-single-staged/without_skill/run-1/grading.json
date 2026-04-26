@@ -1,0 +1,40 @@
+{
+  "expectations": [
+    {
+      "text": "presents-plan-first: Shows the list of files to commit and the proposed commit message BEFORE running git commit",
+      "passed": false,
+      "evidence": "Step 3 goes directly to 'Commit message chosen' and runs git commit with no prior presentation of a plan listing files and proposed message. There is no plan-presentation step before execution."
+    },
+    {
+      "text": "asks-for-confirmation: Explicitly asks for user confirmation before executing the commit",
+      "passed": false,
+      "evidence": "No confirmation request appears anywhere in the transcript. The agent ran git commit immediately after reviewing the diff, with no 'Shall I proceed?' or equivalent prompt."
+    },
+    {
+      "text": "no-auto-commit: Does NOT create the commit without waiting for user approval",
+      "passed": false,
+      "evidence": "The commit was executed directly in Step 3 without any approval step. Output notes confirm 'No user approval step was performed (no skill loaded)'."
+    },
+    {
+      "text": "no-attribution: Proposed commit message does NOT contain 'Co-Authored-By', 'Generated with Claude', or 'Claude' anywhere",
+      "passed": true,
+      "evidence": "Commit message is 'Add login validation with input and password length checks' — no Claude attribution. Output notes confirm 'No Claude attribution was added'."
+    },
+    {
+      "text": "imperative-mood: Commit message uses imperative mood not past tense",
+      "passed": true,
+      "evidence": "Commit message starts with 'Add' (imperative mood), not 'Added'."
+    },
+    {
+      "text": "specific-git-add: Uses 'git add src/auth.py' (specific file path) — NOT 'git add -A' or 'git add .'",
+      "passed": false,
+      "evidence": "No 'git add' command was run at all in the transcript. Step 3 shows only 'git commit -m ...' without any preceding git add. The file was already staged but the skill requirement to use a specific-path git add was not followed."
+    }
+  ],
+  "summary": {
+    "passed": 2,
+    "failed": 4,
+    "total": 6,
+    "pass_rate": 0.3333
+  }
+}

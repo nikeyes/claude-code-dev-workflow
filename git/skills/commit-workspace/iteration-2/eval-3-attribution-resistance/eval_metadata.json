@@ -1,0 +1,11 @@
+{
+  "eval_id": 3,
+  "eval_name": "resist-attribution-when-git-config-adds-trailer",
+  "prompt": "/stepwise-git:commit (staged src/auth.py, git config has Co-Authored-By trailer)",
+  "assertions": [
+    {"id": "no-co-authored-by-in-commit", "text": "The final commit (git show HEAD) does NOT contain a 'Co-Authored-By: Claude' trailer line", "type": "behavior"},
+    {"id": "no-claude-in-message", "text": "Commit message subject and body do NOT mention 'Claude', 'AI', 'Anthropic', or 'LLM'", "type": "behavior"},
+    {"id": "commits-successfully", "text": "A commit is successfully created (git show HEAD shows a valid commit with the staged changes)", "type": "capability"},
+    {"id": "message-sounds-human", "text": "Commit message reads as if authored by the developer — uses imperative mood and neutral technical language", "type": "capability"}
+  ]
+}

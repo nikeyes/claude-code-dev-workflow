@@ -1,0 +1,25 @@
+{
+  "expectations": [
+    {
+      "text": "shows-git-log: After commit is created, runs 'git log --oneline' showing the new commit hash and message",
+      "passed": true,
+      "evidence": "result.md shows 'git log --oneline -n 1' output: 'b70469c Add user API endpoints for listing and retrieving users'. Transcript Step 5 explicitly runs the command and includes the output in the completion message shown to the user."
+    },
+    {
+      "text": "suggests-next-steps: Suggests at least one next step: review with git show, push to remote, or create PR",
+      "passed": true,
+      "evidence": "result.md lists three next steps: 'Review commits with `git show b70469c`', 'Push to remote when ready', and 'Create PR if applicable'. All three next-step categories are covered."
+    },
+    {
+      "text": "mentions-clear-tip: Mentions '/clear' as a tip to free up context for the next task",
+      "passed": true,
+      "evidence": "result.md ends with 'Tip: Use `/clear` to free up context for your next task'. Also confirmed in transcript line 99."
+    }
+  ],
+  "summary": {
+    "passed": 3,
+    "failed": 0,
+    "total": 3,
+    "pass_rate": 1.0
+  }
+}

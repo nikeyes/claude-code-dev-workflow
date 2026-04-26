@@ -1,0 +1,10 @@
+{
+  "eval_id": 7,
+  "eval_name": "nothing-to-commit-handles-gracefully",
+  "prompt": "/stepwise-git:commit (clean working tree — no staged or unstaged changes)",
+  "assertions": [
+    {"id": "detects-clean-tree", "text": "Runs git status and identifies there are no changes to commit", "type": "capability"},
+    {"id": "no-empty-commit", "text": "Does NOT attempt to run git commit when there are no changes", "type": "behavior"},
+    {"id": "informs-user-clearly", "text": "Clearly informs the user that there is nothing to commit — does not error or silently succeed", "type": "capability"}
+  ]
+}

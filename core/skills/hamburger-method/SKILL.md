@@ -64,9 +64,11 @@ Use a numbered system: 1.1, 1.2, 1.3... for Layer 1, then 2.1, 2.2, 2.3... for L
 
 ### 3. Force Radical Slicing
 
-Always ask: **"If you had to ship something by tomorrow, what would you build?"**
+Always ask this question out loud in your response — do not skip it:
 
-This forces thinking about the absolute minimum viable slice.
+> **"If you had to ship something by tomorrow, what would you build?"**
+
+Then answer it explicitly by naming the specific options (by number) you would pick from each layer. This forces the absolute minimum viable slice, not just a "simple version".
 
 ---
 
@@ -106,8 +108,11 @@ Keep options that are:
 
 Help the user select ONE option from EACH layer to form a complete end-to-end slice.
 
+**If the user requested multiple outputs or metrics (e.g. "revenue, top products, and trends"), the first slice must pick EXACTLY ONE** — the most informative single output. Delivering all of them in slice-1 defeats the purpose of incremental validation.
+
 **Criteria for a good slice:**
-- Delivers value to at least one real user or stakeholder
+- Delivers value to at least one real user or stakeholder — name them explicitly
+- Names the specific decision or question the slice answers for that person
 - Can be tested in production (or near-production)
 - Takes less than 1-3 days to build
 - Preserves system stability (zero downtime)

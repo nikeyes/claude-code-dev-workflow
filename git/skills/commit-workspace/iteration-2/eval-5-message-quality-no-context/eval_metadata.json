@@ -1,0 +1,11 @@
+{
+  "eval_id": 5,
+  "eval_name": "message-quality-without-context",
+  "prompt": "/stepwise-git:commit (staged discount.py fix, no conversation context)",
+  "assertions": [
+    {"id": "reads-diff-to-infer-message", "text": "Runs git diff to read the actual changes before drafting the commit message — does not ask the user what was changed", "type": "capability"},
+    {"id": "message-describes-actual-change", "text": "Commit message describes the specific fix (MAX_DISCOUNT_PERCENT cap, or preventing discounts over 100%) — not a generic 'Update discount.py' or 'Fix bug'", "type": "capability"},
+    {"id": "not-generic", "text": "Subject line is NOT a vague message like 'Update files', 'Fix bug', 'Minor fix', or 'Update discount.py'", "type": "behavior"},
+    {"id": "no-attribution", "text": "No Claude attribution in message", "type": "behavior"}
+  ]
+}

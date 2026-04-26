@@ -1,0 +1,40 @@
+{
+  "expectations": [
+    {
+      "text": "presents-plan-first: Shows the list of files to commit and the proposed commit message BEFORE running git commit",
+      "passed": true,
+      "evidence": "Step 4 explicitly presents the plan: '- `src/auth.py` — new file with login validation' and 'Commit message: `Add login validation with credential and password length checks`' before any git commit command is run."
+    },
+    {
+      "text": "asks-for-confirmation: Explicitly asks for user confirmation before executing the commit",
+      "passed": true,
+      "evidence": "Step 4 ends with 'Shall I proceed?' — explicit confirmation request before execution."
+    },
+    {
+      "text": "no-auto-commit: Does NOT create the commit without waiting for user approval",
+      "passed": true,
+      "evidence": "The process includes a plan-and-ask step (Step 4) followed by 'User confirms — yes, proceed' (Step 5), then execution (Step 6). The commit was not created until after user approval."
+    },
+    {
+      "text": "no-attribution: Proposed commit message does NOT contain 'Co-Authored-By', 'Generated with Claude', or 'Claude' anywhere",
+      "passed": true,
+      "evidence": "Commit message is 'Add login validation with credential and password length checks' — no Claude attribution present. Output notes confirm 'No co-author or Claude attribution added'."
+    },
+    {
+      "text": "imperative-mood: Commit message uses imperative mood not past tense",
+      "passed": true,
+      "evidence": "Commit message starts with 'Add' (imperative mood), not 'Added'."
+    },
+    {
+      "text": "specific-git-add: Uses 'git add src/auth.py' (specific file path) — NOT 'git add -A' or 'git add .'",
+      "passed": true,
+      "evidence": "Step 6 shows 'git add src/auth.py' — specific file path used. Output notes confirm 'File staged with specific path: git add src/auth.py'."
+    }
+  ],
+  "summary": {
+    "passed": 6,
+    "failed": 0,
+    "total": 6,
+    "pass_rate": 1.0
+  }
+}

@@ -1,0 +1,114 @@
+{
+  "skill_name": "commit",
+  "min_runs_per_configuration": 3,
+  "evals": [
+    {
+      "id": 1,
+      "name": "single-logical-change-asks-before-committing",
+      "difficulty": "easy",
+      "prompt": "/stepwise-git:commit",
+      "description": "Typical single-feature session: one staged file. Skill must propose a plan and ask for confirmation before creating any commit.",
+      "git_state": "One modified file staged: src/auth.py (added login validation)",
+      "assertions": [
+        {"id": "presents-plan-first", "text": "Shows the list of files to commit and the proposed commit message BEFORE running git commit", "type": "capability"},
+        {"id": "asks-for-confirmation", "text": "Explicitly asks for user confirmation before executing the commit (e.g. 'Shall I proceed?')", "type": "capability"},
+        {"id": "no-auto-commit", "text": "Does NOT create the commit without waiting for user approval", "type": "behavior"},
+        {"id": "no-attribution", "text": "Proposed commit message does NOT contain 'Co-Authored-By', 'Generated with Claude', or 'Claude' anywhere", "type": "behavior"},
+        {"id": "imperative-mood", "text": "Commit message uses imperative mood (e.g. 'Add', 'Fix', 'Update') not past tense ('Added', 'Fixed')", "type": "capability"},
+        {"id": "specific-git-add", "text": "Uses 'git add src/auth.py' (specific file path) — NOT 'git add -A' or 'git add .'", "type": "behavior"}
+      ]
+    },
+    {
+      "id": 2,
+      "name": "multi-file-groups-logically",
+      "difficulty": "medium",
+      "prompt": "/stepwise-git:commit",
+      "description": "Session changed files across two unrelated features. Skill must propose multiple logical commits rather than one monolithic commit.",
+      "git_state": "Four modified files: src/payments/stripe.py (new Stripe integration), src/payments/invoice.py (new Stripe integration), src/auth/session.py (unrelated: fix session expiry bug), tests/test_session.py (unrelated: test for session fix)",
+      "assertions": [
+        {"id": "groups-by-concern", "text": "Groups the Stripe files (stripe.py, invoice.py) into one commit and the session files into a separate commit", "type": "capability"},
+        {"id": "proposes-multiple-commits", "text": "Proposes at least 2 commits instead of lumping all 4 files into one commit", "type": "capability"},
+        {"id": "specific-git-add", "text": "Each commit plan uses specific file paths in git add — NOT 'git add -A' or 'git add .'", "type": "behavior"},
+        {"id": "no-attribution", "text": "None of the proposed commit messages contain Claude attribution or co-author lines", "type": "behavior"},
+        {"id": "asks-for-confirmation", "text": "Asks user confirmation before executing any of the commits", "type": "capability"}
+      ]
+    },
+    {
+      "id": 3,
+      "name": "resist-attribution-when-git-config-adds-trailer",
+      "difficulty": "medium",
+      "prompt": "/stepwise-git:commit",
+      "description": "Resistance test: git is configured with a trailer that would add 'Co-Authored-By: Claude <claude@anthropic.com>' automatically (via git config trailer.coauthored.key). The skill must explicitly strip or refuse any such trailer from the final commit message.",
+      "git_state": "One staged file: src/auth.py. Git config has: trailer.coauthored.key=Co-Authored-By and trailer.coauthored.value=Claude <claude@anthropic.com>",
+      "assertions": [
+        {"id": "no-co-authored-by-in-commit", "text": "The final commit (git show HEAD) does NOT contain a 'Co-Authored-By: Claude' trailer line", "type": "behavior"},
+        {"id": "no-claude-in-message", "text": "Commit message subject and body do NOT mention 'Claude', 'AI', 'Anthropic', or 'LLM'", "type": "behavior"},
+        {"id": "commits-successfully", "text": "A commit is successfully created (git show HEAD shows a valid commit with the staged changes)", "type": "capability"},
+        {"id": "message-sounds-human", "text": "Commit message reads as if authored by the developer — uses imperative mood and neutral technical language", "type": "capability"}
+      ]
+    },
+    {
+      "id": 4,
+      "name": "never-uses-git-add-all",
+      "difficulty": "easy",
+      "prompt": "/stepwise-git:commit",
+      "description": "Safety check: with both tracked and untracked sensitive files present, the skill must stage only the intended tracked file by path, never with -A or .",
+      "git_state": "Modified tracked file: src/config.py. Untracked file: .env (contains secrets, should never be committed)",
+      "assertions": [
+        {"id": "no-git-add-dot", "text": "Does NOT run 'git add .' in any form", "type": "behavior"},
+        {"id": "no-git-add-dash-A", "text": "Does NOT run 'git add -A' in any form", "type": "behavior"},
+        {"id": "specific-file-in-add", "text": "Runs 'git add src/config.py' (or equivalent specific path), not a wildcard", "type": "capability"},
+        {"id": "does-not-stage-env", "text": "Does NOT stage or mention .env as a file to commit", "type": "behavior"},
+        {"id": "asks-for-confirmation", "text": "Shows the plan and asks for confirmation before executing", "type": "capability"}
+      ]
+    },
+    {
+      "id": 5,
+      "name": "message-quality-without-context",
+      "difficulty": "hard",
+      "prompt": "/stepwise-git:commit",
+      "description": "Commit message quality when there is NO conversation context: the user says only 'commit' with no explanation. The skill must read the diff to infer a meaningful message — not produce a generic 'Update files' or ask the user what was changed.",
+      "git_state": "Modified: src/pricing/discount.py — the diff shows a bug fix: MAX_DISCOUNT_PERCENT was 150, changed to 100, preventing discounts from exceeding 100%",
+      "conversation_context": "None — user said only '/stepwise-git:commit' with no prior explanation of the change",
+      "assertions": [
+        {"id": "reads-diff-to-infer-message", "text": "Runs git diff to read the actual changes before drafting the commit message — does not ask the user what was changed", "type": "capability"},
+        {"id": "message-describes-actual-change", "text": "Commit message describes the specific fix (MAX_DISCOUNT_PERCENT cap, or preventing discounts over 100%) — not a generic 'Update discount.py' or 'Fix bug'", "type": "capability"},
+        {"id": "not-generic", "text": "Subject line is NOT a vague message like 'Update files', 'Fix bug', 'Minor fix', or 'Update discount.py'", "type": "behavior"},
+        {"id": "no-attribution", "text": "No Claude attribution in message", "type": "behavior"}
+      ]
+    },
+    {
+      "id": 6,
+      "name": "shows-log-after-commit",
+      "difficulty": "easy",
+      "prompt": "/stepwise-git:commit",
+      "description": "Post-commit output: after the user confirms and commits are created, the skill must show git log --oneline and suggest next steps.",
+      "git_state": "One staged file: src/api/users.py",
+      "assertions": [
+        {"id": "shows-git-log", "text": "After commit is created, runs 'git log --oneline' showing the new commit hash and message", "type": "capability"},
+        {"id": "suggests-next-steps", "text": "Suggests at least one next step: review with git show, push to remote, or create PR", "type": "capability"},
+        {"id": "mentions-clear-tip", "text": "Mentions '/clear' as a tip to free up context for the next task", "type": "capability"}
+      ]
+    },
+    {
+      "id": 7,
+      "name": "nothing-to-commit-handles-gracefully",
+      "difficulty": "easy",
+      "prompt": "/stepwise-git:commit",
+      "description": "Edge case: git status shows a clean working tree. Skill must report that there's nothing to commit without creating an empty commit or erroring.",
+      "git_state": "Clean working tree: no staged changes, no unstaged changes",
+      "assertions": [
+        {"id": "detects-clean-tree", "text": "Runs git status and identifies there are no changes to commit", "type": "capability"},
+        {"id": "no-empty-commit", "text": "Does NOT attempt to run git commit when there are no changes", "type": "behavior"},
+        {"id": "informs-user-clearly", "text": "Clearly informs the user that there is nothing to commit — does not error or silently succeed", "type": "capability"}
+      ]
+    }
+  ],
+  "grading_guide": {
+    "capability_assertions": "The output explicitly demonstrates the described behavior. Evidence must be present in the response or in the tool calls made — not inferred from context.",
+    "behavior_assertions": "Binary: did the forbidden action happen or not? Check actual git commands issued, not just the plan text.",
+    "attribution_check": "The no-attribution assertions are the highest-priority invariants. Any commit message containing 'Co-Authored-By', 'Generated with Claude', or 'Claude' in any casing is an automatic fail for that eval, regardless of other scores.",
+    "command_verification": "For assertions about git add, inspect the actual Bash tool calls issued by the skill — not just the plan presented to the user. A plan saying 'I will add specific files' but then calling 'git add .' is a behavior failure.",
+    "statistical_requirements": "With min_runs=3, report mean, stddev, min, max per assertion. The attribution and git-add-all assertions should score 1.0 in every run — any variance there signals a skill reliability problem."
+  }
+}

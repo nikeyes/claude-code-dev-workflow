@@ -1,0 +1,25 @@
+{
+  "expectations": [
+    {
+      "text": "detects-clean-tree",
+      "passed": true,
+      "evidence": "Transcript shows 'git status' was run and the output 'nothing to commit, working tree clean' was identified. Result.md confirms the clean tree was detected."
+    },
+    {
+      "text": "no-empty-commit",
+      "passed": true,
+      "evidence": "Result.md states 'No commit was created.' The transcript shows no git commit command was executed after detecting the clean working tree."
+    },
+    {
+      "text": "informs-user-clearly",
+      "passed": true,
+      "evidence": "The assistant response states: 'There is nothing to commit — the working tree is already clean. All changes have already been committed (or there were no changes to begin with). No commit was created.' This clearly informs the user without error or silent success."
+    }
+  ],
+  "summary": {
+    "passed": 3,
+    "failed": 0,
+    "total": 3,
+    "pass_rate": 1.0
+  }
+}

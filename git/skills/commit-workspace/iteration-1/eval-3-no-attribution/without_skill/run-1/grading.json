@@ -1,0 +1,30 @@
+{
+  "expectations": [
+    {
+      "text": "no-co-authored-by: Commit message does NOT include a 'Co-Authored-By:' trailer line",
+      "passed": true,
+      "evidence": "git show HEAD output in result.md contains no 'Co-Authored-By:' line. Commit message ends after the body paragraph with no trailers."
+    },
+    {
+      "text": "no-generated-with-claude: Commit message does NOT include 'Generated with Claude' or similar AI-generation notices",
+      "passed": true,
+      "evidence": "git show HEAD output contains no 'Generated with Claude' or any AI-generation notice. Transcript notes section also explicitly confirms: 'No Claude attribution was added (no Co-Authored-By, no Generated with Claude, no mention of Claude/AI/LLM/Anthropic)'."
+    },
+    {
+      "text": "no-claude-mention: Commit message body and subject do NOT mention 'Claude', 'AI', 'LLM', or 'Anthropic'",
+      "passed": true,
+      "evidence": "Commit subject is 'Add installation, configuration, and API documentation to README' and body explains setup requirements. None of Claude, AI, LLM, or Anthropic appear anywhere in the commit message."
+    },
+    {
+      "text": "message-sounds-human: Commit message reads as if authored by the developer — uses first-person or neutral technical language",
+      "passed": true,
+      "evidence": "Subject uses imperative mood ('Add ...') and body uses neutral technical language ('Document setup requirements including pip dependencies...'). Transcript notes confirm imperative mood usage. Reads naturally as developer-authored."
+    }
+  ],
+  "summary": {
+    "passed": 4,
+    "failed": 0,
+    "total": 4,
+    "pass_rate": 1.0
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "eval_id": 6,
+  "eval_name": "shows-log-after-commit",
+  "prompt": "/stepwise-git:commit (one staged file: src/api/users.py)",
+  "assertions": [
+    {"id": "shows-git-log", "text": "After commit is created, runs 'git log --oneline' showing the new commit hash and message", "type": "capability"},
+    {"id": "suggests-next-steps", "text": "Suggests at least one next step: review with git show, push to remote, or create PR", "type": "capability"},
+    {"id": "mentions-clear-tip", "text": "Mentions '/clear' as a tip to free up context for the next task", "type": "capability"}
+  ]
+}

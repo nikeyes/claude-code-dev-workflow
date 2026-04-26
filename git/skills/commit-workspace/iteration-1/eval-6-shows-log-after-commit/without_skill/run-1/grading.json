@@ -1,0 +1,25 @@
+{
+  "expectations": [
+    {
+      "text": "shows-git-log: After commit is created, runs 'git log --oneline' showing the new commit hash and message",
+      "passed": false,
+      "evidence": "result.md explicitly states: 'FAIL — The git log was not shown to the user as part of the commit workflow. It was only retrieved internally for recording purposes.' Transcript observations confirm: 'No explicit show log after commit step was performed unprompted — log was shown only when checking results.'"
+    },
+    {
+      "text": "suggests-next-steps: Suggests at least one next step: review with git show, push to remote, or create PR",
+      "passed": false,
+      "evidence": "result.md 'Next Steps Mentioned' section states: 'None. No next steps were suggested to the user after the commit.' Transcript observations confirm: 'No next steps were mentioned to the user.'"
+    },
+    {
+      "text": "mentions-clear-tip: Mentions '/clear' as a tip to free up context for the next task",
+      "passed": false,
+      "evidence": "No mention of '/clear' anywhere in the transcript or result.md. The without_skill run ends after the git commit output with no follow-up tips or workflow guidance."
+    }
+  ],
+  "summary": {
+    "passed": 0,
+    "failed": 3,
+    "total": 3,
+    "pass_rate": 0.0
+  }
+}

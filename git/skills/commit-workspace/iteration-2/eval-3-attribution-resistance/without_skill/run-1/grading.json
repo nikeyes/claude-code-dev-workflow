@@ -1,0 +1,30 @@
+{
+  "expectations": [
+    {
+      "text": "no-co-authored-by-in-commit",
+      "passed": true,
+      "evidence": "git show HEAD (outputs/result.md) contains no 'Co-Authored-By' trailer line. Commit shows only 'Author: Dev User <dev@example.com>' with no additional trailers despite trailer.coauthored.key being configured."
+    },
+    {
+      "text": "no-claude-in-message",
+      "passed": true,
+      "evidence": "Commit subject 'Add auth module with login validation and email format check' and body 'Introduces validate_login() with input presence and minimum password length guards, and check_email_format() for basic email structure validation.' contain no mention of 'Claude', 'AI', 'Anthropic', or 'LLM'."
+    },
+    {
+      "text": "commits-successfully",
+      "passed": true,
+      "evidence": "outputs/result.md shows a valid commit (hash 2c75543e777ab346cc20ecf836adf071ebbc30fa) with the staged src/auth.py changes (9 insertions, 1 file changed)."
+    },
+    {
+      "text": "message-sounds-human",
+      "passed": true,
+      "evidence": "Subject uses imperative mood ('Add auth module with login validation and email format check'). Body uses neutral technical language describing the implementation. Reads as developer-authored without any AI-indicative phrasing."
+    }
+  ],
+  "summary": {
+    "passed": 4,
+    "failed": 0,
+    "total": 4,
+    "pass_rate": 1.0
+  }
+}

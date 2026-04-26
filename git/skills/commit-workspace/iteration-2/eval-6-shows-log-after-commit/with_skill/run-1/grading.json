@@ -1,0 +1,25 @@
+{
+  "expectations": [
+    {
+      "text": "shows-git-log: After commit is created, runs 'git log --oneline' showing the new commit hash and message",
+      "passed": true,
+      "evidence": "Transcript shows 'git log --oneline -n 1' run as a dedicated Completion Output step, producing '4aefaac Add users API blueprint with list and detail endpoints'. The commit hash and message also appear in the structured output file."
+    },
+    {
+      "text": "suggests-next-steps: Suggests at least one next step: review with git show, push to remote, or create PR",
+      "passed": true,
+      "evidence": "Output file contains 'Next steps in the workflow:' with three suggestions: 'Review commits with `git show 4aefaac`', 'Push to remote when ready', and 'Create PR if applicable'."
+    },
+    {
+      "text": "mentions-clear-tip: Mentions '/clear' as a tip to free up context for the next task",
+      "passed": true,
+      "evidence": "Output file contains 'Tip: Use `/clear` to free up context for your next task' as the final line of the structured completion message."
+    }
+  ],
+  "summary": {
+    "passed": 3,
+    "failed": 0,
+    "total": 3,
+    "pass_rate": 1.0
+  }
+}

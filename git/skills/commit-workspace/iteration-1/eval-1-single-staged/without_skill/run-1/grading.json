@@ -1,0 +1,84 @@
+{
+  "expectations": [
+    {
+      "text": "presents-plan-first: Shows the list of files to commit and the proposed commit message BEFORE running git commit",
+      "passed": false,
+      "evidence": "Transcript goes directly from Step 2 (diff analysis) to Step 3 (git commit execution). There is no intermediate step where the files and proposed message are presented to the user before committing. The commit is created in Step 3 without any prior plan presentation."
+    },
+    {
+      "text": "asks-for-confirmation: Explicitly asks for user confirmation before executing the commit (e.g. 'Shall I proceed?')",
+      "passed": false,
+      "evidence": "No confirmation request appears anywhere in the transcript. The agent runs git status, git diff --staged, then immediately executes git commit with no approval step."
+    },
+    {
+      "text": "no-auto-commit: Does NOT create the commit without waiting for user approval",
+      "passed": false,
+      "evidence": "The commit is executed in Step 3 immediately after inspecting the diff, with no plan presentation or confirmation step. The transcript contains no user approval — the commit was created without waiting."
+    },
+    {
+      "text": "no-attribution: Proposed commit message does NOT contain 'Co-Authored-By', 'Generated with Claude', or 'Claude' anywhere",
+      "passed": true,
+      "evidence": "Commit message in outputs/result.md is 'Add login validation to auth module\\n\\nAdds validate_login() that enforces non-empty credentials and a minimum password length of 8 characters.' — contains none of the prohibited attribution strings."
+    },
+    {
+      "text": "imperative-mood: Commit message uses imperative mood (e.g. 'Add', 'Fix', 'Update') not past tense ('Added', 'Fixed')",
+      "passed": true,
+      "evidence": "Subject line is 'Add login validation to auth module' — 'Add' is imperative mood, not past tense."
+    }
+  ],
+  "summary": {
+    "passed": 2,
+    "failed": 3,
+    "total": 5,
+    "pass_rate": 0.40
+  },
+  "execution_metrics": {
+    "total_tool_calls": null,
+    "total_steps": 4,
+    "errors_encountered": 0,
+    "output_chars": 294,
+    "transcript_chars": 1637
+  },
+  "timing": {
+    "executor_duration_seconds": null,
+    "total_duration_seconds": 43.9,
+    "total_tokens": 15173
+  },
+  "claims": [
+    {
+      "claim": "The agent inspected staged changes before committing",
+      "type": "process",
+      "verified": true,
+      "evidence": "Steps 1 and 2 show git status and git diff --staged were run before git commit."
+    },
+    {
+      "claim": "The commit message describes the actual change",
+      "type": "quality",
+      "verified": true,
+      "evidence": "Subject 'Add login validation to auth module' and body accurately describe the validate_login() function added in src/auth.py."
+    },
+    {
+      "claim": "User approval was obtained before committing",
+      "type": "process",
+      "verified": false,
+      "evidence": "No confirmation step appears in the transcript. The commit was run directly after the diff review."
+    }
+  ],
+  "user_notes_summary": {
+    "uncertainties": [],
+    "needs_review": [],
+    "workarounds": []
+  },
+  "eval_feedback": {
+    "suggestions": [
+      {
+        "assertion": "no-attribution",
+        "reason": "This assertion passes trivially for without_skill runs because vanilla Claude rarely adds attribution on its own. It's more discriminating in the with_skill run where the skill's own output template might introduce it. Consider whether this assertion adds value in the without_skill context."
+      },
+      {
+        "reason": "The without_skill run produces a commit message of equivalent quality to the with_skill run (same imperative mood, same level of detail). No assertion captures whether the commit message quality actually differs between runs. If a goal of the skill is to produce better messages, a quality assertion would surface that."
+      }
+    ],
+    "overall": "The three failing assertions (presents-plan-first, asks-for-confirmation, no-auto-commit) cleanly differentiate the without_skill run from the with_skill run — the skill's core value proposition is well-tested. The no-attribution and imperative-mood assertions pass in both runs, suggesting they may be less discriminating on their own."
+  }
+}

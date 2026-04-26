@@ -1,0 +1,11 @@
+{
+  "eval_id": 3,
+  "eval_name": "no-claude-attribution-in-any-form",
+  "prompt": "/stepwise-git:commit (one staged file: README.md, entire session done with Claude)",
+  "assertions": [
+    {"id": "no-co-authored-by", "text": "Commit message does NOT include a 'Co-Authored-By:' trailer line", "type": "behavior"},
+    {"id": "no-generated-with-claude", "text": "Commit message does NOT include 'Generated with Claude' or similar AI-generation notices", "type": "behavior"},
+    {"id": "no-claude-mention", "text": "Commit message body and subject do NOT mention 'Claude', 'AI', 'LLM', or 'Anthropic'", "type": "behavior"},
+    {"id": "message-sounds-human", "text": "Commit message reads as if authored by the developer — uses first-person or neutral technical language", "type": "capability"}
+  ]
+}

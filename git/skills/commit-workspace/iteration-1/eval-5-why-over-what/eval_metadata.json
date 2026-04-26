@@ -1,0 +1,11 @@
+{
+  "eval_id": 5,
+  "eval_name": "why-over-what-in-message",
+  "prompt": "/stepwise-git:commit (rate_limiter.py, context: security incident with brute-force attacks)",
+  "assertions": [
+    {"id": "explains-why", "text": "Commit message mentions the reason for the change (security, brute-force protection, or incident mitigation) — not just 'add rate limiter'", "type": "capability"},
+    {"id": "not-just-what", "text": "Subject line is NOT a pure restatement of the diff like 'Add rate_limiter.py' or 'Modify auth module'", "type": "behavior"},
+    {"id": "references-session-context", "text": "Uses the session conversation context to inform the commit message — does not ask the user what was changed", "type": "capability"},
+    {"id": "no-attribution", "text": "No Claude attribution in message", "type": "behavior"}
+  ]
+}

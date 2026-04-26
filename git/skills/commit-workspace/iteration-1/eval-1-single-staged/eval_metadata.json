@@ -1,0 +1,12 @@
+{
+  "eval_id": 1,
+  "eval_name": "single-staged-asks-before-committing",
+  "prompt": "/stepwise-git:commit (one staged file: src/auth.py — login validation)",
+  "assertions": [
+    {"id": "presents-plan-first", "text": "Shows the list of files to commit and the proposed commit message BEFORE running git commit", "type": "capability"},
+    {"id": "asks-for-confirmation", "text": "Explicitly asks for user confirmation before executing the commit (e.g. 'Shall I proceed?')", "type": "capability"},
+    {"id": "no-auto-commit", "text": "Does NOT create the commit without waiting for user approval", "type": "behavior"},
+    {"id": "no-attribution", "text": "Proposed commit message does NOT contain 'Co-Authored-By', 'Generated with Claude', or 'Claude' anywhere", "type": "behavior"},
+    {"id": "imperative-mood", "text": "Commit message uses imperative mood (e.g. 'Add', 'Fix', 'Update') not past tense ('Added', 'Fixed')", "type": "capability"}
+  ]
+}

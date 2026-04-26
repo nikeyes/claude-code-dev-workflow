@@ -1,0 +1,84 @@
+{
+  "expectations": [
+    {
+      "text": "presents-plan-first: Shows the list of files to commit and the proposed commit message BEFORE running git commit",
+      "passed": true,
+      "evidence": "Transcript Step 3 shows the full plan — file 'src/auth.py' and the complete commit message — presented to the user before any git commit command is run. git commit is not executed until Step 4, after confirmation."
+    },
+    {
+      "text": "asks-for-confirmation: Explicitly asks for user confirmation before executing the commit (e.g. 'Shall I proceed?')",
+      "passed": true,
+      "evidence": "Transcript Step 3 ends with: 'Shall I proceed?' followed by 'User response: Yes, proceed.' — an explicit confirmation request before any commit is made."
+    },
+    {
+      "text": "no-auto-commit: Does NOT create the commit without waiting for user approval",
+      "passed": true,
+      "evidence": "The skill presented a plan (Step 3), asked 'Shall I proceed?', and only executed git commit (Step 4) after receiving user approval. The confirmation step was not skipped."
+    },
+    {
+      "text": "no-attribution: Proposed commit message does NOT contain 'Co-Authored-By', 'Generated with Claude', or 'Claude' anywhere",
+      "passed": true,
+      "evidence": "Commit message in outputs/result.md is 'Add login validation to auth module\\n\\nAdds validate_login() that enforces non-empty credentials and a minimum password length of 8 characters.' — no attribution strings present. result.md also explicitly notes: 'Author: Git config default (no Claude attribution added)'."
+    },
+    {
+      "text": "imperative-mood: Commit message uses imperative mood (e.g. 'Add', 'Fix', 'Update') not past tense ('Added', 'Fixed')",
+      "passed": true,
+      "evidence": "Subject line is 'Add login validation to auth module' — 'Add' is imperative mood, not past tense."
+    }
+  ],
+  "summary": {
+    "passed": 5,
+    "failed": 0,
+    "total": 5,
+    "pass_rate": 1.0
+  },
+  "execution_metrics": {
+    "total_tool_calls": null,
+    "total_steps": 5,
+    "errors_encountered": 0,
+    "output_chars": 479,
+    "transcript_chars": 2821
+  },
+  "timing": {
+    "executor_duration_seconds": null,
+    "total_duration_seconds": 74.2,
+    "total_tokens": 18937
+  },
+  "claims": [
+    {
+      "claim": "The skill ran git add with a specific file path (not -A or .)",
+      "type": "process",
+      "verified": true,
+      "evidence": "Transcript Step 4 shows: 'git add src/auth.py' — specific file, not wildcard."
+    },
+    {
+      "claim": "No Claude attribution was added to the commit",
+      "type": "quality",
+      "verified": true,
+      "evidence": "outputs/result.md states 'Author: Git config default (no Claude attribution added)' and the commit message contains no 'Claude', 'Co-Authored-By', or 'Generated with' strings."
+    },
+    {
+      "claim": "A git log was shown after the commit",
+      "type": "process",
+      "verified": true,
+      "evidence": "Transcript Step 5 shows git log --oneline -n 3 output: '8ba73f9 Add login validation to auth module'."
+    }
+  ],
+  "user_notes_summary": {
+    "uncertainties": [],
+    "needs_review": [],
+    "workarounds": []
+  },
+  "eval_feedback": {
+    "suggestions": [
+      {
+        "reason": "No assertion checks that git add used a specific file path rather than '-A' or '.'. The skill explicitly forbids wildcard staging, but none of the five assertions verify this. A run that used 'git add .' would pass all five assertions."
+      },
+      {
+        "assertion": "presents-plan-first",
+        "reason": "This assertion would also pass if the plan were shown but contained an inaccurate or garbled commit message. Consider adding an assertion that the proposed message is coherent and describes the actual change."
+      }
+    ],
+    "overall": "Core safety properties (confirmation gate, no attribution, imperative mood) are well-covered. The missing gap is staging hygiene — no assertion enforces that files are added individually rather than with a wildcard."
+  }
+}
