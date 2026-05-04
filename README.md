@@ -21,6 +21,17 @@ Implements **Research → Plan → Implement → Validate** with frequent `/clea
 - Clear between phases, save to `thoughts/`
 - Never lose research or decisions
 
+### Why This Workflow With AI
+
+**More generated code = more risk if you don't have a solid feedback loop.**
+
+The faster AI generates code, the more these practices matter:
+
+- **Story Splitting** — AI can produce a lot in little time. If scope isn't cut, chaos scales just as fast.
+- **Hamburger Method** — Deliver value end-to-end continuously by slicing features into thin vertical layers.
+- **Small Safe Steps** — Each step must be reversible. Speed of generation is not speed to production.
+- **Advanced testing** — Mutation, acceptance, and architectural testing. The feedback loop must be solid. No more excuses.
+
 ## 📦 Available Plugins
 
 This repository contains **4 independent plugins** that can be installed separately based on your needs:
@@ -140,6 +151,20 @@ Use `grep -r thoughts/` to search across all documents.
 
 ## 🔄 The Four-Phase Workflow
 
+**Use `/clear` between phases.** Knowledge lives in `thoughts/`, not in the context window.
+
+### Quick reference
+
+| Phase | Main command | Helpers (skills / agents) |
+|---|---|---|
+| Across all phases | `/clear` between phases | `thoughts-management`, `thoughts-locator`, `thoughts-analyzer` |
+| **Before** (product side) | `/story-splitting` | Applied to the PRD / ticket / use case — **not** the code |
+| 🔍 Research | `/research-codebase`, `/deep-research` | `codebase-locator`, `codebase-analyzer`, `codebase-pattern-finder`, `web-search-researcher`, `citation-analyst` |
+| 🗺️ Plan | `/create-plan`, `/iterate-plan` | `/hamburger-method`, `/small-safe-steps` |
+| 🛠️ Implement | `/implement-plan`, `/commit` | `/test-desiderata` (test quality), `/bugmagnet <file>` (edge-case & bug hunt) |
+| ✅ Validate | `/validate-plan` | — |
+| 🌐 Any web lookup | _"search the web for..."_ | `web-search-researcher` fires automatically |
+
 ### Phase 1: Research (stepwise-core)
 
 ```bash
@@ -162,7 +187,7 @@ Iterates with you 5+ times, creates detailed phases with verification steps.
 /stepwise-core:implement-plan @thoughts/shared/plans/2025-11-09-rate-limiting.md
 ```
 
-Executes one phase at a time, validates before proceeding.
+Executes one phase at a time, validates before proceeding. While implementing, lean on `/test-desiderata` to keep test quality high and `/bugmagnet <file>` to surface edge cases on a specific module.
 
 ### Phase 4: Validate (stepwise-core)
 
@@ -232,9 +257,13 @@ claude plugin update stepwise-web@stepwise-dev
 claude plugin update stepwise-research@stepwise-dev
 ```
 
-## 📝 Context Management
+## 📝 Golden Rules
 
-**Golden Rule**: Never exceed 60% context capacity.
+1. **Keep context under 60%** — past that, accuracy drops.
+2. **`/clear` between phases** — knowledge lives in `thoughts/`, not in the context window.
+3. **Read a 200-line plan before Claude writes 2,000 lines of code.**
+4. **Implement one phase at a time** — with its own tests and its own commit.
+5. **Delegate noisy work** (web research, large codebase scans) to **sub-agents** so the parent context stays clean.
 
 ```bash
 /context  # Check current usage
