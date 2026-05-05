@@ -346,7 +346,7 @@ Apache License 2.0 - See LICENSE file for details.
 
 Derived from [HumanLayer's Claude Code workflow](https://github.com/humanlayer/humanlayer/tree/main/.claude) under Apache License 2.0.
 
-Several skills are derived from [eferro's skill-factory](https://github.com/eferro/skill-factory) (hamburger-method, small-safe-steps, story-splitting, test-desiderata) and [Gojko Adzic's BugMagnet](https://github.com/gojko/bugmagnet-ai-assistant). See [NOTICE](NOTICE) for detailed attribution.
+Several skills are derived from [Matt Pocock's skills](https://github.com/mattpocock/skills) (grill-me, tdd), [eferro's skill-factory](https://github.com/eferro/skill-factory) (hamburger-method, small-safe-steps, story-splitting, test-desiderata, and tdd/zombies reference) and [Gojko Adzic's BugMagnet](https://github.com/gojko/bugmagnet-ai-assistant). See [NOTICE](NOTICE) for detailed attribution.
 
 **Major enhancements**:
 - Multi-plugin architecture for modular installation

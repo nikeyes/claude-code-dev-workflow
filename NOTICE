@@ -54,11 +54,25 @@ https://github.com/eferro/skill-factory
 - core/skills/small-safe-steps/ (from output_skills/practices/small-safe-steps)
 - core/skills/story-splitting/ (from output_skills/practices/story-splitting)
 - core/skills/test-desiderata/ (from output_skills/testing/test-desiderata)
+- core/skills/tdd/references/zombies.md (from output_skills/testing/tdd/references/zombies.md)
 
 Note: the hamburger-method and story-splitting skills ultimately credit
 Gojko Adzic as the author of the underlying techniques; test-desiderata
 credits Kent Beck. The skill-factory repository is the upstream source
 from which these SKILL.md files were adapted.
+
+================================================================================
+
+The following Agent Skills are derived from mattpocock/skills:
+Copyright (c) Matt Pocock
+Licensed under the MIT License
+https://github.com/mattpocock/skills
+
+- core/skills/grill-me/ (from skills/productivity/grill-me)
+- core/skills/tdd/ (from skills/engineering/tdd)
+  - SKILL.md and all references/ files (deep-modules.md, interface-design.md,
+    mocking.md, refactoring.md, tests.md) adapted as-is
+  - references/zombies.md sourced from eferro/skill-factory (see below)
 
 ================================================================================
 

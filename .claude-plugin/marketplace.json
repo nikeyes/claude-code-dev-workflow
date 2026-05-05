@@ -6,13 +6,13 @@
   },
   "metadata": {
     "description": "Structured development workflow plugins for Claude Code",
-    "version": "1.1.0"
+    "version": "1.2.0"
   },
   "plugins": [
     {
       "name": "stepwise-core",
       "source": "./core",
-      "version": "1.1.0",
+      "version": "1.2.0",
       "description": "Core workflow for structured development: Research → Plan → Implement → Validate with thoughts/ management",
       "keywords": ["workflow", "research", "planning", "implementation", "validation", "thoughts"]
     },
