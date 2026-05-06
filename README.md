@@ -40,7 +40,7 @@ This repository contains **4 independent plugins** that can be installed separat
 The foundation plugin with the complete Research → Plan → Implement → Validate cycle.
 
 **Includes:**
-- 11 skills (`research-codebase`, `create-plan`, `iterate-plan`, `implement-plan`, `validate-plan`, `thoughts-management`, `bugmagnet`, `hamburger-method`, `small-safe-steps`, `story-splitting`, `test-desiderata`)
+- 13 skills (`research-codebase`, `create-plan`, `iterate-plan`, `implement-plan`, `validate-plan`, `thoughts-management`, `bugmagnet`, `hamburger-method`, `small-safe-steps`, `story-splitting`, `test-desiderata`, `tdd`, `grill-me`)
 - 5 specialized agents (codebase exploration and thoughts management)
 
 [→ Read more](./core/README.md)
@@ -160,8 +160,8 @@ Use `grep -r thoughts/` to search across all documents.
 | Across all phases | `/clear` between phases | `thoughts-management`, `thoughts-locator`, `thoughts-analyzer` |
 | **Before** (product side) | `/story-splitting` | Applied to the PRD / ticket / use case — **not** the code |
 | 🔍 Research | `/research-codebase`, `/deep-research` | `codebase-locator`, `codebase-analyzer`, `codebase-pattern-finder`, `web-search-researcher`, `citation-analyst` |
-| 🗺️ Plan | `/create-plan`, `/iterate-plan` | `/hamburger-method`, `/small-safe-steps` |
-| 🛠️ Implement | `/implement-plan`, `/commit` | `/test-desiderata` (test quality), `/bugmagnet <file>` (edge-case & bug hunt) |
+| 🗺️ Plan | `/create-plan`, `/iterate-plan` | `/hamburger-method`, `/small-safe-steps`, `/grill-me` (stress-test the plan) |
+| 🛠️ Implement | `/implement-plan`, `/commit` | `/tdd` (test-first development), `/test-desiderata` (test quality), `/bugmagnet <file>` (edge-case & bug hunt) |
 | ✅ Validate | `/validate-plan` | — |
 | 🌐 Any web lookup | _"search the web for..."_ | `web-search-researcher` fires automatically |
 
@@ -179,7 +179,7 @@ Spawns parallel agents, searches codebase and thoughts/, generates comprehensive
 /stepwise-core:create-plan Add rate limiting to the API
 ```
 
-Iterates with you 5+ times, creates detailed phases with verification steps.
+Iterates with you 5+ times, creates detailed phases with verification steps. Use `/grill-me` to stress-test the plan before moving on — it interviews you on every assumption until the design is solid.
 
 ### Phase 3: Implement (stepwise-core)
 
@@ -187,7 +187,7 @@ Iterates with you 5+ times, creates detailed phases with verification steps.
 /stepwise-core:implement-plan @thoughts/shared/plans/2025-11-09-rate-limiting.md
 ```
 
-Executes one phase at a time, validates before proceeding. While implementing, lean on `/test-desiderata` to keep test quality high and `/bugmagnet <file>` to surface edge cases on a specific module.
+Executes one phase at a time, validates before proceeding. Use `/tdd` to drive the implementation test-first (red→green→refactor). While implementing, lean on `/test-desiderata` to keep test quality high and `/bugmagnet <file>` to surface edge cases on a specific module.
 
 ### Phase 4: Validate (stepwise-core)
 
