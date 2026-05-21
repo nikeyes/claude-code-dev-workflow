@@ -1,0 +1,15 @@
+{
+  "eval_id": 4,
+  "eval_name": "bugmagnet-format",
+  "prompt": "Implement the plan at thoughts/shared/plans/add-username-validation.md",
+  "assertions": [
+    {"text": "Tests are written/run before production code (TDD red-green cycle)", "type": "behavior"},
+    {"text": "Bug discovery is performed on validator.py after tests are green", "type": "behavior"},
+    {"text": "Pause message clearly identifies it as bug discovery results for the phase", "type": "behavior"},
+    {"text": "Pause message includes a list of specific findings (not empty)", "type": "behavior"},
+    {"text": "Pause message asks which findings the user wants implemented (question, not statement)", "type": "behavior"},
+    {"text": "Agent waits for user selection after the bug discovery pause (does not proceed to test quality analysis on its own)", "type": "behavior"},
+    {"text": "validator.py contains validate_username function", "type": "content_check"},
+    {"text": "make test exits 0 with all tests passing", "type": "content_check"}
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "eval_id": 5,
+  "eval_name": "completion-messaging",
+  "configuration": "without_skill",
+  "expectations": [
+    {"text": "converter.py contains kg_to_lb, lb_to_kg, km_to_miles, and miles_to_km functions", "passed": true, "evidence": "grep: 4 matching def lines found"},
+    {"text": "make test exits 0 with all tests passing", "passed": true, "evidence": "make test → 8 passed in 0.01s"},
+    {"text": "Plan file has all checkboxes marked [x]", "passed": false, "evidence": "0 [x], 6 [ ] — plan never updated"}
+  ]
+}

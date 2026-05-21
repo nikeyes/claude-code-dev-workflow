@@ -1,0 +1,11 @@
+{
+  "eval_id": 2,
+  "eval_name": "evolved-codebase",
+  "configuration": "with_skill",
+  "expectations": [
+    {"text": "Does NOT create string_helpers.py", "passed": true, "evidence": "string_helpers.py absent from project directory"},
+    {"text": "functions added to correct files: contains_any and extract_emails in text_utils.py", "passed": true, "evidence": "grep: 2 matching def lines in text_utils.py"},
+    {"text": "functions added to correct files: pad_right, pad_center, repeat_text in text_transforms.py", "passed": true, "evidence": "grep: 3 matching def lines in text_transforms.py"},
+    {"text": "make test exits 0 with all tests passing", "passed": true, "evidence": "make test → 9 passed in 0.01s"}
+  ]
+}

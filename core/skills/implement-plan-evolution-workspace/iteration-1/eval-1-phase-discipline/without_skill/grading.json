@@ -1,0 +1,21 @@
+{
+  "eval_id": 1,
+  "eval_name": "phase-discipline",
+  "configuration": "without_skill",
+  "overall": {"pass_rate": 0.23, "passed": 3, "failed": 10, "total": 13},
+  "expectations": [
+    {"text": "For each implementation phase, tests are written or run BEFORE production code is written (TDD red-green cycle)", "passed": false, "evidence": "All three phases implemented in a single edit pass with no per-phase test runs"},
+    {"text": "After each phase's tests pass, a bug discovery step is performed on modified files", "passed": false, "evidence": "No bug discovery performed"},
+    {"text": "After bug discovery, agent pauses and presents findings before asking which to implement", "passed": false, "evidence": "No bug discovery, no pause"},
+    {"text": "After bug discovery selection, a test quality analysis step is performed on test files", "passed": false, "evidence": "No test quality analysis performed"},
+    {"text": "After test quality analysis, agent pauses and presents suggestions before asking which to apply", "passed": false, "evidence": "No test quality analysis, no pause"},
+    {"text": "Bug discovery is only invoked after tests are green (not while tests are failing)", "passed": false, "evidence": "No bug discovery at all"},
+    {"text": "Test quality analysis is only invoked after bug discovery pause is resolved", "passed": false, "evidence": "No test quality analysis at all"},
+    {"text": "Agent does not skip the TDD cycle by writing all production code directly without running tests", "passed": false, "evidence": "All three methods written in a single edit, single make test at the end"},
+    {"text": "Phases are implemented sequentially (Phase 1 before Phase 2 before Phase 3)", "passed": false, "evidence": "All methods added in one edit — no sequential phasing"},
+    {"text": "Checkboxes in the plan file are marked progressively as phases complete", "passed": false, "evidence": "Plan updated only after all tests passed at the end"},
+    {"text": "inventory.py contains remove_item, total_value, and apply_discount methods", "passed": true, "evidence": "16 tests pass confirming all methods present"},
+    {"text": "make test exits 0 with all tests passing", "passed": true, "evidence": "16 passed, 0 failed"},
+    {"text": "Plan file has all checkboxes marked [x]", "passed": true, "evidence": "Agent marked all checkboxes at the end"}
+  ]
+}

@@ -1,0 +1,187 @@
+{
+  "metadata": {
+    "skill_name": "implement-plan-evolution",
+    "skill_path": "/Users/jorge.castro/mordor/personal/stepwise-dev/core/skills/implement-plan-evolution",
+    "executor_model": "claude-sonnet-4-6",
+    "analyzer_model": "claude-sonnet-4-6",
+    "timestamp": "2026-05-07T00:00:00Z",
+    "evals_run": [1, 2, 3, 4, 5],
+    "runs_per_configuration": 1,
+    "iteration": 1,
+    "skill_change": "Initial evaluation of implement-plan-evolution (adds TDD + BugMagnet + Test Desiderata cycle per phase)"
+  },
+  "runs": [
+    {
+      "eval_id": 1, "eval_name": "phase-discipline", "configuration": "with_skill", "run_number": 1,
+      "result": {"pass_rate": 1.00, "passed": 13, "failed": 0, "total": 13, "time_seconds": 135.8, "tokens": 26335, "tool_calls": 17, "errors": 0},
+      "expectations": [
+        {"text": "For each implementation phase, tests are written or run BEFORE production code (TDD red-green cycle)", "passed": true, "evidence": "Agent confirmed red state per phase before implementing"},
+        {"text": "After each phase's tests pass, bug discovery is performed on modified files", "passed": true, "evidence": "BugMagnet run on inventory.py after each phase; 2 bugs found"},
+        {"text": "After bug discovery, agent pauses and presents findings before asking which to implement", "passed": true, "evidence": "'BugMagnet results for Phase N:' with numbered list"},
+        {"text": "After bug discovery selection, test quality analysis is performed on test files", "passed": true, "evidence": "Test Desiderata run on test_inventory.py after each bugmagnet pause"},
+        {"text": "After test quality analysis, agent pauses and presents suggestions before asking which to apply", "passed": true, "evidence": "'Test Desiderata results for Phase N:' with suggestions"},
+        {"text": "Bug discovery only invoked after tests are green", "passed": true, "evidence": "Each phase confirmed make test green before bugmagnet"},
+        {"text": "Test quality analysis only invoked after bug discovery pause is resolved", "passed": true, "evidence": "Sequential: TDD → bugmagnet pause → test-desiderata pause"},
+        {"text": "Agent does not skip TDD cycle by writing all production code directly", "passed": true, "evidence": "Phase-by-phase implementation with test runs between phases"},
+        {"text": "Phases implemented sequentially (Phase 1 before Phase 2 before Phase 3)", "passed": true, "evidence": "remove_item → total_value → apply_discount in order"},
+        {"text": "Checkboxes marked progressively as phases complete", "passed": true, "evidence": "All checkboxes [x]; agent confirmed progressive marking"},
+        {"text": "inventory.py contains remove_item, total_value, and apply_discount methods", "passed": true, "evidence": "20 passing tests confirm all methods present"},
+        {"text": "make test exits 0 with all tests passing", "passed": true, "evidence": "20 passing, 2 skipped — exits 0"},
+        {"text": "Plan file has all checkboxes marked [x]", "passed": true, "evidence": "All items [x]"}
+      ]
+    },
+    {
+      "eval_id": 1, "eval_name": "phase-discipline", "configuration": "without_skill", "run_number": 1,
+      "result": {"pass_rate": 0.23, "passed": 3, "failed": 10, "total": 13, "time_seconds": 57.9, "tokens": 19920, "tool_calls": 13, "errors": 0},
+      "expectations": [
+        {"text": "For each implementation phase, tests written or run BEFORE production code (TDD red-green cycle)", "passed": false, "evidence": "All phases in one edit pass, no per-phase test runs"},
+        {"text": "After each phase's tests pass, bug discovery performed", "passed": false, "evidence": "No bug discovery"},
+        {"text": "After bug discovery, pause and present findings", "passed": false, "evidence": "No bug discovery, no pause"},
+        {"text": "After bug discovery selection, test quality analysis performed", "passed": false, "evidence": "No test quality analysis"},
+        {"text": "After test quality analysis, pause and present suggestions", "passed": false, "evidence": "No test quality analysis, no pause"},
+        {"text": "Bug discovery only invoked after tests green", "passed": false, "evidence": "No bug discovery at all"},
+        {"text": "Test quality analysis only invoked after bug discovery resolved", "passed": false, "evidence": "No test quality analysis at all"},
+        {"text": "Agent does not skip TDD cycle", "passed": false, "evidence": "All methods written in single edit, single make test at end"},
+        {"text": "Phases implemented sequentially", "passed": false, "evidence": "All methods added in one edit"},
+        {"text": "Checkboxes marked progressively", "passed": false, "evidence": "Plan updated only after all tests passed"},
+        {"text": "inventory.py contains all methods", "passed": true, "evidence": "16 tests pass"},
+        {"text": "make test exits 0", "passed": true, "evidence": "16 passed"},
+        {"text": "Plan all [x]", "passed": true, "evidence": "Agent marked all checkboxes at end"}
+      ]
+    },
+    {
+      "eval_id": 2, "eval_name": "evolved-codebase", "configuration": "with_skill", "run_number": 1,
+      "result": {"pass_rate": 0.71, "passed": 5, "failed": 2, "total": 7, "time_seconds": 124.4, "tokens": 24014, "tool_calls": 19, "errors": 0},
+      "expectations": [
+        {"text": "Detects that string_helpers.py does not exist", "passed": true, "evidence": "Detected in first codebase survey"},
+        {"text": "Identifies text_utils.py and text_transforms.py instead", "passed": true, "evidence": "Both files named correctly"},
+        {"text": "Presents file structure mismatch BEFORE starting implementation", "passed": false, "evidence": "Classified as naming mismatch, adapted inline — file non-existence is structural per skill rules"},
+        {"text": "Uses structured Issue/Expected/Found format", "passed": false, "evidence": "Used inline plan notes, not Issue/Expected/Found format"},
+        {"text": "Does NOT create string_helpers.py", "passed": true, "evidence": "No string_helpers.py created"},
+        {"text": "Functions added to correct existing files", "passed": true, "evidence": "contains_any/extract_emails → text_utils; pad_right/pad_center/repeat_text → text_transforms"},
+        {"text": "make test exits 0", "passed": true, "evidence": "9/9 tests passed"}
+      ]
+    },
+    {
+      "eval_id": 2, "eval_name": "evolved-codebase", "configuration": "without_skill", "run_number": 1,
+      "result": {"pass_rate": 0.71, "passed": 5, "failed": 2, "total": 7, "time_seconds": 117.1, "tokens": 21666, "tool_calls": 16, "errors": 0},
+      "expectations": [
+        {"text": "Detects that string_helpers.py does not exist", "passed": true, "evidence": "Inferred from directory listing"},
+        {"text": "Identifies text_utils.py and text_transforms.py instead", "passed": true, "evidence": "Both identified"},
+        {"text": "Presents file structure mismatch BEFORE starting implementation", "passed": false, "evidence": "Not communicated — silently resolved by following test imports"},
+        {"text": "Uses structured Issue/Expected/Found format", "passed": false, "evidence": "No structured format — retroactive plan notes only"},
+        {"text": "Does NOT create string_helpers.py", "passed": true, "evidence": "Not created"},
+        {"text": "Functions added to correct existing files", "passed": true, "evidence": "All 5 functions in correct files, 9 tests pass"},
+        {"text": "make test exits 0", "passed": true, "evidence": "9 passed"}
+      ]
+    },
+    {
+      "eval_id": 3, "eval_name": "pause-order", "configuration": "with_skill", "run_number": 1,
+      "result": {"pass_rate": 0.63, "passed": 5, "failed": 3, "total": 8, "time_seconds": 156.9, "tokens": 25895, "tool_calls": 26, "errors": 0},
+      "expectations": [
+        {"text": "Phase 1: bug discovery pause before test quality pause (correct order)", "passed": true, "evidence": "Skill Phase Cycle enforces order; agent followed it"},
+        {"text": "Phase 2: bug discovery pause before test quality pause (correct order)", "passed": true, "evidence": "Same"},
+        {"text": "Phase 2: manual verification pause AFTER test quality pause", "passed": false, "evidence": "Agent completed with 28 passing tests but no evidence of manual verification pause"},
+        {"text": "Manual Verification checkboxes remain [ ]", "passed": false, "evidence": "No pause for manual verification — checkboxes likely auto-marked"},
+        {"text": "Pause messages present findings as list and ask for user selection", "passed": false, "evidence": "Agent found no bugs — unclear if pause was presented when bugmagnet had nothing to report"},
+        {"text": "stats.py contains median and mode functions", "passed": true, "evidence": "28 tests pass"},
+        {"text": "make test exits 0", "passed": true, "evidence": "28 passing"},
+        {"text": "Phase 1 and Phase 2 code checkboxes marked [x]", "passed": true, "evidence": "Agent completed implementation"}
+      ]
+    },
+    {
+      "eval_id": 3, "eval_name": "pause-order", "configuration": "without_skill", "run_number": 1,
+      "result": {"pass_rate": 0.38, "passed": 3, "failed": 5, "total": 8, "time_seconds": 106.1, "tokens": 18686, "tool_calls": 13, "errors": 0},
+      "expectations": [
+        {"text": "Phase 1: bug discovery pause before test quality pause", "passed": false, "evidence": "No bug discovery or test quality analysis"},
+        {"text": "Phase 2: bug discovery pause before test quality pause", "passed": false, "evidence": "No bug discovery or test quality analysis"},
+        {"text": "Phase 2: manual verification pause AFTER test quality pause", "passed": false, "evidence": "Ran verification command internally, did not pause"},
+        {"text": "Manual Verification checkboxes remain [ ]", "passed": false, "evidence": "Completed autonomously — no user confirmation"},
+        {"text": "Pause messages present findings as list and ask for user selection", "passed": false, "evidence": "No pause messages at any point"},
+        {"text": "stats.py contains median and mode functions", "passed": true, "evidence": "10/10 tests pass"},
+        {"text": "make test exits 0", "passed": true, "evidence": "10 passed"},
+        {"text": "Phase 1 and Phase 2 code checkboxes marked [x]", "passed": true, "evidence": "Plan updated"}
+      ]
+    },
+    {
+      "eval_id": 4, "eval_name": "bugmagnet-format", "configuration": "with_skill", "run_number": 1,
+      "result": {"pass_rate": 1.00, "passed": 8, "failed": 0, "total": 8, "time_seconds": 358.7, "tokens": 27729, "tool_calls": 23, "errors": 0},
+      "expectations": [
+        {"text": "Tests written/run before production code (TDD red-green cycle)", "passed": true, "evidence": "Red state confirmed (5 failed), green after implementation (7 pass)"},
+        {"text": "Bug discovery performed on validator.py after tests green", "passed": true, "evidence": "8 bugs found after make test confirmed green"},
+        {"text": "Pause message identifies bug discovery results for the phase", "passed": true, "evidence": "'BugMagnet results for Phase 1:'"},
+        {"text": "Pause message includes list of specific findings (not empty)", "passed": true, "evidence": "8 numbered findings"},
+        {"text": "Pause message asks which findings user wants implemented", "passed": true, "evidence": "'Which of these would you like me to implement?'"},
+        {"text": "Agent waits after bug discovery pause (does not proceed autonomously)", "passed": true, "evidence": "Stopped at pause — did not proceed to test-desiderata"},
+        {"text": "validator.py contains validate_username function", "passed": true, "evidence": "7 tests pass"},
+        {"text": "make test exits 0", "passed": true, "evidence": "7 passed"}
+      ]
+    },
+    {
+      "eval_id": 4, "eval_name": "bugmagnet-format", "configuration": "without_skill", "run_number": 1,
+      "result": {"pass_rate": 0.38, "passed": 3, "failed": 5, "total": 8, "time_seconds": 101.0, "tokens": 18411, "tool_calls": 14, "errors": 0},
+      "expectations": [
+        {"text": "Tests written/run before production code (TDD red-green cycle)", "passed": true, "evidence": "Followed test file, confirmed red then green"},
+        {"text": "Bug discovery performed on validator.py after tests green", "passed": false, "evidence": "No bug discovery — completed after tests passed"},
+        {"text": "Pause message identifies bug discovery results", "passed": false, "evidence": "No pause message"},
+        {"text": "Pause message includes list of findings", "passed": false, "evidence": "No findings"},
+        {"text": "Pause message asks which findings user wants implemented", "passed": false, "evidence": "No pause message"},
+        {"text": "Agent waits after bug discovery pause", "passed": false, "evidence": "No pause — completed autonomously"},
+        {"text": "validator.py contains validate_username function", "passed": true, "evidence": "7 tests pass"},
+        {"text": "make test exits 0", "passed": true, "evidence": "7 passed"}
+      ]
+    },
+    {
+      "eval_id": 5, "eval_name": "completion-messaging", "configuration": "with_skill", "run_number": 1,
+      "result": {"pass_rate": 1.00, "passed": 7, "failed": 0, "total": 7, "time_seconds": 167.8, "tokens": 24441, "tool_calls": 18, "errors": 0},
+      "expectations": [
+        {"text": "converter.py contains all 4 functions", "passed": true, "evidence": "8 tests pass"},
+        {"text": "make test exits 0", "passed": true, "evidence": "8 passed"},
+        {"text": "Plan all [x]", "passed": true, "evidence": "All 6 checkboxes [x]"},
+        {"text": "Completion message references validate-plan", "passed": true, "evidence": "'/stepwise-core:validate-plan...' in completion message"},
+        {"text": "Completion message references stepwise-git:commit", "passed": true, "evidence": "'/stepwise-git:commit' in completion message"},
+        {"text": "Completion message suggests /clear", "passed": true, "evidence": "'Tip: Use /clear to free up context'"},
+        {"text": "Completion message includes summary of accomplishments", "passed": true, "evidence": "Phase-by-phase summary in completion message"}
+      ]
+    },
+    {
+      "eval_id": 5, "eval_name": "completion-messaging", "configuration": "without_skill", "run_number": 1,
+      "result": {"pass_rate": 0.57, "passed": 4, "failed": 3, "total": 7, "time_seconds": 47.7, "tokens": 17601, "tool_calls": 13, "errors": 0},
+      "expectations": [
+        {"text": "converter.py contains all 4 functions", "passed": true, "evidence": "8 tests pass"},
+        {"text": "make test exits 0", "passed": true, "evidence": "8 passed"},
+        {"text": "Plan all [x]", "passed": true, "evidence": "Agent marked all checkboxes"},
+        {"text": "Completion message references validate-plan", "passed": false, "evidence": "No structured completion message — factual report only"},
+        {"text": "Completion message references stepwise-git:commit", "passed": false, "evidence": "Not mentioned"},
+        {"text": "Completion message suggests /clear", "passed": false, "evidence": "Not mentioned"},
+        {"text": "Completion message includes summary of accomplishments", "passed": true, "evidence": "Factual report described what was implemented"}
+      ]
+    }
+  ],
+  "run_summary": {
+    "with_skill": {
+      "pass_rate": {"mean": 0.87, "stddev": 0.17, "min": 0.63, "max": 1.00},
+      "time_seconds": {"mean": 188.7, "stddev": 90.8, "min": 124.4, "max": 358.7},
+      "tokens": {"mean": 25683, "stddev": 1449, "min": 24014, "max": 27729}
+    },
+    "without_skill": {
+      "pass_rate": {"mean": 0.45, "stddev": 0.17, "min": 0.23, "max": 0.71},
+      "time_seconds": {"mean": 86.0, "stddev": 29.2, "min": 47.7, "max": 117.1},
+      "tokens": {"mean": 19257, "stddev": 1598, "min": 17601, "max": 21666}
+    },
+    "delta": {
+      "pass_rate": "+0.42",
+      "time_seconds": "+102.7",
+      "tokens": "+6426"
+    }
+  },
+  "notes": [
+    "HEADLINE: with_skill mean pass_rate 0.87 vs without_skill 0.45 — +0.42 delta. The TDD+BugMagnet+TestDesiderata cycle clearly differentiates skill vs baseline.",
+    "PERFECT: Eval-1 (phase-discipline) and Eval-4 (bugmagnet-format) and Eval-5 (completion-messaging) score 1.00 with_skill — core behaviors working.",
+    "WEAK: Eval-3 (pause-order) with_skill scores 0.63 — manual verification pause not triggered, and bugmagnet with zero findings may skip the pause entirely instead of still presenting an empty-findings message.",
+    "INDISTINGUISHABLE: Eval-2 (evolved-codebase) both configurations score 0.71 — the structural mismatch (missing file) is classified as a naming mismatch by both the skill-following and baseline agent. Skill needs to clarify that file non-existence = structural mismatch → STOP.",
+    "COST: with_skill takes 2.2x longer (188.7s vs 86.0s) and uses 33% more tokens (25683 vs 19257). This is expected given the TDD+BugMagnet+TestDesiderata overhead.",
+    "Eval-4 (bugmagnet-format) with_skill took 358.7s — outlier driven by extensive bug discovery (8 bugs found vs 0 in eval-3). Bugmagnet thoroughness varies significantly by codebase.",
+    "without_skill baseline is consistent and minimal: fast (47-117s), low tokens, functional code, but zero structured workflow behaviors."
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "eval_id": 2,
+  "eval_name": "evolved-codebase",
+  "configuration": "with_skill",
+  "overall": {"pass_rate": 0.71, "passed": 5, "failed": 2, "total": 7},
+  "expectations": [
+    {"text": "Detects that string_helpers.py does not exist", "passed": true, "evidence": "Transcript: 'no string_helpers.py exists. The codebase has evolved into two modules'"},
+    {"text": "Identifies that the codebase has text_utils.py and text_transforms.py instead", "passed": true, "evidence": "Both files named and correctly identified in transcript"},
+    {"text": "Presents the file structure mismatch before starting implementation", "passed": false, "evidence": "Classified as naming mismatch, adapted inline without STOP — file non-existence is a structural mismatch per skill rules"},
+    {"text": "Uses structured Issue/Expected/Found format to communicate the mismatch", "passed": false, "evidence": "Used inline plan notes ('plan said string_helpers.py — does not exist') not the Issue/Expected/Found format"},
+    {"text": "Does NOT create a new string_helpers.py file", "passed": true, "evidence": "No string_helpers.py created — confirmed in transcript"},
+    {"text": "If agent proceeds, functions are added to the correct existing files", "passed": true, "evidence": "contains_any/extract_emails → text_utils.py; pad_right/pad_center/repeat_text → text_transforms.py"},
+    {"text": "If agent proceeds, make test exits 0 with all tests passing", "passed": true, "evidence": "9/9 tests passed"}
+  ]
+}

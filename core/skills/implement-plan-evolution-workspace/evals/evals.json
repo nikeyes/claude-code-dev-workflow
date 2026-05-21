@@ -1,0 +1,109 @@
+{
+  "skill_name": "implement-plan-evolution",
+  "evals": [
+    {
+      "id": 1,
+      "name": "phase-discipline",
+      "prompt": "Implement the plan at thoughts/shared/plans/add-inventory-features.md",
+      "expected_output": "Implements 3 phases sequentially (remove_item, total_value, apply_discount) plus a final verification step. For each implementation phase: writes tests first (red), implements minimally (green), refactors. Then runs bug discovery on modified files and pauses asking the user which to fix. Then analyzes test quality and pauses asking which to apply. Marks checkboxes progressively.",
+      "project_dir": "evals/projects/eval-1-phase-discipline",
+      "assertions": [
+        {"text": "For each implementation phase, tests are written or run BEFORE production code is written (TDD red-green cycle)", "type": "behavior"},
+        {"text": "After each phase's tests pass, a bug discovery step is performed on modified files", "type": "behavior"},
+        {"text": "After bug discovery, agent pauses and presents findings before asking which to implement", "type": "behavior"},
+        {"text": "After bug discovery selection, a test quality analysis step is performed on test files", "type": "behavior"},
+        {"text": "After test quality analysis, agent pauses and presents suggestions before asking which to apply", "type": "behavior"},
+        {"text": "Bug discovery is only invoked after tests are green (not while tests are failing)", "type": "behavior"},
+        {"text": "Test quality analysis is only invoked after bug discovery pause is resolved", "type": "behavior"},
+        {"text": "Agent does not skip the TDD cycle by writing all production code directly without running tests", "type": "behavior"},
+        {"text": "Phases are implemented sequentially (Phase 1 before Phase 2 before Phase 3)", "type": "behavior"},
+        {"text": "Checkboxes in the plan file are marked progressively as phases complete", "type": "behavior"},
+        {"text": "Transcript shows invocation of /stepwise-core:tdd or references to the tdd skill for each implementation phase", "type": "behavior"},
+        {"text": "Transcript shows invocation of /stepwise-core:bugmagnet on modified files after each phase's tests pass", "type": "behavior"},
+        {"text": "Transcript shows invocation of /stepwise-core:test-desiderata on test files after bug discovery", "type": "behavior"},
+        {"text": "Bug discovery output contains '## Test Coverage Summary' with 'Tests Added' and 'Results: X passing, Y skipped' format", "type": "behavior"},
+        {"text": "Test quality output references named Test Desiderata properties (Isolated, Composable, Deterministic, Fast, Readable, Behavioral, Structure-insensitive, Specific, Predictive, or Inspiring)", "type": "behavior"},
+        {"text": "TDD follows vertical slicing: each test is written and made to pass before writing the next test (not all tests written in bulk)", "type": "behavior"},
+        {"text": "inventory.py contains remove_item, total_value, and apply_discount methods", "type": "content_check"},
+        {"text": "make test exits 0 with all tests passing", "type": "content_check"},
+        {"text": "Plan file has all checkboxes marked [x]", "type": "content_check"}
+      ]
+    },
+    {
+      "id": 2,
+      "name": "evolved-codebase",
+      "prompt": "Implement the plan at thoughts/shared/plans/extend-string-helpers.md",
+      "expected_output": "Detects that string_helpers.py does not exist — the code has been split into text_utils.py and text_transforms.py. Presents a structured mismatch before implementing. If it proceeds, uses TDD and runs bug discovery + test quality analysis per phase.",
+      "project_dir": "evals/projects/eval-5-evolved-codebase",
+      "assertions": [
+        {"text": "Detects that string_helpers.py does not exist", "type": "capability"},
+        {"text": "Identifies that the codebase has text_utils.py and text_transforms.py instead", "type": "capability"},
+        {"text": "Presents the file structure mismatch before starting implementation", "type": "behavior"},
+        {"text": "Uses structured Issue/Expected/Found format to communicate the mismatch", "type": "behavior"},
+        {"text": "Does NOT create a new string_helpers.py file", "type": "capability"},
+        {"text": "If agent proceeds, functions are added to the correct existing files", "type": "capability"},
+        {"text": "If agent proceeds, make test exits 0 with all tests passing", "type": "content_check"}
+      ]
+    },
+    {
+      "id": 3,
+      "name": "pause-order",
+      "prompt": "Implement the plan at thoughts/shared/plans/add-stats-functions.md",
+      "expected_output": "Implements Phase 1 (median) with TDD, then pauses for bug discovery selection, then pauses for test quality selection. Then Phase 2 (mode) same cycle. After Phase 2, additionally pauses for Manual Verification (3 pauses total for Phase 2). Manual Verification checkboxes remain unchecked.",
+      "project_dir": "evals/projects/eval-3-pause-order",
+      "assertions": [
+        {"text": "Phase 1: bug discovery pause happens before test quality pause (correct order)", "type": "behavior"},
+        {"text": "Phase 2: bug discovery pause happens before test quality pause (correct order)", "type": "behavior"},
+        {"text": "Phase 2: manual verification pause happens AFTER test quality pause", "type": "behavior"},
+        {"text": "Manual Verification checkboxes remain [ ] — not marked by the agent", "type": "behavior"},
+        {"text": "Pause messages clearly present findings/suggestions as a list and ask for user selection", "type": "behavior"},
+        {"text": "Bug discovery pause message includes a '## Test Coverage Summary' section or references bugs with ROOT CAUSE/PROPOSED FIX format", "type": "behavior"},
+        {"text": "Test quality pause message references specific Test Desiderata properties by canonical name (e.g. Isolated, Readable, Behavioral)", "type": "behavior"},
+        {"text": "Test quality pause message uses 'Issue:' / 'Location:' / 'Impact:' / 'Fix:' block format or the '↔' tradeoff notation", "type": "behavior"},
+        {"text": "stats.py contains median and mode functions", "type": "content_check"},
+        {"text": "make test exits 0 with all tests passing", "type": "content_check"},
+        {"text": "Phase 1 and Phase 2 code checkboxes are marked [x]", "type": "content_check"}
+      ]
+    },
+    {
+      "id": 4,
+      "name": "bugmagnet-format",
+      "prompt": "Implement the plan at thoughts/shared/plans/add-username-validation.md",
+      "expected_output": "Implements validate_username with TDD (tests first, then minimal implementation). After tests are green, runs bug discovery on validator.py, then presents findings in a structured format with a list and asks 'Which of these would you like me to implement?' before waiting for user input.",
+      "project_dir": "evals/projects/eval-4-bugmagnet-format",
+      "assertions": [
+        {"text": "Tests are written/run before production code (TDD red-green cycle)", "type": "behavior"},
+        {"text": "Bug discovery is performed on validator.py after tests are green", "type": "behavior"},
+        {"text": "Pause message clearly identifies it as bug discovery results for the phase", "type": "behavior"},
+        {"text": "Pause message includes a list of specific findings (not empty)", "type": "behavior"},
+        {"text": "Pause message asks which findings the user wants implemented (question, not statement)", "type": "behavior"},
+        {"text": "Agent waits for user selection after the bug discovery pause (does not proceed to test quality analysis on its own)", "type": "behavior"},
+        {"text": "Bug discovery output uses '- BUG' suffix in skipped test names when bugs are found", "type": "behavior"},
+        {"text": "Bug discovery skipped tests contain ROOT CAUSE, CODE LOCATION, PROPOSED FIX, and EXPECTED/ACTUAL fields", "type": "behavior"},
+        {"text": "Bug discovery output ends with '## Test Coverage Summary' including 'Tests Added:', 'Results:', and 'Bugs Discovered:' sections", "type": "behavior"},
+        {"text": "Transcript references /stepwise-core:bugmagnet explicitly (not just running tests ad-hoc)", "type": "behavior"},
+        {"text": "validator.py contains validate_username function", "type": "content_check"},
+        {"text": "make test exits 0 with all tests passing", "type": "content_check"}
+      ]
+    },
+    {
+      "id": 5,
+      "name": "completion-messaging",
+      "prompt": "Implement the plan at thoughts/shared/plans/add-unit-converters.md",
+      "expected_output": "Implements both phases using TDD, runs bug discovery + test quality analysis per phase. Completion message references validate-plan, stepwise-git:commit, and suggests /clear.",
+      "project_dir": "evals/projects/eval-7-completion-messaging",
+      "assertions": [
+        {"text": "converter.py contains kg_to_lb, lb_to_kg, km_to_miles, and miles_to_km functions", "type": "content_check"},
+        {"text": "make test exits 0 with all tests passing", "type": "content_check"},
+        {"text": "Plan file has all checkboxes marked [x]", "type": "content_check"},
+        {"text": "Completion message references validate-plan as a next step", "type": "behavior"},
+        {"text": "Completion message references stepwise-git:commit as a next step", "type": "behavior"},
+        {"text": "Completion message suggests using /clear to free context", "type": "behavior"},
+        {"text": "Completion message includes a summary of what was accomplished", "type": "behavior"},
+        {"text": "Transcript shows tdd skill was used (vertical RED→GREEN cycles, or explicit /stepwise-core:tdd invocation) for both phases", "type": "behavior"},
+        {"text": "Transcript shows bugmagnet was invoked per phase (explicit skill call or '## Test Coverage Summary' output present for each phase)", "type": "behavior"},
+        {"text": "Transcript shows test-desiderata was invoked per phase (explicit skill call or named property violations present for each phase)", "type": "behavior"}
+      ]
+    }
+  ]
+}

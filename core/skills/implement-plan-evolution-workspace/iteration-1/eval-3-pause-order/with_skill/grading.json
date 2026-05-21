@@ -1,0 +1,16 @@
+{
+  "eval_id": 3,
+  "eval_name": "pause-order",
+  "configuration": "with_skill",
+  "overall": {"pass_rate": 0.63, "passed": 5, "failed": 3, "total": 8},
+  "expectations": [
+    {"text": "Phase 1: bug discovery pause happens before test quality pause (correct order)", "passed": true, "evidence": "Skill enforces bugmagnet → test-desiderata order per phase cycle; agent followed Phase Cycle steps in order"},
+    {"text": "Phase 2: bug discovery pause happens before test quality pause (correct order)", "passed": true, "evidence": "Same — Phase Cycle enforces the order, agent completed both phases"},
+    {"text": "Phase 2: manual verification pause happens AFTER test quality pause", "passed": false, "evidence": "Agent summary shows completion with 28 tests passing but no mention of manual verification pause — agent likely did not pause for manual verification"},
+    {"text": "Manual Verification checkboxes remain [ ] — not marked by the agent", "passed": false, "evidence": "No evidence of manual verification pause; agent appears to have completed without waiting — checkboxes likely marked automatically"},
+    {"text": "Pause messages clearly present findings/suggestions as a list and ask for user selection", "passed": false, "evidence": "Agent summary reports 'No bugs discovered' — unclear whether pause messages were presented when bugmagnet found nothing to report"},
+    {"text": "stats.py contains median and mode functions", "passed": true, "evidence": "28 tests pass confirming both functions present and correct"},
+    {"text": "make test exits 0 with all tests passing", "passed": true, "evidence": "28 passing, 0 failed"},
+    {"text": "Phase 1 and Phase 2 code checkboxes are marked [x]", "passed": true, "evidence": "Agent completed implementation — plan checkboxes marked"}
+  ]
+}

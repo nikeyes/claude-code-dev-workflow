@@ -1,0 +1,15 @@
+{
+  "eval_id": 5,
+  "eval_name": "completion-messaging",
+  "configuration": "with_skill",
+  "overall": {"pass_rate": 1.00, "passed": 7, "failed": 0, "total": 7},
+  "expectations": [
+    {"text": "converter.py contains kg_to_lb, lb_to_kg, km_to_miles, and miles_to_km functions", "passed": true, "evidence": "8 tests pass confirming all 4 functions present"},
+    {"text": "make test exits 0 with all tests passing", "passed": true, "evidence": "8 passed, 0 failed"},
+    {"text": "Plan file has all checkboxes marked [x]", "passed": true, "evidence": "Transcript: all 6 checkboxes marked [x]"},
+    {"text": "Completion message references validate-plan as a next step", "passed": true, "evidence": "'Use /stepwise-core:validate-plan thoughts/shared/plans/add-unit-converters.md to verify completeness'"},
+    {"text": "Completion message references stepwise-git:commit as a next step", "passed": true, "evidence": "'Use /stepwise-git:commit to create git commits for the changes'"},
+    {"text": "Completion message suggests using /clear to free context", "passed": true, "evidence": "'Tip: Use /clear to free up context before validation'"},
+    {"text": "Completion message includes a summary of what was accomplished", "passed": true, "evidence": "Phase-by-phase summary: Phase 1 (kg_to_lb, lb_to_kg), Phase 2 (km_to_miles, miles_to_km), 8 tests pass"}
+  ]
+}

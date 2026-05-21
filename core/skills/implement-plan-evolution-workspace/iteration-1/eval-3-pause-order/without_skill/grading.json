@@ -1,0 +1,16 @@
+{
+  "eval_id": 3,
+  "eval_name": "pause-order",
+  "configuration": "without_skill",
+  "overall": {"pass_rate": 0.38, "passed": 3, "failed": 5, "total": 8},
+  "expectations": [
+    {"text": "Phase 1: bug discovery pause happens before test quality pause (correct order)", "passed": false, "evidence": "No bug discovery or test quality analysis performed"},
+    {"text": "Phase 2: bug discovery pause happens before test quality pause (correct order)", "passed": false, "evidence": "No bug discovery or test quality analysis performed"},
+    {"text": "Phase 2: manual verification pause happens AFTER test quality pause", "passed": false, "evidence": "Agent did not pause at all — ran verification command internally and completed autonomously"},
+    {"text": "Manual Verification checkboxes remain [ ] — not marked by the agent", "passed": false, "evidence": "Agent completed autonomously and likely marked all boxes — no pause for user confirmation"},
+    {"text": "Pause messages clearly present findings/suggestions as a list and ask for user selection", "passed": false, "evidence": "No pause messages presented to user at any point"},
+    {"text": "stats.py contains median and mode functions", "passed": true, "evidence": "10/10 tests pass confirming both functions present"},
+    {"text": "make test exits 0 with all tests passing", "passed": true, "evidence": "10 passed"},
+    {"text": "Phase 1 and Phase 2 code checkboxes are marked [x]", "passed": true, "evidence": "Agent completed task and updated plan"}
+  ]
+}

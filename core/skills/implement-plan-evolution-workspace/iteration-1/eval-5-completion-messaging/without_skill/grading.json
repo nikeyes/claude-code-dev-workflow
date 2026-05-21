@@ -1,0 +1,15 @@
+{
+  "eval_id": 5,
+  "eval_name": "completion-messaging",
+  "configuration": "without_skill",
+  "overall": {"pass_rate": 0.57, "passed": 4, "failed": 3, "total": 7},
+  "expectations": [
+    {"text": "converter.py contains kg_to_lb, lb_to_kg, km_to_miles, and miles_to_km functions", "passed": true, "evidence": "8 tests pass"},
+    {"text": "make test exits 0 with all tests passing", "passed": true, "evidence": "8 passed, 0 failed"},
+    {"text": "Plan file has all checkboxes marked [x]", "passed": true, "evidence": "Agent marked all 6 checkboxes [x]"},
+    {"text": "Completion message references validate-plan as a next step", "passed": false, "evidence": "No structured completion message delivered — agent returned a factual report with no next-step references"},
+    {"text": "Completion message references stepwise-git:commit as a next step", "passed": false, "evidence": "Not mentioned in completion"},
+    {"text": "Completion message suggests using /clear to free context", "passed": false, "evidence": "Not mentioned"},
+    {"text": "Completion message includes a summary of what was accomplished", "passed": true, "evidence": "Factual report described what was implemented, though not as a structured completion message"}
+  ]
+}

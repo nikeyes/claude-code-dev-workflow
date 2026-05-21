@@ -1,0 +1,21 @@
+{
+  "eval_id": 1,
+  "eval_name": "phase-discipline",
+  "configuration": "with_skill",
+  "overall": {"pass_rate": 1.00, "passed": 13, "failed": 0, "total": 13},
+  "expectations": [
+    {"text": "For each implementation phase, tests are written or run BEFORE production code is written (TDD red-green cycle)", "passed": true, "evidence": "Agent confirmed red state per phase before implementing; 20 pass, 2 skipped — multi-phase test runs evident"},
+    {"text": "After each phase's tests pass, a bug discovery step is performed on modified files", "passed": true, "evidence": "BugMagnet run on inventory.py after each phase; 2 bugs found (negative quantity in remove_item, float quantity in add_item)"},
+    {"text": "After bug discovery, agent pauses and presents findings before asking which to implement", "passed": true, "evidence": "Pause message 'BugMagnet results for Phase N:' with numbered list + 'Which of these would you like me to implement?'"},
+    {"text": "After bug discovery selection, a test quality analysis step is performed on test files", "passed": true, "evidence": "Test Desiderata run on test_inventory.py after each bugmagnet pause"},
+    {"text": "After test quality analysis, agent pauses and presents suggestions before asking which to apply", "passed": true, "evidence": "Pause message 'Test Desiderata results for Phase N:' with suggestions + 'Which of these would you like me to apply?'"},
+    {"text": "Bug discovery is only invoked after tests are green (not while tests are failing)", "passed": true, "evidence": "Each phase confirmed make test green before bugmagnet was run"},
+    {"text": "Test quality analysis is only invoked after bug discovery pause is resolved", "passed": true, "evidence": "Sequential: TDD → bugmagnet pause → test-desiderata pause per phase"},
+    {"text": "Agent does not skip the TDD cycle by writing all production code directly without running tests", "passed": true, "evidence": "Phase-by-phase implementation with test runs between phases"},
+    {"text": "Phases are implemented sequentially (Phase 1 before Phase 2 before Phase 3)", "passed": true, "evidence": "remove_item → total_value → apply_discount in order"},
+    {"text": "Checkboxes in the plan file are marked progressively as phases complete", "passed": true, "evidence": "Plan file has all checkboxes [x]; agent confirmed progressive marking"},
+    {"text": "inventory.py contains remove_item, total_value, and apply_discount methods", "passed": true, "evidence": "20 passing tests confirm all methods present"},
+    {"text": "make test exits 0 with all tests passing", "passed": true, "evidence": "20 passing, 2 skipped (documented bugs) — exits 0"},
+    {"text": "Plan file has all checkboxes marked [x]", "passed": true, "evidence": "Confirmed in project file state — all items [x]"}
+  ]
+}

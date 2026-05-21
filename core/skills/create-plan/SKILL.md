@@ -57,7 +57,7 @@ Then wait for the user's input.
    - **NEVER** read files partially - if a file is mentioned, read it completely
 
 2. **Spawn initial research tasks to gather context**:
-   Before asking the user any questions, use specialized agents to research in parallel:
+   Use specialized agents to research in parallel — do not ask the user anything yet:
 
    - Use the **stepwise-core:codebase-locator** agent to find all files related to the ticket/task
    - Use the **stepwise-core:codebase-analyzer** agent to understand how the current implementation works
@@ -80,7 +80,7 @@ Then wait for the user's input.
    - Note assumptions that need verification
    - Determine true scope based on codebase reality
 
-5. **Present informed understanding and focused questions**:
+5. **Present informed understanding — no questions**:
    ```
    Based on the ticket and my research of the codebase, I understand we need to [accurate summary].
 
@@ -88,18 +88,13 @@ Then wait for the user's input.
    - [Current implementation detail with file:line reference]
    - [Relevant pattern or constraint discovered]
    - [Potential complexity or edge case identified]
-
-   Questions that my research couldn't answer:
-   - [Specific technical question that requires human judgment]
-   - [Business logic clarification]
-   - [Design preference that affects implementation]
    ```
 
-   Only ask questions that you genuinely cannot answer through code investigation.
+   Do NOT list questions here. All open questions are resolved in Step 3 via grill-me.
 
 ### Step 2: Research & Discovery
 
-After getting initial clarifications:
+After presenting the Step 1 findings (no clarifications yet — those happen in Step 3):
 
 1. **If the user corrects any misunderstanding**:
    - DO NOT just accept the correction
@@ -131,26 +126,31 @@ After getting initial clarifications:
 
 3. **Wait for ALL sub-tasks to complete** before proceeding
 
-4. **Present findings and design options**:
+4. **Present research findings — facts only, no invented options or questions**:
    ```
    Based on my research, here's what I found:
 
    **Current State:**
    - [Key discovery about existing code]
    - [Pattern or convention to follow]
+   - [Constraint or dependency discovered]
 
-   **Design Options:**
-   1. [Option A] - [pros/cons]
-   2. [Option B] - [pros/cons]
-
-   **Open Questions:**
-   - [Technical uncertainty]
-   - [Design decision needed]
-
-   Which approach aligns best with your vision?
+   **Options mentioned in the codebase** (only if explicitly found — e.g., a features file, a comment, existing patterns):
+   - [Option explicitly referenced in file:line]
    ```
+   Do NOT invent design options or list pros/cons. Only surface options explicitly documented in the codebase. All design decisions happen in Step 3 via grill-me.
 
-### Step 3: Plan Structure Development
+### Step 3: Interrogation Phase
+
+**Do not ask questions yourself — not even one.** Use the `Skill` tool to invoke `/stepwise-core:grill-me` now.
+
+Why: grill-me walks down the decision tree one branch at a time, with a recommended answer per question. If you ask inline, you will dump a list and lose the structured resolution that makes this valuable. Any question you feel tempted to ask here belongs inside grill-me.
+
+Pass grill-me the full context from your research: current state, design options found, and all unresolved decisions. Let grill-me drive the conversation from there.
+
+Only proceed to Step 4 once grill-me has resolved all open design decisions and you have shared understanding with the user on every choice.
+
+### Step 4: Plan Structure Development
 
 Once aligned on approach:
 
@@ -171,7 +171,7 @@ Once aligned on approach:
 
 2. **Get feedback on structure** before writing details
 
-### Step 4: Detailed Plan Writing
+### Step 5: Detailed Plan Writing
 
 After structure approval:
 
@@ -283,7 +283,7 @@ After structure approval:
 - Similar implementation: `[file:line]`
 ````
 
-### Step 5: Sync and Review
+### Step 6: Sync and Review
 
 1. **Present the draft plan location**:
    ```
@@ -470,7 +470,7 @@ Assistant: Let me read that ticket file completely first...
 
 [Reads file fully]
 
-Based on the ticket, I understand we need to track parent-child relationships for Claude sub-task events in the hld daemon. Before I start planning, I have some questions...
+Based on the ticket, I understand we need to track parent-child relationships for Claude sub-task events in the hld daemon. Here's what I found in the codebase: [findings with file:line references]
 
-[Interactive process continues...]
+[Research continues, then Step 3 invokes grill-me for all design decisions...]
 ```

@@ -1,0 +1,11 @@
+{
+  "eval_id": 3,
+  "eval_name": "pause-order",
+  "configuration": "without_skill",
+  "expectations": [
+    {"text": "stats.py contains median and mode functions", "passed": true, "evidence": "grep: 2 matching def lines in stats.py"},
+    {"text": "make test exits 0 with all tests passing", "passed": true, "evidence": "make test → 28 passed in 0.02s"},
+    {"text": "Phase 1 and Phase 2 code checkboxes are marked [x]", "passed": false, "evidence": "0 [x], 12 [ ] — plan never updated"},
+    {"text": "Manual Verification checkboxes remain [ ]", "passed": true, "evidence": "All checkboxes [ ] — but only because plan was never updated at all"}
+  ]
+}
