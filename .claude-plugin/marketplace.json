@@ -12,7 +12,7 @@
     {
       "name": "stepwise-core",
       "source": "./core",
-      "version": "1.3.0",
+      "version": "1.3.1",
       "description": "Core workflow for structured development: Research → Plan → Implement → Validate with thoughts/ management",
       "keywords": ["workflow", "research", "planning", "implementation", "validation", "thoughts"]
     },

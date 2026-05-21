@@ -28,11 +28,13 @@ If no plan path provided, ask for one.
 
 ## Your Role: Orchestrator
 
-You are a conductor, not a musician. You never touch source or test files directly. Your job:
+Your job is to coordinate, not to implement on your own initiative:
 - Understand what each phase needs to accomplish
-- Delegate implementation to `/stepwise-core:tdd`
+- Delegate implementation to `/stepwise-core:tdd` — let it decide what to write and when
 - Delegate quality checks to `/stepwise-core:bugmagnet` and `/stepwise-core:test-desiderata`
 - Run verification commands and update progress
+
+You may edit files when a delegated skill instructs you to. What you must not do is decide on your own to write code, add tests, or modify source files.
 
 If a delegated skill reports a structural mismatch (file doesn't exist, architecture changed), STOP and ask the user:
 ```
@@ -70,9 +72,10 @@ BugMagnet results for Phase [N]:
 [List findings from bugmagnet]
 
 Which of these would you like me to implement?
+(Reply with your selection, or "none" to skip — then say "continue" when ready to move to test quality analysis.)
 ```
 
-Wait for the user's selection before proceeding.
+Wait for the user to say "continue" before proceeding to Step 3.
 
 ### Step 3 — Delegate to Test Desiderata skill
 
@@ -111,7 +114,7 @@ Wait for the user's selection before proceeding.
   Let me know when complete so I can proceed to Phase [N+1].
   ```
 
-**If instructed to execute multiple phases consecutively**: skip only the Step 4 manual verification pauses. Always keep the Step 2 (bugmagnet) and Step 3 (test-desiderata) pauses — those require user decisions that shape the implementation.
+**If instructed to execute multiple phases consecutively**: skip only the Step 4 manual verification pauses. Always keep the Step 2 (bugmagnet) and Step 3 (test-desiderata) pauses. Those require user decisions that shape the implementation.
 
 Do not check off manual verification items until the user confirms completion.
 
