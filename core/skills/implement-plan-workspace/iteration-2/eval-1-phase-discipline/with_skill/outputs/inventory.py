@@ -18,6 +18,8 @@ class Inventory:
         return dict(self._items[name])
 
     def remove_item(self, name, quantity):
+        if quantity < 0:
+            raise ValueError("Quantity cannot be negative")
         if name not in self._items:
             raise KeyError(name)
         if quantity > self._items[name]["quantity"]:
@@ -27,11 +29,14 @@ class Inventory:
             del self._items[name]
 
     def total_value(self):
-        return sum(item["quantity"] * item["price"] for item in self._items.values())
+        return sum(
+            item["quantity"] * item["price"]
+            for item in self._items.values()
+        )
 
     def apply_discount(self, name, percentage):
+        if percentage < 0 or percentage > 100:
+            raise ValueError("Discount must be between 0 and 100")
         if name not in self._items:
             raise KeyError(name)
-        if not (0 <= percentage <= 100):
-            raise ValueError("Discount must be between 0 and 100")
         self._items[name]["price"] *= (1 - percentage / 100)

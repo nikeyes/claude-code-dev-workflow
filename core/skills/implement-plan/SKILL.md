@@ -18,45 +18,82 @@ You are tasked with implementing an approved technical plan from `thoughts/share
 
 When given a plan path:
 - Read the plan completely and check for any existing checkmarks (- [x])
-- Read the original ticket and all files mentioned in the plan
-- **Read files fully** - never use limit/offset parameters, you need complete context
-- Think deeply about how the pieces fit together
-- Create a todo list to track your progress
-- Start implementing if you understand what needs to be done
+- Read the original ticket if referenced
+- Create a todo list to track your progress (one item per phase)
+- Then follow the Phase Cycle below for each phase
+
+**Do NOT read source or test files mentioned in the plan.** The delegated skills will read them. Your role is orchestrator: you understand the plan's structure and delegate execution. If you read the implementation files, you will be tempted to implement directly — that defeats the purpose of this skill.
 
 If no plan path provided, ask for one.
 
-## Implementation Philosophy
+## Your Role: Orchestrator
 
-Plans are carefully designed, but reality can be messy. Your job is to:
-- Follow the plan's intent while adapting to what you find
-- Implement each phase fully before moving to the next
-- Verify your work makes sense in the broader codebase context
-- Update checkboxes in the plan as you complete sections
+Your job is to coordinate, not to implement on your own initiative:
+- Understand what each phase needs to accomplish
+- Delegate implementation to `/stepwise-core:tdd` — let it decide what to write and when
+- Delegate quality checks to `/stepwise-core:bugmagnet` and `/stepwise-core:test-desiderata`
+- Run verification commands and update progress
 
-When things don't match the plan exactly, think about why and communicate clearly. The plan is your guide, but your judgment matters too.
+You may edit files when a delegated skill instructs you to. What you must not do is decide on your own to write code, add tests, or modify source files.
 
-There are two kinds of mismatches — handle them differently:
+If a delegated skill reports a structural mismatch (file doesn't exist, architecture changed), STOP and ask the user:
+```
+Issue in Phase [N]:
+Expected: [what the plan says]
+Found: [actual situation]
+Why this matters: [explanation]
 
-**Naming mismatches** (class/method/parameter named differently, but the intent is clear from context or tests):
-- Adapt to the actual codebase names — tests are the source of truth
-- Document what you adapted in the plan file as inline notes
-- Continue without pausing
+How should I proceed?
+```
 
-**Structural mismatches** (file doesn't exist, architecture changed, module split/merged, missing dependencies):
-- STOP and present the issue clearly:
-  ```
-  Issue in Phase [N]:
-  Expected: [what the plan says]
-  Found: [actual situation]
-  Why this matters: [explanation]
+## Phase Cycle
 
-  How should I proceed?
-  ```
+For **each phase** in the plan, follow this cycle in order:
 
-## Verification Approach
+### Step 1 — Delegate to TDD skill
 
-After implementing a phase:
+Invoke `/stepwise-core:tdd` using the `Skill` tool. Pass it:
+- The phase description (copy the relevant section from the plan)
+- The file paths that need to be created or modified
+- The success criteria for this phase
+
+Example argument: "Implement Phase 2 from the plan: Add TodoUpdate model to models.py. Files: src/todo_api/models.py, tests/test_models.py. Success: make test passes."
+
+TDD will read the files, write failing tests, implement, and refactor. Wait for it to complete before proceeding to Step 2.
+
+### Step 2 — Delegate to BugMagnet skill
+
+**Do not analyze bugs yourself.** Invoke `/stepwise-core:bugmagnet` using the `Skill` tool on each file modified in this phase. Wait for it to complete before presenting results to the user.
+
+After bugmagnet completes, **pause and ask the user**:
+```
+BugMagnet results for Phase [N]:
+
+[List findings from bugmagnet]
+
+Which of these would you like me to implement?
+(Reply with your selection, or "none" to skip — then say "continue" when ready to move to test quality analysis.)
+```
+
+Wait for the user to say "continue" before proceeding to Step 3.
+
+### Step 3 — Delegate to Test Desiderata skill
+
+**Do not analyze test quality yourself.** Invoke `/stepwise-core:test-desiderata` using the `Skill` tool on the test files for this phase. Wait for it to complete before presenting results to the user.
+
+After test-desiderata completes, **pause and ask the user**:
+```
+Test Desiderata results for Phase [N]:
+
+[List improvement suggestions]
+
+Which of these would you like me to apply?
+```
+
+Wait for the user's selection before proceeding.
+
+### Step 4 — Verify and Advance
+
 - Run all automated success criteria checks (usually `make check test` covers everything)
 - Fix any issues before proceeding
 - Update your progress in both the plan and your todos
@@ -77,19 +114,19 @@ After implementing a phase:
   Let me know when complete so I can proceed to Phase [N+1].
   ```
 
-If instructed to execute multiple phases consecutively, skip pauses until the last phase.
+**If instructed to execute multiple phases consecutively**: skip only the Step 4 manual verification pauses. Always keep the Step 2 (bugmagnet) and Step 3 (test-desiderata) pauses. Those require user decisions that shape the implementation.
 
 Do not check off manual verification items until the user confirms completion.
 
 
 ## If You Get Stuck
 
-When something isn't working as expected:
-- First, make sure you've read and understood all the relevant code
+When a delegated skill fails or reports issues:
+- Present the problem to the user with context from the skill's output
 - Consider if the codebase has evolved since the plan was written
-- Present the mismatch clearly and ask for guidance
+- Ask for guidance before retrying
 
-Use sub-tasks sparingly - mainly for targeted debugging or exploring unfamiliar territory.
+Do not attempt to fix issues by reading source files and implementing directly — re-invoke the skill with adjusted instructions.
 
 ## Resuming Work
 

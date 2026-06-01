@@ -28,7 +28,7 @@ Add a method to apply percentage discounts to item prices.
 - [x] Raises `KeyError` if item doesn't exist
 - [x] total_value reflects discounted prices
 
-## Phase 4: Final verification
+## Final verification
 
 - [x] All tests pass with `make test`
 - [x] All phases integrated correctly
