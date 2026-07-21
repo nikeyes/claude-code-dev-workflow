@@ -1,8 +1,9 @@
 ---
 name: commit
-description: Create git commits with user approval and no Claude attribution
-model: haiku
+description: Create git commits with user approval, semantic commit format, and no Claude attribution
+model: sonnet
 disable-model-invocation: true
+allowed-tools: Bash(git status:*) Bash(git diff:*) Bash(git log:*) Bash(git add:*) Bash(git commit:*)
 ---
 
 <!-- SPDX-License-Identifier: Apache-2.0
@@ -11,66 +12,17 @@ disable-model-invocation: true
 
 # Commit Changes
 
-You are tasked with creating git commits for the changes made during this session.
+Create git commit(s) for the changes in this session. Present a plan first, then commit only after the user confirms.
 
-## Process:
+## Rules
 
-1. **Think about what changed:**
-   - Review the conversation history and understand what was accomplished
-   - Run `git status` to see current changes
-   - Run `git diff` to understand the modifications
-   - Consider whether changes should be one commit or multiple logical commits
-
-2. **Plan your commit(s):**
-   - Identify which files belong together
-   - Draft clear, descriptive commit messages
-   - Use imperative mood in commit messages
-   - Focus on why the changes were made, not just what
-
-3. **Present your plan to the user:**
-   - List the files you plan to add for each commit
-   - Show the commit message(s) you'll use
-   - Ask: "I plan to create [N] commit(s) with these changes. Shall I proceed?"
-
-4. **Execute upon confirmation:**
-   - Use `git add` with specific files (never use `-A` or `.`)
-   - Create commits with your planned messages
-   - Show the result with `git log --oneline -n [number]`
-
-## Important:
-- **NEVER add co-author information or Claude attribution**
-- Commits should be authored solely by the user
-- Do not include any "Generated with Claude" messages
-- Do not add "Co-Authored-By" lines
-- Write commit messages as if the user wrote them
-
-## Remember:
-- You have the full context of what was done in this session
-- Group related changes together
-- Keep commits focused and atomic when possible
-- The user trusts your judgment - they asked you to commit
-
-## Completion
-
-After commits are created:
-
-1. **Show commit summary**:
-   ```bash
-   git log --oneline -n [N]  # Show the commits you just created
-   ```
-
-2. **Inform the user**:
-   ```
-   Commits created successfully
-
-   Created [N] commit(s):
-   - [commit hash] [commit message]
-   - [commit hash] [commit message]
-
-   Next steps in the workflow:
-   - Review commits with `git show [hash]`
-   - Push to remote when ready
-   - Create PR if applicable
-
-   Tip: Use `/clear` to free up context for your next task
-   ```
+- **Format**: `TYPE([SCOPE])[!]: description` (e.g. `feat(kyc): add disapproval reason to kyc mail`)
+  - **Types**: `feat`, `fix`, `refactor`, `perf`, `style`, `test`, `docs`, `build`, `ops`, `chore`, `revert`, `reapply`
+  - **Scope**: optional, contextual (never a ticket id)
+  - **Breaking change**: `!` before `:`, or a `BREAKING CHANGES:` footer
+  - **Description**: imperative present tense, lowercase, no trailing period
+  - **Body/footer**: optional; use to explain motivation and contrast with previous behavior
+- **Splitting**: group related changes; multiple commits if the changes have distinct purposes
+- **Staging**: `git add` specific files only — never `-A` or `.`
+- **Never include**: ticket identifiers (Jira, Linear, etc.), Claude attribution, `Co-Authored-By` lines
+- **Confirmation**: show the plan (files + messages) and ask before running `git commit`
