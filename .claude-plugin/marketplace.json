@@ -18,9 +18,9 @@
     {
       "name": "stepwise-git",
       "source": "./git",
-      "version": "1.1.0",
-      "description": "Git commit workflow without Claude attribution",
-      "keywords": ["git", "commit", "version-control"]
+      "version": "1.2.0",
+      "description": "Git and GitHub workflow: clean commits and rigorous PR comment review",
+      "keywords": ["git", "commit", "pr", "code-review", "github", "version-control"]
     },
     {
       "name": "stepwise-web",

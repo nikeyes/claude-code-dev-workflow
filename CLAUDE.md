@@ -21,7 +21,7 @@ This project is distributed as **4 independent Claude Code plugins** in a single
 ### Plugin 2: stepwise-git
 **Location**: `git/`
 **Components**:
-- 1 skill (commit)
+- 2 skills (commit, review-pr-comments)
 
 ### Plugin 3: stepwise-web
 **Location**: `web/`
@@ -83,8 +83,9 @@ core/                  # stepwise-core plugin
 git/                   # stepwise-git plugin
 ├── .claude-plugin/
 │   └── plugin.json
-└── skills/            # 1 skill
-    └── commit/SKILL.md
+└── skills/            # 2 skills
+    ├── commit/SKILL.md
+    └── review-pr-comments/SKILL.md
 
 web/                   # stepwise-web plugin
 ├── .claude-plugin/

@@ -1,7 +1,7 @@
 {
   "name": "stepwise-git",
-  "version": "1.1.0",
-  "description": "Git commit workflow without Claude attribution",
+  "version": "1.2.0",
+  "description": "Git and GitHub workflow: clean commits and rigorous PR comment review",
   "author": {
     "name": "Jorge Castro",
     "url": "https://github.com/nikeyes"

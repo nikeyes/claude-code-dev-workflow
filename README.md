@@ -45,12 +45,13 @@ The foundation plugin with the complete Research → Plan → Implement → Vali
 
 [→ Read more](./core/README.md)
 
-### 2. **stepwise-git** (Git Operations)
-Clean git commit workflow without Claude attribution.
+### 2. **stepwise-git** (Git & GitHub Operations)
+Clean git commit workflow without Claude attribution, plus rigorous PR comment review.
 
 **Includes:**
-- 1 skill (`commit`)
+- 2 skills (`commit`, `review-pr-comments`)
 - Smart staging and commit message generation
+- PR comment negotiation with individual inline replies
 
 [→ Read more](./git/README.md)
 
