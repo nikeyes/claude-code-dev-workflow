@@ -17,7 +17,11 @@ Review all open PR comments, present a summary with your position on each, itera
 - **Scope**: only active comments (both inline and general). Ignore resolved and outdated ones.
 - **Bias**: defend the existing code. Only accept a change with a concrete technical reason (bug, violated principle, demonstrable readability gain). Reject style preferences without objective justification.
 - **Context**: before evaluating, read the full files affected plus related files (tests, types, direct dependencies).
-- **Summary format**: after reviewing every comment, present all decisions together, one compact block per comment. Do NOT quote the full body verbatim — the user has GitHub open and can click through. Rephrase the claim in one sentence in your own words. Format:
+- **Summary format**: after reviewing every comment, present all decisions grouped by severity, one compact block per comment. Do NOT quote the full body verbatim — the user has GitHub open and can click through. Rephrase the claim in one sentence in your own words.
+
+  Extract severity from the comment's prefix when present (`[SECURITY — CRITICAL]`, `[CODE QUALITY — HIGH]`, `[TESTS — LOW]`, `[SUGGESTION]`, etc.). If no prefix, infer: correctness/security bugs → HIGH; performance, tests, or missing error paths → MEDIUM; style, docstrings, naming, "for symmetry", "for consistency" nits → LOW.
+
+  Block format per comment:
 
   ```
   N. [ACCEPT|REJECT] {path}:{line or "general"} @{user} — {your one-sentence rephrase of the claim}
@@ -27,7 +31,22 @@ Review all open PR comments, present a summary with your position on each, itera
      Link: {comment.html_url}
   ```
 
-  Then ask: "Do you agree with these positions?"
+  Present them in this order:
+
+  ```
+  HIGH — decision required:
+    <blocks>
+
+  MEDIUM — decision required:
+    <blocks>
+
+  LOW / nits — proposed REJECT in batch (unless you rescue any):
+    <blocks, but with just the one-line rephrase + link; no Reason/Alternative>
+  ```
+
+  Then ask ONE question: **"Confirm my ACCEPT/REJECT on HIGH+MEDIUM and I discard the LOW batch — or do you want to rescue any LOW?"**
+
+  Omit a section entirely if it has no comments. If ALL comments are LOW and every one would be REJECT, offer: "This round is all low-severity nits and rehashes of earlier positions. Close the round without replying?" — closing without a reply is a valid outcome when the original threads already carry your positions.
 
   Exception: if a comment is genuinely short (<3 lines) and self-contained, quoting it verbatim is fine. The rule is "don't repeat information the user can read in one glance in GitHub".
 
