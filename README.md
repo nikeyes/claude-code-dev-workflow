@@ -125,11 +125,18 @@ claude --bare \
 
 ## 🤖 Using It with Codex
 
-The same skills also run under OpenAI Codex. From a clone of this repo:
+The same skills also run under OpenAI Codex.
 
-```bash
-make install-codex
-```
+- **From a clone of this repo:**
+  ```bash
+  make install-codex
+  ```
+- **Already installed via the Claude Code marketplace?** The full repo (including `Makefile` and `codex/`) lives in `~/.claude/plugins/marketplaces/stepwise-dev/`, so:
+  ```bash
+  cd ~/.claude/plugins/marketplaces/stepwise-dev && make install-codex
+  ```
+
+> Note: `~/.claude/plugins/cache/` (where Claude Code loads the plugins from) does **not** include `Makefile` or `codex/` — only what each `plugin.json` declares. The marketplace clone is the one to use.
 
 This installs:
 
