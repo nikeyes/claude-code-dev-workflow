@@ -165,6 +165,45 @@ section() {
   echo -e "${YELLOW}▶ $1${NC}"
 }
 
+# Assert that two values are equal
+# Usage: assert_equals EXPECTED ACTUAL "description"
+assert_equals() {
+  local expected="$1"
+  local actual="$2"
+  local desc="${3:-values are equal}"
+
+  TESTS_RUN=$((TESTS_RUN + 1))
+
+  if [ "$expected" = "$actual" ]; then
+    echo -e "${GREEN}✓${NC} $desc"
+    TESTS_PASSED=$((TESTS_PASSED + 1))
+    return 0
+  else
+    echo -e "${RED}✗${NC} $desc (expected: '$expected', got: '$actual')"
+    TESTS_FAILED=$((TESTS_FAILED + 1))
+    return 1
+  fi
+}
+
+# Assert that a command exits non-zero
+# Usage: assert_fails "description" COMMAND [ARGS...]
+assert_fails() {
+  local desc="$1"
+  shift
+
+  TESTS_RUN=$((TESTS_RUN + 1))
+
+  if "$@" >/dev/null 2>&1; then
+    echo -e "${RED}✗${NC} $desc (command unexpectedly succeeded)"
+    TESTS_FAILED=$((TESTS_FAILED + 1))
+    return 1
+  else
+    echo -e "${GREEN}✓${NC} $desc"
+    TESTS_PASSED=$((TESTS_PASSED + 1))
+    return 0
+  fi
+}
+
 # Assert that a value is not empty
 # Usage: assert_not_empty VALUE "description"
 assert_not_empty() {
