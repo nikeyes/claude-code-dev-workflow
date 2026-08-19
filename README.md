@@ -136,8 +136,6 @@ The same skills also run under OpenAI Codex.
   cd ~/.claude/plugins/marketplaces/stepwise-dev && make install-codex
   ```
 
-> Note: `~/.claude/plugins/cache/` (where Claude Code loads the plugins from) does **not** include `Makefile` or `codex/` — only what each `plugin.json` declares. The marketplace clone is the one to use.
-
 This installs:
 
 - **16 skills** symlinked into `~/.agents/skills/` (13 from core, 2 from git, 1 from research) — Codex follows symlinks when scanning that directory, so edits in the repo take effect immediately
