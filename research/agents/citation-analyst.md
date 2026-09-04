@@ -5,7 +5,7 @@ tools:
   - Read
   - WebFetch
   - Grep
-model: sonnet
+model: inherit
 color: yellow
 ---
 
