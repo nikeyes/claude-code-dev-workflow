@@ -308,6 +308,11 @@ and agents are copied into `~/.codex/agents/`.
 `research-codebase`, `create-plan` and `iterate-plan` use `$ARGUMENTS`, which Codex does
 not expand — under Codex, pass the input in the message itself.
 
+`model: inherit` in a SKILL.md frontmatter makes Codex log `ignoring invalid skill
+model annotation`, once per skill that declares it. Only the annotation is dropped,
+never the skill: it loads and runs on the session's model, which is what `inherit`
+asks for anyway. The key stays because Claude Code needs it.
+
 
 ## Attribution
 
