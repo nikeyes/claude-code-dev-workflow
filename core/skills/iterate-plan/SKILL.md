@@ -2,7 +2,7 @@
 name: iterate-plan
 description: Iterate on existing implementation plans with thorough research and updates
 argument-hint: [plan-file-path] [changes to make]
-model: opus
+model: inherit
 disable-model-invocation: true
 ---
 

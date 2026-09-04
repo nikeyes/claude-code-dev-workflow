@@ -1,7 +1,7 @@
 ---
 name: commit
 description: Create git commits with user approval, semantic commit format, and no Claude attribution
-model: sonnet
+model: inherit
 disable-model-invocation: true
 allowed-tools: Bash(git status:*) Bash(git diff:*) Bash(git log:*) Bash(git add:*) Bash(git commit:*)
 ---

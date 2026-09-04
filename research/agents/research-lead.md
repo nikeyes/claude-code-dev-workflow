@@ -6,7 +6,7 @@ tools:
   - Read
   - Write
   - TodoWrite
-model: opus
+model: inherit
 color: blue
 ---
 

@@ -2,7 +2,7 @@
 name: deep-research
 description: Conduct multi-agent deep research on a topic with parallel web searches and synthesis
 argument-hint: <research topic or question>
-model: opus
+model: inherit
 disable-model-invocation: true
 ---
 

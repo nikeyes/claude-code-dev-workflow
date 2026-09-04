@@ -3,7 +3,7 @@ name: thoughts-locator
 description: Discovers relevant documents in the thoughts/ directory. Use when you need to find research, plans, notes, or tickets related to a topic.
 tools: Grep, Glob, LS
 color: cyan
-model: haiku
+model: inherit
 ---
 
 <!-- SPDX-License-Identifier: Apache-2.0
