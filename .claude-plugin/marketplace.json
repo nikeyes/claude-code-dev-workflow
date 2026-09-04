@@ -1,6 +1,6 @@
 {
   "name": "stepwise-dev",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "owner": {
     "name": "Jorge Castro",
     "email": "nikeyes@gmail.com"
@@ -12,14 +12,14 @@
     {
       "name": "stepwise-core",
       "source": "./core",
-      "version": "1.4.1",
+      "version": "1.5.0",
       "description": "Core workflow for structured development: Research → Plan → Implement → Validate with thoughts/ management",
       "keywords": ["workflow", "research", "planning", "implementation", "validation", "thoughts"]
     },
     {
       "name": "stepwise-git",
       "source": "./git",
-      "version": "1.5.1",
+      "version": "1.6.0",
       "description": "Git and GitHub workflow: semantic commits and rigorous PR comment review",
       "keywords": ["git", "commit", "pr", "code-review", "github", "version-control"]
     },
@@ -33,7 +33,7 @@
     {
       "name": "stepwise-research",
       "source": "./research",
-      "version": "1.1.1",
+      "version": "1.2.0",
       "description": "Multi-agent deep research plugin with parallel web searches and synthesis",
       "keywords": ["research", "multi-agent", "web", "synthesis", "orchestration", "citations"]
     }

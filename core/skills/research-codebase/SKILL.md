@@ -42,12 +42,12 @@ You are tasked with researching the codebase to answer user questions. Your only
 
 1. If `thoughts/` doesn't exist, initialize it:
    ```bash
-   bash ${CLAUDE_PLUGIN_ROOT}/skills/thoughts-management/scripts/thoughts-init
+   bash ${CLAUDE_PLUGIN_ROOT:-$HOME/.agents}/skills/thoughts-management/scripts/thoughts-init
    ```
 
 2. Gather metadata:
    ```bash
-   bash ${CLAUDE_PLUGIN_ROOT}/skills/thoughts-management/scripts/thoughts-metadata
+   bash ${CLAUDE_PLUGIN_ROOT:-$HOME/.agents}/skills/thoughts-management/scripts/thoughts-metadata
    ```
 
 3. Write the document to `thoughts/shared/research/YYYY-MM-DD-description.md` (add `ENG-XXXX-` after the date if there's a ticket number). Use this structure:

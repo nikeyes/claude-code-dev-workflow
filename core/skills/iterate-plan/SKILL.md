@@ -128,7 +128,7 @@ Get user confirmation before proceeding.
    - Check if `thoughts/` directory exists
    - If it doesn't exist, use the thoughts-management Skill to initialize it:
      ```bash
-     bash ${CLAUDE_PLUGIN_ROOT}/skills/thoughts-management/scripts/thoughts-init
+     bash ${CLAUDE_PLUGIN_ROOT:-$HOME/.agents}/skills/thoughts-management/scripts/thoughts-init
      ```
    - This ensures the directory structure is properly set up
 

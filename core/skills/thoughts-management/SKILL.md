@@ -27,7 +27,7 @@ Creates the complete thoughts/ directory structure in the current project.
 
 **Command:**
 ```bash
-bash ${CLAUDE_PLUGIN_ROOT}/skills/thoughts-management/scripts/thoughts-init
+bash ${CLAUDE_PLUGIN_ROOT:-$HOME/.agents}/skills/thoughts-management/scripts/thoughts-init
 ```
 
 **What it does:**
@@ -46,7 +46,7 @@ Generates git and project metadata for document frontmatter.
 
 **Command:**
 ```bash
-bash ${CLAUDE_PLUGIN_ROOT}/skills/thoughts-management/scripts/thoughts-metadata
+bash ${CLAUDE_PLUGIN_ROOT:-$HOME/.agents}/skills/thoughts-management/scripts/thoughts-metadata
 ```
 
 **Output format:**
@@ -74,7 +74,7 @@ Timestamp For Filename: 2025-01-12_14-30-45
 1. Need to create document with frontmatter
 2. **Gather metadata:**
    ```bash
-   bash ${CLAUDE_PLUGIN_ROOT}/skills/thoughts-management/scripts/thoughts-metadata
+   bash ${CLAUDE_PLUGIN_ROOT:-$HOME/.agents}/skills/thoughts-management/scripts/thoughts-metadata
    ```
 3. Use output to populate YAML frontmatter fields
 4. Create the document
@@ -120,12 +120,12 @@ Default username: `nikey_es`
 
 **Solution:** Run chmod:
 ```bash
-chmod +x ${CLAUDE_PLUGIN_ROOT}/skills/thoughts-management/scripts/*
+chmod +x ${CLAUDE_PLUGIN_ROOT:-$HOME/.agents}/skills/thoughts-management/scripts/*
 ```
 
 ## Script reference
 
-All scripts are located in: `${CLAUDE_PLUGIN_ROOT}/skills/thoughts-management/scripts/`
+All scripts are located in: `${CLAUDE_PLUGIN_ROOT:-$HOME/.agents}/skills/thoughts-management/scripts/`
 
 | Script | Purpose | When to use |
 |--------|---------|-------------|

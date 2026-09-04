@@ -123,6 +123,32 @@ claude --bare \
 
 `--bare` disables plugin sync (so installed plugins are ignored) but still loads the directories you pass via `--plugin-dir`. This means your local changes are tested in isolation without needing to reinstall anything.
 
+## 🤖 Using It with Codex
+
+The same skills also run under OpenAI Codex.
+
+- **From a clone of this repo:**
+  ```bash
+  make install-codex
+  ```
+- **Already installed via the Claude Code marketplace?** The full repo (including `Makefile` and `codex/`) lives in `~/.claude/plugins/marketplaces/stepwise-dev/`, so:
+  ```bash
+  cd ~/.claude/plugins/marketplaces/stepwise-dev && make install-codex
+  ```
+
+This installs:
+
+- **16 skills** symlinked into `~/.agents/skills/` (13 from core, 2 from git, 1 from research) — Codex follows symlinks when scanning that directory, so edits in the repo take effect immediately
+- **9 agents** copied into `~/.codex/agents/` as TOML, generated from the agent markdown by `codex/transpile-agents.sh`
+
+Regenerate the agents after editing any `*/agents/*.md` with `make transpile-codex`; `make check-codex` fails if they're out of sync.
+
+### Known limitations under Codex
+
+- `research-codebase`, `create-plan` and `iterate-plan` use `$ARGUMENTS`, which Codex does not expand. You'll see the literal string — pass your input in the message itself instead.
+- Codex only delegates to subagents on an explicit instruction, so the skills spell out the parallel spawns. If a skill investigates in its main context instead of spawning agents, say so explicitly in your prompt.
+- Skills that are user-invoked only carry an `agents/openai.yaml` opting out of implicit invocation. This is documented for the ChatGPT desktop app; whether the Codex CLI honors it is unverified.
+
 ## 🧪 Try It Out
 
 Don't have a project to test with? Use [stepwise-todo-api-test](https://github.com/nikeyes/stepwise-todo-api-test) — a sample repository designed for testing these plugins.

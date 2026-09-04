@@ -71,6 +71,15 @@ assert_file_exists "core/skills/iterate-plan/SKILL.md" "iterate-plan skill"
 assert_file_exists "core/skills/implement-plan/SKILL.md" "implement-plan skill"
 assert_file_exists "core/skills/validate-plan/SKILL.md" "validate-plan skill"
 
+# Skills (practices)
+assert_file_exists "core/skills/tdd/SKILL.md" "tdd skill"
+assert_file_exists "core/skills/grill-me/SKILL.md" "grill-me skill"
+assert_file_exists "core/skills/bugmagnet/SKILL.md" "bugmagnet skill"
+assert_file_exists "core/skills/hamburger-method/SKILL.md" "hamburger-method skill"
+assert_file_exists "core/skills/small-safe-steps/SKILL.md" "small-safe-steps skill"
+assert_file_exists "core/skills/story-splitting/SKILL.md" "story-splitting skill"
+assert_file_exists "core/skills/test-desiderata/SKILL.md" "test-desiderata skill"
+
 # Agents
 assert_file_exists "core/agents/codebase-locator.md" "codebase-locator agent"
 assert_file_exists "core/agents/codebase-analyzer.md" "codebase-analyzer agent"
@@ -98,6 +107,7 @@ section "Test 3: stepwise-git plugin"
 assert_file_exists "git/.claude-plugin/plugin.json" "git/plugin.json exists"
 assert_file_exists "git/README.md" "git/README.md exists"
 assert_file_exists "git/skills/commit/SKILL.md" "commit skill exists"
+assert_file_exists "git/skills/review-pr-comments/SKILL.md" "review-pr-comments skill exists"
 
 # ============================================================================
 # Test 4: Web plugin structure (stepwise-web)
@@ -109,11 +119,57 @@ assert_file_exists "web/README.md" "web/README.md exists"
 assert_file_exists "web/agents/web-search-researcher.md" "web-search-researcher agent exists"
 
 # ============================================================================
-# Test 5: Root documentation
+# Test 5: Research plugin structure (stepwise-research)
 # ============================================================================
-section "Test 5: Root documentation"
+section "Test 5: stepwise-research plugin"
+
+assert_file_exists "research/.claude-plugin/plugin.json" "research/plugin.json exists"
+assert_file_exists "research/README.md" "research/README.md exists"
+assert_file_exists "research/skills/deep-research/SKILL.md" "deep-research skill exists"
+assert_file_exists "research/skills/deep-research/scripts/generate-report" "generate-report exists"
+assert_executable "research/skills/deep-research/scripts/generate-report" "generate-report is executable"
+assert_file_exists "research/agents/research-lead.md" "research-lead agent exists"
+assert_file_exists "research/agents/research-worker.md" "research-worker agent exists"
+assert_file_exists "research/agents/citation-analyst.md" "citation-analyst agent exists"
+
+# ============================================================================
+# Test 6: Codex compatibility layer
+# ============================================================================
+section "Test 6: codex/"
+
+assert_file_exists "codex/transpile-agents.sh" "transpile-agents.sh exists"
+assert_executable "codex/transpile-agents.sh" "transpile-agents.sh is executable"
+assert_file_exists "codex/install.sh" "install.sh exists"
+assert_executable "codex/install.sh" "install.sh is executable"
+
+for agent in codebase-locator codebase-analyzer codebase-pattern-finder \
+             thoughts-locator thoughts-analyzer \
+             research-lead research-worker citation-analyst web-search-researcher; do
+  assert_file_exists "codex/agents/$agent.toml" "$agent.toml is generated"
+  # An empty file would satisfy existence alone; require real generated content.
+  assert_contains "codex/agents/$agent.toml" "^name = \"$agent\"$" "$agent.toml declares its name"
+  assert_contains "codex/agents/$agent.toml" "^developer_instructions" "$agent.toml has instructions"
+done
+
+# Every skill Claude Code opts out of implicit invocation must carry the Codex
+# equivalent. The list is derived from the frontmatter rather than hardcoded, so
+# a new opt-out skill that forgets its openai.yaml fails here.
+OPT_OUT_SKILLS="$(grep -rl '^disable-model-invocation: *true' --include="SKILL.md" core git research web | sort)"
+assert_not_empty "$OPT_OUT_SKILLS" "found skills that opt out of implicit invocation"
+
+while IFS= read -r skill_md; do
+  skill="$(dirname "$skill_md")"
+  assert_contains "$skill/agents/openai.yaml" "allow_implicit_invocation: false" \
+    "$(basename "$skill") opts out of implicit invocation"
+done <<< "$OPT_OUT_SKILLS"
+
+# ============================================================================
+# Test 7: Root documentation
+# ============================================================================
+section "Test 7: Root documentation"
 
 assert_file_exists "README.md" "README.md exists"
+assert_file_exists "AGENTS.md" "AGENTS.md exists"
 assert_file_exists "CLAUDE.md" "CLAUDE.md exists"
 assert_file_exists ".gitignore" ".gitignore exists"
 assert_contains "README.md" "stepwise-dev" "README documents marketplace"
