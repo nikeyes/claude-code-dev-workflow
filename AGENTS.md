@@ -110,7 +110,8 @@ research/              # stepwise-research plugin
 codex/                 # OpenAI Codex compatibility layer
 ├── agents/*.toml      # 9 generated agent definitions
 ├── transpile-agents.sh
-└── install.sh
+├── install.sh
+└── uninstall.sh
 
 test/                  # Automated bash tests (for development)
 ```
@@ -273,7 +274,8 @@ artifacts are the nine agent `.toml` files.
 codex/
 ├── agents/*.toml          # GENERATED — do not edit by hand
 ├── transpile-agents.sh    # core|research|web/agents/*.md -> codex/agents/*.toml
-└── install.sh             # symlinks skills + copies agents
+├── install.sh             # symlinks skills + copies agents
+└── uninstall.sh           # removes only what install.sh created
 ```
 
 ### Install
@@ -292,6 +294,11 @@ and agents are copied into `~/.codex/agents/`.
   as the Codex install location; it is a convention, not a detection, and `install.sh`
   must keep honoring it.
 - **`agents/openai.yaml`** in a skill preserves `disable-model-invocation: true` for Codex.
+  The test suite derives the list of skills needing one from the frontmatter, so a new
+  opt-out skill without its `openai.yaml` fails `make test`.
+- **`model: inherit`** transpiles to *no* `model` key in the TOML: a Codex agent without
+  one runs on the session's configured model, which is what `inherit` means. The
+  `haiku`/`sonnet`/`opus` mappings remain for an agent that deliberately pins a model.
 - Agents are regenerated with `make transpile-codex`. `make check-codex` (wired into
   `make ci`) fails if a `.md` changed without regenerating, if a TOML is malformed, or
   if a bare `${CLAUDE_PLUGIN_ROOT}` appears without its `:-` default.

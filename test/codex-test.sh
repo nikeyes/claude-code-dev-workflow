@@ -155,10 +155,10 @@ assert_contains "$OUT_1/codebase-locator.toml" 'sandbox_mode = "read-only"' \
 READONLY_COUNT="$(grep -l 'sandbox_mode = "read-only"' "$OUT_1"/*.toml | wc -l | tr -d ' ')"
 assert_equals "8" "$READONLY_COUNT" "8 of 9 agents are read-only"
 
-# Model mapping is what makes the agents usable in Codex at all.
-assert_contains "$OUT_1/codebase-locator.toml" 'model = "gpt-5.6-luna"' "haiku maps to luna"
-assert_contains "$OUT_1/codebase-analyzer.toml" 'model = "gpt-5.6-terra"' "sonnet maps to terra"
-assert_contains "$OUT_1/research-lead.toml" 'model = "gpt-5.6"' "opus maps to gpt-5.6"
+# Every agent declares `model: inherit`, which maps to pinning no model at all:
+# a Codex agent without a model key runs on whatever the session config says.
+PINNED_COUNT="$(grep -l '^model = ' "$OUT_1"/*.toml | wc -l | tr -d ' ')"
+assert_equals "0" "$PINNED_COUNT" "inherit pins no model on any agent"
 
 # ============================================================================
 # Summary

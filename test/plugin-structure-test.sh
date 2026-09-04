@@ -151,13 +151,17 @@ for agent in codebase-locator codebase-analyzer codebase-pattern-finder \
   assert_contains "codex/agents/$agent.toml" "^developer_instructions" "$agent.toml has instructions"
 done
 
-# Skills that must not be implicitly invocable in Codex
-for skill in core/skills/research-codebase core/skills/create-plan core/skills/iterate-plan \
-             core/skills/implement-plan core/skills/validate-plan \
-             git/skills/commit git/skills/review-pr-comments research/skills/deep-research; do
+# Every skill Claude Code opts out of implicit invocation must carry the Codex
+# equivalent. The list is derived from the frontmatter rather than hardcoded, so
+# a new opt-out skill that forgets its openai.yaml fails here.
+OPT_OUT_SKILLS="$(grep -rl '^disable-model-invocation: *true' --include="SKILL.md" core git research web | sort)"
+assert_not_empty "$OPT_OUT_SKILLS" "found skills that opt out of implicit invocation"
+
+while IFS= read -r skill_md; do
+  skill="$(dirname "$skill_md")"
   assert_contains "$skill/agents/openai.yaml" "allow_implicit_invocation: false" \
     "$(basename "$skill") opts out of implicit invocation"
-done
+done <<< "$OPT_OUT_SKILLS"
 
 # ============================================================================
 # Test 7: Root documentation
