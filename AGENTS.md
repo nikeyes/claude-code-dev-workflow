@@ -11,7 +11,7 @@ The workflow operates entirely locally without cloud dependencies and uses a `th
 
 ## Multi-Plugin Architecture
 
-This project is distributed as **5 independent Claude Code plugins** in a single marketplace:
+This project is distributed as **6 independent Claude Code plugins** in a single marketplace:
 
 ### Plugin 1: stepwise-core
 **Location**: `core/`
@@ -40,6 +40,11 @@ This project is distributed as **5 independent Claude Code plugins** in a single
 **Components**:
 - 1 skill (frontend-slides) with a large template pack
 
+### Plugin 6: stepwise-diagrams
+**Location**: `diagrams/` (vendored from `cathrynlavery/diagram-design`, MIT)
+**Components**:
+- 1 skill (diagram-design) with 38+ editorial diagram types (architecture, flowchart, sequence, ER, sankey, etc.) as self-contained HTML/SVG
+
 **Installation**:
 ```bash
 # Add marketplace
@@ -51,6 +56,7 @@ claude plugin install stepwise-git@stepwise-dev
 claude plugin install stepwise-web@stepwise-dev
 claude plugin install stepwise-research@stepwise-dev
 claude plugin install stepwise-slides@stepwise-dev
+claude plugin install stepwise-diagrams@stepwise-dev
 ```
 
 See README.md for detailed installation instructions.
@@ -121,6 +127,13 @@ slides/                # stepwise-slides plugin (vendored via git subtree)
         ├── SKILL.md
         └── ...        # template pack
 
+diagrams/              # stepwise-diagrams plugin (vendored via git subtree)
+├── LICENSE            # Upstream MIT — preserved for attribution
+├── .claude-plugin/plugin.json
+└── skills/diagram-design/
+    ├── SKILL.md
+    └── ...            # references, assets, diagram type packs
+
 codex/                 # OpenAI Codex compatibility layer
 ├── agents/*.toml      # 9 generated agent definitions
 ├── transpile-agents.sh
@@ -141,6 +154,7 @@ claude plugin install stepwise-git@stepwise-dev
 claude plugin install stepwise-web@stepwise-dev
 claude plugin install stepwise-research@stepwise-dev
 claude plugin install stepwise-slides@stepwise-dev
+claude plugin install stepwise-diagrams@stepwise-dev
 # Restart Claude Code
 
 # That's it! All components are included in the respective plugins
@@ -352,8 +366,31 @@ git subtree pull \
 If the pull brings meaningful changes, patch-bump `stepwise-slides` in both
 `plugin.json`-mirroring entries per `.claude/rules/versioning.md`.
 
+`stepwise-diagrams` is imported verbatim from
+[`cathrynlavery/diagram-design`](https://github.com/cathrynlavery/diagram-design)
+(MIT, author Cathryn Lavery) under the `diagrams/` prefix via `git subtree`.
+Upstream attribution is preserved via `diagrams/LICENSE`.
+
+Do **not** edit files under `diagrams/`. Same rule as above: every future
+`git subtree pull` must succeed without conflicts.
+
+Optional sync one-liner (run manually, on demand):
+
+```bash
+git subtree pull \
+  --prefix=diagrams \
+  https://github.com/cathrynlavery/diagram-design.git \
+  main --squash
+```
+
+If the pull brings meaningful changes, patch-bump `stepwise-diagrams` in
+`.claude-plugin/marketplace.json` and the top-level marketplace `version` per
+`.claude/rules/versioning.md`.
+
 ## Attribution
 
 This project is derived from [HumanLayer](https://github.com/humanlayer/humanlayer) and adapted for local-only operation. All `.claude/` components are modified versions licensed under Apache License 2.0.
 
 `stepwise-slides` is vendored from [zarazhangrui/frontend-slides](https://github.com/zarazhangrui/frontend-slides) by Zara Zhang under the MIT License.
+
+`stepwise-diagrams` is vendored from [cathrynlavery/diagram-design](https://github.com/cathrynlavery/diagram-design) by Cathryn Lavery under the MIT License.

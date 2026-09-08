@@ -14,7 +14,8 @@ count=0
 for skill in "$REPO_ROOT"/core/skills/*/ \
              "$REPO_ROOT"/git/skills/*/ \
              "$REPO_ROOT"/research/skills/*/ \
-             "$REPO_ROOT"/slides/plugins/frontend-slides/skills/*/; do
+             "$REPO_ROOT"/slides/plugins/frontend-slides/skills/*/ \
+             "$REPO_ROOT"/diagrams/skills/*/; do
   case "$skill" in *-workspace/*) continue ;; esac
   [ -f "$skill/SKILL.md" ] || continue
 
