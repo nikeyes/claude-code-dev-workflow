@@ -94,4 +94,4 @@ git/skills/commit-workspace/iteration-*/eval-*/*/transcript.md
 **/iteration-*/review.html
 
 # Thoughts generated during eval runs (outputs, not source)
-thoughts/
+core/skills/*-workspace/**/thoughts/
