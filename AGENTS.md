@@ -11,7 +11,7 @@ The workflow operates entirely locally without cloud dependencies and uses a `th
 
 ## Multi-Plugin Architecture
 
-This project is distributed as **4 independent Claude Code plugins** in a single marketplace:
+This project is distributed as **5 independent Claude Code plugins** in a single marketplace:
 
 ### Plugin 1: stepwise-core
 **Location**: `core/`
@@ -35,6 +35,11 @@ This project is distributed as **4 independent Claude Code plugins** in a single
 - 1 skill (deep-research, includes generate-report script)
 - 3 specialized agents (research-lead, research-worker, citation-analyst)
 
+### Plugin 5: stepwise-slides
+**Location**: `slides/plugins/frontend-slides/` (vendored from `zarazhangrui/frontend-slides`, MIT)
+**Components**:
+- 1 skill (frontend-slides) with a large template pack
+
 **Installation**:
 ```bash
 # Add marketplace
@@ -45,6 +50,7 @@ claude plugin install stepwise-core@stepwise-dev
 claude plugin install stepwise-git@stepwise-dev
 claude plugin install stepwise-web@stepwise-dev
 claude plugin install stepwise-research@stepwise-dev
+claude plugin install stepwise-slides@stepwise-dev
 ```
 
 See README.md for detailed installation instructions.
@@ -107,6 +113,14 @@ research/              # stepwise-research plugin
         └── scripts/
             └── generate-report
 
+slides/                # stepwise-slides plugin (vendored via git subtree)
+├── LICENSE            # Upstream MIT — preserved for attribution
+└── plugins/frontend-slides/
+    ├── .claude-plugin/plugin.json
+    └── skills/frontend-slides/
+        ├── SKILL.md
+        └── ...        # template pack
+
 codex/                 # OpenAI Codex compatibility layer
 ├── agents/*.toml      # 9 generated agent definitions
 ├── transpile-agents.sh
@@ -126,6 +140,7 @@ claude plugin install stepwise-core@stepwise-dev
 claude plugin install stepwise-git@stepwise-dev
 claude plugin install stepwise-web@stepwise-dev
 claude plugin install stepwise-research@stepwise-dev
+claude plugin install stepwise-slides@stepwise-dev
 # Restart Claude Code
 
 # That's it! All components are included in the respective plugins
@@ -314,6 +329,31 @@ never the skill: it loads and runs on the session's model, which is what `inheri
 asks for anyway. The key stays because Claude Code needs it.
 
 
+## Vendored plugins
+
+`stepwise-slides` is imported verbatim from
+[`zarazhangrui/frontend-slides`](https://github.com/zarazhangrui/frontend-slides)
+(MIT, author Zara Zhang) under the `slides/` prefix via `git subtree`. Upstream
+attribution is preserved via `slides/LICENSE`.
+
+Do **not** edit files under `slides/`. Every future `git subtree pull` must
+succeed without conflicts; if divergence is needed, wrap the upstream skill
+externally instead of patching in place.
+
+Optional sync one-liner (run manually, on demand):
+
+```bash
+git subtree pull \
+  --prefix=slides \
+  https://github.com/zarazhangrui/frontend-slides.git \
+  main --squash
+```
+
+If the pull brings meaningful changes, patch-bump `stepwise-slides` in both
+`plugin.json`-mirroring entries per `.claude/rules/versioning.md`.
+
 ## Attribution
 
 This project is derived from [HumanLayer](https://github.com/humanlayer/humanlayer) and adapted for local-only operation. All `.claude/` components are modified versions licensed under Apache License 2.0.
+
+`stepwise-slides` is vendored from [zarazhangrui/frontend-slides](https://github.com/zarazhangrui/frontend-slides) by Zara Zhang under the MIT License.

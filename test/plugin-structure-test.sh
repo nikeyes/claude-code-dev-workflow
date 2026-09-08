@@ -133,9 +133,44 @@ assert_file_exists "research/agents/research-worker.md" "research-worker agent e
 assert_file_exists "research/agents/citation-analyst.md" "citation-analyst agent exists"
 
 # ============================================================================
-# Test 6: Codex compatibility layer
+# Test 6: Slides plugin structure (stepwise-slides, vendored)
 # ============================================================================
-section "Test 6: codex/"
+section "Test 6: stepwise-slides plugin"
+
+assert_file_exists "slides/LICENSE" "slides/LICENSE exists"
+assert_contains "slides/LICENSE" "MIT License" "slides/LICENSE is MIT"
+assert_file_exists "slides/plugins/frontend-slides/.claude-plugin/plugin.json" "vendored plugin.json exists"
+assert_file_exists "slides/plugins/frontend-slides/skills/frontend-slides/SKILL.md" "frontend-slides SKILL.md exists"
+assert_contains "slides/plugins/frontend-slides/skills/frontend-slides/SKILL.md" "^name: frontend-slides" "SKILL.md declares name"
+
+if command -v jq >/dev/null 2>&1; then
+  UPSTREAM_NAME=$(jq -r '.name // empty' slides/plugins/frontend-slides/.claude-plugin/plugin.json)
+  if [ "$UPSTREAM_NAME" = "frontend-slides" ]; then
+    TESTS_RUN=$((TESTS_RUN + 1))
+    TESTS_PASSED=$((TESTS_PASSED + 1))
+    echo -e "${GREEN}✓${NC} vendored plugin.json .name == frontend-slides"
+  else
+    TESTS_RUN=$((TESTS_RUN + 1))
+    TESTS_FAILED=$((TESTS_FAILED + 1))
+    echo -e "${RED}✗${NC} vendored plugin.json .name is '$UPSTREAM_NAME'"
+  fi
+
+  SLIDES_SOURCE=$(jq -r '.plugins[] | select(.name=="stepwise-slides") | .source' .claude-plugin/marketplace.json)
+  if [ "$SLIDES_SOURCE" = "./slides/plugins/frontend-slides" ]; then
+    TESTS_RUN=$((TESTS_RUN + 1))
+    TESTS_PASSED=$((TESTS_PASSED + 1))
+    echo -e "${GREEN}✓${NC} marketplace entry stepwise-slides points at vendored dir"
+  else
+    TESTS_RUN=$((TESTS_RUN + 1))
+    TESTS_FAILED=$((TESTS_FAILED + 1))
+    echo -e "${RED}✗${NC} stepwise-slides source is '$SLIDES_SOURCE'"
+  fi
+fi
+
+# ============================================================================
+# Test 7: Codex compatibility layer
+# ============================================================================
+section "Test 7: codex/"
 
 assert_file_exists "codex/transpile-agents.sh" "transpile-agents.sh exists"
 assert_executable "codex/transpile-agents.sh" "transpile-agents.sh is executable"
@@ -164,9 +199,9 @@ while IFS= read -r skill_md; do
 done <<< "$OPT_OUT_SKILLS"
 
 # ============================================================================
-# Test 7: Root documentation
+# Test 8: Root documentation
 # ============================================================================
-section "Test 7: Root documentation"
+section "Test 8: Root documentation"
 
 assert_file_exists "README.md" "README.md exists"
 assert_file_exists "AGENTS.md" "AGENTS.md exists"

@@ -1,6 +1,6 @@
 {
   "name": "stepwise-dev",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "owner": {
     "name": "Jorge Castro",
     "email": "nikeyes@gmail.com"
@@ -36,6 +36,17 @@
       "version": "1.2.0",
       "description": "Multi-agent deep research plugin with parallel web searches and synthesis",
       "keywords": ["research", "multi-agent", "web", "synthesis", "orchestration", "citations"]
+    },
+    {
+      "name": "stepwise-slides",
+      "source": "./slides/plugins/frontend-slides",
+      "version": "1.0.0",
+      "description": "Create beautiful HTML slides from a coding agent — vendored from zarazhangrui/frontend-slides (MIT)",
+      "author": {
+        "name": "Zara Zhang",
+        "url": "https://github.com/zarazhangrui/frontend-slides"
+      },
+      "keywords": ["slides", "presentation", "html", "generative-ui", "vendored"]
     }
   ]
 }
