@@ -35,11 +35,11 @@ section "Test 1: Clean install"
 HOME_1="$(fresh_home)"
 INSTALL_OUT="$(HOME="$HOME_1" ./codex/install.sh 2>&1)"
 
-assert_output_contains "$INSTALL_OUT" "Installed 17 skills" "installs exactly 17 skills"
+assert_output_contains "$INSTALL_OUT" "Installed 18 skills" "installs exactly 18 skills"
 assert_output_contains "$INSTALL_OUT" "Installed 9 agents" "installs exactly 9 agents"
 
 SKILL_COUNT="$(find "$HOME_1/.agents/skills" -maxdepth 1 -mindepth 1 | wc -l | tr -d ' ')"
-assert_equals "17" "$SKILL_COUNT" "17 entries land in ~/.agents/skills"
+assert_equals "18" "$SKILL_COUNT" "18 entries land in ~/.agents/skills"
 
 AGENT_COUNT="$(find "$HOME_1/.codex/agents" -name '*.toml' | wc -l | tr -d ' ')"
 assert_equals "9" "$AGENT_COUNT" "9 agent TOMLs land in ~/.codex/agents"
@@ -75,7 +75,7 @@ else
 fi
 
 SKILL_COUNT_2="$(find "$HOME_1/.agents/skills" -maxdepth 1 -mindepth 1 | wc -l | tr -d ' ')"
-assert_equals "17" "$SKILL_COUNT_2" "re-install does not duplicate skills"
+assert_equals "18" "$SKILL_COUNT_2" "re-install does not duplicate skills"
 
 # ============================================================================
 # Test 4: REGRESSION - install refuses to clobber a real directory

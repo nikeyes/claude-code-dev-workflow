@@ -168,9 +168,44 @@ if command -v jq >/dev/null 2>&1; then
 fi
 
 # ============================================================================
-# Test 7: Codex compatibility layer
+# Test 7: Diagrams plugin structure (stepwise-diagrams, vendored)
 # ============================================================================
-section "Test 7: codex/"
+section "Test 7: stepwise-diagrams plugin"
+
+assert_file_exists "diagrams/LICENSE" "diagrams/LICENSE exists"
+assert_contains "diagrams/LICENSE" "MIT License" "diagrams/LICENSE is MIT"
+assert_file_exists "diagrams/.claude-plugin/plugin.json" "vendored plugin.json exists"
+assert_file_exists "diagrams/skills/diagram-design/SKILL.md" "diagram-design SKILL.md exists"
+assert_contains "diagrams/skills/diagram-design/SKILL.md" "^name: diagram-design" "SKILL.md declares name"
+
+if command -v jq >/dev/null 2>&1; then
+  UPSTREAM_NAME=$(jq -r '.name // empty' diagrams/.claude-plugin/plugin.json)
+  if [ "$UPSTREAM_NAME" = "diagram-design" ]; then
+    TESTS_RUN=$((TESTS_RUN + 1))
+    TESTS_PASSED=$((TESTS_PASSED + 1))
+    echo -e "${GREEN}✓${NC} vendored plugin.json .name == diagram-design"
+  else
+    TESTS_RUN=$((TESTS_RUN + 1))
+    TESTS_FAILED=$((TESTS_FAILED + 1))
+    echo -e "${RED}✗${NC} vendored plugin.json .name is '$UPSTREAM_NAME'"
+  fi
+
+  DIAGRAMS_SOURCE=$(jq -r '.plugins[] | select(.name=="stepwise-diagrams") | .source' .claude-plugin/marketplace.json)
+  if [ "$DIAGRAMS_SOURCE" = "./diagrams" ]; then
+    TESTS_RUN=$((TESTS_RUN + 1))
+    TESTS_PASSED=$((TESTS_PASSED + 1))
+    echo -e "${GREEN}✓${NC} marketplace entry stepwise-diagrams points at vendored dir"
+  else
+    TESTS_RUN=$((TESTS_RUN + 1))
+    TESTS_FAILED=$((TESTS_FAILED + 1))
+    echo -e "${RED}✗${NC} stepwise-diagrams source is '$DIAGRAMS_SOURCE'"
+  fi
+fi
+
+# ============================================================================
+# Test 8: Codex compatibility layer
+# ============================================================================
+section "Test 8: codex/"
 
 assert_file_exists "codex/transpile-agents.sh" "transpile-agents.sh exists"
 assert_executable "codex/transpile-agents.sh" "transpile-agents.sh is executable"
@@ -199,9 +234,9 @@ while IFS= read -r skill_md; do
 done <<< "$OPT_OUT_SKILLS"
 
 # ============================================================================
-# Test 8: Root documentation
+# Test 9: Root documentation
 # ============================================================================
-section "Test 8: Root documentation"
+section "Test 9: Root documentation"
 
 assert_file_exists "README.md" "README.md exists"
 assert_file_exists "AGENTS.md" "AGENTS.md exists"
