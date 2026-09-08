@@ -11,7 +11,10 @@ AGENTS_DIR="$HOME/.codex/agents"
 mkdir -p "$SKILLS_DIR" "$AGENTS_DIR"
 
 count=0
-for skill in "$REPO_ROOT"/core/skills/*/ "$REPO_ROOT"/git/skills/*/ "$REPO_ROOT"/research/skills/*/; do
+for skill in "$REPO_ROOT"/core/skills/*/ \
+             "$REPO_ROOT"/git/skills/*/ \
+             "$REPO_ROOT"/research/skills/*/ \
+             "$REPO_ROOT"/slides/plugins/frontend-slides/skills/*/; do
   case "$skill" in *-workspace/*) continue ;; esac
   [ -f "$skill/SKILL.md" ] || continue
 

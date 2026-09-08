@@ -34,7 +34,7 @@ The faster AI generates code, the more these practices matter:
 
 ## 📦 Available Plugins
 
-This repository contains **4 independent plugins** that can be installed separately based on your needs:
+This repository contains **5 independent plugins** that can be installed separately based on your needs:
 
 ### 1. **stepwise-core** (Core Workflow)
 The foundation plugin with the complete Research → Plan → Implement → Validate cycle.
@@ -74,6 +74,12 @@ Advanced multi-agent research system with parallel web searches and synthesis.
 
 [→ Read more](./research/README.md)
 
+### 5. **stepwise-slides** (HTML Slide Decks)
+Generate beautiful HTML presentations from a coding agent. **Vendored** from [zarazhangrui/frontend-slides](https://github.com/zarazhangrui/frontend-slides) (MIT, author Zara Zhang).
+
+**Includes:**
+- 1 skill (`frontend-slides`) with a large template pack
+
 ## 🚀 Installation
 
 ### Option 1: Install All Plugins (Recommended for first-time users)
@@ -86,6 +92,7 @@ claude plugin install stepwise-core@stepwise-dev
 claude plugin install stepwise-git@stepwise-dev
 claude plugin install stepwise-web@stepwise-dev
 claude plugin install stepwise-research@stepwise-dev
+claude plugin install stepwise-slides@stepwise-dev
 ```
 
 ### Option 2: Install Only What You Need
@@ -105,6 +112,9 @@ claude plugin install stepwise-web@stepwise-dev
 
 # Optionally add multi-agent deep research
 claude plugin install stepwise-research@stepwise-dev
+
+# Optionally add HTML slide generation (vendored)
+claude plugin install stepwise-slides@stepwise-dev
 ```
 
 **Restart Claude Code after installation.**
@@ -138,7 +148,7 @@ The same skills also run under OpenAI Codex.
 
 This installs:
 
-- **16 skills** symlinked into `~/.agents/skills/` (13 from core, 2 from git, 1 from research) — Codex follows symlinks when scanning that directory, so edits in the repo take effect immediately
+- **17 skills** symlinked into `~/.agents/skills/` (13 from core, 2 from git, 1 from research, 1 from vendored slides) — Codex follows symlinks when scanning that directory, so edits in the repo take effect immediately
 - **9 agents** copied into `~/.codex/agents/` as TOML, generated from the agent markdown by `codex/transpile-agents.sh`
 
 Regenerate the agents after editing any `*/agents/*.md` with `make transpile-codex`; `make check-codex` fails if they're out of sync.
@@ -282,7 +292,21 @@ claude plugin update stepwise-core@stepwise-dev
 claude plugin update stepwise-git@stepwise-dev
 claude plugin update stepwise-web@stepwise-dev
 claude plugin update stepwise-research@stepwise-dev
+claude plugin update stepwise-slides@stepwise-dev
 ```
+
+### Syncing vendored plugins
+
+`stepwise-slides` is imported from upstream via `git subtree`. To pull the latest upstream changes:
+
+```bash
+git subtree pull \
+  --prefix=slides \
+  https://github.com/zarazhangrui/frontend-slides.git \
+  main --squash
+```
+
+Do **not** edit files under `slides/` — every future sync must apply cleanly. If the pull brings meaningful changes, patch-bump `stepwise-slides` in `.claude-plugin/marketplace.json` and the top-level marketplace `version` per `.claude/rules/versioning.md`.
 
 ## 📝 Golden Rules
 
@@ -372,6 +396,8 @@ Apache License 2.0 - See LICENSE file for details.
 ## 🔖 Attribution
 
 Derived from [HumanLayer's Claude Code workflow](https://github.com/humanlayer/humanlayer/tree/main/.claude) under Apache License 2.0.
+
+`stepwise-slides` is vendored verbatim from [zarazhangrui/frontend-slides](https://github.com/zarazhangrui/frontend-slides) (MIT, author Zara Zhang) under the `slides/` prefix, imported via `git subtree`.
 
 Several skills are derived from [Matt Pocock's skills](https://github.com/mattpocock/skills) (grill-me, tdd), [eferro's skill-factory](https://github.com/eferro/skill-factory) (hamburger-method, small-safe-steps, story-splitting, test-desiderata, and tdd/zombies reference) and [Gojko Adzic's BugMagnet](https://github.com/gojko/bugmagnet-ai-assistant). See [NOTICE](NOTICE) for detailed attribution.
 

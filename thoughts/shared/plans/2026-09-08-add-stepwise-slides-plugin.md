@@ -69,10 +69,10 @@ This produces one merge commit and one squashed commit; the resulting tree has:
 - Inert upstream duplicates: `slides/SKILL.md`, `slides/.claude-plugin/marketplace.json` (do not delete)
 
 ### Success Criteria:
-- [ ] `slides/LICENSE` exists and is MIT.
-- [ ] `slides/plugins/frontend-slides/.claude-plugin/plugin.json` parses as JSON: `jq . slides/plugins/frontend-slides/.claude-plugin/plugin.json`
-- [ ] `slides/plugins/frontend-slides/skills/frontend-slides/SKILL.md` exists with frontmatter containing `name: frontend-slides`.
-- [ ] `git log --oneline -3` shows the squash+merge from the subtree add.
+- [x] `slides/LICENSE` exists and is MIT.
+- [x] `slides/plugins/frontend-slides/.claude-plugin/plugin.json` parses as JSON: `jq . slides/plugins/frontend-slides/.claude-plugin/plugin.json`
+- [x] `slides/plugins/frontend-slides/skills/frontend-slides/SKILL.md` exists with frontmatter containing `name: frontend-slides`.
+- [x] `git log --oneline -3` shows the squash+merge from the subtree add.
 
 ---
 
@@ -102,9 +102,9 @@ Add the `stepwise-slides` entry to `.claude-plugin/marketplace.json` and bump th
 ```
 
 ### Success Criteria:
-- [ ] `jq '.version' .claude-plugin/marketplace.json` returns `"1.1.0"`.
-- [ ] `jq '.plugins[] | select(.name == "stepwise-slides")' .claude-plugin/marketplace.json` returns the new entry.
-- [ ] `jq '.plugins[].source' .claude-plugin/marketplace.json` includes `"./slides/plugins/frontend-slides"`.
+- [x] `jq '.version' .claude-plugin/marketplace.json` returns `"1.1.0"`.
+- [x] `jq '.plugins[] | select(.name == "stepwise-slides")' .claude-plugin/marketplace.json` returns the new entry.
+- [x] `jq '.plugins[].source' .claude-plugin/marketplace.json` includes `"./slides/plugins/frontend-slides"`.
 
 ---
 
@@ -129,10 +129,10 @@ for skill in "$REPO_ROOT"/core/skills/*/ \
 **Verification during implementation**: `grep -nE '(\$HOME|/Users/|/tmp)' slides/plugins/frontend-slides/skills/frontend-slides/SKILL.md` — must return nothing. Upstream SKILL.md is self-contained with relative paths; if this check fails, add a wrapper skill instead of symlinking directly. (Expected: passes without change.)
 
 ### Success Criteria:
-- [ ] `make install-codex` succeeds.
-- [ ] `readlink ~/.agents/skills/frontend-slides` resolves to `<repo>/slides/plugins/frontend-slides/skills/frontend-slides`.
-- [ ] `make uninstall-codex` removes the symlink cleanly.
-- [ ] `make check-codex` passes (no agents to transpile → no diff).
+- [x] `make install-codex` succeeds.
+- [x] `readlink ~/.agents/skills/frontend-slides` resolves to `<repo>/slides/plugins/frontend-slides/skills/frontend-slides`.
+- [x] `make uninstall-codex` removes the symlink cleanly.
+- [x] `make check-codex` passes (no agents to transpile → no diff).
 
 ---
 
@@ -155,9 +155,9 @@ Add four cheap structural checks to `test/smoke-test.sh` covering the new plugin
 Use the existing helpers in `test/test-helpers.sh` (assertion patterns like `assert_file_exists`, `assert_json_valid`).
 
 ### Success Criteria:
-- [ ] `make test` passes (existing + new checks).
-- [ ] `make test-verbose` shows the four new assertions running.
-- [ ] `make check` (shellcheck) passes on `test/smoke-test.sh`.
+- [x] `make test` passes (existing + new checks).
+- [x] `make test-verbose` shows the four new assertions running.
+- [x] `make check` (shellcheck) passes on `test/smoke-test.sh`.
 
 ---
 
@@ -187,10 +187,10 @@ Document the new plugin, its provenance, and the optional sync workflow.
 **Changes**: Add the new install command and a one-line description in the plugin list.
 
 ### Success Criteria:
-- [ ] `AGENTS.md` mentions "5 independent Claude Code plugins" and includes the `slides/` tree.
-- [ ] `AGENTS.md` has a "Vendored plugins" section with the exact `git subtree pull` one-liner.
-- [ ] `README.md` lists `claude plugin install stepwise-slides@stepwise-dev`.
-- [ ] Both files mention Zara Zhang + MIT + upstream URL.
+- [x] `AGENTS.md` mentions "5 independent Claude Code plugins" and includes the `slides/` tree.
+- [x] `AGENTS.md` has a "Vendored plugins" section with the exact `git subtree pull` one-liner.
+- [x] `README.md` lists `claude plugin install stepwise-slides@stepwise-dev`.
+- [x] Both files mention Zara Zhang + MIT + upstream URL.
 
 ---
 
