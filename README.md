@@ -295,6 +295,19 @@ claude plugin update stepwise-research@stepwise-dev
 claude plugin update stepwise-slides@stepwise-dev
 ```
 
+### Syncing vendored plugins
+
+`stepwise-slides` is imported from upstream via `git subtree`. To pull the latest upstream changes:
+
+```bash
+git subtree pull \
+  --prefix=slides \
+  https://github.com/zarazhangrui/frontend-slides.git \
+  main --squash
+```
+
+Do **not** edit files under `slides/` — every future sync must apply cleanly. If the pull brings meaningful changes, patch-bump `stepwise-slides` in `.claude-plugin/marketplace.json` and the top-level marketplace `version` per `.claude/rules/versioning.md`.
+
 ## 📝 Golden Rules
 
 1. **Keep context under 60%** — past that, accuracy drops.
@@ -384,16 +397,7 @@ Apache License 2.0 - See LICENSE file for details.
 
 Derived from [HumanLayer's Claude Code workflow](https://github.com/humanlayer/humanlayer/tree/main/.claude) under Apache License 2.0.
 
-`stepwise-slides` is vendored verbatim from [zarazhangrui/frontend-slides](https://github.com/zarazhangrui/frontend-slides) (MIT, author Zara Zhang) under the `slides/` prefix, imported via `git subtree`. Do **not** edit files under `slides/` — every future sync must apply cleanly. To pull upstream changes:
-
-```bash
-git subtree pull \
-  --prefix=slides \
-  https://github.com/zarazhangrui/frontend-slides.git \
-  main --squash
-```
-
-If the pull brings meaningful changes, patch-bump `stepwise-slides` in `.claude-plugin/marketplace.json` and the top-level marketplace `version` per `.claude/rules/versioning.md`. See `AGENTS.md` for full guidance.
+`stepwise-slides` is vendored verbatim from [zarazhangrui/frontend-slides](https://github.com/zarazhangrui/frontend-slides) (MIT, author Zara Zhang) under the `slides/` prefix, imported via `git subtree`.
 
 Several skills are derived from [Matt Pocock's skills](https://github.com/mattpocock/skills) (grill-me, tdd), [eferro's skill-factory](https://github.com/eferro/skill-factory) (hamburger-method, small-safe-steps, story-splitting, test-desiderata, and tdd/zombies reference) and [Gojko Adzic's BugMagnet](https://github.com/gojko/bugmagnet-ai-assistant). See [NOTICE](NOTICE) for detailed attribution.
 
